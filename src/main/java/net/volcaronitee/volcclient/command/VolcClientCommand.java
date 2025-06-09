@@ -1,4 +1,4 @@
-package net.volcaronitee.command;
+package net.volcaronitee.volcclient.command;
 
 import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.literal;
 
