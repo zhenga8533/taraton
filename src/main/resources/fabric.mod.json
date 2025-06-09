@@ -13,8 +13,6 @@
   "icon": "assets/volc-client/icon.png",
   "environment": "*",
   "entrypoints": {
-    "main": ["net.volcaronitee.volcclient.VolcClient"],
-    "fabric-datagen": ["net.volcaronitee.volcclient.VolcClientDataGenerator"],
     "client": ["net.volcaronitee.volcclient.VolcClient"]
   },
   "mixins": ["volc-client.mixins.json"],
@@ -23,7 +21,7 @@
     "minecraft": "~1.21.5",
     "java": ">=21",
     "fabric-api": "*",
-    "yet_another_config_lib_v3": ">=3.6.2"
+    "yet_another_config_lib_v3": ">=3.6.6+1.21.5"
   },
   "suggests": {
     "another-mod": "*"

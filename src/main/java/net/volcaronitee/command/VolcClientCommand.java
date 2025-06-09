@@ -1,10 +1,8 @@
 package net.volcaronitee.command;
 
-import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.argument;
 import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.literal;
 
 import com.mojang.brigadier.CommandDispatcher;
-import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
@@ -26,12 +24,13 @@ public class VolcClientCommand {
                     .executes(context -> help(context))
 
                     // Help command
-                    .then(argument("help", StringArgumentType.word())
+                    .then(literal("help")
                         .executes(context -> help(context)))
 
                     // Settings command
-                    .then(argument("settings", StringArgumentType.word())
-                        .executes(context -> settings()))
+                    .then(
+                        literal("settings")
+                            .executes(context -> settings()))
 
             // Command End
             );
