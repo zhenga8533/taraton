@@ -13,7 +13,8 @@
   "icon": "assets/volc-client/icon.png",
   "environment": "*",
   "entrypoints": {
-    "client": ["net.volcaronitee.volcclient.VolcClient"]
+    "client": ["net.volcaronitee.volcclient.VolcClient"],
+    "modmenu": ["net.volcaronitee.volcclient.config.ModMenuIntegration"]
   },
   "mixins": ["volc-client.mixins.json"],
   "depends": {

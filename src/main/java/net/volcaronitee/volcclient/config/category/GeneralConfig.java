@@ -15,7 +15,7 @@ public class GeneralConfig {
         // Mod Enabled
         .option(Option.<Boolean>createBuilder()
             .name(Text.literal("Mod Enabled"))
-            .description(OptionDescription.of(Text.translatable("Enable or disable the mod.")))
+            .description(OptionDescription.of(Text.literal("Enable or disable the mod.")))
             .binding(
                 defaults.general.modEnabled,
                 () -> config.general.modEnabled,

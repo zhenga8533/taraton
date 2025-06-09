@@ -45,7 +45,8 @@ public class VolcClientConfig {
   public static Screen createScreen(Screen parent) {
     return YetAnotherConfigLib.create(HANDLER, (defaults, config, builder) -> {
       builder.title(Text.literal("Volc Client Config"))
-          .category(GeneralConfig.create(defaults, config));
+          .category(GeneralConfig.create(defaults, config))
+          .category(ChatConfig.create(defaults, config));
 
       return builder;
     }).generateScreen(parent);
