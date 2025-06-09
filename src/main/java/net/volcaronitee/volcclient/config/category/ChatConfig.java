@@ -6,7 +6,6 @@ import dev.isxander.yacl3.api.OptionDescription;
 import dev.isxander.yacl3.config.v2.api.SerialEntry;
 import net.minecraft.text.Text;
 import net.volcaronitee.volcclient.config.VolcClientConfig;
-import net.volcaronitee.volcclient.config.VolcClientConfigManager;
 
 public class ChatConfig {
   public static ConfigCategory create(VolcClientConfig defaults, VolcClientConfig config) {
@@ -21,7 +20,7 @@ public class ChatConfig {
                 defaults.chat.partyCommands,
                 () -> config.chat.partyCommands,
                 newVal -> config.chat.partyCommands = newVal)
-            .controller(VolcClientConfigManager::createBooleanController)
+            .controller(VolcClientConfig::createBooleanController)
             .build())
 
         .build();
