@@ -1,6 +1,7 @@
 package net.volcaronitee.volcclient.config.category;
 
 import dev.isxander.yacl3.api.ConfigCategory;
+import dev.isxander.yacl3.api.NameableEnum;
 import dev.isxander.yacl3.api.Option;
 import dev.isxander.yacl3.api.OptionDescription;
 import dev.isxander.yacl3.api.OptionGroup;
@@ -70,4 +71,34 @@ public class ChatConfig {
 
     @SerialEntry
     public boolean playtimeWarning = false;
+
+    // Message Option Group
+    @SerialEntry
+    public String guildJoinMessage = "";
+
+    @SerialEntry
+    public String partyJoinMessage = "";
+
+    @SerialEntry
+    public boolean partyLeaderOnly = false;
+
+    // Party Option Group
+    @SerialEntry
+    public boolean antiGhostParty = false;
+
+    @SerialEntry
+    public boolean joinReparty = false;
+
+
+    @SerialEntry
+    public AutoTransfer autoTransfer = AutoTransfer.A;
+
+    public enum AutoTransfer implements NameableEnum {
+        A, B, C;
+
+        @Override
+        public Text getDisplayName() {
+            return Text.literal("mymod.alphabet." + name().toLowerCase());
+        }
+    }
 }

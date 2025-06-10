@@ -4,6 +4,7 @@ import java.nio.file.Path;
 import dev.isxander.yacl3.api.Option;
 import dev.isxander.yacl3.api.YetAnotherConfigLib;
 import dev.isxander.yacl3.api.controller.BooleanControllerBuilder;
+import dev.isxander.yacl3.api.controller.EnumControllerBuilder;
 import dev.isxander.yacl3.config.v2.api.ConfigClassHandler;
 import dev.isxander.yacl3.config.v2.api.SerialEntry;
 import dev.isxander.yacl3.config.v2.api.serializer.GsonConfigSerializerBuilder;
@@ -63,6 +64,12 @@ public class VolcClientConfig {
 
     public static BooleanControllerBuilder createBooleanController(Option<Boolean> opt) {
         return BooleanControllerBuilder.create(opt).yesNoFormatter().coloured(true);
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <E extends Enum<E>> EnumControllerBuilder<E> createEnumController(Option<E> opt) {
+        return EnumControllerBuilder.create(opt)
+                .enumClass((Class<E>) opt.stateManager().get().getClass());
     }
 
     // Configuration Categories
