@@ -44,7 +44,18 @@ public class VolcClientConfig {
         return YetAnotherConfigLib.create(HANDLER, (defaults, config, builder) -> {
             builder.title(Text.literal("Volc Client Config"))
                     .category(GeneralConfig.create(defaults, config))
-                    .category(ChatConfig.create(defaults, config));
+                    .category(ChatConfig.create(defaults, config))
+                    .category(ContainerConfig.create(defaults, config))
+                    .category(EconomyConfig.create(defaults, config))
+                    .category(CombatConfig.create(defaults, config))
+                    .category(MiningConfig.create(defaults, config))
+                    .category(FarmingConfig.create(defaults, config))
+                    .category(ForagingConfig.create(defaults, config))
+                    .category(EventsConfig.create(defaults, config))
+                    .category(CrimsonIslesConfig.create(defaults, config))
+                    .category(DungeonsConfig.create(defaults, config))
+                    .category(KuudraConfig.create(defaults, config))
+                    .category(RiftConfig.create(defaults, config));
 
             return builder;
         }).generateScreen(parent);
