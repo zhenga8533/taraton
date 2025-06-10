@@ -1,7 +1,6 @@
 package net.volcaronitee.volcclient.config;
 
 import java.nio.file.Path;
-
 import dev.isxander.yacl3.api.Option;
 import dev.isxander.yacl3.api.YetAnotherConfigLib;
 import dev.isxander.yacl3.api.controller.BooleanControllerBuilder;
@@ -26,72 +25,70 @@ import net.volcaronitee.volcclient.config.category.MiningConfig;
 import net.volcaronitee.volcclient.config.category.RiftConfig;
 
 public class VolcClientConfig {
-  private static final Path CONFIG_PATH = FabricLoader.getInstance().getConfigDir().resolve("volcclient/config.json");
-  private static final ConfigClassHandler<VolcClientConfig> HANDLER = ConfigClassHandler
-      .createBuilder(VolcClientConfig.class)
-      .serializer(config -> GsonConfigSerializerBuilder.create(config)
-          .setPath(CONFIG_PATH)
-          .appendGsonBuilder(gsonBuilder -> gsonBuilder
-              .setPrettyPrinting()
-              .disableHtmlEscaping()
-              .serializeNulls())
-          .build())
-      .build();
+    private static final Path CONFIG_PATH =
+            FabricLoader.getInstance().getConfigDir().resolve("volcclient/config.json");
+    private static final ConfigClassHandler<VolcClientConfig> HANDLER =
+            ConfigClassHandler.createBuilder(VolcClientConfig.class)
+                    .serializer(config -> GsonConfigSerializerBuilder.create(config)
+                            .setPath(CONFIG_PATH).appendGsonBuilder(gsonBuilder -> gsonBuilder
+                                    .setPrettyPrinting().disableHtmlEscaping().serializeNulls())
+                            .build())
+                    .build();
 
-  public static void init() {
-    HANDLER.load();
-  }
+    public static void init() {
+        HANDLER.load();
+    }
 
-  public static Screen createScreen(Screen parent) {
-    return YetAnotherConfigLib.create(HANDLER, (defaults, config, builder) -> {
-      builder.title(Text.literal("Volc Client Config"))
-          .category(GeneralConfig.create(defaults, config))
-          .category(ChatConfig.create(defaults, config));
+    public static Screen createScreen(Screen parent) {
+        return YetAnotherConfigLib.create(HANDLER, (defaults, config, builder) -> {
+            builder.title(Text.literal("Volc Client Config"))
+                    .category(GeneralConfig.create(defaults, config))
+                    .category(ChatConfig.create(defaults, config));
 
-      return builder;
-    }).generateScreen(parent);
-  }
+            return builder;
+        }).generateScreen(parent);
+    }
 
-  public static BooleanControllerBuilder createBooleanController(Option<Boolean> opt) {
-    return BooleanControllerBuilder.create(opt).yesNoFormatter().coloured(true);
-  }
+    public static BooleanControllerBuilder createBooleanController(Option<Boolean> opt) {
+        return BooleanControllerBuilder.create(opt).yesNoFormatter().coloured(true);
+    }
 
-  @SerialEntry
-  public GeneralConfig general = new GeneralConfig();
+    @SerialEntry
+    public GeneralConfig general = new GeneralConfig();
 
-  @SerialEntry
-  public ChatConfig chat = new ChatConfig();
+    @SerialEntry
+    public ChatConfig chat = new ChatConfig();
 
-  @SerialEntry
-  public ContainerConfig container = new ContainerConfig();
+    @SerialEntry
+    public ContainerConfig container = new ContainerConfig();
 
-  @SerialEntry
-  public EconomyConfig economy = new EconomyConfig();
+    @SerialEntry
+    public EconomyConfig economy = new EconomyConfig();
 
-  @SerialEntry
-  public CombatConfig combat = new CombatConfig();
+    @SerialEntry
+    public CombatConfig combat = new CombatConfig();
 
-  @SerialEntry
-  public MiningConfig mining = new MiningConfig();
+    @SerialEntry
+    public MiningConfig mining = new MiningConfig();
 
-  @SerialEntry
-  public FarmingConfig farming = new FarmingConfig();
+    @SerialEntry
+    public FarmingConfig farming = new FarmingConfig();
 
-  @SerialEntry
-  public ForagingConfig foraging = new ForagingConfig();
+    @SerialEntry
+    public ForagingConfig foraging = new ForagingConfig();
 
-  @SerialEntry
-  public EventConfig event = new EventConfig();
+    @SerialEntry
+    public EventConfig event = new EventConfig();
 
-  @SerialEntry
-  public CrimsonIslesConfig crimsonIsles = new CrimsonIslesConfig();
+    @SerialEntry
+    public CrimsonIslesConfig crimsonIsles = new CrimsonIslesConfig();
 
-  @SerialEntry
-  public DungeonConfig dungeon = new DungeonConfig();
+    @SerialEntry
+    public DungeonConfig dungeon = new DungeonConfig();
 
-  @SerialEntry
-  public KuudraConfig kuudra = new KuudraConfig();
+    @SerialEntry
+    public KuudraConfig kuudra = new KuudraConfig();
 
-  @SerialEntry
-  public RiftConfig rift = new RiftConfig();
+    @SerialEntry
+    public RiftConfig rift = new RiftConfig();
 }
