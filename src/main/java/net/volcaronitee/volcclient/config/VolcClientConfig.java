@@ -14,15 +14,16 @@ import net.volcaronitee.volcclient.config.category.ChatConfig;
 import net.volcaronitee.volcclient.config.category.CombatConfig;
 import net.volcaronitee.volcclient.config.category.ContainerConfig;
 import net.volcaronitee.volcclient.config.category.CrimsonIslesConfig;
-import net.volcaronitee.volcclient.config.category.DungeonConfig;
+import net.volcaronitee.volcclient.config.category.DungeonsConfig;
 import net.volcaronitee.volcclient.config.category.EconomyConfig;
-import net.volcaronitee.volcclient.config.category.EventConfig;
+import net.volcaronitee.volcclient.config.category.EventsConfig;
 import net.volcaronitee.volcclient.config.category.FarmingConfig;
 import net.volcaronitee.volcclient.config.category.ForagingConfig;
 import net.volcaronitee.volcclient.config.category.GeneralConfig;
 import net.volcaronitee.volcclient.config.category.KuudraConfig;
 import net.volcaronitee.volcclient.config.category.MiningConfig;
 import net.volcaronitee.volcclient.config.category.RiftConfig;
+import net.volcaronitee.volcclient.config.category.TemplateConfig;
 
 public class VolcClientConfig {
     private static final Path CONFIG_PATH =
@@ -53,6 +54,10 @@ public class VolcClientConfig {
         return BooleanControllerBuilder.create(opt).yesNoFormatter().coloured(true);
     }
 
+    // Configuration Categories
+    @SerialEntry
+    public TemplateConfig template = new TemplateConfig();
+
     @SerialEntry
     public GeneralConfig general = new GeneralConfig();
 
@@ -78,13 +83,13 @@ public class VolcClientConfig {
     public ForagingConfig foraging = new ForagingConfig();
 
     @SerialEntry
-    public EventConfig event = new EventConfig();
+    public EventsConfig events = new EventsConfig();
 
     @SerialEntry
     public CrimsonIslesConfig crimsonIsles = new CrimsonIslesConfig();
 
     @SerialEntry
-    public DungeonConfig dungeon = new DungeonConfig();
+    public DungeonsConfig dungeons = new DungeonsConfig();
 
     @SerialEntry
     public KuudraConfig kuudra = new KuudraConfig();

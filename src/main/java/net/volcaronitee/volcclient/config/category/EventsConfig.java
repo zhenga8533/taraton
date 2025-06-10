@@ -8,9 +8,9 @@ import dev.isxander.yacl3.config.v2.api.SerialEntry;
 import net.minecraft.text.Text;
 import net.volcaronitee.volcclient.config.VolcClientConfig;
 
-public class KuudraConfig {
+public class EventsConfig {
     public static ConfigCategory create(VolcClientConfig defaults, VolcClientConfig config) {
-        return ConfigCategory.createBuilder().name(Text.literal("Kuudra"))
+        return ConfigCategory.createBuilder().name(Text.literal("Events"))
 
                 // Option Group
                 .group(OptionGroup.createBuilder().name(Text.literal(""))
@@ -18,8 +18,8 @@ public class KuudraConfig {
                         // Option
                         .option(Option.<Boolean>createBuilder().name(Text.literal(""))
                                 .description(OptionDescription.of(Text.literal("")))
-                                .binding(defaults.kuudra.temp, () -> config.kuudra.temp,
-                                        newVal -> config.kuudra.temp = newVal)
+                                .binding(defaults.events.temp, () -> config.events.temp,
+                                        newVal -> config.events.temp = newVal)
                                 .controller(VolcClientConfig::createBooleanController).build())
 
                         .build())
