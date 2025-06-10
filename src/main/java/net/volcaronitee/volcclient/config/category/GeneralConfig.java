@@ -80,6 +80,16 @@ public class GeneralConfig {
                                         .range(0, 10).step(1))
                                 .build())
 
+                        // SkyBlock XP Alert
+                        .option(Option.<Boolean>createBuilder()
+                                .name(Text.literal("SkyBlock XP Alert"))
+                                .description(OptionDescription.of(Text.literal(
+                                        "Displays a chat message and title when you gain SkyBlock XP.")))
+                                .binding(defaults.general.skyblockXpAlert,
+                                        () -> config.general.skyblockXpAlert,
+                                        newVal -> config.general.skyblockXpAlert = newVal)
+                                .controller(VolcClientConfig::createBooleanController).build())
+
                         // Waypoint Timeout
                         .option(Option.<Integer>createBuilder()
                                 .name(Text.literal("Waypoint Timeout"))
@@ -215,50 +225,6 @@ public class GeneralConfig {
 
                         .build())
 
-                // Yapping Option Group
-                .group(OptionGroup.createBuilder().name(Text.literal("Yapping"))
-
-                        // Autocomplete Command
-                        .option(Option.<Boolean>createBuilder()
-                                .name(Text.literal("Autocomplete Command"))
-                                .description(OptionDescription.of(Text.literal(
-                                        "Enables the autocomplete command feature. Autocompletes commands in chat.")))
-                                .binding(defaults.general.autocompleteCommand,
-                                        () -> config.general.autocompleteCommand,
-                                        newVal -> config.general.autocompleteCommand = newVal)
-                                .controller(VolcClientConfig::createBooleanController).build())
-
-                        // Autocorrect Command
-                        .option(Option.<Boolean>createBuilder()
-                                .name(Text.literal("Autocorrect Command"))
-                                .description(OptionDescription.of(Text.literal(
-                                        "Enables the autocorrect command feature. Autocorrects commands in chat.")))
-                                .binding(defaults.general.autocorrectCommand,
-                                        () -> config.general.autocorrectCommand,
-                                        newVal -> config.general.autocorrectCommand = newVal)
-                                .controller(VolcClientConfig::createBooleanController).build())
-
-                        // Custom Emotes
-                        .option(Option.<Boolean>createBuilder().name(Text.literal("Custom Emotes"))
-                                .description(OptionDescription.of(Text.literal(
-                                        "Allows the use of MVP++ emotes in chat. Customize your emotes using /vc emotes.")))
-                                .binding(defaults.general.customEmotes,
-                                        () -> config.general.customEmotes,
-                                        newVal -> config.general.customEmotes = newVal)
-                                .controller(VolcClientConfig::createBooleanController).build())
-
-                        // SkyBlock XP Alert
-                        .option(Option.<Boolean>createBuilder()
-                                .name(Text.literal("SkyBlock XP Alert"))
-                                .description(OptionDescription.of(Text.literal(
-                                        "Displays a chat message and title when you gain SkyBlock XP.")))
-                                .binding(defaults.general.skyblockXpAlert,
-                                        () -> config.general.skyblockXpAlert,
-                                        newVal -> config.general.skyblockXpAlert = newVal)
-                                .controller(VolcClientConfig::createBooleanController).build())
-
-                        .build())
-
                 .build();
     }
 
@@ -278,6 +244,9 @@ public class GeneralConfig {
 
     @SerialEntry
     public int skillTracker = 0;
+
+    @SerialEntry
+    public boolean skyblockXpAlert = true;
 
     @SerialEntry
     public int waypointTimeout = 0;
@@ -316,17 +285,4 @@ public class GeneralConfig {
 
     @SerialEntry
     public int reminderTimer = 0;
-
-    // Yapping Option Group
-    @SerialEntry
-    public boolean autocompleteCommand = true;
-
-    @SerialEntry
-    public boolean autocorrectCommand = true;
-
-    @SerialEntry
-    public boolean customEmotes = true;
-
-    @SerialEntry
-    public boolean skyblockXpAlert = true;
 }

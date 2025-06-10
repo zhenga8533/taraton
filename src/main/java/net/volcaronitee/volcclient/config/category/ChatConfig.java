@@ -12,14 +12,45 @@ public class ChatConfig {
     public static ConfigCategory create(VolcClientConfig defaults, VolcClientConfig config) {
         return ConfigCategory.createBuilder().name(Text.literal("Chat"))
 
-                // Option Group
-                .group(OptionGroup.createBuilder().name(Text.literal(""))
+                // Correct Option Group
+                .group(OptionGroup.createBuilder().name(Text.literal("Correct"))
 
-                        // Option
-                        .option(Option.<Boolean>createBuilder().name(Text.literal(""))
-                                .description(OptionDescription.of(Text.literal("")))
-                                .binding(defaults.chat.temp, () -> config.chat.temp,
-                                        newVal -> config.chat.temp = newVal)
+                        // Autocomplete Command
+                        .option(Option.<Boolean>createBuilder()
+                                .name(Text.literal("Autocomplete Command"))
+                                .description(OptionDescription.of(Text.literal(
+                                        "Enables the autocomplete command feature. Autocompletes commands in chat.")))
+                                .binding(defaults.chat.autocompleteCommand,
+                                        () -> config.chat.autocompleteCommand,
+                                        newVal -> config.chat.autocompleteCommand = newVal)
+                                .controller(VolcClientConfig::createBooleanController).build())
+
+                        // Autocorrect Command
+                        .option(Option.<Boolean>createBuilder()
+                                .name(Text.literal("Autocorrect Command"))
+                                .description(OptionDescription.of(Text.literal(
+                                        "Enables the autocorrect command feature. Autocorrects commands in chat.")))
+                                .binding(defaults.chat.autocorrectCommand,
+                                        () -> config.chat.autocorrectCommand,
+                                        newVal -> config.chat.autocorrectCommand = newVal)
+                                .controller(VolcClientConfig::createBooleanController).build())
+
+                        // Custom Emotes
+                        .option(Option.<Boolean>createBuilder().name(Text.literal("Custom Emotes"))
+                                .description(OptionDescription.of(Text.literal(
+                                        "Allows the use of MVP++ emotes in chat. Customize your emotes using /vc emotes.")))
+                                .binding(defaults.chat.customEmotes, () -> config.chat.customEmotes,
+                                        newVal -> config.chat.customEmotes = newVal)
+                                .controller(VolcClientConfig::createBooleanController).build())
+
+                        // Playtime Warning
+                        .option(Option.<Boolean>createBuilder()
+                                .name(Text.literal("Playtime Warning"))
+                                .description(OptionDescription.of(Text.literal(
+                                        "Warns you when you have been playing for too long.")))
+                                .binding(defaults.chat.playtimeWarning,
+                                        () -> config.chat.playtimeWarning,
+                                        newVal -> config.chat.playtimeWarning = newVal)
                                 .controller(VolcClientConfig::createBooleanController).build())
 
                         .build())
@@ -27,7 +58,16 @@ public class ChatConfig {
                 .build();
     }
 
-    // Option Group
+    // Correct Option Group
     @SerialEntry
-    public boolean temp = false;
+    public boolean autocompleteCommand = false;
+
+    @SerialEntry
+    public boolean autocorrectCommand = false;
+
+    @SerialEntry
+    public boolean customEmotes = false;
+
+    @SerialEntry
+    public boolean playtimeWarning = false;
 }
