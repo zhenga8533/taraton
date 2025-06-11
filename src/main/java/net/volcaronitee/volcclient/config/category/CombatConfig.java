@@ -94,7 +94,7 @@ public class CombatConfig {
     public AnnounceSlayer announceSlayerMiniboss = AnnounceSlayer.OFF;
 
     public enum AnnounceSlayer implements NameableEnum {
-        OFF, ALL, PARTY, SELF;
+        OFF, ALL, PARTY, PRIVATE;
 
         @Override
         public Text getDisplayName() {
@@ -102,7 +102,7 @@ public class CombatConfig {
                 case OFF -> Text.literal("Disabled");
                 case ALL -> Text.literal("All Chat");
                 case PARTY -> Text.literal("Party Chat");
-                case SELF -> Text.literal("Self Only");
+                case PRIVATE -> Text.literal("Private Chat");
             };
         }
     }
