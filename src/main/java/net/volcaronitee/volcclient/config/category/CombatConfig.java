@@ -121,24 +121,14 @@ public class CombatConfig {
                 // Slayer Option Group
                 .group(OptionGroup.createBuilder().name(Text.literal("Slayer"))
 
-                        // Announce Slayer Boss
+                        // Slayer Boss Announce
                         .option(Option.<AnnounceWP>createBuilder()
-                                .name(Text.literal("Announce Slayer Boss"))
-                                .description(OptionDescription.of(Text.literal(
-                                        "Highlights nearby slayer bosses and sends a chat message on initial detection.")))
-                                .binding(defaults.combat.announceSlayerBoss,
-                                        () -> config.combat.announceSlayerBoss,
-                                        newVal -> config.combat.announceSlayerBoss = newVal)
-                                .controller(VolcClientConfig::createEnumController).build())
-
-                        // Announce Slayer Miniboss
-                        .option(Option.<AnnounceWP>createBuilder()
-                                .name(Text.literal("Announce Slayer Miniboss"))
-                                .description(OptionDescription.of(Text.literal(
-                                        "Highlights nearby slayer minibosses and sends a chat message on initial detection.")))
-                                .binding(defaults.combat.announceSlayerMiniboss,
-                                        () -> config.combat.announceSlayerMiniboss,
-                                        newVal -> config.combat.announceSlayerMiniboss = newVal)
+                                .name(Text.literal("Slayer Boss Announce"))
+                                .description(OptionDescription.of(
+                                        Text.literal("Sends a chat message on slayer boss spawn.")))
+                                .binding(defaults.combat.slayerBossAnnounce,
+                                        () -> config.combat.slayerBossAnnounce,
+                                        newVal -> config.combat.slayerBossAnnounce = newVal)
                                 .controller(VolcClientConfig::createEnumController).build())
 
                         // Slayer Boss Highlight
@@ -150,6 +140,16 @@ public class CombatConfig {
                                         () -> config.combat.slayerBossHighlight,
                                         newVal -> config.combat.slayerBossHighlight = newVal)
                                 .controller(VolcClientConfig::createBooleanController).build())
+
+                        // Slayer Miniboss Announce
+                        .option(Option.<AnnounceWP>createBuilder()
+                                .name(Text.literal("Slayer Miniboss Announce"))
+                                .description(OptionDescription.of(Text
+                                        .literal("Sends a chat message on slayer miniboss spawn.")))
+                                .binding(defaults.combat.slayerMinibossAnnounce,
+                                        () -> config.combat.slayerMinibossAnnounce,
+                                        newVal -> config.combat.slayerMinibossAnnounce = newVal)
+                                .controller(VolcClientConfig::createEnumController).build())
 
                         // Slayer Miniboss Highlight
                         .option(Option.<Boolean>createBuilder()
@@ -235,13 +235,13 @@ public class CombatConfig {
 
     // Slayer Option Group
     @SerialEntry
-    public AnnounceWP announceSlayerBoss = AnnounceWP.OFF;
-
-    @SerialEntry
-    public AnnounceWP announceSlayerMiniboss = AnnounceWP.OFF;
+    public AnnounceWP slayerBossAnnounce = AnnounceWP.OFF;
 
     @SerialEntry
     public boolean slayerBossHighlight = false;
+
+    @SerialEntry
+    public AnnounceWP slayerMinibossAnnounce = AnnounceWP.OFF;
 
     @SerialEntry
     public boolean slayerMinibossHighlight = false;

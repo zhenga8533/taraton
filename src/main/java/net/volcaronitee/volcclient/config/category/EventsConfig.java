@@ -41,7 +41,7 @@ public class EventsConfig {
                         .option(Option.<AnnounceWP>createBuilder()
                                 .name(Text.literal("Inquisitor Announce"))
                                 .description(OptionDescription.of(
-                                        Text.literal("Announces inquisitor waypoints in chat.")))
+                                        Text.literal("Sends a chat message on inquisitor spawn.")))
                                 .binding(defaults.events.inquisitorAnnounce,
                                         () -> config.events.inquisitorAnnounce,
                                         newVal -> config.events.inquisitorAnnounce = newVal)
@@ -51,7 +51,7 @@ public class EventsConfig {
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Inquisitor Detection"))
                                 .description(OptionDescription.of(Text.literal(
-                                        "Highlights nearby inquisitors and sends a chat message on initial detection.")))
+                                        "Highlights nearby inquisitors. This includes inquisitors spawned by other players.")))
                                 .binding(defaults.events.inquisitorDetection,
                                         () -> config.events.inquisitorDetection,
                                         newVal -> config.events.inquisitorDetection = newVal)
