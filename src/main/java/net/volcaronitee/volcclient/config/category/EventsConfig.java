@@ -51,7 +51,7 @@ public class EventsConfig {
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Inquisitor Detection"))
                                 .description(OptionDescription.of(Text.literal(
-                                        "Highlights nearby inquisitors and sends a chat message initial detection.")))
+                                        "Highlights nearby inquisitors and sends a chat message on initial detection.")))
                                 .binding(defaults.events.inquisitorDetection,
                                         () -> config.events.inquisitorDetection,
                                         newVal -> config.events.inquisitorDetection = newVal)
