@@ -117,14 +117,16 @@ public class GeneralConfig {
                 .group(OptionGroup.createBuilder().name(Text.literal("Server"))
 
                         // Fairy Soul Waypoints
-                        .option(Option.<Boolean>createBuilder()
+                        .option(Option.<Integer>createBuilder()
                                 .name(Text.literal("Fairy Soul Waypoints"))
-                                .description(OptionDescription
-                                        .of(Text.literal("Highlights fairy soul locations.")))
+                                .description(OptionDescription.of(Text.literal(
+                                        "Renders waypoints of Fairy Soul locations. Sets maximum distance for waypoints to be rendered.")))
                                 .binding(defaults.general.fairySoulWaypoints,
                                         () -> config.general.fairySoulWaypoints,
                                         newVal -> config.general.fairySoulWaypoints = newVal)
-                                .controller(VolcClientConfig::createBooleanController).build())
+                                .controller(opt -> IntegerSliderControllerBuilder.create(opt)
+                                        .range(0, 128).step(4))
+                                .build())
 
                         // Hide Far Entities
                         .option(Option.<Integer>createBuilder()
@@ -135,7 +137,7 @@ public class GeneralConfig {
                                         () -> config.general.hideFarEntities,
                                         newVal -> config.general.hideFarEntities = newVal)
                                 .controller(opt -> IntegerSliderControllerBuilder.create(opt)
-                                        .range(0, 128).step(1))
+                                        .range(0, 128).step(4))
                                 .build())
 
                         // Hide Close Players
@@ -147,7 +149,7 @@ public class GeneralConfig {
                                         () -> config.general.hideClosePlayers,
                                         newVal -> config.general.hideClosePlayers = newVal)
                                 .controller(opt -> IntegerSliderControllerBuilder.create(opt)
-                                        .range(0, 128).step(1))
+                                        .range(0, 128).step(4))
                                 .build())
 
                         // Hide All Particles
@@ -256,7 +258,7 @@ public class GeneralConfig {
 
     // Server Option Group
     @SerialEntry
-    public boolean fairySoulWaypoints = false;
+    public int fairySoulWaypoints = 0;
 
     @SerialEntry
     public int hideFarEntities = 0;
