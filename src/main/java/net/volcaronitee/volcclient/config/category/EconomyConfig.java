@@ -21,7 +21,7 @@ public class EconomyConfig {
                         // Coin Tracker
                         .option(Option.<Integer>createBuilder().name(Text.literal("Coin Tracker"))
                                 .description(OptionDescription.of(Text.literal(
-                                        "Tracks coin purse gain/loss progress on the screen. Sets time in seconds of inactivity before tracking stops.")))
+                                        "Tracks coin purse gain/loss progress on the screen. Sets time in minutes of inactivity before tracking stops.")))
                                 .binding(defaults.economy.coinTracker,
                                         () -> config.economy.coinTracker,
                                         newVal -> config.economy.coinTracker = newVal)

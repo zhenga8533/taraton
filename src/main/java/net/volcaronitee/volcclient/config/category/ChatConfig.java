@@ -55,6 +55,14 @@ public class ChatConfig {
                                         newVal -> config.chat.playtimeWarning = newVal)
                                 .controller(VolcClientConfig::createBooleanController).build())
 
+                        // Spam Hider
+                        .option(Option.<Boolean>createBuilder().name(Text.literal("Spam Hider"))
+                                .description(OptionDescription.of(Text.literal(
+                                        "Hides spam messages in chat. Customize your spam filter using /vc spam.")))
+                                .binding(defaults.chat.spamHider, () -> config.chat.spamHider,
+                                        newVal -> config.chat.spamHider = newVal)
+                                .controller(VolcClientConfig::createBooleanController).build())
+
                         // Word Substitution
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Text Substitution"))
@@ -177,6 +185,9 @@ public class ChatConfig {
 
     @SerialEntry
     public boolean playtimeWarning = false;
+
+    @SerialEntry
+    public boolean spamHider = false;
 
     @SerialEntry
     public boolean textSubstitution = false;

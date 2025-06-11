@@ -72,7 +72,7 @@ public class GeneralConfig {
                         // Skill Tracker
                         .option(Option.<Integer>createBuilder().name(Text.literal("Skill Tracker"))
                                 .description(OptionDescription.of(Text.literal(
-                                        "Tracks skill progress on the screen. Sets time in seconds of inactivity needed before tracking stops.")))
+                                        "Tracks skill progress on the screen. Sets time in minutes of inactivity needed before tracking stops.")))
                                 .binding(defaults.general.skillTracker,
                                         () -> config.general.skillTracker,
                                         newVal -> config.general.skillTracker = newVal)
