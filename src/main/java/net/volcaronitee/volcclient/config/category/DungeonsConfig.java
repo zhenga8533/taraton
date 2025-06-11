@@ -31,7 +31,7 @@ public class DungeonsConfig {
                         // Dungeon Profit
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Dungeon Profit"))
                                 .description(OptionDescription.of(Text.literal(
-                                        "Shows profit of any opened dungeon chest on the screen.")))
+                                        "Displays profit of any opened dungeon chest on the screen.")))
                                 .binding(defaults.dungeons.dungeonProfit,
                                         () -> config.dungeons.dungeonProfit,
                                         newVal -> config.dungeons.dungeonProfit = newVal)
