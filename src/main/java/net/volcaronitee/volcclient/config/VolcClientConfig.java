@@ -66,6 +66,13 @@ public class VolcClientConfig {
         return BooleanControllerBuilder.create(opt).yesNoFormatter().coloured(true);
     }
 
+    public static BooleanControllerBuilder createBooleanController(Option<Boolean> opt,
+            String trueString, String falseString) {
+        return BooleanControllerBuilder.create(opt)
+                .formatValue(val -> val ? Text.literal(trueString) : Text.literal(falseString))
+                .coloured(true);
+    }
+
     @SuppressWarnings("unchecked")
     public static <E extends Enum<E>> EnumControllerBuilder<E> createEnumController(Option<E> opt) {
         return EnumControllerBuilder.create(opt)
