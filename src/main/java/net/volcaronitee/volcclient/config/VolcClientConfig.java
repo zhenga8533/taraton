@@ -1,6 +1,7 @@
 package net.volcaronitee.volcclient.config;
 
 import java.nio.file.Path;
+import dev.isxander.yacl3.api.NameableEnum;
 import dev.isxander.yacl3.api.Option;
 import dev.isxander.yacl3.api.YetAnotherConfigLib;
 import dev.isxander.yacl3.api.controller.BooleanControllerBuilder;
@@ -121,4 +122,19 @@ public class VolcClientConfig {
 
     @SerialEntry
     public RiftConfig rift = new RiftConfig();
+
+    // Shared enums
+    public enum AnnounceWP implements NameableEnum {
+        OFF, ALL, PARTY, PRIVATE;
+
+        @Override
+        public Text getDisplayName() {
+            return switch (this) {
+                case OFF -> Text.literal("Disabled");
+                case ALL -> Text.literal("All Chat");
+                case PARTY -> Text.literal("Party Chat");
+                case PRIVATE -> Text.literal("Private Chat");
+            };
+        }
+    }
 }
