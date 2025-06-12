@@ -99,7 +99,7 @@ public class GeneralConfig {
                                         () -> config.general.waypointTimeout,
                                         newVal -> config.general.waypointTimeout = newVal)
                                 .controller(opt -> IntegerSliderControllerBuilder.create(opt)
-                                        .range(0, 120).step(1))
+                                        .range(0, 120).step(10))
                                 .build())
 
                         // Widget Display

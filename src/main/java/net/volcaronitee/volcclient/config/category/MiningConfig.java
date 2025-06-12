@@ -60,7 +60,7 @@ public class MiningConfig {
                                         () -> config.mining.powderChestHighlight,
                                         newVal -> config.mining.powderChestHighlight = newVal)
                                 .controller(opt -> IntegerSliderControllerBuilder.create(opt)
-                                        .range(0, 128).step(1))
+                                        .range(0, 128).step(4))
                                 .build())
 
                         // Powder Tracker

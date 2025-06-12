@@ -93,7 +93,7 @@ public class CombatConfig {
                                         () -> config.combat.lowHealthWarning,
                                         newVal -> config.combat.lowHealthWarning = newVal)
                                 .controller(opt -> IntegerSliderControllerBuilder.create(opt)
-                                        .range(0, 100).step(1))
+                                        .range(0, 100).step(5))
                                 .build())
 
                         // Mana Drain Range
@@ -170,7 +170,7 @@ public class CombatConfig {
                                         () -> config.combat.slayerSpawnWarning,
                                         newVal -> config.combat.slayerSpawnWarning = newVal)
                                 .controller(opt -> IntegerSliderControllerBuilder.create(opt)
-                                        .range(0, 100).step(1))
+                                        .range(0, 100).step(5))
                                 .build())
 
                         .build())
