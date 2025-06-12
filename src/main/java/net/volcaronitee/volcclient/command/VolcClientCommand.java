@@ -8,6 +8,7 @@ import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.text.Text;
+import net.volcaronitee.volcclient.VolcClientScreen;
 import net.volcaronitee.volcclient.config.VolcClientConfig;
 
 public class VolcClientCommand {
@@ -21,10 +22,10 @@ public class VolcClientCommand {
                         dispatcher.register(literal(alias).executes(context -> help(context))
 
                                 // Help command
-                                .then(literal("help").executes(context -> help(context)))
+                                .then(literal("help").executes(VolcClientCommand::help))
 
                                 // Settings command
-                                .then(literal("settings").executes(context -> settings()))
+                                .then(literal("settings").executes(VolcClientCommand::settings))
 
                         // Command End
                         );
@@ -42,13 +43,14 @@ public class VolcClientCommand {
         return 1;
     }
 
-    private static int settings() {
+    private static int settings(CommandContext<FabricClientCommandSource> context) {
         MinecraftClient client = MinecraftClient.getInstance();
         if (client.player == null || client.world == null) {
             return 0;
         }
 
-        client.setScreen(VolcClientConfig.createScreen(client.currentScreen));
+        VolcClientScreen screen = new VolcClientScreen();
+        client.setScreen(VolcClientConfig.createScreen(screen));
         return 1;
     }
 
