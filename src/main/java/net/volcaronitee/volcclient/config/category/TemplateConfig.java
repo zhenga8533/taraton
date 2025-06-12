@@ -12,10 +12,10 @@ import dev.isxander.yacl3.api.controller.StringControllerBuilder;
 import dev.isxander.yacl3.api.controller.TickBoxControllerBuilder;
 import dev.isxander.yacl3.config.v2.api.SerialEntry;
 import net.minecraft.text.Text;
-import net.volcaronitee.volcclient.config.VolcClientConfig;
+import net.volcaronitee.volcclient.util.ConfigUtil;
 
 public class TemplateConfig {
-    public static ConfigCategory create(VolcClientConfig defaults, VolcClientConfig config) {
+    public static ConfigCategory create(ConfigUtil defaults, ConfigUtil config) {
         return ConfigCategory.createBuilder().name(Text.literal("Category"))
 
                 // Option Group
@@ -26,7 +26,7 @@ public class TemplateConfig {
                                 .description(OptionDescription.of(Text.literal("Description")))
                                 .binding(defaults.template.bool, () -> config.template.bool,
                                         newVal -> config.template.bool = newVal)
-                                .controller(VolcClientConfig::createBooleanController).build())
+                                .controller(ConfigUtil::createBooleanController).build())
 
                         // Boolean With Values
                         .option(Option.<Boolean>createBuilder()
@@ -34,7 +34,7 @@ public class TemplateConfig {
                                 .description(OptionDescription.of(Text.literal("Description")))
                                 .binding(defaults.template.bool, () -> config.template.bool,
                                         newVal -> config.template.bool = newVal)
-                                .controller(opt -> VolcClientConfig.createBooleanController(opt,
+                                .controller(opt -> ConfigUtil.createBooleanController(opt,
                                         "trueString", "falseString"))
                                 .build())
 
@@ -67,7 +67,7 @@ public class TemplateConfig {
                                 .description(OptionDescription.of(Text.literal("Description")))
                                 .binding(defaults.template.imu, () -> config.template.imu,
                                         newVal -> config.template.imu = newVal)
-                                .controller(VolcClientConfig::createEnumController).build())
+                                .controller(ConfigUtil::createEnumController).build())
 
                         // Color
                         .option(Option.<Color>createBuilder().name(Text.literal("Color"))

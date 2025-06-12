@@ -9,10 +9,10 @@ import dev.isxander.yacl3.api.controller.IntegerSliderControllerBuilder;
 import dev.isxander.yacl3.api.controller.StringControllerBuilder;
 import dev.isxander.yacl3.config.v2.api.SerialEntry;
 import net.minecraft.text.Text;
-import net.volcaronitee.volcclient.config.VolcClientConfig;
+import net.volcaronitee.volcclient.util.ConfigUtil;
 
 public class GeneralConfig {
-    public static ConfigCategory create(VolcClientConfig defaults, VolcClientConfig config) {
+    public static ConfigCategory create(ConfigUtil defaults, ConfigUtil config) {
         return ConfigCategory.createBuilder().name(Text.literal("General"))
 
                 // Essential Option Group
@@ -24,7 +24,7 @@ public class GeneralConfig {
                                 .binding(defaults.general.modEnabled,
                                         () -> config.general.modEnabled,
                                         newVal -> config.general.modEnabled = newVal)
-                                .controller(VolcClientConfig::createBooleanController).build())
+                                .controller(ConfigUtil::createBooleanController).build())
 
                         // SkyBlock Only
                         .option(Option.<Boolean>createBuilder().name(Text.literal("SkyBlock Only"))
@@ -33,7 +33,7 @@ public class GeneralConfig {
                                 .binding(defaults.general.skyblockOnly,
                                         () -> config.general.skyblockOnly,
                                         newVal -> config.general.skyblockOnly = newVal)
-                                .controller(VolcClientConfig::createBooleanController).build())
+                                .controller(ConfigUtil::createBooleanController).build())
 
                         // Socket Connection
                         .option(Option.<Boolean>createBuilder()
@@ -43,7 +43,7 @@ public class GeneralConfig {
                                 .binding(defaults.general.socketConnection,
                                         () -> config.general.socketConnection,
                                         newVal -> config.general.socketConnection = newVal)
-                                .controller(VolcClientConfig::createBooleanController).build())
+                                .controller(ConfigUtil::createBooleanController).build())
 
                         // Discord Link
                         .option(ButtonOption.createBuilder().name(Text.literal("Discord Link"))
@@ -67,7 +67,7 @@ public class GeneralConfig {
                                 .binding(defaults.general.removeSelfieMode,
                                         () -> config.general.removeSelfieMode,
                                         newVal -> config.general.removeSelfieMode = newVal)
-                                .controller(VolcClientConfig::createBooleanController).build())
+                                .controller(ConfigUtil::createBooleanController).build())
 
                         // Skill Tracker
                         .option(Option.<Integer>createBuilder().name(Text.literal("Skill Tracker"))
@@ -88,7 +88,7 @@ public class GeneralConfig {
                                 .binding(defaults.general.skyblockXpAlert,
                                         () -> config.general.skyblockXpAlert,
                                         newVal -> config.general.skyblockXpAlert = newVal)
-                                .controller(VolcClientConfig::createBooleanController).build())
+                                .controller(ConfigUtil::createBooleanController).build())
 
                         // Waypoint Timeout
                         .option(Option.<Integer>createBuilder()
@@ -109,7 +109,7 @@ public class GeneralConfig {
                                 .binding(defaults.general.widgetDisplay,
                                         () -> config.general.widgetDisplay,
                                         newVal -> config.general.widgetDisplay = newVal)
-                                .controller(VolcClientConfig::createBooleanController).build())
+                                .controller(ConfigUtil::createBooleanController).build())
 
                         .build())
 
@@ -160,7 +160,7 @@ public class GeneralConfig {
                                 .binding(defaults.general.hideAllParticles,
                                         () -> config.general.hideAllParticles,
                                         newVal -> config.general.hideAllParticles = newVal)
-                                .controller(VolcClientConfig::createBooleanController).build())
+                                .controller(ConfigUtil::createBooleanController).build())
 
                         // Server Rejoin Alert
                         .option(Option.<Boolean>createBuilder()
@@ -170,7 +170,7 @@ public class GeneralConfig {
                                 .binding(defaults.general.serverRejoinAlert,
                                         () -> config.general.serverRejoinAlert,
                                         newVal -> config.general.serverRejoinAlert = newVal)
-                                .controller(VolcClientConfig::createBooleanController).build())
+                                .controller(ConfigUtil::createBooleanController).build())
 
                         // Server Status
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Server Status"))
@@ -179,7 +179,7 @@ public class GeneralConfig {
                                 .binding(defaults.general.serverStatus,
                                         () -> config.general.serverStatus,
                                         newVal -> config.general.serverStatus = newVal)
-                                .controller(VolcClientConfig::createBooleanController).build())
+                                .controller(ConfigUtil::createBooleanController).build())
 
                         // Stats Display
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Stats Display"))
@@ -188,7 +188,7 @@ public class GeneralConfig {
                                 .binding(defaults.general.statsDisplay,
                                         () -> config.general.statsDisplay,
                                         newVal -> config.general.statsDisplay = newVal)
-                                .controller(VolcClientConfig::createBooleanController).build())
+                                .controller(ConfigUtil::createBooleanController).build())
 
                         .build())
 
@@ -203,7 +203,7 @@ public class GeneralConfig {
                                 .binding(defaults.general.itemCooldownAlert,
                                         () -> config.general.itemCooldownAlert,
                                         newVal -> config.general.itemCooldownAlert = newVal)
-                                .controller(VolcClientConfig::createBooleanController).build())
+                                .controller(ConfigUtil::createBooleanController).build())
 
                         // Reminder Text
                         .option(Option.<String>createBuilder().name(Text.literal("Reminder Text"))

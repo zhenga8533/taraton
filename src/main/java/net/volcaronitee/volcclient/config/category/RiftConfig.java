@@ -7,11 +7,11 @@ import dev.isxander.yacl3.api.OptionGroup;
 import dev.isxander.yacl3.api.controller.IntegerSliderControllerBuilder;
 import dev.isxander.yacl3.config.v2.api.SerialEntry;
 import net.minecraft.text.Text;
-import net.volcaronitee.volcclient.config.VolcClientConfig;
-import net.volcaronitee.volcclient.config.VolcClientConfig.AnnounceWP;
+import net.volcaronitee.volcclient.util.ConfigUtil;
+import net.volcaronitee.volcclient.util.ConfigUtil.AnnounceWP;
 
 public class RiftConfig {
-    public static ConfigCategory create(VolcClientConfig defaults, VolcClientConfig config) {
+    public static ConfigCategory create(ConfigUtil defaults, ConfigUtil config) {
         return ConfigCategory.createBuilder().name(Text.literal("Rift"))
 
                 // Rift Option Group
@@ -23,7 +23,7 @@ public class RiftConfig {
                                         .literal("Replaces Dance Room titles with custom ones.")))
                                 .binding(defaults.rift.ddrHelper, () -> config.rift.ddrHelper,
                                         newVal -> config.rift.ddrHelper = newVal)
-                                .controller(VolcClientConfig::createBooleanController).build())
+                                .controller(ConfigUtil::createBooleanController).build())
 
                         // Enigma Soul Waypoints
                         .option(Option.<Integer>createBuilder()
@@ -62,7 +62,7 @@ public class RiftConfig {
                                 .binding(defaults.rift.announceManiaPhase,
                                         () -> config.rift.announceManiaPhase,
                                         newVal -> config.rift.announceManiaPhase = newVal)
-                                .controller(VolcClientConfig::createEnumController).build())
+                                .controller(ConfigUtil::createEnumController).build())
 
                         // Effigy Waypoint
                         .option(Option.<Boolean>createBuilder()
@@ -72,7 +72,7 @@ public class RiftConfig {
                                 .binding(defaults.rift.effigyWaypoint,
                                         () -> config.rift.effigyWaypoint,
                                         newVal -> config.rift.effigyWaypoint = newVal)
-                                .controller(VolcClientConfig::createBooleanController).build())
+                                .controller(ConfigUtil::createBooleanController).build())
 
                         // Vampire Attack Display
                         .option(Option.<Boolean>createBuilder()
@@ -82,7 +82,7 @@ public class RiftConfig {
                                 .binding(defaults.rift.vampireAttackDisplay,
                                         () -> config.rift.vampireAttackDisplay,
                                         newVal -> config.rift.vampireAttackDisplay = newVal)
-                                .controller(VolcClientConfig::createBooleanController).build())
+                                .controller(ConfigUtil::createBooleanController).build())
 
                         .build())
 

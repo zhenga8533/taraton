@@ -9,10 +9,10 @@ import dev.isxander.yacl3.api.controller.BooleanControllerBuilder;
 import dev.isxander.yacl3.api.controller.IntegerSliderControllerBuilder;
 import dev.isxander.yacl3.config.v2.api.SerialEntry;
 import net.minecraft.text.Text;
-import net.volcaronitee.volcclient.config.VolcClientConfig;
+import net.volcaronitee.volcclient.util.ConfigUtil;
 
 public class EconomyConfig {
-    public static ConfigCategory create(VolcClientConfig defaults, VolcClientConfig config) {
+    public static ConfigCategory create(ConfigUtil defaults, ConfigUtil config) {
         return ConfigCategory.createBuilder().name(Text.literal("Economy"))
 
                 // Economy Option Group
@@ -37,7 +37,7 @@ public class EconomyConfig {
                                 .binding(defaults.economy.noBitsWarning,
                                         () -> config.economy.noBitsWarning,
                                         newVal -> config.economy.noBitsWarning = newVal)
-                                .controller(VolcClientConfig::createBooleanController).build())
+                                .controller(ConfigUtil::createBooleanController).build())
 
                         .build())
 
@@ -63,7 +63,7 @@ public class EconomyConfig {
                                         "Sets how item prices are displayed in the game.")))
                                 .binding(defaults.economy.itemPrice, () -> config.economy.itemPrice,
                                         newVal -> config.economy.itemPrice = newVal)
-                                .controller(VolcClientConfig::createEnumController).build())
+                                .controller(ConfigUtil::createEnumController).build())
 
                         // Single Attribute
                         .option(Option.<Boolean>createBuilder()
@@ -73,7 +73,7 @@ public class EconomyConfig {
                                 .binding(defaults.economy.singleAttribute,
                                         () -> config.economy.singleAttribute,
                                         newVal -> config.economy.singleAttribute = newVal)
-                                .controller(VolcClientConfig::createBooleanController).build())
+                                .controller(ConfigUtil::createBooleanController).build())
 
                         // Price Type
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Price Type"))
@@ -81,8 +81,8 @@ public class EconomyConfig {
                                         "Sets the type of bazaar pricing used in item calculations.")))
                                 .binding(defaults.economy.priceType, () -> config.economy.priceType,
                                         newVal -> config.economy.priceType = newVal)
-                                .controller(opt -> VolcClientConfig.createBooleanController(opt,
-                                        "Order", "Insta"))
+                                .controller(opt -> ConfigUtil.createBooleanController(opt, "Order",
+                                        "Insta"))
                                 .build())
 
                         // Trade Evaluation

@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.loader.api.ModContainer;
 import net.volcaronitee.volcclient.command.VolcClientCommand;
-import net.volcaronitee.volcclient.config.VolcClientConfig;
+import net.volcaronitee.volcclient.util.ConfigUtil;
 
 public class VolcClient implements ClientModInitializer {
     public static final String MOD_ID = "volc-client";
@@ -19,7 +19,7 @@ public class VolcClient implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
-        VolcClientConfig.init();
+        ConfigUtil.init();
         VolcClientCommand.register();
     }
 }

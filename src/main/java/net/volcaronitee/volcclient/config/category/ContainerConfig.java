@@ -6,10 +6,10 @@ import dev.isxander.yacl3.api.OptionDescription;
 import dev.isxander.yacl3.api.OptionGroup;
 import dev.isxander.yacl3.config.v2.api.SerialEntry;
 import net.minecraft.text.Text;
-import net.volcaronitee.volcclient.config.VolcClientConfig;
+import net.volcaronitee.volcclient.util.ConfigUtil;
 
 public class ContainerConfig {
-    public static ConfigCategory create(VolcClientConfig defaults, VolcClientConfig config) {
+    public static ConfigCategory create(ConfigUtil defaults, ConfigUtil config) {
         return ConfigCategory.createBuilder().name(Text.literal("Container"))
 
                 // Container Option Group
@@ -23,7 +23,7 @@ public class ContainerConfig {
                                 .binding(defaults.container.containerPreview,
                                         () -> config.container.containerPreview,
                                         newVal -> config.container.containerPreview = newVal)
-                                .controller(VolcClientConfig::createBooleanController).build())
+                                .controller(ConfigUtil::createBooleanController).build())
 
                         // Searchbar
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Searchbar"))
@@ -32,7 +32,7 @@ public class ContainerConfig {
                                 .binding(defaults.container.searchbar,
                                         () -> config.container.searchbar,
                                         newVal -> config.container.searchbar = newVal)
-                                .controller(VolcClientConfig::createBooleanController).build())
+                                .controller(ConfigUtil::createBooleanController).build())
 
                         .build())
 
@@ -47,7 +47,7 @@ public class ContainerConfig {
                                 .binding(defaults.container.containerButtons,
                                         () -> config.container.containerButtons,
                                         newVal -> config.container.containerButtons = newVal)
-                                .controller(VolcClientConfig::createBooleanController).build())
+                                .controller(ConfigUtil::createBooleanController).build())
 
                         // Slot Binding
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Slot Binding"))
@@ -56,7 +56,7 @@ public class ContainerConfig {
                                 .binding(defaults.container.slotBinding,
                                         () -> config.container.slotBinding,
                                         newVal -> config.container.slotBinding = newVal)
-                                .controller(VolcClientConfig::createBooleanController).build())
+                                .controller(ConfigUtil::createBooleanController).build())
 
                         // Wardrobe Swap
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Wardrobe Swap"))
@@ -65,7 +65,7 @@ public class ContainerConfig {
                                 .binding(defaults.container.wardrobeSwap,
                                         () -> config.container.wardrobeSwap,
                                         newVal -> config.container.wardrobeSwap = newVal)
-                                .controller(VolcClientConfig::createBooleanController).build())
+                                .controller(ConfigUtil::createBooleanController).build())
 
                         .build())
 
@@ -80,7 +80,7 @@ public class ContainerConfig {
                                 .binding(defaults.container.attributeAbbreviation,
                                         () -> config.container.attributeAbbreviation,
                                         newVal -> config.container.attributeAbbreviation = newVal)
-                                .controller(VolcClientConfig::createBooleanController).build())
+                                .controller(ConfigUtil::createBooleanController).build())
 
                         // Armor Display
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Armor Display"))
@@ -89,7 +89,7 @@ public class ContainerConfig {
                                 .binding(defaults.container.armorDisplay,
                                         () -> config.container.armorDisplay,
                                         newVal -> config.container.armorDisplay = newVal)
-                                .controller(VolcClientConfig::createBooleanController).build())
+                                .controller(ConfigUtil::createBooleanController).build())
 
                         // Equipment Display
                         .option(Option.<Boolean>createBuilder()
@@ -99,7 +99,7 @@ public class ContainerConfig {
                                 .binding(defaults.container.equipmentDisplay,
                                         () -> config.container.equipmentDisplay,
                                         newVal -> config.container.equipmentDisplay = newVal)
-                                .controller(VolcClientConfig::createBooleanController).build())
+                                .controller(ConfigUtil::createBooleanController).build())
 
                         // Max Supercraft
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Max Supercraft"))
@@ -108,7 +108,7 @@ public class ContainerConfig {
                                 .binding(defaults.container.maxSupercraft,
                                         () -> config.container.maxSupercraft,
                                         newVal -> config.container.maxSupercraft = newVal)
-                                .controller(VolcClientConfig::createBooleanController).build())
+                                .controller(ConfigUtil::createBooleanController).build())
 
                         .build())
 

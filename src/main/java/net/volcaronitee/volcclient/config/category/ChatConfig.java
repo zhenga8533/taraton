@@ -8,10 +8,10 @@ import dev.isxander.yacl3.api.OptionGroup;
 import dev.isxander.yacl3.api.controller.StringControllerBuilder;
 import dev.isxander.yacl3.config.v2.api.SerialEntry;
 import net.minecraft.text.Text;
-import net.volcaronitee.volcclient.config.VolcClientConfig;
+import net.volcaronitee.volcclient.util.ConfigUtil;
 
 public class ChatConfig {
-    public static ConfigCategory create(VolcClientConfig defaults, VolcClientConfig config) {
+    public static ConfigCategory create(ConfigUtil defaults, ConfigUtil config) {
         return ConfigCategory.createBuilder().name(Text.literal("Chat"))
 
                 // Correct Option Group
@@ -25,7 +25,7 @@ public class ChatConfig {
                                 .binding(defaults.chat.autocompleteCommand,
                                         () -> config.chat.autocompleteCommand,
                                         newVal -> config.chat.autocompleteCommand = newVal)
-                                .controller(VolcClientConfig::createBooleanController).build())
+                                .controller(ConfigUtil::createBooleanController).build())
 
                         // Autocorrect Command
                         .option(Option.<Boolean>createBuilder()
@@ -35,7 +35,7 @@ public class ChatConfig {
                                 .binding(defaults.chat.autocorrectCommand,
                                         () -> config.chat.autocorrectCommand,
                                         newVal -> config.chat.autocorrectCommand = newVal)
-                                .controller(VolcClientConfig::createBooleanController).build())
+                                .controller(ConfigUtil::createBooleanController).build())
 
                         // Custom Emotes
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Custom Emotes"))
@@ -43,7 +43,7 @@ public class ChatConfig {
                                         "Allows the use of MVP++ emotes in chat. Customize your emotes using /vc emotes.")))
                                 .binding(defaults.chat.customEmotes, () -> config.chat.customEmotes,
                                         newVal -> config.chat.customEmotes = newVal)
-                                .controller(VolcClientConfig::createBooleanController).build())
+                                .controller(ConfigUtil::createBooleanController).build())
 
                         // Playtime Warning
                         .option(Option.<Boolean>createBuilder()
@@ -53,7 +53,7 @@ public class ChatConfig {
                                 .binding(defaults.chat.playtimeWarning,
                                         () -> config.chat.playtimeWarning,
                                         newVal -> config.chat.playtimeWarning = newVal)
-                                .controller(VolcClientConfig::createBooleanController).build())
+                                .controller(ConfigUtil::createBooleanController).build())
 
                         // Spam Hider
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Spam Hider"))
@@ -61,7 +61,7 @@ public class ChatConfig {
                                         "Hides spam messages in chat. Customize your spam filter using /vc spam.")))
                                 .binding(defaults.chat.spamHider, () -> config.chat.spamHider,
                                         newVal -> config.chat.spamHider = newVal)
-                                .controller(VolcClientConfig::createBooleanController).build())
+                                .controller(ConfigUtil::createBooleanController).build())
 
                         // Word Substitution
                         .option(Option.<Boolean>createBuilder()
@@ -71,7 +71,7 @@ public class ChatConfig {
                                 .binding(defaults.chat.textSubstitution,
                                         () -> config.chat.textSubstitution,
                                         newVal -> config.chat.textSubstitution = newVal)
-                                .controller(VolcClientConfig::createBooleanController).build())
+                                .controller(ConfigUtil::createBooleanController).build())
 
                         .build())
 
@@ -86,7 +86,7 @@ public class ChatConfig {
                                 .binding(defaults.chat.leaderCommands,
                                         () -> config.chat.leaderCommands,
                                         newVal -> config.chat.leaderCommands = newVal)
-                                .controller(VolcClientConfig::createBooleanController).build())
+                                .controller(ConfigUtil::createBooleanController).build())
 
                         // Party Commands
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Party Commands"))
@@ -95,7 +95,7 @@ public class ChatConfig {
                                 .binding(defaults.chat.partyCommands,
                                         () -> config.chat.partyCommands,
                                         newVal -> config.chat.partyCommands = newVal)
-                                .controller(VolcClientConfig::createBooleanController).build())
+                                .controller(ConfigUtil::createBooleanController).build())
 
                         // Guild Join Message
                         .option(Option.<String>createBuilder()
@@ -125,7 +125,7 @@ public class ChatConfig {
                                 .binding(defaults.chat.partyLeaderOnly,
                                         () -> config.chat.partyLeaderOnly,
                                         newVal -> config.chat.partyLeaderOnly = newVal)
-                                .controller(VolcClientConfig::createBooleanController).build())
+                                .controller(ConfigUtil::createBooleanController).build())
 
                         .build())
 
@@ -140,7 +140,7 @@ public class ChatConfig {
                                 .binding(defaults.chat.antiGhostParty,
                                         () -> config.chat.antiGhostParty,
                                         newVal -> config.chat.antiGhostParty = newVal)
-                                .controller(VolcClientConfig::createBooleanController).build())
+                                .controller(ConfigUtil::createBooleanController).build())
 
                         // Join Reparty
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Join Reparty"))
@@ -148,7 +148,7 @@ public class ChatConfig {
                                         "Automatically accepts reparty invites send within 60 seconds.")))
                                 .binding(defaults.chat.joinReparty, () -> config.chat.joinReparty,
                                         newVal -> config.chat.joinReparty = newVal)
-                                .controller(VolcClientConfig::createBooleanController).build())
+                                .controller(ConfigUtil::createBooleanController).build())
 
                         // Join Whitelist
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Join Whitelist"))
@@ -157,7 +157,7 @@ public class ChatConfig {
                                 .binding(defaults.chat.joinWhitelist,
                                         () -> config.chat.joinWhitelist,
                                         newVal -> config.chat.joinWhitelist = newVal)
-                                .controller(VolcClientConfig::createBooleanController).build())
+                                .controller(ConfigUtil::createBooleanController).build())
 
                         // Auto Transfer
                         .option(Option.<ChatConfig.AutoTransfer>createBuilder()
@@ -166,7 +166,7 @@ public class ChatConfig {
                                         "Automatically transfers party leadership when you leave the party.")))
                                 .binding(defaults.chat.autoTransfer, () -> config.chat.autoTransfer,
                                         newVal -> config.chat.autoTransfer = newVal)
-                                .controller(VolcClientConfig::createEnumController).build())
+                                .controller(ConfigUtil::createEnumController).build())
 
                         .build())
 

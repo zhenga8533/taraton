@@ -7,11 +7,11 @@ import dev.isxander.yacl3.api.OptionDescription;
 import dev.isxander.yacl3.api.OptionGroup;
 import dev.isxander.yacl3.config.v2.api.SerialEntry;
 import net.minecraft.text.Text;
-import net.volcaronitee.volcclient.config.VolcClientConfig;
-import net.volcaronitee.volcclient.config.VolcClientConfig.AnnounceWP;
+import net.volcaronitee.volcclient.util.ConfigUtil;
+import net.volcaronitee.volcclient.util.ConfigUtil.AnnounceWP;
 
 public class EventsConfig {
-    public static ConfigCategory create(VolcClientConfig defaults, VolcClientConfig config) {
+    public static ConfigCategory create(ConfigUtil defaults, ConfigUtil config) {
         return ConfigCategory.createBuilder().name(Text.literal("Events"))
 
                 // Diana Option Group
@@ -25,7 +25,7 @@ public class EventsConfig {
                                 .binding(defaults.events.burrowDetection,
                                         () -> config.events.burrowDetection,
                                         newVal -> config.events.burrowDetection = newVal)
-                                .controller(VolcClientConfig::createBooleanController).build())
+                                .controller(ConfigUtil::createBooleanController).build())
 
                         // Burrow Waypoints
                         .option(Option.<Boolean>createBuilder()
@@ -35,7 +35,7 @@ public class EventsConfig {
                                 .binding(defaults.events.burrowWaypoints,
                                         () -> config.events.burrowWaypoints,
                                         newVal -> config.events.burrowWaypoints = newVal)
-                                .controller(VolcClientConfig::createBooleanController).build())
+                                .controller(ConfigUtil::createBooleanController).build())
 
                         // Inquisitor Announce
                         .option(Option.<AnnounceWP>createBuilder()
@@ -45,7 +45,7 @@ public class EventsConfig {
                                 .binding(defaults.events.inquisitorAnnounce,
                                         () -> config.events.inquisitorAnnounce,
                                         newVal -> config.events.inquisitorAnnounce = newVal)
-                                .controller(VolcClientConfig::createEnumController).build())
+                                .controller(ConfigUtil::createEnumController).build())
 
                         // Inquisitor Detection
                         .option(Option.<Boolean>createBuilder()
@@ -55,7 +55,7 @@ public class EventsConfig {
                                 .binding(defaults.events.inquisitorDetection,
                                         () -> config.events.inquisitorDetection,
                                         newVal -> config.events.inquisitorDetection = newVal)
-                                .controller(VolcClientConfig::createBooleanController).build())
+                                .controller(ConfigUtil::createBooleanController).build())
 
                         .build())
 
@@ -70,7 +70,7 @@ public class EventsConfig {
                                 .binding(defaults.events.chocolateFactoryDisplay,
                                         () -> config.events.chocolateFactoryDisplay,
                                         newVal -> config.events.chocolateFactoryDisplay = newVal)
-                                .controller(VolcClientConfig::createBooleanController).build())
+                                .controller(ConfigUtil::createBooleanController).build())
 
                         // Egg Timers
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Egg Timers"))
@@ -78,7 +78,7 @@ public class EventsConfig {
                                         "Displays timers for upcoming rabbit eggs on the screen.")))
                                 .binding(defaults.events.eggTimers, () -> config.events.eggTimers,
                                         newVal -> config.events.eggTimers = newVal)
-                                .controller(VolcClientConfig::createBooleanController).build())
+                                .controller(ConfigUtil::createBooleanController).build())
 
                         // Egg Waypoints
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Egg Waypoints"))
@@ -87,7 +87,7 @@ public class EventsConfig {
                                 .binding(defaults.events.eggWaypoints,
                                         () -> config.events.eggWaypoints,
                                         newVal -> config.events.eggWaypoints = newVal)
-                                .controller(VolcClientConfig::createBooleanController).build())
+                                .controller(ConfigUtil::createBooleanController).build())
 
                         // Rabbit Worker Highlight
                         .option(Option.<RabbitWorkerHighlight>createBuilder()
@@ -97,7 +97,7 @@ public class EventsConfig {
                                 .binding(defaults.events.rabbitWorkerHighlight,
                                         () -> config.events.rabbitWorkerHighlight,
                                         newVal -> config.events.rabbitWorkerHighlight = newVal)
-                                .controller(VolcClientConfig::createEnumController).build())
+                                .controller(ConfigUtil::createEnumController).build())
 
                         // Stray Rabbit Alert
                         .option(Option.<StrayRabbitAlert>createBuilder()
@@ -107,7 +107,7 @@ public class EventsConfig {
                                 .binding(defaults.events.strayRabbitAlert,
                                         () -> config.events.strayRabbitAlert,
                                         newVal -> config.events.strayRabbitAlert = newVal)
-                                .controller(VolcClientConfig::createEnumController).build())
+                                .controller(ConfigUtil::createEnumController).build())
 
                         .build())
 
@@ -122,7 +122,7 @@ public class EventsConfig {
                                 .binding(defaults.events.bingoCardDisplay,
                                         () -> config.events.bingoCardDisplay,
                                         newVal -> config.events.bingoCardDisplay = newVal)
-                                .controller(VolcClientConfig::createEnumController).build())
+                                .controller(ConfigUtil::createEnumController).build())
 
                         // Calendar Time
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Calendar Time"))
@@ -131,7 +131,7 @@ public class EventsConfig {
                                 .binding(defaults.events.calendarTime,
                                         () -> config.events.calendarTime,
                                         newVal -> config.events.calendarTime = newVal)
-                                .controller(VolcClientConfig::createBooleanController).build())
+                                .controller(ConfigUtil::createBooleanController).build())
 
                         .build())
 

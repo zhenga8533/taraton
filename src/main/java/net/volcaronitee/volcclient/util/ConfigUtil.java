@@ -1,4 +1,4 @@
-package net.volcaronitee.volcclient.config;
+package net.volcaronitee.volcclient.util;
 
 import java.nio.file.Path;
 import dev.isxander.yacl3.api.NameableEnum;
@@ -27,11 +27,11 @@ import net.volcaronitee.volcclient.config.category.MiningConfig;
 import net.volcaronitee.volcclient.config.category.RiftConfig;
 import net.volcaronitee.volcclient.config.category.TemplateConfig;
 
-public class VolcClientConfig {
+public class ConfigUtil {
     private static final Path CONFIG_PATH =
             FabricLoader.getInstance().getConfigDir().resolve("volcclient/config.json");
-    private static final ConfigClassHandler<VolcClientConfig> HANDLER =
-            ConfigClassHandler.createBuilder(VolcClientConfig.class)
+    private static final ConfigClassHandler<ConfigUtil> HANDLER =
+            ConfigClassHandler.createBuilder(ConfigUtil.class)
                     .serializer(config -> GsonConfigSerializerBuilder.create(config)
                             .setPath(CONFIG_PATH).appendGsonBuilder(gsonBuilder -> gsonBuilder
                                     .setPrettyPrinting().disableHtmlEscaping().serializeNulls())

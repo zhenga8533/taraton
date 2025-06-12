@@ -9,10 +9,10 @@ import dev.isxander.yacl3.api.OptionGroup;
 import dev.isxander.yacl3.api.controller.ColorControllerBuilder;
 import dev.isxander.yacl3.config.v2.api.SerialEntry;
 import net.minecraft.text.Text;
-import net.volcaronitee.volcclient.config.VolcClientConfig;
+import net.volcaronitee.volcclient.util.ConfigUtil;
 
 public class DungeonsConfig {
-    public static ConfigCategory create(VolcClientConfig defaults, VolcClientConfig config) {
+    public static ConfigCategory create(ConfigUtil defaults, ConfigUtil config) {
         return ConfigCategory.createBuilder().name(Text.literal("Dungeons"))
 
                 // Chests Option Group
@@ -26,7 +26,7 @@ public class DungeonsConfig {
                                 .binding(defaults.dungeons.croseusHighlight,
                                         () -> config.dungeons.croseusHighlight,
                                         newVal -> config.dungeons.croseusHighlight = newVal)
-                                .controller(VolcClientConfig::createBooleanController).build())
+                                .controller(ConfigUtil::createBooleanController).build())
 
                         // Dungeon Profit
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Dungeon Profit"))
@@ -35,7 +35,7 @@ public class DungeonsConfig {
                                 .binding(defaults.dungeons.dungeonProfit,
                                         () -> config.dungeons.dungeonProfit,
                                         newVal -> config.dungeons.dungeonProfit = newVal)
-                                .controller(VolcClientConfig::createBooleanController).build())
+                                .controller(ConfigUtil::createBooleanController).build())
 
                         .build())
 
@@ -50,7 +50,7 @@ public class DungeonsConfig {
                                 .binding(defaults.dungeons.starMobHighlight,
                                         () -> config.dungeons.starMobHighlight,
                                         newVal -> config.dungeons.starMobHighlight = newVal)
-                                .controller(VolcClientConfig::createEnumController).build())
+                                .controller(ConfigUtil::createEnumController).build())
 
                         // Star Highlight Color
                         .option(Option.<Color>createBuilder()

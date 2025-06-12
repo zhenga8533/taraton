@@ -8,10 +8,10 @@ import dev.isxander.yacl3.api.OptionGroup;
 import dev.isxander.yacl3.api.controller.IntegerSliderControllerBuilder;
 import dev.isxander.yacl3.config.v2.api.SerialEntry;
 import net.minecraft.text.Text;
-import net.volcaronitee.volcclient.config.VolcClientConfig;
+import net.volcaronitee.volcclient.util.ConfigUtil;
 
 public class FarmingConfig {
-    public static ConfigCategory create(VolcClientConfig defaults, VolcClientConfig config) {
+    public static ConfigCategory create(ConfigUtil defaults, ConfigUtil config) {
         return ConfigCategory.createBuilder().name(Text.literal("Farming"))
 
                 // Garden Option Group
@@ -25,7 +25,7 @@ public class FarmingConfig {
                                 .binding(defaults.farming.composterDisplay,
                                         () -> config.farming.composterDisplay,
                                         newVal -> config.farming.composterDisplay = newVal)
-                                .controller(VolcClientConfig::createEnumController).build())
+                                .controller(ConfigUtil::createEnumController).build())
 
                         // Plot Bounding Box
                         .option(Option.<Boolean>createBuilder()
@@ -35,7 +35,7 @@ public class FarmingConfig {
                                 .binding(defaults.farming.plotBoundingBox,
                                         () -> config.farming.plotBoundingBox,
                                         newVal -> config.farming.plotBoundingBox = newVal)
-                                .controller(VolcClientConfig::createBooleanController).build())
+                                .controller(ConfigUtil::createBooleanController).build())
 
                         // Visitor Display
                         .option(Option.<Boolean>createBuilder()
@@ -45,7 +45,7 @@ public class FarmingConfig {
                                 .binding(defaults.farming.visitorDisplay,
                                         () -> config.farming.visitorDisplay,
                                         newVal -> config.farming.visitorDisplay = newVal)
-                                .controller(VolcClientConfig::createBooleanController).build())
+                                .controller(ConfigUtil::createBooleanController).build())
 
                         .build())
 
@@ -59,7 +59,7 @@ public class FarmingConfig {
                                 .binding(defaults.farming.deskHighlight,
                                         () -> config.farming.deskHighlight,
                                         newVal -> config.farming.deskHighlight = newVal)
-                                .controller(VolcClientConfig::createBooleanController).build())
+                                .controller(ConfigUtil::createBooleanController).build())
 
                         // Infestation Warning
                         .option(Option.<Integer>createBuilder()
@@ -79,7 +79,7 @@ public class FarmingConfig {
                                         "Displays a chat message and title when pests spawn in the garden.")))
                                 .binding(defaults.farming.pestAlert, () -> config.farming.pestAlert,
                                         newVal -> config.farming.pestAlert = newVal)
-                                .controller(VolcClientConfig::createBooleanController).build())
+                                .controller(ConfigUtil::createBooleanController).build())
 
                         // Spray Display
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Spray Display"))
@@ -88,7 +88,7 @@ public class FarmingConfig {
                                 .binding(defaults.farming.sprayDisplay,
                                         () -> config.farming.sprayDisplay,
                                         newVal -> config.farming.sprayDisplay = newVal)
-                                .controller(VolcClientConfig::createBooleanController).build())
+                                .controller(ConfigUtil::createBooleanController).build())
 
                         .build())
 

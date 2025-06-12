@@ -6,11 +6,11 @@ import dev.isxander.yacl3.api.OptionDescription;
 import dev.isxander.yacl3.api.OptionGroup;
 import dev.isxander.yacl3.config.v2.api.SerialEntry;
 import net.minecraft.text.Text;
-import net.volcaronitee.volcclient.config.VolcClientConfig;
-import net.volcaronitee.volcclient.config.VolcClientConfig.AnnounceWP;
+import net.volcaronitee.volcclient.util.ConfigUtil;
+import net.volcaronitee.volcclient.util.ConfigUtil.AnnounceWP;
 
 public class CrimsonIslesConfig {
-    public static ConfigCategory create(VolcClientConfig defaults, VolcClientConfig config) {
+    public static ConfigCategory create(ConfigUtil defaults, ConfigUtil config) {
         return ConfigCategory.createBuilder().name(Text.literal("Crimson Isles"))
 
                 // Fishing Option Group
@@ -25,7 +25,7 @@ public class CrimsonIslesConfig {
                                         () -> config.crimsonIsles.mythicLavaCreatureAnnounce,
                                         newVal -> config.crimsonIsles.mythicLavaCreatureAnnounce =
                                                 newVal)
-                                .controller(VolcClientConfig::createEnumController).build())
+                                .controller(ConfigUtil::createEnumController).build())
 
                         // Mythic Lava Creature Highlight
                         .option(Option.<Boolean>createBuilder()
@@ -36,7 +36,7 @@ public class CrimsonIslesConfig {
                                         () -> config.crimsonIsles.mythicLavaCreatureHighlight,
                                         newVal -> config.crimsonIsles.mythicLavaCreatureHighlight =
                                                 newVal)
-                                .controller(VolcClientConfig::createBooleanController).build())
+                                .controller(ConfigUtil::createBooleanController).build())
 
                         // Golden Fish Timer
                         .option(Option.<Boolean>createBuilder()
@@ -46,7 +46,7 @@ public class CrimsonIslesConfig {
                                 .binding(defaults.crimsonIsles.goldenFishTimer,
                                         () -> config.crimsonIsles.goldenFishTimer,
                                         newVal -> config.crimsonIsles.goldenFishTimer = newVal)
-                                .controller(VolcClientConfig::createBooleanController).build())
+                                .controller(ConfigUtil::createBooleanController).build())
 
                         // Trophy Fisher Display
                         .option(Option.<Boolean>createBuilder()
@@ -56,7 +56,7 @@ public class CrimsonIslesConfig {
                                 .binding(defaults.crimsonIsles.trophyFisherDisplay,
                                         () -> config.crimsonIsles.trophyFisherDisplay,
                                         newVal -> config.crimsonIsles.trophyFisherDisplay = newVal)
-                                .controller(VolcClientConfig::createBooleanController).build())
+                                .controller(ConfigUtil::createBooleanController).build())
 
                         .build())
 
@@ -71,7 +71,7 @@ public class CrimsonIslesConfig {
                                 .binding(defaults.crimsonIsles.vanquisherAnnounce,
                                         () -> config.crimsonIsles.vanquisherAnnounce,
                                         newVal -> config.crimsonIsles.vanquisherAnnounce = newVal)
-                                .controller(VolcClientConfig::createEnumController).build())
+                                .controller(ConfigUtil::createEnumController).build())
 
                         // Vanquisher Highlight
                         .option(Option.<Boolean>createBuilder()
@@ -81,7 +81,7 @@ public class CrimsonIslesConfig {
                                 .binding(defaults.crimsonIsles.vanquisherHighlight,
                                         () -> config.crimsonIsles.vanquisherHighlight,
                                         newVal -> config.crimsonIsles.vanquisherHighlight = newVal)
-                                .controller(VolcClientConfig::createBooleanController).build())
+                                .controller(ConfigUtil::createBooleanController).build())
 
                         // Vanquisher Warp
                         .option(Option.<Boolean>createBuilder()
@@ -91,7 +91,7 @@ public class CrimsonIslesConfig {
                                 .binding(defaults.crimsonIsles.vanquisherWarp,
                                         () -> config.crimsonIsles.vanquisherWarp,
                                         newVal -> config.crimsonIsles.vanquisherWarp = newVal)
-                                .controller(VolcClientConfig::createBooleanController).build())
+                                .controller(ConfigUtil::createBooleanController).build())
 
                         .build())
 

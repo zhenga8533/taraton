@@ -10,11 +10,11 @@ import dev.isxander.yacl3.api.controller.ColorControllerBuilder;
 import dev.isxander.yacl3.api.controller.IntegerSliderControllerBuilder;
 import dev.isxander.yacl3.config.v2.api.SerialEntry;
 import net.minecraft.text.Text;
-import net.volcaronitee.volcclient.config.VolcClientConfig;
-import net.volcaronitee.volcclient.config.VolcClientConfig.AnnounceWP;
+import net.volcaronitee.volcclient.util.ConfigUtil;
+import net.volcaronitee.volcclient.util.ConfigUtil.AnnounceWP;
 
 public class CombatConfig {
-    public static ConfigCategory create(VolcClientConfig defaults, VolcClientConfig config) {
+    public static ConfigCategory create(ConfigUtil defaults, ConfigUtil config) {
         return ConfigCategory.createBuilder().name(Text.literal("Combat"))
 
                 // Bestiary Option Group
@@ -27,7 +27,7 @@ public class CombatConfig {
                                 .binding(defaults.combat.bestiaryCounter,
                                         () -> config.combat.bestiaryCounter,
                                         newVal -> config.combat.bestiaryCounter = newVal)
-                                .controller(VolcClientConfig::createEnumController).build())
+                                .controller(ConfigUtil::createEnumController).build())
 
                         // Bestiary Menu
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Bestiary Menu"))
@@ -36,7 +36,7 @@ public class CombatConfig {
                                 .binding(defaults.combat.bestiaryMenu,
                                         () -> config.combat.bestiaryMenu,
                                         newVal -> config.combat.bestiaryMenu = newVal)
-                                .controller(VolcClientConfig::createBooleanController).build())
+                                .controller(ConfigUtil::createBooleanController).build())
 
                         // Hitbox Color
                         .option(Option.<Color>createBuilder().name(Text.literal("Hitbox Color"))
@@ -72,7 +72,7 @@ public class CombatConfig {
                                 .binding(defaults.combat.comboDisplay,
                                         () -> config.combat.comboDisplay,
                                         newVal -> config.combat.comboDisplay = newVal)
-                                .controller(VolcClientConfig::createBooleanController).build())
+                                .controller(ConfigUtil::createBooleanController).build())
 
                         // Damage Tracer
                         .option(Option.<DamageTracer>createBuilder()
@@ -82,7 +82,7 @@ public class CombatConfig {
                                 .binding(defaults.combat.damageTracer,
                                         () -> config.combat.damageTracer,
                                         newVal -> config.combat.damageTracer = newVal)
-                                .controller(VolcClientConfig::createEnumController).build())
+                                .controller(ConfigUtil::createEnumController).build())
 
                         // Low Health Warning
                         .option(Option.<Integer>createBuilder()
@@ -104,7 +104,7 @@ public class CombatConfig {
                                 .binding(defaults.combat.manaDrainRange,
                                         () -> config.combat.manaDrainRange,
                                         newVal -> config.combat.manaDrainRange = newVal)
-                                .controller(VolcClientConfig::createBooleanController).build())
+                                .controller(ConfigUtil::createBooleanController).build())
 
                         // Ragnarok Detection
                         .option(Option.<Boolean>createBuilder()
@@ -114,7 +114,7 @@ public class CombatConfig {
                                 .binding(defaults.combat.ragnarokDetection,
                                         () -> config.combat.ragnarokDetection,
                                         newVal -> config.combat.ragnarokDetection = newVal)
-                                .controller(VolcClientConfig::createBooleanController).build())
+                                .controller(ConfigUtil::createBooleanController).build())
 
                         .build())
 
@@ -129,7 +129,7 @@ public class CombatConfig {
                                 .binding(defaults.combat.slayerBossAnnounce,
                                         () -> config.combat.slayerBossAnnounce,
                                         newVal -> config.combat.slayerBossAnnounce = newVal)
-                                .controller(VolcClientConfig::createEnumController).build())
+                                .controller(ConfigUtil::createEnumController).build())
 
                         // Slayer Boss Highlight
                         .option(Option.<Boolean>createBuilder()
@@ -139,7 +139,7 @@ public class CombatConfig {
                                 .binding(defaults.combat.slayerBossHighlight,
                                         () -> config.combat.slayerBossHighlight,
                                         newVal -> config.combat.slayerBossHighlight = newVal)
-                                .controller(VolcClientConfig::createBooleanController).build())
+                                .controller(ConfigUtil::createBooleanController).build())
 
                         // Slayer Miniboss Announce
                         .option(Option.<AnnounceWP>createBuilder()
@@ -149,7 +149,7 @@ public class CombatConfig {
                                 .binding(defaults.combat.slayerMinibossAnnounce,
                                         () -> config.combat.slayerMinibossAnnounce,
                                         newVal -> config.combat.slayerMinibossAnnounce = newVal)
-                                .controller(VolcClientConfig::createEnumController).build())
+                                .controller(ConfigUtil::createEnumController).build())
 
                         // Slayer Miniboss Highlight
                         .option(Option.<Boolean>createBuilder()
@@ -159,7 +159,7 @@ public class CombatConfig {
                                 .binding(defaults.combat.slayerMinibossHighlight,
                                         () -> config.combat.slayerMinibossHighlight,
                                         newVal -> config.combat.slayerMinibossHighlight = newVal)
-                                .controller(VolcClientConfig::createBooleanController).build())
+                                .controller(ConfigUtil::createBooleanController).build())
 
                         // Slayer Spawn Warning
                         .option(Option.<Integer>createBuilder()

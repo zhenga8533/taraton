@@ -8,8 +8,8 @@ import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.text.Text;
-import net.volcaronitee.volcclient.VolcClientScreen;
-import net.volcaronitee.volcclient.config.VolcClientConfig;
+import net.volcaronitee.volcclient.util.ConfigUtil;
+import net.volcaronitee.volcclient.util.ScreenUtil;
 
 public class VolcClientCommand {
     private static final String[] ALIASES = {"vc", "volc", "volcclient"};
@@ -49,8 +49,8 @@ public class VolcClientCommand {
             return 0;
         }
 
-        VolcClientScreen screen = new VolcClientScreen();
-        client.setScreen(VolcClientConfig.createScreen(screen));
+        ScreenUtil screen = new ScreenUtil();
+        client.setScreen(ConfigUtil.createScreen(screen));
         return 1;
     }
 

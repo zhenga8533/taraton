@@ -6,10 +6,10 @@ import dev.isxander.yacl3.api.OptionDescription;
 import dev.isxander.yacl3.api.OptionGroup;
 import dev.isxander.yacl3.config.v2.api.SerialEntry;
 import net.minecraft.text.Text;
-import net.volcaronitee.volcclient.config.VolcClientConfig;
+import net.volcaronitee.volcclient.util.ConfigUtil;
 
 public class KuudraConfig {
-    public static ConfigCategory create(VolcClientConfig defaults, VolcClientConfig config) {
+    public static ConfigCategory create(ConfigUtil defaults, ConfigUtil config) {
         return ConfigCategory.createBuilder().name(Text.literal("Kuudra"))
 
                 // Kuudra Profit Option Group
@@ -22,7 +22,7 @@ public class KuudraConfig {
                                 .binding(defaults.kuudra.kuudraProfit,
                                         () -> config.kuudra.kuudraProfit,
                                         newVal -> config.kuudra.kuudraProfit = newVal)
-                                .controller(VolcClientConfig::createBooleanController).build())
+                                .controller(ConfigUtil::createBooleanController).build())
 
                         // Kuudra Profit Tracker
                         .option(Option.<Boolean>createBuilder()
@@ -32,7 +32,7 @@ public class KuudraConfig {
                                 .binding(defaults.kuudra.kuudraProfitTracker,
                                         () -> config.kuudra.kuudraProfitTracker,
                                         newVal -> config.kuudra.kuudraProfitTracker = newVal)
-                                .controller(VolcClientConfig::createBooleanController).build())
+                                .controller(ConfigUtil::createBooleanController).build())
 
                         // Tabasco Included
                         .option(Option.<Boolean>createBuilder()
@@ -42,7 +42,7 @@ public class KuudraConfig {
                                 .binding(defaults.kuudra.tabascoIncluded,
                                         () -> config.kuudra.tabascoIncluded,
                                         newVal -> config.kuudra.tabascoIncluded = newVal)
-                                .controller(VolcClientConfig::createBooleanController).build())
+                                .controller(ConfigUtil::createBooleanController).build())
 
                         .build())
 
@@ -56,7 +56,7 @@ public class KuudraConfig {
                                 .binding(defaults.kuudra.kuudraAlerts,
                                         () -> config.kuudra.kuudraAlerts,
                                         newVal -> config.kuudra.kuudraAlerts = newVal)
-                                .controller(VolcClientConfig::createBooleanController).build())
+                                .controller(ConfigUtil::createBooleanController).build())
 
                         // Kuudra Crate Waypoints
                         .option(Option.<Boolean>createBuilder()
@@ -66,7 +66,7 @@ public class KuudraConfig {
                                 .binding(defaults.kuudra.kuudraCrateWaypoints,
                                         () -> config.kuudra.kuudraCrateWaypoints,
                                         newVal -> config.kuudra.kuudraCrateWaypoints = newVal)
-                                .controller(VolcClientConfig::createBooleanController).build())
+                                .controller(ConfigUtil::createBooleanController).build())
 
                         // Kuudra Fresh Tracking
                         .option(Option.<Boolean>createBuilder()
@@ -76,7 +76,7 @@ public class KuudraConfig {
                                 .binding(defaults.kuudra.kuudraFreshTracking,
                                         () -> config.kuudra.kuudraFreshTracking,
                                         newVal -> config.kuudra.kuudraFreshTracking = newVal)
-                                .controller(VolcClientConfig::createBooleanController).build())
+                                .controller(ConfigUtil::createBooleanController).build())
 
                         // Kuudra HP Display
                         .option(Option.<Boolean>createBuilder()
@@ -86,7 +86,7 @@ public class KuudraConfig {
                                 .binding(defaults.kuudra.kuudraHpDisplay,
                                         () -> config.kuudra.kuudraHpDisplay,
                                         newVal -> config.kuudra.kuudraHpDisplay = newVal)
-                                .controller(VolcClientConfig::createBooleanController).build())
+                                .controller(ConfigUtil::createBooleanController).build())
 
                         // Kuudra Spawn Alert
                         .option(Option.<Boolean>createBuilder()
@@ -96,7 +96,7 @@ public class KuudraConfig {
                                 .binding(defaults.kuudra.kuudraSpawnAlert,
                                         () -> config.kuudra.kuudraSpawnAlert,
                                         newVal -> config.kuudra.kuudraSpawnAlert = newVal)
-                                .controller(VolcClientConfig::createBooleanController).build())
+                                .controller(ConfigUtil::createBooleanController).build())
 
                         // Kuudra Splits Timer
                         .option(Option.<Boolean>createBuilder()
@@ -106,7 +106,7 @@ public class KuudraConfig {
                                 .binding(defaults.kuudra.kuudraSplitsTimer,
                                         () -> config.kuudra.kuudraSplitsTimer,
                                         newVal -> config.kuudra.kuudraSplitsTimer = newVal)
-                                .controller(VolcClientConfig::createBooleanController).build())
+                                .controller(ConfigUtil::createBooleanController).build())
 
                         // Kuudra Supply Piles
                         .option(Option.<Boolean>createBuilder()
@@ -116,7 +116,7 @@ public class KuudraConfig {
                                 .binding(defaults.kuudra.kuudraSupplyPiles,
                                         () -> config.kuudra.kuudraSupplyPiles,
                                         newVal -> config.kuudra.kuudraSupplyPiles = newVal)
-                                .controller(VolcClientConfig::createBooleanController).build())
+                                .controller(ConfigUtil::createBooleanController).build())
 
                         .build())
 

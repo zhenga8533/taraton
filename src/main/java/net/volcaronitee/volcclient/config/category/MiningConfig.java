@@ -7,10 +7,10 @@ import dev.isxander.yacl3.api.OptionGroup;
 import dev.isxander.yacl3.api.controller.IntegerSliderControllerBuilder;
 import dev.isxander.yacl3.config.v2.api.SerialEntry;
 import net.minecraft.text.Text;
-import net.volcaronitee.volcclient.config.VolcClientConfig;
+import net.volcaronitee.volcclient.util.ConfigUtil;
 
 public class MiningConfig {
-    public static ConfigCategory create(VolcClientConfig defaults, VolcClientConfig config) {
+    public static ConfigCategory create(ConfigUtil defaults, ConfigUtil config) {
         return ConfigCategory.createBuilder().name(Text.literal("Mining"))
 
                 // Commission Option Group
@@ -24,7 +24,7 @@ public class MiningConfig {
                                 .binding(defaults.mining.commissionCompletion,
                                         () -> config.mining.commissionCompletion,
                                         newVal -> config.mining.commissionCompletion = newVal)
-                                .controller(VolcClientConfig::createBooleanController).build())
+                                .controller(ConfigUtil::createBooleanController).build())
 
                         // Commission Display
                         .option(Option.<Boolean>createBuilder()
@@ -34,7 +34,7 @@ public class MiningConfig {
                                 .binding(defaults.mining.commissionDisplay,
                                         () -> config.mining.commissionDisplay,
                                         newVal -> config.mining.commissionDisplay = newVal)
-                                .controller(VolcClientConfig::createBooleanController).build())
+                                .controller(ConfigUtil::createBooleanController).build())
 
                         // Commission Waypoints
                         .option(Option.<Boolean>createBuilder()
@@ -44,7 +44,7 @@ public class MiningConfig {
                                 .binding(defaults.mining.commissionWaypoints,
                                         () -> config.mining.commissionWaypoints,
                                         newVal -> config.mining.commissionWaypoints = newVal)
-                                .controller(VolcClientConfig::createBooleanController).build())
+                                .controller(ConfigUtil::createBooleanController).build())
 
                         .build())
 
@@ -87,7 +87,7 @@ public class MiningConfig {
                                 .binding(defaults.mining.pickaxeAbilityDisplay,
                                         () -> config.mining.pickaxeAbilityDisplay,
                                         newVal -> config.mining.pickaxeAbilityDisplay = newVal)
-                                .controller(VolcClientConfig::createBooleanController).build())
+                                .controller(ConfigUtil::createBooleanController).build())
 
                         // Wishing Compass Locator
                         .option(Option.<Boolean>createBuilder()
@@ -97,7 +97,7 @@ public class MiningConfig {
                                 .binding(defaults.mining.wishingCompassLocator,
                                         () -> config.mining.wishingCompassLocator,
                                         newVal -> config.mining.wishingCompassLocator = newVal)
-                                .controller(VolcClientConfig::createBooleanController).build())
+                                .controller(ConfigUtil::createBooleanController).build())
 
                         .build())
 
@@ -112,7 +112,7 @@ public class MiningConfig {
                                 .binding(defaults.mining.corpseWaypoints,
                                         () -> config.mining.corpseWaypoints,
                                         newVal -> config.mining.corpseWaypoints = newVal)
-                                .controller(VolcClientConfig::createBooleanController).build())
+                                .controller(ConfigUtil::createBooleanController).build())
 
                         // Fossil Solver
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Fossil Solver"))
@@ -121,7 +121,7 @@ public class MiningConfig {
                                 .binding(defaults.mining.fossilSolver,
                                         () -> config.mining.fossilSolver,
                                         newVal -> config.mining.fossilSolver = newVal)
-                                .controller(VolcClientConfig::createBooleanController).build())
+                                .controller(ConfigUtil::createBooleanController).build())
 
                         .build())
 
