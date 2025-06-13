@@ -2,7 +2,9 @@ package net.volcaronitee.volcclient.util;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Supplier;
+import com.google.gson.JsonObject;
 import net.fabricmc.fabric.api.client.rendering.v1.HudLayerRegistrationCallback;
 import net.fabricmc.fabric.api.client.rendering.v1.LayeredDrawerWrapper;
 import net.minecraft.client.MinecraftClient;
@@ -13,26 +15,67 @@ import net.minecraft.text.Text;
 
 public class OverlayUtil {
     private static final OverlayUtil INSTANCE = new OverlayUtil();
-    private static final ArrayList<Overlay> OVERLAYS = new ArrayList<>();
 
+    /**
+     * Returns the singleton instance of OverlayUtil.
+     *
+     * @return The OverlayUtil instance.
+     */
+    public static OverlayUtil getInstance() {
+        return INSTANCE;
+    }
+
+    private static final Map<String, Overlay> OVERLAYS = new java.util.HashMap<>();
     public static boolean globalMoveMode = false;
+
+    private OverlayUtil() {}
 
     public static void init() {
         HudLayerRegistrationCallback.EVENT.register(OverlayUtil::renderOverlays);
     }
 
-    public static OverlayUtil getInstance() {
-        return INSTANCE;
+    public static void createOverlay(String name, Supplier<Boolean> shouldRender,
+            List<LineContent> templateLines) {
+        JsonObject overlayJson = JsonUtil.getInstance().loadJson(name + ".json");
+        int x = overlayJson.has("x") ? overlayJson.get("x").getAsInt() : 0;
+        int y = overlayJson.has("y") ? overlayJson.get("y").getAsInt() : 0;
+        float scale = overlayJson.has("scale") ? overlayJson.get("scale").getAsFloat() : 1.0f;
+
+        OVERLAYS.put(name, new Overlay(x, y, scale, shouldRender, templateLines));
     }
 
-    public void createOverlay(int initialX, int initialY, Supplier<Boolean> shouldRender,
-            List<LineContent> templateLines) {
-        OVERLAYS.add(new Overlay(initialX, initialY, shouldRender, templateLines));
+    public void resetOverlay(String name) {
+        Overlay overlay = OVERLAYS.get(name);
+        if (overlay != null) {
+            JsonObject templateJson = JsonUtil.getInstance().loadTemplate(name + ".json");
+            int x = templateJson.has("x") ? templateJson.get("x").getAsInt() : 0;
+            int y = templateJson.has("y") ? templateJson.get("y").getAsInt() : 0;
+            float scale = templateJson.has("scale") ? templateJson.get("scale").getAsFloat() : 1.0f;
+
+            overlay.setX(x);
+            overlay.setY(y);
+            overlay.scale = scale;
+            overlay.recalculateSize();
+        }
     }
 
     public static void renderOverlays(LayeredDrawerWrapper context) {
-        for (Overlay overlay : OVERLAYS) {
+        for (Overlay overlay : OVERLAYS.values()) {
             overlay.render((DrawContext) context);
+        }
+    }
+
+    public static void saveOverlays() {
+        for (Map.Entry<String, Overlay> entry : OVERLAYS.entrySet()) {
+            String name = entry.getKey();
+            Overlay overlay = entry.getValue();
+
+            JsonObject overlayJson = new JsonObject();
+            overlayJson.addProperty("x", overlay.getX());
+            overlayJson.addProperty("y", overlay.getY());
+            overlayJson.addProperty("scale", overlay.scale);
+
+            JsonUtil.getInstance().saveJson("overlays", name + ".json", overlayJson);
         }
     }
 
@@ -50,8 +93,9 @@ public class OverlayUtil {
         }
     }
 
-    public class Overlay {
+    public static class Overlay {
         private int x, y;
+        private float scale;
         private boolean dragging = false;
         private int offsetX, offsetY;
 
@@ -59,13 +103,23 @@ public class OverlayUtil {
         private final List<LineContent> activeLines;
         private final List<LineContent> templateLines;
 
-        private int width = 0;
-        private int height = 0;
+        private float width = 0;
+        private float height = 0;
 
-        public Overlay(int initialX, int initialY, Supplier<Boolean> shouldRender,
+        /**
+         * Creates a new Overlay instance.
+         *
+         * @param initialX The initial X position of the overlay.
+         * @param initialY The initial Y position of the overlay.
+         * @param scale The scale factor for the overlay.
+         * @param shouldRender A supplier that determines if the overlay should be rendered.
+         * @param templateLines The template lines to be displayed in the overlay.
+         */
+        public Overlay(int initialX, int initialY, float scale, Supplier<Boolean> shouldRender,
                 List<LineContent> templateLines) {
             this.x = initialX;
             this.y = initialY;
+            this.scale = scale;
             this.shouldRender = shouldRender;
             this.activeLines = new ArrayList<>(templateLines);
             this.templateLines = templateLines;
@@ -78,38 +132,28 @@ public class OverlayUtil {
 
             TextRenderer tr = MinecraftClient.getInstance().textRenderer;
 
-            int maxWidth = 0;
-            int lineHeight = 18;
-            int totalHeight = 0;
+            float lineHeight = 18 * scale;
 
             List<LineContent> linesToRender = globalMoveMode ? templateLines : activeLines;
 
             for (int i = 0; i < linesToRender.size(); i++) {
                 LineContent line = linesToRender.get(i);
-                int offsetX = 0;
-                int drawY = y + (i * lineHeight);
+                float offsetX = 0;
+                float drawY = y + (i * lineHeight);
 
                 for (ItemStack stack : line.items) {
-                    context.drawItem(stack, x + offsetX, drawY);
-                    offsetX += 18;
+                    context.drawItem(stack, (int) (x + offsetX), (int) drawY);
+                    offsetX += 18 * scale;
                 }
 
-                context.drawText(tr, line.text, x + offsetX, drawY + 4, 0xAAAAAA, true);
-
-                int lineWidth = offsetX + tr.getWidth(line.text);
-                maxWidth = Math.max(maxWidth, lineWidth);
-                totalHeight += lineHeight;
+                context.drawText(tr, line.text, (int) (x + offsetX), (int) (drawY + 4 * scale),
+                        0xAAAAAA, true);
             }
-
-            this.width = maxWidth;
-            this.height = totalHeight;
         }
 
         public void updateMouse(double mx, double my, boolean isDown) {
-            if (!globalMoveMode)
-                return;
-
-            if (isMouseOver(mx, my)) {
+            // Check if the mouse is within the overlay bounds
+            if (mx >= x && mx <= x + width && my >= y && my <= y + height) {
                 if (isDown && !dragging) {
                     dragging = true;
                     offsetX = (int) mx - x;
@@ -126,19 +170,15 @@ public class OverlayUtil {
             }
         }
 
-        public boolean isMouseOver(double mx, double my) {
-            return mx >= x && mx <= x + width && my >= y && my <= y + height;
-        }
-
         public void recalculateSize() {
             TextRenderer tr = MinecraftClient.getInstance().textRenderer;
 
-            int maxWidth = 0;
-            int totalHeight = 0;
-            int lineHeight = 18;
+            float maxWidth = 0;
+            float totalHeight = 0;
+            float lineHeight = 18 * scale;
 
             for (LineContent line : templateLines) {
-                int lineWidth = (line.items.size() * 18) + tr.getWidth(line.text);
+                float lineWidth = (line.items.size() * 18 + tr.getWidth(line.text) * scale);
                 maxWidth = Math.max(maxWidth, lineWidth);
                 totalHeight += lineHeight;
             }
