@@ -3,6 +3,8 @@ package net.volcaronitee.volcclient.util;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
+import net.fabricmc.fabric.api.client.rendering.v1.HudLayerRegistrationCallback;
+import net.fabricmc.fabric.api.client.rendering.v1.LayeredDrawerWrapper;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
@@ -10,18 +12,27 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
 
 public class OverlayUtil {
-    private ArrayList<Overlay> overlays = new ArrayList<>();
+    private static final OverlayUtil INSTANCE = new OverlayUtil();
+    private static final ArrayList<Overlay> OVERLAYS = new ArrayList<>();
 
     public static boolean globalMoveMode = false;
 
-    public void createOverlay(int initialX, int initialY, Supplier<Boolean> shouldRender,
-            List<LineContent> templateLines) {
-        overlays.add(new Overlay(initialX, initialY, shouldRender, templateLines));
+    public static void init() {
+        HudLayerRegistrationCallback.EVENT.register(OverlayUtil::renderOverlays);
     }
 
-    public void renderOverlays(DrawContext context) {
-        for (Overlay overlay : overlays) {
-            overlay.render(context);
+    public static OverlayUtil getInstance() {
+        return INSTANCE;
+    }
+
+    public void createOverlay(int initialX, int initialY, Supplier<Boolean> shouldRender,
+            List<LineContent> templateLines) {
+        OVERLAYS.add(new Overlay(initialX, initialY, shouldRender, templateLines));
+    }
+
+    public static void renderOverlays(LayeredDrawerWrapper context) {
+        for (Overlay overlay : OVERLAYS) {
+            overlay.render((DrawContext) context);
         }
     }
 

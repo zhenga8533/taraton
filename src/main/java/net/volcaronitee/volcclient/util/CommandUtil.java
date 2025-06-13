@@ -1,4 +1,4 @@
-package net.volcaronitee.volcclient.command;
+package net.volcaronitee.volcclient.util;
 
 import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.literal;
 import com.mojang.brigadier.CommandDispatcher;
@@ -8,13 +8,11 @@ import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.text.Text;
-import net.volcaronitee.volcclient.util.ConfigUtil;
-import net.volcaronitee.volcclient.util.ScreenUtil;
 
-public class VolcClientCommand {
+public class CommandUtil {
     private static final String[] ALIASES = {"vc", "volc", "volcclient"};
 
-    public static void register() {
+    public static void init() {
         ClientCommandRegistrationCallback.EVENT
                 .register((CommandDispatcher<FabricClientCommandSource> dispatcher,
                         CommandRegistryAccess access) -> {
@@ -22,10 +20,10 @@ public class VolcClientCommand {
                         dispatcher.register(literal(alias).executes(context -> help(context))
 
                                 // Help command
-                                .then(literal("help").executes(VolcClientCommand::help))
+                                .then(literal("help").executes(CommandUtil::help))
 
                                 // Settings command
-                                .then(literal("settings").executes(VolcClientCommand::settings))
+                                .then(literal("settings").executes(CommandUtil::settings))
 
                         // Command End
                         );
