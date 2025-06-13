@@ -9,9 +9,15 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.text.Text;
 
+/**
+ * Utility class for handling client commands.
+ */
 public class CommandUtil {
     private static final String[] ALIASES = {"vc", "volc", "volcclient"};
 
+    /*
+     * Initializes the client command registration for Volc Client.
+     */
     public static void init() {
         ClientCommandRegistrationCallback.EVENT
                 .register((CommandDispatcher<FabricClientCommandSource> dispatcher,
@@ -31,6 +37,12 @@ public class CommandUtil {
                 });
     }
 
+    /**
+     * Displays help information for the Volc Client commands.
+     * 
+     * @param context The command context containing the source and arguments.
+     * @return 1 if the command was executed successfully, 0 otherwise.
+     */
     private static int help(CommandContext<FabricClientCommandSource> context) {
         FabricClientCommandSource source = context.getSource();
         if (source.getPlayer() == null || source.getWorld() == null) {
@@ -41,6 +53,12 @@ public class CommandUtil {
         return 1;
     }
 
+    /**
+     * Opens the settings screen for Volc Client.
+     * 
+     * @param context The command context containing the source and arguments.
+     * @return 1 if the command was executed successfully, 0 otherwise.
+     */
     private static int settings(CommandContext<FabricClientCommandSource> context) {
         MinecraftClient client = MinecraftClient.getInstance();
         if (client.player == null || client.world == null) {

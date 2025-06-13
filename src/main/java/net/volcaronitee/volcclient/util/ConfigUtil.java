@@ -27,6 +27,9 @@ import net.volcaronitee.volcclient.config.category.MiningConfig;
 import net.volcaronitee.volcclient.config.category.RiftConfig;
 import net.volcaronitee.volcclient.config.category.TemplateConfig;
 
+/**
+ * Utility class for handling configuration settings.
+ */
 public class ConfigUtil {
     private static final Path CONFIG_PATH =
             FabricLoader.getInstance().getConfigDir().resolve("volcclient/config.json");
@@ -38,10 +41,19 @@ public class ConfigUtil {
                             .build())
                     .build();
 
+    /**
+     * Initializes the configuration handler for Volc Client.
+     */
     public static void init() {
         HANDLER.load();
     }
 
+    /**
+     * Creates a configuration screen for Volc Client.
+     * 
+     * @param parent The parent screen to attach the configuration screen to.
+     * @return A new configuration screen for Volc Client.
+     */
     public static Screen createScreen(Screen parent) {
         return YetAnotherConfigLib.create(HANDLER, (defaults, config, builder) -> {
             builder.title(Text.literal("Volc Client Config"))
@@ -63,10 +75,24 @@ public class ConfigUtil {
         }).generateScreen(parent);
     }
 
+    /**
+     * Creates a boolean controller for a given option.
+     * 
+     * @param opt The option to create a boolean controller for.
+     * @return A BooleanControllerBuilder for the specified option.
+     */
     public static BooleanControllerBuilder createBooleanController(Option<Boolean> opt) {
         return BooleanControllerBuilder.create(opt).yesNoFormatter().coloured(true);
     }
 
+    /**
+     * Creates a boolean controller for a given option with custom true and false strings.
+     * 
+     * @param opt The option to create a boolean controller for.
+     * @param trueString The string to display when the option is true.
+     * @param falseString The string to display when the option is false.
+     * @return A BooleanControllerBuilder for the specified option with custom strings.
+     */
     public static BooleanControllerBuilder createBooleanController(Option<Boolean> opt,
             String trueString, String falseString) {
         return BooleanControllerBuilder.create(opt)
@@ -74,6 +100,13 @@ public class ConfigUtil {
                 .coloured(true);
     }
 
+    /**
+     * Creates an enum controller for a given option.
+     * 
+     * @param <E> The type of the enum.
+     * @param opt The option to create an enum controller for.
+     * @return An EnumControllerBuilder for the specified option.
+     */
     @SuppressWarnings("unchecked")
     public static <E extends Enum<E>> EnumControllerBuilder<E> createEnumController(Option<E> opt) {
         return EnumControllerBuilder.create(opt)

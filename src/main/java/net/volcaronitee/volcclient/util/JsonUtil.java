@@ -10,12 +10,15 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import net.fabricmc.loader.api.FabricLoader;
 
+/**
+ * Utility class for handling JSON file operations.
+ */
 public class JsonUtil {
     private static final JsonUtil INSTANCE = new JsonUtil();
 
     /**
      * Returns the singleton instance of JsonUtil.
-     *
+     * 
      * @return The JsonUtil instance.
      */
     public static JsonUtil getInstance() {
@@ -46,7 +49,7 @@ public class JsonUtil {
 
     /**
      * Loads a JSON file, creating it if it doesn't exist.
-     *
+     * 
      * @param fileName The name of the JSON file to load.
      * @return The loaded JsonObject, or an empty JsonObject if the file doesn't exist.
      */
@@ -75,6 +78,14 @@ public class JsonUtil {
         }
     }
 
+    /**
+     * Loads a JSON template file from the templates directory.
+     * 
+     * @param fileName The name of the template file to load.
+     * @return The loaded JsonObject from the template file.
+     * @throws RuntimeException if the template file does not exist or cannot be read.
+     * @throws IOException if an I/O error occurs while reading the file.
+     */
     public JsonObject loadTemplate(String fileName) {
         Path templatePath = TEMPLATE_DIR.resolve(fileName);
 
@@ -93,7 +104,7 @@ public class JsonUtil {
 
     /**
      * Saves a JsonObject to a JSON file.
-     *
+     * 
      * @param fileDir The directory extension to save the JSON file in.
      * @param fileName The name of the JSON file to save.
      * @param jsonObject The JsonObject to save.

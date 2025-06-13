@@ -13,12 +13,15 @@ import net.minecraft.client.gui.DrawContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
 
+/**
+ * Utility class for handling overlays.
+ */
 public class OverlayUtil {
     private static final OverlayUtil INSTANCE = new OverlayUtil();
 
     /**
      * Returns the singleton instance of OverlayUtil.
-     *
+     * 
      * @return The OverlayUtil instance.
      */
     public static OverlayUtil getInstance() {
@@ -28,12 +31,25 @@ public class OverlayUtil {
     private static final Map<String, Overlay> OVERLAYS = new java.util.HashMap<>();
     public static boolean globalMoveMode = false;
 
+    /**
+     * Private constructor to prevent instantiation.
+     */
     private OverlayUtil() {}
 
+    /**
+     * Initializes the OverlayUtil by registering the overlay rendering callback.
+     */
     public static void init() {
         HudLayerRegistrationCallback.EVENT.register(OverlayUtil::renderOverlays);
     }
 
+    /**
+     * Creates a new overlay with the specified name, rendering condition, and template lines.
+     * 
+     * @param name The name of the overlay.
+     * @param shouldRender A supplier that determines if the overlay should be rendered.
+     * @param templateLines The template lines to be displayed in the overlay.
+     */
     public static void createOverlay(String name, Supplier<Boolean> shouldRender,
             List<LineContent> templateLines) {
         JsonObject overlayJson = JsonUtil.getInstance().loadJson(name + ".json");
@@ -44,6 +60,11 @@ public class OverlayUtil {
         OVERLAYS.put(name, new Overlay(x, y, scale, shouldRender, templateLines));
     }
 
+    /**
+     * Resets the overlay with the specified name to its template values.
+     * 
+     * @param name The name of the overlay to reset.
+     */
     public void resetOverlay(String name) {
         Overlay overlay = OVERLAYS.get(name);
         if (overlay != null) {
@@ -52,47 +73,76 @@ public class OverlayUtil {
             int y = templateJson.has("y") ? templateJson.get("y").getAsInt() : 0;
             float scale = templateJson.has("scale") ? templateJson.get("scale").getAsFloat() : 1.0f;
 
-            overlay.setX(x);
-            overlay.setY(y);
+            overlay.x = x;
+            overlay.y = y;
             overlay.scale = scale;
             overlay.recalculateSize();
         }
     }
 
+    /**
+     * Renders all overlays using the provided context.
+     * 
+     * @param context The context to use for rendering overlays.
+     */
     public static void renderOverlays(LayeredDrawerWrapper context) {
         for (Overlay overlay : OVERLAYS.values()) {
             overlay.render((DrawContext) context);
         }
     }
 
+    /**
+     * Updates the mouse position and state for all overlays.
+     * 
+     * @param mx The mouse X position.
+     * @param my The mouse Y position.
+     * @param isDown Whether the mouse button is pressed.
+     */
     public static void saveOverlays() {
         for (Map.Entry<String, Overlay> entry : OVERLAYS.entrySet()) {
             String name = entry.getKey();
             Overlay overlay = entry.getValue();
 
             JsonObject overlayJson = new JsonObject();
-            overlayJson.addProperty("x", overlay.getX());
-            overlayJson.addProperty("y", overlay.getY());
+            overlayJson.addProperty("x", overlay.x);
+            overlayJson.addProperty("y", overlay.y);
             overlayJson.addProperty("scale", overlay.scale);
 
             JsonUtil.getInstance().saveJson("overlays", name + ".json", overlayJson);
         }
     }
 
+    /**
+     * Represents the content of a line in an overlay, containing a list of item stacks and text.
+     */
     public static class LineContent {
         public final List<ItemStack> items;
         public Text text;
 
+        /**
+         * Creates a new LineContent instance with the specified items and text.
+         * 
+         * @param items The list of item stacks to display in the line.
+         * @param text The text to display in the line.
+         */
         public LineContent(List<ItemStack> items, Text text) {
             this.items = items;
             this.text = text;
         }
 
+        /**
+         * Changes the text of this line content to a new Text instance.
+         * 
+         * @param newText The new Text instance to set for this line content.
+         */
         public void changeText(Text newText) {
             this.text = newText;
         }
     }
 
+    /**
+     * Represents an overlay that can be rendered on the screen, containing lines of content.
+     */
     public static class Overlay {
         private int x, y;
         private float scale;
@@ -108,7 +158,7 @@ public class OverlayUtil {
 
         /**
          * Creates a new Overlay instance.
-         *
+         * 
          * @param initialX The initial X position of the overlay.
          * @param initialY The initial Y position of the overlay.
          * @param scale The scale factor for the overlay.
@@ -126,6 +176,11 @@ public class OverlayUtil {
             recalculateSize();
         }
 
+        /**
+         * Renders the overlay using the provided context.
+         * 
+         * @param context The context to use for rendering the overlay.
+         */
         private void render(DrawContext context) {
             if (!shouldRender.get())
                 return;
@@ -151,6 +206,13 @@ public class OverlayUtil {
             }
         }
 
+        /**
+         * Updates the mouse position and state for the overlay, allowing it to be dragged.
+         * 
+         * @param mx The mouse X position.
+         * @param my The mouse Y position.
+         * @param isDown Whether the mouse button is pressed.
+         */
         public void updateMouse(double mx, double my, boolean isDown) {
             // Check if the mouse is within the overlay bounds
             if (mx >= x && mx <= x + width && my >= y && my <= y + height) {
@@ -170,6 +232,9 @@ public class OverlayUtil {
             }
         }
 
+        /**
+         * Recalculates the size of the overlay based on its content.
+         */
         public void recalculateSize() {
             TextRenderer tr = MinecraftClient.getInstance().textRenderer;
 
@@ -185,22 +250,6 @@ public class OverlayUtil {
 
             this.width = maxWidth;
             this.height = totalHeight;
-        }
-
-        public int getX() {
-            return x;
-        }
-
-        public int getY() {
-            return y;
-        }
-
-        public void setX(int newX) {
-            x = newX;
-        }
-
-        public void setY(int newY) {
-            y = newY;
         }
     }
 }
