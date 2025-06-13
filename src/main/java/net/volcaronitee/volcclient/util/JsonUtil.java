@@ -1,0 +1,119 @@
+package net.volcaronitee.volcclient.util;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import net.fabricmc.loader.api.FabricLoader;
+
+public class JsonUtil {
+    private static final JsonUtil INSTANCE = new JsonUtil();
+
+    /**
+     * Returns the singleton instance of JsonUtil.
+     *
+     * @return The JsonUtil instance.
+     */
+    public static JsonUtil getInstance() {
+        return INSTANCE;
+    }
+
+    private static final Path CONFIG_DIR =
+            FabricLoader.getInstance().getConfigDir().resolve("volcclient");
+    private static final Path JSON_DIR = CONFIG_DIR.resolve("json");
+    private static final Path TEMPLATE_DIR = JSON_DIR.resolve("json_templates");
+
+    private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
+
+    static {
+        // Ensure directories exist
+        try {
+            Files.createDirectories(JSON_DIR);
+            Files.createDirectories(TEMPLATE_DIR);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /*
+     * Private constructor to prevent instantiation.
+     */
+    private JsonUtil() {}
+
+    /**
+     * Loads a JSON file, creating it if it doesn't exist.
+     *
+     * @param fileName The name of the JSON file to load.
+     * @return The loaded JsonObject, or an empty JsonObject if the file doesn't exist.
+     */
+    public JsonObject loadJson(String fileName) {
+        Path filePath = JSON_DIR.resolve(fileName);
+
+        try {
+            if (!Files.exists(filePath)) {
+                // Create from template if it doesn't exist
+                Path templatePath = TEMPLATE_DIR.resolve(fileName);
+                if (Files.exists(templatePath)) {
+                    // Copy template to JSON directory
+                    Files.copy(templatePath, filePath);
+                } else {
+                    // Create an empty JSON file if no template exists
+                    Files.write(filePath, "{}".getBytes(), StandardOpenOption.CREATE);
+                }
+            }
+
+            // Read and parse the JSON file
+            String content = Files.readString(filePath);
+            return JsonParser.parseString(content).getAsJsonObject();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return new JsonObject();
+        }
+    }
+
+    public JsonObject loadTemplate(String fileName) {
+        Path templatePath = TEMPLATE_DIR.resolve(fileName);
+
+        try {
+            if (!Files.exists(templatePath)) {
+                throw new IOException("Template file does not exist: " + templatePath);
+            }
+
+            String content = Files.readString(templatePath);
+            return JsonParser.parseString(content).getAsJsonObject();
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Failed to load template: " + fileName, e);
+        }
+    }
+
+    /**
+     * Saves a JsonObject to a JSON file.
+     *
+     * @param fileDir The directory extension to save the JSON file in.
+     * @param fileName The name of the JSON file to save.
+     * @param jsonObject The JsonObject to save.
+     */
+    public void saveJson(String fileDir, String fileName, JsonObject jsonObject) {
+        Path filePath;
+
+        // Handle root directory case
+        if (fileDir == null || fileDir.isEmpty() || fileDir.equals("/")) {
+            filePath = JSON_DIR.resolve(fileName);
+        } else {
+            filePath = JSON_DIR.resolve(fileDir).resolve(fileName);
+        }
+
+        try {
+            // Write the JSON object to the file
+            Files.write(filePath, GSON.toJson(jsonObject).getBytes(), StandardOpenOption.CREATE,
+                    StandardOpenOption.TRUNCATE_EXISTING);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}
