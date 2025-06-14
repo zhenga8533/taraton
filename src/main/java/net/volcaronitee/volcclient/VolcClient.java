@@ -6,6 +6,7 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.loader.api.ModContainer;
 import net.volcaronitee.volcclient.util.CommandUtil;
 import net.volcaronitee.volcclient.util.ConfigUtil;
+import net.volcaronitee.volcclient.util.FeatureUtil;
 import net.volcaronitee.volcclient.util.OverlayUtil;
 
 public class VolcClient implements ClientModInitializer {
@@ -22,6 +23,7 @@ public class VolcClient implements ClientModInitializer {
     public void onInitializeClient() {
         CommandUtil.init();
         ConfigUtil.init();
+        FeatureUtil.init();
         OverlayUtil.init();
     }
 }

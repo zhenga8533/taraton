@@ -49,6 +49,15 @@ public class ConfigUtil {
     }
 
     /**
+     * Gets the configuration handler for Volc Client.
+     * 
+     * @return The ConfigClassHandler for Volc Client.
+     */
+    public static ConfigUtil getHandler() {
+        return HANDLER.instance();
+    }
+
+    /**
      * Creates a configuration screen for Volc Client.
      * 
      * @param parent The parent screen to attach the configuration screen to.

@@ -18,7 +18,7 @@ public class GeneralConfig {
                 // Essential Option Group
                 .group(OptionGroup.createBuilder().name(Text.literal("Essential"))
 
-                        // Mod Enabled
+                        // TODO: Mod Enabled
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Mod Enabled"))
                                 .description(OptionDescription.of(Text.literal("Enables the mod.")))
                                 .binding(defaults.general.modEnabled,
@@ -26,7 +26,7 @@ public class GeneralConfig {
                                         newVal -> config.general.modEnabled = newVal)
                                 .controller(ConfigUtil::createBooleanController).build())
 
-                        // SkyBlock Only
+                        // TODO: SkyBlock Only
                         .option(Option.<Boolean>createBuilder().name(Text.literal("SkyBlock Only"))
                                 .description(OptionDescription
                                         .of(Text.literal("Enables the mod only in SkyBlock.")))
@@ -35,7 +35,7 @@ public class GeneralConfig {
                                         newVal -> config.general.skyblockOnly = newVal)
                                 .controller(ConfigUtil::createBooleanController).build())
 
-                        // Socket Connection
+                        // TODO: Socket Connection
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Socket Connection"))
                                 .description(OptionDescription.of(Text.literal(
@@ -59,7 +59,7 @@ public class GeneralConfig {
                 // General Option Group
                 .group(OptionGroup.createBuilder().name(Text.literal("General"))
 
-                        // Remove Selfie Mode
+                        // TODO: Remove Selfie Mode
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Remove Selfie Mode"))
                                 .description(OptionDescription.of(Text.literal(
@@ -69,7 +69,7 @@ public class GeneralConfig {
                                         newVal -> config.general.removeSelfieMode = newVal)
                                 .controller(ConfigUtil::createBooleanController).build())
 
-                        // Skill Tracker
+                        // TODO: Skill Tracker
                         .option(Option.<Integer>createBuilder().name(Text.literal("Skill Tracker"))
                                 .description(OptionDescription.of(Text.literal(
                                         "Tracks skill progress on the screen. Sets time in minutes of inactivity needed before tracking stops.")))
@@ -80,7 +80,7 @@ public class GeneralConfig {
                                         .range(0, 10).step(1))
                                 .build())
 
-                        // SkyBlock XP Alert
+                        // TODO: SkyBlock XP Alert
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("SkyBlock XP Alert"))
                                 .description(OptionDescription.of(Text.literal(
@@ -90,7 +90,7 @@ public class GeneralConfig {
                                         newVal -> config.general.skyblockXpAlert = newVal)
                                 .controller(ConfigUtil::createBooleanController).build())
 
-                        // Waypoint Timeout
+                        // TODO: Waypoint Timeout
                         .option(Option.<Integer>createBuilder()
                                 .name(Text.literal("Waypoint Timeout"))
                                 .description(OptionDescription.of(Text.literal(
@@ -102,7 +102,7 @@ public class GeneralConfig {
                                         .range(0, 120).step(10))
                                 .build())
 
-                        // Widget Display
+                        // TODO: Widget Display
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Widget Display"))
                                 .description(OptionDescription.of(Text.literal(
                                         "Displays SkyBlock widgets on the screen. Set which widgets to display using /vc widgets.")))
@@ -116,7 +116,7 @@ public class GeneralConfig {
                 // Server Option Group
                 .group(OptionGroup.createBuilder().name(Text.literal("Server"))
 
-                        // Fairy Soul Waypoints
+                        // TODO: Fairy Soul Waypoints
                         .option(Option.<Integer>createBuilder()
                                 .name(Text.literal("Fairy Soul Waypoints"))
                                 .description(OptionDescription.of(Text.literal(
@@ -128,7 +128,7 @@ public class GeneralConfig {
                                         .range(0, 128).step(4))
                                 .build())
 
-                        // Hide Far Entities
+                        // TODO: Hide Far Entities
                         .option(Option.<Integer>createBuilder()
                                 .name(Text.literal("Hide Far Entities"))
                                 .description(OptionDescription.of(Text.literal(
@@ -140,7 +140,7 @@ public class GeneralConfig {
                                         .range(0, 128).step(4))
                                 .build())
 
-                        // Hide Close Players
+                        // TODO: Hide Close Players
                         .option(Option.<Integer>createBuilder()
                                 .name(Text.literal("Hide Close Players"))
                                 .description(OptionDescription.of(Text.literal(
@@ -152,7 +152,7 @@ public class GeneralConfig {
                                         .range(0, 128).step(4))
                                 .build())
 
-                        // Hide All Particles
+                        // TODO: Hide All Particles
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Hide All Particles"))
                                 .description(OptionDescription
@@ -162,7 +162,7 @@ public class GeneralConfig {
                                         newVal -> config.general.hideAllParticles = newVal)
                                 .controller(ConfigUtil::createBooleanController).build())
 
-                        // Server Rejoin Alert
+                        // TODO: Server Rejoin Alert
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Server Rejoin Alert"))
                                 .description(OptionDescription.of(Text
@@ -172,7 +172,7 @@ public class GeneralConfig {
                                         newVal -> config.general.serverRejoinAlert = newVal)
                                 .controller(ConfigUtil::createBooleanController).build())
 
-                        // Server Status
+                        // TODO: Server Status
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Server Status"))
                                 .description(OptionDescription
                                         .of(Text.literal("Displays various server information.")))
@@ -181,7 +181,7 @@ public class GeneralConfig {
                                         newVal -> config.general.serverStatus = newVal)
                                 .controller(ConfigUtil::createBooleanController).build())
 
-                        // Stats Display
+                        // TODO: Stats Display
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Stats Display"))
                                 .description(OptionDescription
                                         .of(Text.literal("Displays various player stats.")))
@@ -195,7 +195,7 @@ public class GeneralConfig {
                 // Timer Option Group
                 .group(OptionGroup.createBuilder().name(Text.literal("Timer"))
 
-                        // Item Cooldown Alert
+                        // TODO: Item Cooldown Alert
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Item Cooldown Alert"))
                                 .description(OptionDescription.of(Text.literal(
@@ -205,7 +205,7 @@ public class GeneralConfig {
                                         newVal -> config.general.itemCooldownAlert = newVal)
                                 .controller(ConfigUtil::createBooleanController).build())
 
-                        // Reminder Text
+                        // TODO: Reminder Text
                         .option(Option.<String>createBuilder().name(Text.literal("Reminder Text"))
                                 .description(OptionDescription
                                         .of(Text.literal("Sets the text for the reminder alert.")))
@@ -214,7 +214,7 @@ public class GeneralConfig {
                                         newVal -> config.general.reminderText = newVal)
                                 .controller(opt -> StringControllerBuilder.create(opt)).build())
 
-                        // Reminder Timer
+                        // TODO: Reminder Timer
                         .option(Option.<Integer>createBuilder().name(Text.literal("Reminder Timer"))
                                 .description(OptionDescription.of(Text.literal(
                                         "Sets the time in seconds for the reminder alert.")))
