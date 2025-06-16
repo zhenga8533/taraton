@@ -15,6 +15,62 @@ public class LocationUtil {
     private String map = "";
     private String mode = "";
     private ServerType serverType;
+    private World world = World.UNKNOWN;
+
+    /**
+     * Enum representing different worlds in Hypixel SkyBlock.
+     */
+    public enum World {
+        // @formatter:off
+        UNKNOWN("unknown"),
+        PRIVATE_ISLAND("dynamic"),
+        GARDEN("garden"),
+        HUB("hub"),
+        DARK_AUCTION("dark_auction"),
+        DUNGEON_HUB("dungeon_hub"),
+        THE_FARMING_ISLANDS("farming_1"),
+        THE_PARK("foraging_1"),
+        SPIDERS_DEN("combat_1"),
+        BLAZING_FORTRESS("combat_2"),
+        THE_END("combat_3"),
+        CRIMSON_ISLE("crimson_isle"),
+        GOLD_MINE("mining_1"),
+        DEEP_CAVERN("mining_2"),
+        DWARVEN_MINES("mining_3"),
+        CRYSTAL_HOLLOWS("crystal_hollows"),
+        BACKWATER_BAYOU("fishing_1"),
+        WINTER_ISLAND("winter"),
+        THE_RIFT("rift"),
+        DUNGEON("dungeon"),
+        KUUDRA("kuudra");
+        // @formatter:on
+
+        private final String internalName;
+
+        /**
+         * Constructor for the World enum.
+         * 
+         * @param internalName The internal name of the world used in the Hypixel API.
+         */
+        World(String internalName) {
+            this.internalName = internalName;
+        }
+
+        /**
+         * Returns the internal name of the world.
+         * 
+         * @param name The internal name of the world to match.
+         * @return The World enum constant that matches the internal name, or null if not found.
+         */
+        public static World fromInternalName(String name) {
+            for (World world : values()) {
+                if (world.internalName.equalsIgnoreCase(name)) {
+                    return world;
+                }
+            }
+            return null;
+        }
+    }
 
     /**
      * Private constructor to prevent instantiation.
@@ -48,6 +104,7 @@ public class LocationUtil {
         INSTANCE.map = packet.getMap().orElse("");
         INSTANCE.mode = packet.getMode().orElse("");
         INSTANCE.serverType = packet.getServerType().orElse(ServerType.valueOf("UNKNOWN").get());
+        INSTANCE.world = World.fromInternalName(INSTANCE.map);
     }
 
     /**
@@ -62,6 +119,7 @@ public class LocationUtil {
         debugMessage.append("Map: ").append(INSTANCE.map).append("\n");
         debugMessage.append("Mode: ").append(INSTANCE.mode).append("\n");
         debugMessage.append("Type: ").append(INSTANCE.serverType).append("\n");
+        debugMessage.append("World: ").append(INSTANCE.world.name()).append("\n");
         return debugMessage.toString();
     }
 }
