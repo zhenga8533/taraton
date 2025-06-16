@@ -14,7 +14,7 @@ public class LocationUtil {
     private String lobbyName = "";
     private String map = "";
     private String mode = "";
-    private ServerType serverType;
+    private ServerType serverType = ServerType.valueOf("UNKNOWN").get();
     private World world = World.UNKNOWN;
 
     /**
@@ -105,6 +105,60 @@ public class LocationUtil {
         INSTANCE.mode = packet.getMode().orElse("");
         INSTANCE.serverType = packet.getServerType().orElse(ServerType.valueOf("UNKNOWN").get());
         INSTANCE.world = World.fromInternalName(INSTANCE.map);
+    }
+
+    /**
+     * Returns the name of the server.
+     * 
+     * @return The name of the server.
+     */
+    public String getServerName() {
+        return serverName;
+    }
+
+    /**
+     * Returns the name of the lobby.
+     * 
+     * @return The name of the lobby, or an empty string if not available.
+     */
+    public String getLobbyName() {
+        return lobbyName;
+    }
+
+    /**
+     * Returns the name of the map.
+     * 
+     * @return The name of the map, or an empty string if not available.
+     */
+    public String getMap() {
+        return map;
+    }
+
+    /**
+     * Returns the mode of the game.
+     * 
+     * @return The mode of the game, or an empty string if not available.
+     */
+    public String getMode() {
+        return mode;
+    }
+
+    /**
+     * Returns the type of the server.
+     * 
+     * @return The type of the server, or UNKNOWN if not available.
+     */
+    public ServerType getServerType() {
+        return serverType;
+    }
+
+    /**
+     * Returns the current world based on the map name.
+     * 
+     * @return The World enum constant representing the current world, or UNKNOWN if not recognized.
+     */
+    public World getWorld() {
+        return world;
     }
 
     /**

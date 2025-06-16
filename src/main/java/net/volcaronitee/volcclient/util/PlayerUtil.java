@@ -55,6 +55,42 @@ public class PlayerUtil {
     }
 
     /**
+     * Returns the player's monthly package rank.
+     * 
+     * @return The MonthlyPackageRank of the player.
+     */
+    public static MonthlyPackageRank getMonthlyPackageRank() {
+        return INSTANCE.monthlyPackageRank;
+    }
+
+    /**
+     * Returns the player's package rank.
+     * 
+     * @return The PackageRank of the player.
+     */
+    public static PackageRank getPackageRank() {
+        return INSTANCE.packageRank;
+    }
+
+    /**
+     * Returns the player's rank.
+     * 
+     * @return The PlayerRank of the player.
+     */
+    public static PlayerRank getPlayerRank() {
+        return INSTANCE.playerRank;
+    }
+
+    /**
+     * Returns the player's prefix.
+     * 
+     * @return The prefix of the player, or an empty string if not available.
+     */
+    public static String getPrefix() {
+        return INSTANCE.prefix;
+    }
+
+    /**
      * Returns a debug message containing the current player information.
      * 
      * @return A formatted string with the player's monthly package rank, package rank, player rank,

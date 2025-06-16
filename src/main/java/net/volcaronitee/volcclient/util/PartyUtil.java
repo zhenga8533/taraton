@@ -65,6 +65,42 @@ public class PartyUtil {
     }
 
     /**
+     * Checks if the player is currently in a party.
+     * 
+     * @return True if the player is in a party, false otherwise.
+     */
+    public boolean isInParty() {
+        return inParty;
+    }
+
+    /**
+     * Gets the username of the party leader.
+     * 
+     * @return The username of the party leader, or an empty string if not in a party.
+     */
+    public String getLeader() {
+        return leader;
+    }
+
+    /**
+     * Gets the set of usernames of party moderators.
+     * 
+     * @return A set of usernames of party moderators, or an empty set if not in a party.
+     */
+    public Set<String> getModerators() {
+        return moderators;
+    }
+
+    /**
+     * Gets the set of usernames of party members.
+     * 
+     * @return A set of usernames of party members, or an empty set if not in a party.
+     */
+    public Set<String> getMembers() {
+        return members;
+    }
+
+    /**
      * Returns a debug message containing the current party information.
      * 
      * @return A formatted string with party details including leader, moderators, and members.
