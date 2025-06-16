@@ -9,6 +9,9 @@ import java.util.UUID;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+/**
+ * Utility class for fetching player information from Mojang's session server.
+ */
 public class MojangUtil {
 
     /**
