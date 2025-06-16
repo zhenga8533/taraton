@@ -17,6 +17,11 @@ public class LocationUtil {
     private ServerType serverType;
 
     /**
+     * Private constructor to prevent instantiation.
+     */
+    private LocationUtil() {}
+
+    /**
      * Returns the singleton instance of LocationUtil.
      * 
      * @return The LocationUtil instance.
@@ -24,11 +29,6 @@ public class LocationUtil {
     public static LocationUtil getInstance() {
         return INSTANCE;
     }
-
-    /**
-     * Private constructor to prevent instantiation.
-     */
-    private LocationUtil() {}
 
     public static void register() {
         HypixelModAPI.getInstance().subscribeToEventPacket(ClientboundLocationPacket.class);
@@ -38,7 +38,7 @@ public class LocationUtil {
 
     /**
      * Handles the ClientboundLocationPacket to update the location information. This method
-     * extracts the server name, lobby name, map, mode, server type, and version.
+     * extracts the server name, lobby name, map, mode, server type, and version from the packet.
      * 
      * @param packet The ClientboundLocationPacket containing the location data.
      */

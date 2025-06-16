@@ -17,6 +17,11 @@ public class PartyUtil {
     private Set<String> members = Set.of();
 
     /**
+     * Private constructor to prevent instantiation.
+     */
+    private PartyUtil() {}
+
+    /**
      * Returns the singleton instance of PartyUtil.
      * 
      * @return The PartyUtil instance.
@@ -24,11 +29,6 @@ public class PartyUtil {
     public static PartyUtil getInstance() {
         return INSTANCE;
     }
-
-    /**
-     * Private constructor to prevent instantiation.
-     */
-    private PartyUtil() {}
 
     /**
      * Registers the packet listener for Hypixel party updates.
@@ -39,8 +39,9 @@ public class PartyUtil {
     }
 
     /**
-     * Handles the ClientboundPartyPacket and updates party-related information.
-     *
+     * Handles the ClientboundPartyPacket and updates party-related information. This method
+     * extracts the party leader, moderators, and members from the packet.
+     * 
      * @param packet The party packet from Hypixel.
      */
     private static void handlePartyPacket(ClientboundPartyInfoPacket packet) {

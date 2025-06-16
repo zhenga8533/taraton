@@ -31,6 +31,9 @@ public class CommandUtil {
                                 // Settings command
                                 .then(literal("settings").executes(CommandUtil::settings))
 
+                                // Debug command
+                                .then(literal("debug").executes(CommandUtil::debug))
+
                         // Command End
                         );
                     }
@@ -70,4 +73,23 @@ public class CommandUtil {
         return 1;
     }
 
+    /**
+     * Displays debug information for the Volc Client.
+     * 
+     * @param context The command context containing the source and arguments.
+     * @return 1 if the command was executed successfully, 0 otherwise.
+     */
+    private static int debug(CommandContext<FabricClientCommandSource> context) {
+        FabricClientCommandSource source = context.getSource();
+        if (source.getPlayer() == null || source.getWorld() == null) {
+            return 0;
+        }
+
+        StringBuilder debugMessage = new StringBuilder("Volc Client Debug:\n");
+        debugMessage.append(PlayerUtil.debugPlayer()).append("\n");
+        debugMessage.append(LocationUtil.debugLocation()).append("\n");
+        debugMessage.append(PartyUtil.debugParty());
+        source.sendFeedback(Text.literal(debugMessage.toString()));
+        return 1;
+    }
 }
