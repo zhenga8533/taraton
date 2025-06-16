@@ -12,13 +12,18 @@ base {
 
 repositories {
 	maven {
-		name 'Xander Maven'
-		url 'https://maven.isxander.dev/releases'
+		name "Xander Maven"
+		url "https://maven.isxander.dev/releases"
 	}
 
 	maven {
-    name = "Terraformers"
-    url = "https://maven.terraformersmc.com/"
+    name "Terraformers"
+    url "https://maven.terraformersmc.com/"
+  }
+
+  maven {
+    name "Hypixel"
+    url "https://repo.hypixel.net/repository/Hypixel/"
   }
 }
 
@@ -40,6 +45,7 @@ dependencies {
 	// Custom
 	modImplementation "dev.isxander:yet-another-config-lib:${project.yacl_version}"
 	modImplementation "com.terraformersmc:modmenu:${project.modmenu_version}"
+  implementation "net.hypixel:mod-api:1.0.1"
 }
 
 processResources {
