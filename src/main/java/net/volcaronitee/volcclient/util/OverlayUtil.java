@@ -52,7 +52,7 @@ public class OverlayUtil {
      */
     public static void createOverlay(String name, Supplier<Boolean> shouldRender,
             List<LineContent> templateLines) {
-        JsonObject overlayJson = JsonUtil.getInstance().loadJson(name + ".json");
+        JsonObject overlayJson = JsonUtil.loadJson(name + ".json");
         int x = overlayJson.has("x") ? overlayJson.get("x").getAsInt() : 0;
         int y = overlayJson.has("y") ? overlayJson.get("y").getAsInt() : 0;
         float scale = overlayJson.has("scale") ? overlayJson.get("scale").getAsFloat() : 1.0f;
@@ -68,7 +68,7 @@ public class OverlayUtil {
     public void resetOverlay(String name) {
         Overlay overlay = OVERLAYS.get(name);
         if (overlay != null) {
-            JsonObject templateJson = JsonUtil.getInstance().loadTemplate(name + ".json");
+            JsonObject templateJson = JsonUtil.loadTemplate(name + ".json");
             int x = templateJson.has("x") ? templateJson.get("x").getAsInt() : 0;
             int y = templateJson.has("y") ? templateJson.get("y").getAsInt() : 0;
             float scale = templateJson.has("scale") ? templateJson.get("scale").getAsFloat() : 1.0f;
@@ -108,7 +108,7 @@ public class OverlayUtil {
             overlayJson.addProperty("y", overlay.y);
             overlayJson.addProperty("scale", overlay.scale);
 
-            JsonUtil.getInstance().saveJson("overlays", name + ".json", overlayJson);
+            JsonUtil.saveJson("overlays", name + ".json", overlayJson);
         }
     }
 

@@ -14,17 +14,6 @@ import net.fabricmc.loader.api.FabricLoader;
  * Utility class for handling JSON file operations.
  */
 public class JsonUtil {
-    private static final JsonUtil INSTANCE = new JsonUtil();
-
-    /**
-     * Returns the singleton instance of JsonUtil.
-     * 
-     * @return The JsonUtil instance.
-     */
-    public static JsonUtil getInstance() {
-        return INSTANCE;
-    }
-
     private static final Path CONFIG_DIR =
             FabricLoader.getInstance().getConfigDir().resolve("volcclient");
     private static final Path JSON_DIR = CONFIG_DIR.resolve("json");
@@ -42,18 +31,13 @@ public class JsonUtil {
         }
     }
 
-    /*
-     * Private constructor to prevent instantiation.
-     */
-    private JsonUtil() {}
-
     /**
      * Loads a JSON file, creating it if it doesn't exist.
      * 
      * @param fileName The name of the JSON file to load.
      * @return The loaded JsonObject, or an empty JsonObject if the file doesn't exist.
      */
-    public JsonObject loadJson(String fileName) {
+    public static JsonObject loadJson(String fileName) {
         Path filePath = JSON_DIR.resolve(fileName);
 
         try {
@@ -86,7 +70,7 @@ public class JsonUtil {
      * @throws RuntimeException if the template file does not exist or cannot be read.
      * @throws IOException if an I/O error occurs while reading the file.
      */
-    public JsonObject loadTemplate(String fileName) {
+    public static JsonObject loadTemplate(String fileName) {
         Path templatePath = TEMPLATE_DIR.resolve(fileName);
 
         try {
@@ -109,7 +93,7 @@ public class JsonUtil {
      * @param fileName The name of the JSON file to save.
      * @param jsonObject The JsonObject to save.
      */
-    public void saveJson(String fileDir, String fileName, JsonObject jsonObject) {
+    public static void saveJson(String fileDir, String fileName, JsonObject jsonObject) {
         Path filePath;
 
         // Handle root directory case
