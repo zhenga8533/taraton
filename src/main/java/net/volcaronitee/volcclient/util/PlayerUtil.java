@@ -17,7 +17,6 @@ public class PlayerUtil {
     private PlayerRank playerRank = PlayerRank.NORMAL;
     private String prefix = "";
 
-
     /**
      * Private constructor to prevent instantiation.
      */
