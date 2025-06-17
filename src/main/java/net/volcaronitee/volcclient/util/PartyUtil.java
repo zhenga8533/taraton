@@ -106,15 +106,10 @@ public class PartyUtil {
      * @return A formatted string with party details including leader, moderators, and members.
      */
     public static String debugParty() {
-        StringBuilder debugMessage = new StringBuilder("Party Info:\n");
-        debugMessage.append("In Party: ").append(INSTANCE.inParty).append("\n");
-        if (INSTANCE.inParty) {
-            debugMessage.append("Leader: ").append(INSTANCE.leader).append("\n");
-            debugMessage.append("Moderators: ").append(String.join(", ", INSTANCE.moderators))
-                    .append("\n");
-            debugMessage.append("Members: ").append(String.join(", ", INSTANCE.members))
-                    .append("\n");
-        }
-        return debugMessage.toString();
+        String debugMessage =
+                String.format("Party Info:\nIn Party: %b\nLeader: %s\nModerators: %s\nMembers: %s",
+                        INSTANCE.inParty, INSTANCE.leader, String.join(", ", INSTANCE.moderators),
+                        String.join(", ", INSTANCE.members));
+        return debugMessage;
     }
 }

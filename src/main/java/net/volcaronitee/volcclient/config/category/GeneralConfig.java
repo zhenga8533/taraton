@@ -59,7 +59,7 @@ public class GeneralConfig {
                 // General Option Group
                 .group(OptionGroup.createBuilder().name(Text.literal("General"))
 
-                        // TODO: Remove Selfie Mode
+                        // Remove Selfie Mode
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Remove Selfie Mode"))
                                 .description(OptionDescription.of(Text.literal(
@@ -152,7 +152,7 @@ public class GeneralConfig {
                                         .range(0, 128).step(4))
                                 .build())
 
-                        // TODO: Hide All Particles
+                        // Hide All Particles
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Hide All Particles"))
                                 .description(OptionDescription

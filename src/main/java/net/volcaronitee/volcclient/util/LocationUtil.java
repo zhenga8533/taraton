@@ -1,5 +1,6 @@
 package net.volcaronitee.volcclient.util;
 
+import net.hypixel.data.type.LobbyType;
 import net.hypixel.data.type.ServerType;
 import net.hypixel.modapi.HypixelModAPI;
 import net.hypixel.modapi.packet.impl.clientbound.event.ClientboundLocationPacket;
@@ -14,7 +15,7 @@ public class LocationUtil {
     private String lobbyName = "";
     private String map = "";
     private String mode = "";
-    private ServerType serverType = ServerType.valueOf("UNKNOWN").get();
+    private ServerType serverType = LobbyType.MAIN;
     private World world = World.UNKNOWN;
 
     /**
@@ -103,7 +104,7 @@ public class LocationUtil {
         INSTANCE.lobbyName = packet.getLobbyName().orElse("");
         INSTANCE.map = packet.getMap().orElse("");
         INSTANCE.mode = packet.getMode().orElse("");
-        INSTANCE.serverType = packet.getServerType().orElse(ServerType.valueOf("UNKNOWN").get());
+        INSTANCE.serverType = packet.getServerType().orElse(LobbyType.MAIN);
         INSTANCE.world = World.fromInternalName(INSTANCE.map);
     }
 
@@ -167,13 +168,10 @@ public class LocationUtil {
      * @return A formatted string with the server, lobby, map, mode, type, and version.
      */
     public static String debugLocation() {
-        StringBuilder debugMessage = new StringBuilder("Location Info:\n");
-        debugMessage.append("Server: ").append(INSTANCE.serverName).append("\n");
-        debugMessage.append("Lobby: ").append(INSTANCE.lobbyName).append("\n");
-        debugMessage.append("Map: ").append(INSTANCE.map).append("\n");
-        debugMessage.append("Mode: ").append(INSTANCE.mode).append("\n");
-        debugMessage.append("Type: ").append(INSTANCE.serverType).append("\n");
-        debugMessage.append("World: ").append(INSTANCE.world.name()).append("\n");
-        return debugMessage.toString();
+        String debugMessage = String.format(
+                "Location Info:\nServer: %s\nLobby: %s\nMap: %s\nMode: %s\nType: %s\nWorld: %s",
+                INSTANCE.serverName, INSTANCE.lobbyName, INSTANCE.map, INSTANCE.mode,
+                INSTANCE.serverType.name(), INSTANCE.world.name());
+        return debugMessage;
     }
 }

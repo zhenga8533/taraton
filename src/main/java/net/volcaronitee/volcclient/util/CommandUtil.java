@@ -85,11 +85,9 @@ public class CommandUtil {
             return 0;
         }
 
-        StringBuilder debugMessage = new StringBuilder("Volc Client Debug:\n");
-        debugMessage.append(PlayerUtil.debugPlayer()).append("\n");
-        debugMessage.append(LocationUtil.debugLocation()).append("\n");
-        debugMessage.append(PartyUtil.debugParty());
-        source.sendFeedback(Text.literal(debugMessage.toString()));
+        String debugMessage = String.format("Volc Client Debug:\n%s\n\n%s\n\n%s",
+                PlayerUtil.debugPlayer(), LocationUtil.debugLocation(), PartyUtil.debugParty());
+        source.sendFeedback(Text.literal(debugMessage.strip()));
         return 1;
     }
 }

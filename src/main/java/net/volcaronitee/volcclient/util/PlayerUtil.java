@@ -96,12 +96,10 @@ public class PlayerUtil {
      *         and prefix.
      */
     public static String debugPlayer() {
-        StringBuilder debugMessage = new StringBuilder("Player Info:\n");
-        debugMessage.append("Monthly Package Rank: ").append(INSTANCE.monthlyPackageRank)
-                .append("\n");
-        debugMessage.append("Package Rank: ").append(INSTANCE.packageRank).append("\n");
-        debugMessage.append("Player Rank: ").append(INSTANCE.playerRank).append("\n");
-        debugMessage.append("Prefix: ").append(INSTANCE.prefix).append("\n");
-        return debugMessage.toString();
+        String debugMessage = String.format(
+                "Player Info:\nMonthly Package Rank: %s\nPackage Rank: %s\nPlayer Rank: %s\nPrefix: %s",
+                INSTANCE.monthlyPackageRank.name(), INSTANCE.packageRank.name(),
+                INSTANCE.playerRank.name(), INSTANCE.prefix);
+        return debugMessage;
     }
 }
