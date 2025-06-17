@@ -2,8 +2,9 @@
   "required": true,
   "package": "net.volcaronitee.volcclient.mixin",
   "compatibilityLevel": "JAVA_21",
-  "mixins": [],
+  "mixins": ["TextRendererMixin"],
   "injectors": {
     "defaultRequire": 1
-  }
+  },
+  "refmap": "volc-client.refmap.json"
 }
