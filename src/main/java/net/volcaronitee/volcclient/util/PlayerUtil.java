@@ -57,6 +57,13 @@ public class PlayerUtil {
     }
 
     /**
+     * Updates the last activity time of the player when they move.
+     */
+    public void clientPlayerEntity$onPlayerMove() {
+        INSTANCE.lastActivityTime = System.currentTimeMillis();
+    }
+
+    /**
      * Returns the player's monthly package rank.
      * 
      * @return The MonthlyPackageRank of the player.
