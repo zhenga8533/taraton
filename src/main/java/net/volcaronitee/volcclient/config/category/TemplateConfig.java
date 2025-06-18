@@ -12,6 +12,7 @@ import dev.isxander.yacl3.api.controller.StringControllerBuilder;
 import dev.isxander.yacl3.api.controller.TickBoxControllerBuilder;
 import dev.isxander.yacl3.config.v2.api.SerialEntry;
 import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
 import net.volcaronitee.volcclient.util.ConfigUtil;
 
 public class TemplateConfig {
@@ -24,6 +25,8 @@ public class TemplateConfig {
                         // TODO: Boolean
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Boolean"))
                                 .description(OptionDescription.createBuilder()
+                                        .webpImage(Identifier.of("volc-client",
+                                                "config/template/placeholder.webp"))
                                         .text(Text.literal("Description")).build())
                                 .binding(defaults.template.bool, () -> config.template.bool,
                                         newVal -> config.template.bool = newVal)
@@ -33,6 +36,8 @@ public class TemplateConfig {
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Boolean With Values"))
                                 .description(OptionDescription.createBuilder()
+                                        .webpImage(Identifier.of("volc-client",
+                                                "config/template/placeholder.webp"))
                                         .text(Text.literal("Description")).build())
                                 .binding(defaults.template.bool, () -> config.template.bool,
                                         newVal -> config.template.bool = newVal)
@@ -43,6 +48,8 @@ public class TemplateConfig {
                         // TODO: Tick Box
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Tick Box"))
                                 .description(OptionDescription.createBuilder()
+                                        .webpImage(Identifier.of("volc-client",
+                                                "config/template/placeholder.webp"))
                                         .text(Text.literal("Description")).build())
                                 .binding(defaults.template.bool, () -> config.template.bool,
                                         newVal -> config.template.bool = newVal)
@@ -51,6 +58,8 @@ public class TemplateConfig {
                         // TODO: Integer Slider
                         .option(Option.<Integer>createBuilder().name(Text.literal("Integer Slider"))
                                 .description(OptionDescription.createBuilder()
+                                        .webpImage(Identifier.of("volc-client",
+                                                "config/template/placeholder.webp"))
                                         .text(Text.literal("Description")).build())
                                 .binding(defaults.template.integer, () -> config.template.integer,
                                         newVal -> config.template.integer = newVal)
@@ -61,6 +70,8 @@ public class TemplateConfig {
                         // TODO: String
                         .option(Option.<String>createBuilder().name(Text.literal("String"))
                                 .description(OptionDescription.createBuilder()
+                                        .webpImage(Identifier.of("volc-client",
+                                                "config/template/placeholder.webp"))
                                         .text(Text.literal("Description")).build())
                                 .binding(defaults.template.string, () -> config.template.string,
                                         newVal -> config.template.string = newVal)
@@ -70,6 +81,8 @@ public class TemplateConfig {
                         .option(Option.<TemplateConfig.Imu>createBuilder()
                                 .name(Text.literal("Enum"))
                                 .description(OptionDescription.createBuilder()
+                                        .webpImage(Identifier.of("volc-client",
+                                                "config/template/placeholder.webp"))
                                         .text(Text.literal("Description")).build())
                                 .binding(defaults.template.imu, () -> config.template.imu,
                                         newVal -> config.template.imu = newVal)
@@ -78,6 +91,8 @@ public class TemplateConfig {
                         // TODO: Color
                         .option(Option.<Color>createBuilder().name(Text.literal("Color"))
                                 .description(OptionDescription.createBuilder()
+                                        .webpImage(Identifier.of("volc-client",
+                                                "config/template/placeholder.webp"))
                                         .text(Text.literal("Description")).build())
                                 .binding(defaults.template.color, () -> config.template.color,
                                         newVal -> config.template.color = newVal)

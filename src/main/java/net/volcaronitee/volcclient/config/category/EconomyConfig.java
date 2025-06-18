@@ -9,6 +9,7 @@ import dev.isxander.yacl3.api.controller.BooleanControllerBuilder;
 import dev.isxander.yacl3.api.controller.IntegerSliderControllerBuilder;
 import dev.isxander.yacl3.config.v2.api.SerialEntry;
 import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
 import net.volcaronitee.volcclient.util.ConfigUtil;
 
 public class EconomyConfig {
@@ -20,8 +21,11 @@ public class EconomyConfig {
 
                         // TODO: Coin Tracker
                         .option(Option.<Integer>createBuilder().name(Text.literal("Coin Tracker"))
-                                .description(OptionDescription.createBuilder().text(Text.literal(
-                                        "Tracks coin purse gain/loss progress on the screen. Sets time in minutes of inactivity before tracking stops."))
+                                .description(OptionDescription.createBuilder()
+                                        .webpImage(Identifier.of("volc-client",
+                                                "config/economy/coin_tracker.webp"))
+                                        .text(Text.literal(
+                                                "Tracks coin purse gain/loss progress on the screen. Sets time in minutes of inactivity before tracking stops."))
                                         .build())
                                 .binding(defaults.economy.coinTracker,
                                         () -> config.economy.coinTracker,
@@ -33,8 +37,11 @@ public class EconomyConfig {
                         // TODO: No Bits Warning
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("No Bits Warning"))
-                                .description(OptionDescription.createBuilder().text(Text.literal(
-                                        "Displays a chat warning and title when bits pool is empty."))
+                                .description(OptionDescription.createBuilder()
+                                        .webpImage(Identifier.of("volc-client",
+                                                "config/economy/no_bits_warning.webp"))
+                                        .text(Text.literal(
+                                                "Displays a chat warning and title when bits pool is empty."))
                                         .build())
                                 .binding(defaults.economy.noBitsWarning,
                                         () -> config.economy.noBitsWarning,
@@ -49,8 +56,11 @@ public class EconomyConfig {
                         // TODO: Container Value
                         .option(Option.<Integer>createBuilder()
                                 .name(Text.literal("Container Value"))
-                                .description(OptionDescription.createBuilder().text(Text.literal(
-                                        "Displays item values in container inventories. Set number of items to display before cutoff."))
+                                .description(OptionDescription.createBuilder()
+                                        .webpImage(Identifier.of("volc-client",
+                                                "config/economy/container_value.webp"))
+                                        .text(Text.literal(
+                                                "Displays item values in container inventories. Set number of items to display before cutoff."))
                                         .build())
                                 .binding(defaults.economy.containerValue,
                                         () -> config.economy.containerValue,
@@ -63,6 +73,8 @@ public class EconomyConfig {
                         .option(Option.<EconomyConfig.ItemPrice>createBuilder()
                                 .name(Text.literal("Item Price"))
                                 .description(OptionDescription.createBuilder()
+                                        .webpImage(Identifier.of("volc-client",
+                                                "config/economy/item_price.webp"))
                                         .text(Text.literal(
                                                 "Sets how item prices are displayed in the game."))
                                         .build())
@@ -73,8 +85,11 @@ public class EconomyConfig {
                         // TODO: Single Attribute
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Single Attribute"))
-                                .description(OptionDescription.createBuilder().text(Text.literal(
-                                        "Displays only a single attribute for item prices."))
+                                .description(OptionDescription.createBuilder()
+                                        .webpImage(Identifier.of("volc-client",
+                                                "config/economy/single_attribute.webp"))
+                                        .text(Text.literal(
+                                                "Displays only a single attribute for item prices."))
                                         .build())
                                 .binding(defaults.economy.singleAttribute,
                                         () -> config.economy.singleAttribute,
@@ -83,8 +98,11 @@ public class EconomyConfig {
 
                         // TODO: Price Type
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Price Type"))
-                                .description(OptionDescription.createBuilder().text(Text.literal(
-                                        "Sets the type of bazaar pricing used in item calculations."))
+                                .description(OptionDescription.createBuilder()
+                                        .webpImage(Identifier.of("volc-client",
+                                                "config/economy/price_type.webp"))
+                                        .text(Text.literal(
+                                                "Sets the type of bazaar pricing used in item calculations."))
                                         .build())
                                 .binding(defaults.economy.priceType, () -> config.economy.priceType,
                                         newVal -> config.economy.priceType = newVal)
@@ -95,8 +113,11 @@ public class EconomyConfig {
                         // TODO: Trade Evaluation
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Trade Evaluation"))
-                                .description(OptionDescription.createBuilder().text(Text.literal(
-                                        "Enables value comparison display when in trade menus."))
+                                .description(OptionDescription.createBuilder()
+                                        .webpImage(Identifier.of("volc-client",
+                                                "config/economy/trade_evaluation.webp"))
+                                        .text(Text.literal(
+                                                "Enables value comparison display when in trade menus."))
                                         .build())
                                 .binding(defaults.economy.tradeEvaluation,
                                         () -> config.economy.tradeEvaluation,

@@ -9,6 +9,7 @@ import dev.isxander.yacl3.api.OptionGroup;
 import dev.isxander.yacl3.api.controller.ColorControllerBuilder;
 import dev.isxander.yacl3.config.v2.api.SerialEntry;
 import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
 import net.volcaronitee.volcclient.util.ConfigUtil;
 
 public class DungeonsConfig {
@@ -21,8 +22,11 @@ public class DungeonsConfig {
                         // TODO: Croseus Highlight
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Croseus Highlight"))
-                                .description(OptionDescription.createBuilder().text(Text.literal(
-                                        "Highlights unopened dungeon chests in Croseus menu."))
+                                .description(OptionDescription.createBuilder()
+                                        .webpImage(Identifier.of("volc-client",
+                                                "config/dungeons/croseus_highlight.webp"))
+                                        .text(Text.literal(
+                                                "Highlights unopened dungeon chests in Croseus menu."))
                                         .build())
                                 .binding(defaults.dungeons.croseusHighlight,
                                         () -> config.dungeons.croseusHighlight,
@@ -31,8 +35,11 @@ public class DungeonsConfig {
 
                         // TODO: Dungeon Profit
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Dungeon Profit"))
-                                .description(OptionDescription.createBuilder().text(Text.literal(
-                                        "Displays profit of any opened dungeon chest on the screen."))
+                                .description(OptionDescription.createBuilder()
+                                        .webpImage(Identifier.of("volc-client",
+                                                "config/dungeons/dungeon_profit.webp"))
+                                        .text(Text.literal(
+                                                "Displays profit of any opened dungeon chest on the screen."))
                                         .build())
                                 .binding(defaults.dungeons.dungeonProfit,
                                         () -> config.dungeons.dungeonProfit,
@@ -48,6 +55,8 @@ public class DungeonsConfig {
                         .option(Option.<StarMobHighlight>createBuilder()
                                 .name(Text.literal("Star Mob Highlight"))
                                 .description(OptionDescription.createBuilder()
+                                        .webpImage(Identifier.of("volc-client",
+                                                "config/dungeons/star_mob_highlight.webp"))
                                         .text(Text.literal(
                                                 "Highlights nearby star mobs in dungeons."))
                                         .build())
@@ -60,6 +69,8 @@ public class DungeonsConfig {
                         .option(Option.<Color>createBuilder()
                                 .name(Text.literal("Star Highlight Color"))
                                 .description(OptionDescription.createBuilder()
+                                        .webpImage(Identifier.of("volc-client",
+                                                "config/dungeons/star_highlight_color.webp"))
                                         .text(Text.literal("Color of the star mob highlight."))
                                         .build())
                                 .binding(defaults.dungeons.starHighligColor,

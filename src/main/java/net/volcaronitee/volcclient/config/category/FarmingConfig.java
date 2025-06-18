@@ -8,6 +8,7 @@ import dev.isxander.yacl3.api.OptionGroup;
 import dev.isxander.yacl3.api.controller.IntegerSliderControllerBuilder;
 import dev.isxander.yacl3.config.v2.api.SerialEntry;
 import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
 import net.volcaronitee.volcclient.util.ConfigUtil;
 
 public class FarmingConfig {
@@ -20,8 +21,11 @@ public class FarmingConfig {
                         // TODO: Composter Display
                         .option(Option.<ComposterDisplay>createBuilder()
                                 .name(Text.literal("Composter Display"))
-                                .description(OptionDescription.createBuilder().text(Text.literal(
-                                        "Displays a chat message and title when the composter is not active. Alternatively, you can choose to display activity time as an overlay on the screen."))
+                                .description(OptionDescription.createBuilder()
+                                        .webpImage(Identifier.of("volc-client",
+                                                "config/farming/composter_display.webp"))
+                                        .text(Text.literal(
+                                                "Displays a chat message and title when the composter is not active. Alternatively, you can choose to display activity time as an overlay on the screen."))
                                         .build())
                                 .binding(defaults.farming.composterDisplay,
                                         () -> config.farming.composterDisplay,
@@ -31,8 +35,11 @@ public class FarmingConfig {
                         // TODO: Plot Bounding Box
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Plot Bounding Box"))
-                                .description(OptionDescription.createBuilder().text(Text.literal(
-                                        "Displays a bounding box around the current garden plot."))
+                                .description(OptionDescription.createBuilder()
+                                        .webpImage(Identifier.of("volc-client",
+                                                "config/farming/plot_bounding_box.webp"))
+                                        .text(Text.literal(
+                                                "Displays a bounding box around the current garden plot."))
                                         .build())
                                 .binding(defaults.farming.plotBoundingBox,
                                         () -> config.farming.plotBoundingBox,
@@ -42,8 +49,11 @@ public class FarmingConfig {
                         // TODO: Visitor Display
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Visitor Display"))
-                                .description(OptionDescription.createBuilder().text(Text.literal(
-                                        "Displays the current list of garden visitors. Tracks visitor activity outside of the garden."))
+                                .description(OptionDescription.createBuilder()
+                                        .webpImage(Identifier.of("volc-client",
+                                                "config/farming/visitor_display.webp"))
+                                        .text(Text.literal(
+                                                "Displays the current list of garden visitors. Tracks visitor activity outside of the garden."))
                                         .build())
                                 .binding(defaults.farming.visitorDisplay,
                                         () -> config.farming.visitorDisplay,
@@ -57,8 +67,11 @@ public class FarmingConfig {
 
                         // TODO: Desk Highlight
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Desk Highlight"))
-                                .description(OptionDescription.createBuilder().text(Text.literal(
-                                        "Highlights plots with sprays and pests in the garden desk menu."))
+                                .description(OptionDescription.createBuilder()
+                                        .webpImage(Identifier.of("volc-client",
+                                                "config/farming/desk_highlight.webp"))
+                                        .text(Text.literal(
+                                                "Highlights plots with sprays and pests in the garden desk menu."))
                                         .build())
                                 .binding(defaults.farming.deskHighlight,
                                         () -> config.farming.deskHighlight,
@@ -68,8 +81,11 @@ public class FarmingConfig {
                         // TODO: Infestation Warning
                         .option(Option.<Integer>createBuilder()
                                 .name(Text.literal("Infestation Warning"))
-                                .description(OptionDescription.createBuilder().text(Text.literal(
-                                        "Displays a warning when pests are present in the garden. Sets the number of minimum number of pests to trigger the warning."))
+                                .description(OptionDescription.createBuilder()
+                                        .webpImage(Identifier.of("volc-client",
+                                                "config/farming/infestation_warning.webp"))
+                                        .text(Text.literal(
+                                                "Displays a warning when pests are present in the garden. Sets the number of minimum number of pests to trigger the warning."))
                                         .build())
                                 .binding(defaults.farming.infestationWarning,
                                         () -> config.farming.infestationWarning,
@@ -80,8 +96,11 @@ public class FarmingConfig {
 
                         // TODO: Pest Alert
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Pest Alert"))
-                                .description(OptionDescription.createBuilder().text(Text.literal(
-                                        "Displays a chat message and title when pests spawn in the garden."))
+                                .description(OptionDescription.createBuilder()
+                                        .webpImage(Identifier.of("volc-client",
+                                                "config/farming/pest_alert.webp"))
+                                        .text(Text.literal(
+                                                "Displays a chat message and title when pests spawn in the garden."))
                                         .build())
                                 .binding(defaults.farming.pestAlert, () -> config.farming.pestAlert,
                                         newVal -> config.farming.pestAlert = newVal)
@@ -90,6 +109,8 @@ public class FarmingConfig {
                         // TODO: Spray Display
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Spray Display"))
                                 .description(OptionDescription.createBuilder()
+                                        .webpImage(Identifier.of("volc-client",
+                                                "config/farming/spray_display.webp"))
                                         .text(Text.literal(
                                                 "Displays all active sprays on the screen."))
                                         .build())

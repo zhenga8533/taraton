@@ -7,6 +7,7 @@ import dev.isxander.yacl3.api.OptionGroup;
 import dev.isxander.yacl3.api.controller.IntegerSliderControllerBuilder;
 import dev.isxander.yacl3.config.v2.api.SerialEntry;
 import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
 import net.volcaronitee.volcclient.util.ConfigUtil;
 import net.volcaronitee.volcclient.util.ConfigUtil.AnnounceWP;
 
@@ -20,6 +21,8 @@ public class RiftConfig {
                         // TODO: DDR Helper
                         .option(Option.<Boolean>createBuilder().name(Text.literal("DDR Helper"))
                                 .description(OptionDescription.createBuilder()
+                                        .webpImage(Identifier.of("volc-client",
+                                                "config/rift/ddr_helper.webp"))
                                         .text(Text.literal(
                                                 "Replaces Dance Room titles with custom ones."))
                                         .build())
@@ -30,8 +33,11 @@ public class RiftConfig {
                         // TODO: Enigma Soul Waypoints
                         .option(Option.<Integer>createBuilder()
                                 .name(Text.literal("Enigma Soul Waypoints"))
-                                .description(OptionDescription.createBuilder().text(Text.literal(
-                                        "Renders waypoints of Enigma Soul locations. Sets maximum distance for waypoints to be rendered."))
+                                .description(OptionDescription.createBuilder()
+                                        .webpImage(Identifier.of("volc-client",
+                                                "config/rift/enigma_soul_waypoints.webp"))
+                                        .text(Text.literal(
+                                                "Renders waypoints of Enigma Soul locations. Sets maximum distance for waypoints to be rendered."))
                                         .build())
                                 .binding(defaults.rift.enigmaSoulWaypoints,
                                         () -> config.rift.enigmaSoulWaypoints,
@@ -43,8 +49,11 @@ public class RiftConfig {
                         // TODO: Montezuma Soul Waypoints
                         .option(Option.<Integer>createBuilder()
                                 .name(Text.literal("Montezuma Soul Waypoints"))
-                                .description(OptionDescription.createBuilder().text(Text.literal(
-                                        "Renders waypoints for nearby discord kittens. Sets maximum distance for waypoints to be rendered."))
+                                .description(OptionDescription.createBuilder()
+                                        .webpImage(Identifier.of("volc-client",
+                                                "config/rift/montezuma_soul_waypoints.webp"))
+                                        .text(Text.literal(
+                                                "Renders waypoints for nearby discord kittens. Sets maximum distance for waypoints to be rendered."))
                                         .build())
                                 .binding(defaults.rift.montezumaSoulWaypoints,
                                         () -> config.rift.montezumaSoulWaypoints,
@@ -62,6 +71,8 @@ public class RiftConfig {
                         .option(Option.<AnnounceWP>createBuilder()
                                 .name(Text.literal("Announce Mania Phase"))
                                 .description(OptionDescription.createBuilder()
+                                        .webpImage(Identifier.of("volc-client",
+                                                "config/rift/announce_mania_phase.webp"))
                                         .text(Text.literal(
                                                 "Sends a chat message on start of a mania phase."))
                                         .build())
@@ -74,6 +85,8 @@ public class RiftConfig {
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Effigy Waypoint"))
                                 .description(OptionDescription.createBuilder()
+                                        .webpImage(Identifier.of("volc-client",
+                                                "config/rift/effigy_waypoint.webp"))
                                         .text(Text.literal(
                                                 "Renders a waypoint on inactive Blood Effigies."))
                                         .build())
@@ -85,8 +98,11 @@ public class RiftConfig {
                         // TODO: Vampire Attack Display
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Vampire Attack Display"))
-                                .description(OptionDescription.createBuilder().text(Text.literal(
-                                        "Displays time of Mania, Twinclaws, and Ichor attacks."))
+                                .description(OptionDescription.createBuilder()
+                                        .webpImage(Identifier.of("volc-client",
+                                                "config/rift/vampire_attack_display.webp"))
+                                        .text(Text.literal(
+                                                "Displays time of Mania, Twinclaws, and Ichor attacks."))
                                         .build())
                                 .binding(defaults.rift.vampireAttackDisplay,
                                         () -> config.rift.vampireAttackDisplay,

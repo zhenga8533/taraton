@@ -6,6 +6,7 @@ import dev.isxander.yacl3.api.OptionDescription;
 import dev.isxander.yacl3.api.OptionGroup;
 import dev.isxander.yacl3.config.v2.api.SerialEntry;
 import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
 import net.volcaronitee.volcclient.util.ConfigUtil;
 import net.volcaronitee.volcclient.util.ConfigUtil.AnnounceWP;
 
@@ -19,8 +20,11 @@ public class CrimsonIslesConfig {
                         // TODO: Mythic Lava Creature Announce
                         .option(Option.<AnnounceWP>createBuilder()
                                 .name(Text.literal("Mythic Lava Creature Announce"))
-                                .description(OptionDescription.createBuilder().text(Text.literal(
-                                        "Sends a chat message on mythic lava sea creature spawn."))
+                                .description(OptionDescription.createBuilder()
+                                        .webpImage(Identifier.of("volc-client",
+                                                "config/crimson_isle/mythic_lava_creature_announce.webp"))
+                                        .text(Text.literal(
+                                                "Sends a chat message on mythic lava sea creature spawn."))
                                         .build())
                                 .binding(defaults.crimsonIsles.mythicLavaCreatureAnnounce,
                                         () -> config.crimsonIsles.mythicLavaCreatureAnnounce,
@@ -31,8 +35,11 @@ public class CrimsonIslesConfig {
                         // TODO: Mythic Lava Creature Highlight
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Mythic Lava Creature Highlight"))
-                                .description(OptionDescription.createBuilder().text(Text.literal(
-                                        "Highlights nearby mythic lava sea creatures. This includes mythic lava sea creatures spawned by other players."))
+                                .description(OptionDescription.createBuilder()
+                                        .webpImage(Identifier.of("volc-client",
+                                                "config/crimson_isle/mythic_lava_creature_highlight.webp"))
+                                        .text(Text.literal(
+                                                "Highlights nearby mythic lava sea creatures. This includes mythic lava sea creatures spawned by other players."))
                                         .build())
                                 .binding(defaults.crimsonIsles.mythicLavaCreatureHighlight,
                                         () -> config.crimsonIsles.mythicLavaCreatureHighlight,
@@ -43,8 +50,11 @@ public class CrimsonIslesConfig {
                         // TODO: Golden Fish Timer
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Golden Fish Timer"))
-                                .description(OptionDescription.createBuilder().text(Text.literal(
-                                        "Displays a timer for the golden trophy fish on the screen."))
+                                .description(OptionDescription.createBuilder()
+                                        .webpImage(Identifier.of("volc-client",
+                                                "config/crimson_isle/golden_fish_timer.webp"))
+                                        .text(Text.literal(
+                                                "Displays a timer for the golden trophy fish on the screen."))
                                         .build())
                                 .binding(defaults.crimsonIsles.goldenFishTimer,
                                         () -> config.crimsonIsles.goldenFishTimer,
@@ -54,8 +64,11 @@ public class CrimsonIslesConfig {
                         // TODO: Trophy Fisher Display
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Trophy Fisher Display"))
-                                .description(OptionDescription.createBuilder().text(Text.literal(
-                                        "Displays the session trophy fishing progress on the screen."))
+                                .description(OptionDescription.createBuilder()
+                                        .webpImage(Identifier.of("volc-client",
+                                                "config/crimson_isle/trophy_fisher_display.webp"))
+                                        .text(Text.literal(
+                                                "Displays the session trophy fishing progress on the screen."))
                                         .build())
                                 .binding(defaults.crimsonIsles.trophyFisherDisplay,
                                         () -> config.crimsonIsles.trophyFisherDisplay,
@@ -71,6 +84,8 @@ public class CrimsonIslesConfig {
                         .option(Option.<AnnounceWP>createBuilder()
                                 .name(Text.literal("Vanquisher Announce"))
                                 .description(OptionDescription.createBuilder()
+                                        .webpImage(Identifier.of("volc-client",
+                                                "config/crimson_isle/vanquisher_announce.webp"))
                                         .text(Text.literal(
                                                 "Sends a chat message on vanquisher spawn."))
                                         .build())
@@ -82,8 +97,11 @@ public class CrimsonIslesConfig {
                         // TODO: Vanquisher Highlight
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Vanquisher Highlight"))
-                                .description(OptionDescription.createBuilder().text(Text.literal(
-                                        "Highlights nearby vanquishers. This includes vanquishers spawned by other players."))
+                                .description(OptionDescription.createBuilder()
+                                        .webpImage(Identifier.of("volc-client",
+                                                "config/crimson_isle/vanquisher_highlight.webp"))
+                                        .text(Text.literal(
+                                                "Highlights nearby vanquishers. This includes vanquishers spawned by other players."))
                                         .build())
                                 .binding(defaults.crimsonIsles.vanquisherHighlight,
                                         () -> config.crimsonIsles.vanquisherHighlight,
@@ -93,8 +111,11 @@ public class CrimsonIslesConfig {
                         // TODO: Vanquisher Warp
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Vanquisher Warp"))
-                                .description(OptionDescription.createBuilder().text(Text.literal(
-                                        "Warps vanquisher swap party to your lobby when you spawn a vanquisher. Set the players in your party using /vc vanq."))
+                                .description(OptionDescription.createBuilder()
+                                        .webpImage(Identifier.of("volc-client",
+                                                "config/crimson_isle/vanquisher_warp.webp"))
+                                        .text(Text.literal(
+                                                "Warps vanquisher swap party to your lobby when you spawn a vanquisher. Set the players in your party using /vc vanq."))
                                         .build())
                                 .binding(defaults.crimsonIsles.vanquisherWarp,
                                         () -> config.crimsonIsles.vanquisherWarp,

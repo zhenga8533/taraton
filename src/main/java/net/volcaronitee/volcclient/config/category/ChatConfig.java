@@ -21,10 +21,11 @@ public class ChatConfig {
                         // TODO: Autocomplete Command
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Autocomplete Command"))
-                                .description(OptionDescription.createBuilder().text(Text.literal(
-                                        "Enables the autocomplete command feature. Autocompletes commands in chat."))
+                                .description(OptionDescription.createBuilder()
                                         .webpImage(Identifier.of("volc-client",
                                                 "config/chat/autocomplete_command.webp"))
+                                        .text(Text.literal(
+                                                "Enables the autocomplete command feature. Autocompletes commands in chat."))
                                         .build())
                                 .binding(defaults.chat.autocompleteCommand,
                                         () -> config.chat.autocompleteCommand,
@@ -34,8 +35,11 @@ public class ChatConfig {
                         // TODO: Autocorrect Command
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Autocorrect Command"))
-                                .description(OptionDescription.createBuilder().text(Text.literal(
-                                        "Enables the autocorrect command feature. Autocorrects commands in chat."))
+                                .description(OptionDescription.createBuilder()
+                                        .webpImage(Identifier.of("volc-client",
+                                                "config/chat/autocorrect_command.webp"))
+                                        .text(Text.literal(
+                                                "Enables the autocorrect command feature. Autocorrects commands in chat."))
                                         .build())
                                 .binding(defaults.chat.autocorrectCommand,
                                         () -> config.chat.autocorrectCommand,
@@ -44,8 +48,11 @@ public class ChatConfig {
 
                         // TODO: Custom Emotes
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Custom Emotes"))
-                                .description(OptionDescription.createBuilder().text(Text.literal(
-                                        "Allows the use of MVP++ emotes in chat. Customize your emotes using /vc emotes."))
+                                .description(OptionDescription.createBuilder()
+                                        .webpImage(Identifier.of("volc-client",
+                                                "config/chat/custom_emotes.webp"))
+                                        .text(Text.literal(
+                                                "Allows the use of MVP++ emotes in chat. Customize your emotes using /vc emotes."))
                                         .build())
                                 .binding(defaults.chat.customEmotes, () -> config.chat.customEmotes,
                                         newVal -> config.chat.customEmotes = newVal)
@@ -54,8 +61,11 @@ public class ChatConfig {
                         // TODO: Playtime Warning
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Playtime Warning"))
-                                .description(OptionDescription.createBuilder().text(Text.literal(
-                                        "Warns you when you have been playing for too long."))
+                                .description(OptionDescription.createBuilder()
+                                        .webpImage(Identifier.of("volc-client",
+                                                "config/chat/playtime_warning.webp"))
+                                        .text(Text.literal(
+                                                "Warns you when you have been playing for too long."))
                                         .build())
                                 .binding(defaults.chat.playtimeWarning,
                                         () -> config.chat.playtimeWarning,
@@ -64,8 +74,11 @@ public class ChatConfig {
 
                         // TODO: Spam Hider
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Spam Hider"))
-                                .description(OptionDescription.createBuilder().text(Text.literal(
-                                        "Hides spam messages in chat. Customize your spam filter using /vc spam."))
+                                .description(OptionDescription.createBuilder()
+                                        .webpImage(Identifier.of("volc-client",
+                                                "config/chat/spam_hider.webp"))
+                                        .text(Text.literal(
+                                                "Hides spam messages in chat. Customize your spam filter using /vc spam."))
                                         .build())
                                 .binding(defaults.chat.spamHider, () -> config.chat.spamHider,
                                         newVal -> config.chat.spamHider = newVal)
@@ -74,8 +87,11 @@ public class ChatConfig {
                         // TODO: Word Substitution
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Text Substitution"))
-                                .description(OptionDescription.createBuilder().text(Text.literal(
-                                        "Substitutes user defined occurences of texts. Set text mapping using /vc text."))
+                                .description(OptionDescription.createBuilder()
+                                        .webpImage(Identifier.of("volc-client",
+                                                "config/chat/text_substitution.webp"))
+                                        .text(Text.literal(
+                                                "Substitutes user defined occurences of texts. Set text mapping using /vc text."))
                                         .build())
                                 .binding(defaults.chat.textSubstitution,
                                         () -> config.chat.textSubstitution,
@@ -90,8 +106,11 @@ public class ChatConfig {
                         // TODO: Leader Commands
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Leader Commands"))
-                                .description(OptionDescription.createBuilder().text(Text.literal(
-                                        "Enables leader commands in chat. Toggle them using /vc toggles."))
+                                .description(OptionDescription.createBuilder()
+                                        .webpImage(Identifier.of("volc-client",
+                                                "config/chat/leader_commands.webp"))
+                                        .text(Text.literal(
+                                                "Enables leader commands in chat. Toggle them using /vc toggles."))
                                         .build())
                                 .binding(defaults.chat.leaderCommands,
                                         () -> config.chat.leaderCommands,
@@ -100,8 +119,11 @@ public class ChatConfig {
 
                         // TODO: Party Commands
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Party Commands"))
-                                .description(OptionDescription.createBuilder().text(Text.literal(
-                                        "Enables party commands in chat. Toggle them using /vc toggles."))
+                                .description(OptionDescription.createBuilder()
+                                        .webpImage(Identifier.of("volc-client",
+                                                "config/chat/party_commands.webp"))
+                                        .text(Text.literal(
+                                                "Enables party commands in chat. Toggle them using /vc toggles."))
                                         .build())
                                 .binding(defaults.chat.partyCommands,
                                         () -> config.chat.partyCommands,
@@ -111,8 +133,11 @@ public class ChatConfig {
                         // TODO: Guild Join Message
                         .option(Option.<String>createBuilder()
                                 .name(Text.literal("Guild Join Message"))
-                                .description(OptionDescription.createBuilder().text(Text.literal(
-                                        "Sends message when anyone joins your guild. Use %player% for their name."))
+                                .description(OptionDescription.createBuilder()
+                                        .webpImage(Identifier.of("volc-client",
+                                                "config/chat/guild_join_message.webp"))
+                                        .text(Text.literal(
+                                                "Sends message when anyone joins your guild. Use %player% for their name."))
                                         .build())
                                 .binding(defaults.chat.guildJoinMessage,
                                         () -> config.chat.guildJoinMessage,
@@ -122,8 +147,11 @@ public class ChatConfig {
                         // TODO: Party Join Message
                         .option(Option.<String>createBuilder()
                                 .name(Text.literal("Party Join Message"))
-                                .description(OptionDescription.createBuilder().text(Text.literal(
-                                        "Sends message when anyone joins your party. Use %player% for their name."))
+                                .description(OptionDescription.createBuilder()
+                                        .webpImage(Identifier.of("volc-client",
+                                                "config/chat/party_join_message.webp"))
+                                        .text(Text.literal(
+                                                "Sends message when anyone joins your party. Use %player% for their name."))
                                         .build())
                                 .binding(defaults.chat.partyJoinMessage,
                                         () -> config.chat.partyJoinMessage,
@@ -133,8 +161,11 @@ public class ChatConfig {
                         // TODO: Party Leader Only
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Party Leader Only"))
-                                .description(OptionDescription.createBuilder().text(Text.literal(
-                                        "Only sends party join message when you are the party leader."))
+                                .description(OptionDescription.createBuilder()
+                                        .webpImage(Identifier.of("volc-client",
+                                                "config/chat/party_leader_only.webp"))
+                                        .text(Text.literal(
+                                                "Only sends party join message when you are the party leader."))
                                         .build())
                                 .binding(defaults.chat.partyLeaderOnly,
                                         () -> config.chat.partyLeaderOnly,
@@ -149,8 +180,11 @@ public class ChatConfig {
                         // TODO: Anti-Ghost Party
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Anti-Ghost Party"))
-                                .description(OptionDescription.createBuilder().text(Text.literal(
-                                        "Prevents ghost parties from being created when partying multiple people."))
+                                .description(OptionDescription.createBuilder()
+                                        .webpImage(Identifier.of("volc-client",
+                                                "config/chat/anti_ghost_party.webp"))
+                                        .text(Text.literal(
+                                                "Prevents ghost parties from being created when partying multiple people."))
                                         .build())
                                 .binding(defaults.chat.antiGhostParty,
                                         () -> config.chat.antiGhostParty,
@@ -159,8 +193,11 @@ public class ChatConfig {
 
                         // TODO: Join Reparty
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Join Reparty"))
-                                .description(OptionDescription.createBuilder().text(Text.literal(
-                                        "Automatically accepts reparty invites send within 60 seconds."))
+                                .description(OptionDescription.createBuilder()
+                                        .webpImage(Identifier.of("volc-client",
+                                                "config/chat/join_reparty.webp"))
+                                        .text(Text.literal(
+                                                "Automatically accepts reparty invites send within 60 seconds."))
                                         .build())
                                 .binding(defaults.chat.joinReparty, () -> config.chat.joinReparty,
                                         newVal -> config.chat.joinReparty = newVal)
@@ -168,8 +205,11 @@ public class ChatConfig {
 
                         // TODO: Join Whitelist
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Join Whitelist"))
-                                .description(OptionDescription.createBuilder().text(Text.literal(
-                                        "Automatically accepts party invites from whitelisted players. Whitelist players using /vc wl."))
+                                .description(OptionDescription.createBuilder()
+                                        .webpImage(Identifier.of("volc-client",
+                                                "config/chat/join_whitelist.webp"))
+                                        .text(Text.literal(
+                                                "Automatically accepts party invites from whitelisted players. Whitelist players using /vc wl."))
                                         .build())
                                 .binding(defaults.chat.joinWhitelist,
                                         () -> config.chat.joinWhitelist,
@@ -179,8 +219,11 @@ public class ChatConfig {
                         // TODO: Auto Transfer
                         .option(Option.<ChatConfig.AutoTransfer>createBuilder()
                                 .name(Text.literal("Auto Transfer"))
-                                .description(OptionDescription.createBuilder().text(Text.literal(
-                                        "Automatically transfers party leadership when you leave the party."))
+                                .description(OptionDescription.createBuilder()
+                                        .webpImage(Identifier.of("volc-client",
+                                                "config/chat/auto_transfer.webp"))
+                                        .text(Text.literal(
+                                                "Automatically transfers party leadership when you leave the party."))
                                         .build())
                                 .binding(defaults.chat.autoTransfer, () -> config.chat.autoTransfer,
                                         newVal -> config.chat.autoTransfer = newVal)

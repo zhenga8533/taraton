@@ -10,6 +10,7 @@ import dev.isxander.yacl3.api.controller.ColorControllerBuilder;
 import dev.isxander.yacl3.api.controller.IntegerSliderControllerBuilder;
 import dev.isxander.yacl3.config.v2.api.SerialEntry;
 import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
 import net.volcaronitee.volcclient.util.ConfigUtil;
 import net.volcaronitee.volcclient.util.ConfigUtil.AnnounceWP;
 
@@ -23,8 +24,11 @@ public class CombatConfig {
                         // TODO: Bestiary Counter
                         .option(Option.<BestiaryCounter>createBuilder()
                                 .name(Text.literal("Bestiary Counter"))
-                                .description(OptionDescription.createBuilder().text(Text.literal(
-                                        "Displays total bestiary kill count. Uses tab widgets to track kills."))
+                                .description(OptionDescription.createBuilder()
+                                        .webpImage(Identifier.of("volc-client",
+                                                "config/combat/bestiary_counter.webp"))
+                                        .text(Text.literal(
+                                                "Displays total bestiary kill count. Uses tab widgets to track kills."))
                                         .build())
                                 .binding(defaults.combat.bestiaryCounter,
                                         () -> config.combat.bestiaryCounter,
@@ -33,8 +37,11 @@ public class CombatConfig {
 
                         // TODO: Bestiary Menu
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Bestiary Menu"))
-                                .description(OptionDescription.createBuilder().text(Text.literal(
-                                        "Displays bestiary level as stack size and highlight uncompleted bestiary milestones."))
+                                .description(OptionDescription.createBuilder()
+                                        .webpImage(Identifier.of("volc-client",
+                                                "config/combat/bestiary_menu.webp"))
+                                        .text(Text.literal(
+                                                "Displays bestiary level as stack size and highlight uncompleted bestiary milestones."))
                                         .build())
                                 .binding(defaults.combat.bestiaryMenu,
                                         () -> config.combat.bestiaryMenu,
@@ -43,8 +50,11 @@ public class CombatConfig {
 
                         // TODO: Hitbox Color
                         .option(Option.<Color>createBuilder().name(Text.literal("Hitbox Color"))
-                                .description(OptionDescription.createBuilder().text(Text.literal(
-                                        "Sets the seed seed used for the color of entity hitboxes."))
+                                .description(OptionDescription.createBuilder()
+                                        .webpImage(Identifier.of("volc-client",
+                                                "config/combat/hitbox_color.webp"))
+                                        .text(Text.literal(
+                                                "Sets the seed seed used for the color of entity hitboxes."))
                                         .build())
                                 .binding(defaults.combat.hitboxColor,
                                         () -> config.combat.hitboxColor,
@@ -55,8 +65,11 @@ public class CombatConfig {
 
                         // TODO: Kill Tracker
                         .option(Option.<Integer>createBuilder().name(Text.literal("Kill Tracker"))
-                                .description(OptionDescription.createBuilder().text(Text.literal(
-                                        "Tracks kills progress on the screen. Sets time in minutes of inactivity before tracking stops. Uses the bestiary widget to track kills."))
+                                .description(OptionDescription.createBuilder()
+                                        .webpImage(Identifier.of("volc-client",
+                                                "config/combat/kill_tracker.webp"))
+                                        .text(Text.literal(
+                                                "Tracks kills progress on the screen. Sets time in minutes of inactivity before tracking stops. Uses the bestiary widget to track kills."))
                                         .build())
                                 .binding(defaults.combat.killTracker,
                                         () -> config.combat.killTracker,
@@ -72,8 +85,11 @@ public class CombatConfig {
 
                         // TODO: Combo Display
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Combo Display"))
-                                .description(OptionDescription.createBuilder().text(Text.literal(
-                                        "Removes grandma wolf combo chat messages and displays a combo overlay on the screen."))
+                                .description(OptionDescription.createBuilder()
+                                        .webpImage(Identifier.of("volc-client",
+                                                "config/combat/combo_display.webp"))
+                                        .text(Text.literal(
+                                                "Removes grandma wolf combo chat messages and displays a combo overlay on the screen."))
                                         .build())
                                 .binding(defaults.combat.comboDisplay,
                                         () -> config.combat.comboDisplay,
@@ -83,8 +99,11 @@ public class CombatConfig {
                         // TODO: Damage Tracer
                         .option(Option.<DamageTracer>createBuilder()
                                 .name(Text.literal("Damage Tracer"))
-                                .description(OptionDescription.createBuilder().text(Text.literal(
-                                        "Spams chat with unique damage ticks. This is meant to be used on a training dummy. Optionally provides simple statistics on damage dealt."))
+                                .description(OptionDescription.createBuilder()
+                                        .webpImage(Identifier.of("volc-client",
+                                                "config/combat/damage_tracer.webp"))
+                                        .text(Text.literal(
+                                                "Spams chat with unique damage ticks. This is meant to be used on a training dummy. Optionally provides simple statistics on damage dealt."))
                                         .build())
                                 .binding(defaults.combat.damageTracer,
                                         () -> config.combat.damageTracer,
@@ -94,8 +113,11 @@ public class CombatConfig {
                         // TODO: Low Health Warning
                         .option(Option.<Integer>createBuilder()
                                 .name(Text.literal("Low Health Warning"))
-                                .description(OptionDescription.createBuilder().text(Text.literal(
-                                        "Sets the health percentage at which a low health warning title is displayed."))
+                                .description(OptionDescription.createBuilder()
+                                        .webpImage(Identifier.of("volc-client",
+                                                "config/combat/low_health_warning.webp"))
+                                        .text(Text.literal(
+                                                "Sets the health percentage at which a low health warning title is displayed."))
                                         .build())
                                 .binding(defaults.combat.lowHealthWarning,
                                         () -> config.combat.lowHealthWarning,
@@ -107,8 +129,11 @@ public class CombatConfig {
                         // TODO: Mana Drain Range
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Mana Drain Range"))
-                                .description(OptionDescription.createBuilder().text(Text.literal(
-                                        "Highlights nearby players when a typical mana drain item is held. Displays the number of players in range as a title on the screen."))
+                                .description(OptionDescription.createBuilder()
+                                        .webpImage(Identifier.of("volc-client",
+                                                "config/combat/mana_drain_range.webp"))
+                                        .text(Text.literal(
+                                                "Highlights nearby players when a typical mana drain item is held. Displays the number of players in range as a title on the screen."))
                                         .build())
                                 .binding(defaults.combat.manaDrainRange,
                                         () -> config.combat.manaDrainRange,
@@ -118,8 +143,11 @@ public class CombatConfig {
                         // TODO: Ragnarok Detection
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Ragnarok Detection"))
-                                .description(OptionDescription.createBuilder().text(Text.literal(
-                                        "Displays an alert title when Ragnarok Axe finishes casting or is cancelled."))
+                                .description(OptionDescription.createBuilder()
+                                        .webpImage(Identifier.of("volc-client",
+                                                "config/combat/ragnarok_detection.webp"))
+                                        .text(Text.literal(
+                                                "Displays an alert title when Ragnarok Axe finishes casting or is cancelled."))
                                         .build())
                                 .binding(defaults.combat.ragnarokDetection,
                                         () -> config.combat.ragnarokDetection,
@@ -135,6 +163,8 @@ public class CombatConfig {
                         .option(Option.<AnnounceWP>createBuilder()
                                 .name(Text.literal("Slayer Boss Announce"))
                                 .description(OptionDescription.createBuilder()
+                                        .webpImage(Identifier.of("volc-client",
+                                                "config/combat/slayer_boss_announce.webp"))
                                         .text(Text.literal(
                                                 "Sends a chat message on slayer boss spawn."))
                                         .build())
@@ -146,8 +176,11 @@ public class CombatConfig {
                         // TODO: Slayer Boss Highlight
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Slayer Boss Highlight"))
-                                .description(OptionDescription.createBuilder().text(Text.literal(
-                                        "Highlights nearby slayer bosses. This includes bosses spawned by other players."))
+                                .description(OptionDescription.createBuilder()
+                                        .webpImage(Identifier.of("volc-client",
+                                                "config/combat/slayer_boss_highlight.webp"))
+                                        .text(Text.literal(
+                                                "Highlights nearby slayer bosses. This includes bosses spawned by other players."))
                                         .build())
                                 .binding(defaults.combat.slayerBossHighlight,
                                         () -> config.combat.slayerBossHighlight,
@@ -158,6 +191,8 @@ public class CombatConfig {
                         .option(Option.<AnnounceWP>createBuilder()
                                 .name(Text.literal("Slayer Miniboss Announce"))
                                 .description(OptionDescription.createBuilder()
+                                        .webpImage(Identifier.of("volc-client",
+                                                "config/combat/slayer_miniboss_announce.webp"))
                                         .text(Text.literal(
                                                 "Sends a chat message on slayer miniboss spawn."))
                                         .build())
@@ -169,8 +204,11 @@ public class CombatConfig {
                         // TODO: Slayer Miniboss Highlight
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Slayer Miniboss Highlight"))
-                                .description(OptionDescription.createBuilder().text(Text.literal(
-                                        "Highlights nearby slayer minibosses. This includes minibosses spawned by other players."))
+                                .description(OptionDescription.createBuilder()
+                                        .webpImage(Identifier.of("volc-client",
+                                                "config/combat/slayer_miniboss_highlight.webp"))
+                                        .text(Text.literal(
+                                                "Highlights nearby slayer minibosses. This includes minibosses spawned by other players."))
                                         .build())
                                 .binding(defaults.combat.slayerMinibossHighlight,
                                         () -> config.combat.slayerMinibossHighlight,
@@ -180,8 +218,11 @@ public class CombatConfig {
                         // TODO: Slayer Spawn Warning
                         .option(Option.<Integer>createBuilder()
                                 .name(Text.literal("Slayer Spawn Warning"))
-                                .description(OptionDescription.createBuilder().text(Text.literal(
-                                        "Displays a warning title when a slayer boss is about to spawn. Sets the slayer quest completion percentage at which the warning is displayed."))
+                                .description(OptionDescription.createBuilder()
+                                        .webpImage(Identifier.of("volc-client",
+                                                "config/combat/slayer_spawn_warning.webp"))
+                                        .text(Text.literal(
+                                                "Displays a warning title when a slayer boss is about to spawn. Sets the slayer quest completion percentage at which the warning is displayed."))
                                         .build())
                                 .binding(defaults.combat.slayerSpawnWarning,
                                         () -> config.combat.slayerSpawnWarning,

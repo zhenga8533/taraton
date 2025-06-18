@@ -6,6 +6,7 @@ import dev.isxander.yacl3.api.OptionDescription;
 import dev.isxander.yacl3.api.OptionGroup;
 import dev.isxander.yacl3.config.v2.api.SerialEntry;
 import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
 import net.volcaronitee.volcclient.util.ConfigUtil;
 
 public class ContainerConfig {
@@ -18,8 +19,11 @@ public class ContainerConfig {
                         // TODO: Container Preview
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Container Preview"))
-                                .description(OptionDescription.createBuilder().text(Text.literal(
-                                        "Displays a preview of a backpack or ender chest when hovered."))
+                                .description(OptionDescription.createBuilder()
+                                        .webpImage(Identifier.of("volc-client",
+                                                "config/container/container_preview.webp"))
+                                        .text(Text.literal(
+                                                "Displays a preview of a backpack or ender chest when hovered."))
                                         .build())
                                 .binding(defaults.container.containerPreview,
                                         () -> config.container.containerPreview,
@@ -29,6 +33,8 @@ public class ContainerConfig {
                         // TODO: Searchbar
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Searchbar"))
                                 .description(OptionDescription.createBuilder()
+                                        .webpImage(Identifier.of("volc-client",
+                                                "config/container/searchbar.webp"))
                                         .text(Text.literal(
                                                 "Adds a search bar to container inventories."))
                                         .build())
@@ -45,8 +51,11 @@ public class ContainerConfig {
                         // TODO: Container Buttons
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Container Buttons"))
-                                .description(OptionDescription.createBuilder().text(Text.literal(
-                                        "Creates clickable hotkey buttons for container inventories. Set buttons using /vc buttons."))
+                                .description(OptionDescription.createBuilder()
+                                        .webpImage(Identifier.of("volc-client",
+                                                "config/container/container_buttons.webp"))
+                                        .text(Text.literal(
+                                                "Creates clickable hotkey buttons for container inventories. Set buttons using /vc buttons."))
                                         .build())
                                 .binding(defaults.container.containerButtons,
                                         () -> config.container.containerButtons,
@@ -55,8 +64,11 @@ public class ContainerConfig {
 
                         // TODO: Slot Binding
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Slot Binding"))
-                                .description(OptionDescription.createBuilder().text(Text.literal(
-                                        "Allows you to bind inventory slots to one another. Ctrl + LC to swap binded slots. Set bindings using /vc bind."))
+                                .description(OptionDescription.createBuilder()
+                                        .webpImage(Identifier.of("volc-client",
+                                                "config/container/slot_binding.webp"))
+                                        .text(Text.literal(
+                                                "Allows you to bind inventory slots to one another. Ctrl + LC to swap binded slots. Set bindings using /vc bind."))
                                         .build())
                                 .binding(defaults.container.slotBinding,
                                         () -> config.container.slotBinding,
@@ -65,8 +77,11 @@ public class ContainerConfig {
 
                         // TODO: Wardrobe Swap
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Wardrobe Swap"))
-                                .description(OptionDescription.createBuilder().text(Text.literal(
-                                        "Allows you to fast swap armor in the wardrobe using keybinds. Set keybinds using /vc wardrobe."))
+                                .description(OptionDescription.createBuilder()
+                                        .webpImage(Identifier.of("volc-client",
+                                                "config/container/wardrobe_swap.webp"))
+                                        .text(Text.literal(
+                                                "Allows you to fast swap armor in the wardrobe using keybinds. Set keybinds using /vc wardrobe."))
                                         .build())
                                 .binding(defaults.container.wardrobeSwap,
                                         () -> config.container.wardrobeSwap,
@@ -81,8 +96,11 @@ public class ContainerConfig {
                         // TODO: Attribute Abbreviation
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Attribute Abbreviation"))
-                                .description(OptionDescription.createBuilder().text(Text.literal(
-                                        "Displays attribute abbreviations directly over items."))
+                                .description(OptionDescription.createBuilder()
+                                        .webpImage(Identifier.of("volc-client",
+                                                "config/container/attribute_abbreviation.webp"))
+                                        .text(Text.literal(
+                                                "Displays attribute abbreviations directly over items."))
                                         .build())
                                 .binding(defaults.container.attributeAbbreviation,
                                         () -> config.container.attributeAbbreviation,
@@ -92,6 +110,8 @@ public class ContainerConfig {
                         // TODO: Armor Display
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Armor Display"))
                                 .description(OptionDescription.createBuilder()
+                                        .webpImage(Identifier.of("volc-client",
+                                                "config/container/armor_display.webp"))
                                         .text(Text.literal(
                                                 "Displays current armor set on the screen."))
                                         .build())
@@ -104,6 +124,8 @@ public class ContainerConfig {
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Equipment Display"))
                                 .description(OptionDescription.createBuilder()
+                                        .webpImage(Identifier.of("volc-client",
+                                                "config/container/equipment_display.webp"))
                                         .text(Text.literal(
                                                 "Displays current equipment gear on the screen."))
                                         .build())
@@ -114,8 +136,11 @@ public class ContainerConfig {
 
                         // TODO: Max Supercraft
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Max Supercraft"))
-                                .description(OptionDescription.createBuilder().text(Text.literal(
-                                        "Displays the maximum supercraft quantity in the crafting description."))
+                                .description(OptionDescription.createBuilder()
+                                        .webpImage(Identifier.of("volc-client",
+                                                "config/container/max_supercraft.webp"))
+                                        .text(Text.literal(
+                                                "Displays the maximum supercraft quantity in the crafting description."))
                                         .build())
                                 .binding(defaults.container.maxSupercraft,
                                         () -> config.container.maxSupercraft,
