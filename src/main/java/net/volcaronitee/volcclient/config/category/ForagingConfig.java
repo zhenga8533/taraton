@@ -17,7 +17,8 @@ public class ForagingConfig {
 
                         // Option
                         .option(Option.<Boolean>createBuilder().name(Text.literal(""))
-                                .description(OptionDescription.of(Text.literal("")))
+                                .description(OptionDescription.createBuilder()
+                                        .text(Text.literal("")).build())
                                 .binding(defaults.foraging.temp, () -> config.foraging.temp,
                                         newVal -> config.foraging.temp = newVal)
                                 .controller(ConfigUtil::createBooleanController).build())

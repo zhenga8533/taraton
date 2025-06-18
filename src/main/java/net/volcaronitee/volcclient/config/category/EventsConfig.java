@@ -20,8 +20,9 @@ public class EventsConfig {
                         // Burrow Detection
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Burrow Detection"))
-                                .description(OptionDescription.of(Text.literal(
-                                        "Renders waypoints on nearby burrows and displays a chat message.")))
+                                .description(OptionDescription.createBuilder().text(Text.literal(
+                                        "Renders waypoints on nearby burrows and displays a chat message."))
+                                        .build())
                                 .binding(defaults.events.burrowDetection,
                                         () -> config.events.burrowDetection,
                                         newVal -> config.events.burrowDetection = newVal)
@@ -30,8 +31,9 @@ public class EventsConfig {
                         // Burrow Waypoints
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Burrow Waypoints"))
-                                .description(OptionDescription.of(Text.literal(
-                                        "Renders the best guess of a burrow location using ancestral spade particals and sounds.")))
+                                .description(OptionDescription.createBuilder().text(Text.literal(
+                                        "Renders the best guess of a burrow location using ancestral spade particals and sounds."))
+                                        .build())
                                 .binding(defaults.events.burrowWaypoints,
                                         () -> config.events.burrowWaypoints,
                                         newVal -> config.events.burrowWaypoints = newVal)
@@ -40,8 +42,10 @@ public class EventsConfig {
                         // Inquisitor Announce
                         .option(Option.<AnnounceWP>createBuilder()
                                 .name(Text.literal("Inquisitor Announce"))
-                                .description(OptionDescription.of(
-                                        Text.literal("Sends a chat message on inquisitor spawn.")))
+                                .description(OptionDescription.createBuilder()
+                                        .text(Text.literal(
+                                                "Sends a chat message on inquisitor spawn."))
+                                        .build())
                                 .binding(defaults.events.inquisitorAnnounce,
                                         () -> config.events.inquisitorAnnounce,
                                         newVal -> config.events.inquisitorAnnounce = newVal)
@@ -50,8 +54,9 @@ public class EventsConfig {
                         // Inquisitor Detection
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Inquisitor Detection"))
-                                .description(OptionDescription.of(Text.literal(
-                                        "Highlights nearby inquisitors. This includes inquisitors spawned by other players.")))
+                                .description(OptionDescription.createBuilder().text(Text.literal(
+                                        "Highlights nearby inquisitors. This includes inquisitors spawned by other players."))
+                                        .build())
                                 .binding(defaults.events.inquisitorDetection,
                                         () -> config.events.inquisitorDetection,
                                         newVal -> config.events.inquisitorDetection = newVal)
@@ -65,8 +70,9 @@ public class EventsConfig {
                         // Chocolate Factory Display
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Chocolate Factory Display"))
-                                .description(OptionDescription.of(Text.literal(
-                                        "Displays Chocolate Factory production statistics on the screen.")))
+                                .description(OptionDescription.createBuilder().text(Text.literal(
+                                        "Displays Chocolate Factory production statistics on the screen."))
+                                        .build())
                                 .binding(defaults.events.chocolateFactoryDisplay,
                                         () -> config.events.chocolateFactoryDisplay,
                                         newVal -> config.events.chocolateFactoryDisplay = newVal)
@@ -74,16 +80,19 @@ public class EventsConfig {
 
                         // Egg Timers
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Egg Timers"))
-                                .description(OptionDescription.of(Text.literal(
-                                        "Displays timers for upcoming rabbit eggs on the screen.")))
+                                .description(OptionDescription.createBuilder().text(Text.literal(
+                                        "Displays timers for upcoming rabbit eggs on the screen."))
+                                        .build())
                                 .binding(defaults.events.eggTimers, () -> config.events.eggTimers,
                                         newVal -> config.events.eggTimers = newVal)
                                 .controller(ConfigUtil::createBooleanController).build())
 
                         // Egg Waypoints
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Egg Waypoints"))
-                                .description(OptionDescription.of(
-                                        Text.literal("Renders waypoints on nearby rabbit eggs.")))
+                                .description(OptionDescription.createBuilder()
+                                        .text(Text.literal(
+                                                "Renders waypoints on nearby rabbit eggs."))
+                                        .build())
                                 .binding(defaults.events.eggWaypoints,
                                         () -> config.events.eggWaypoints,
                                         newVal -> config.events.eggWaypoints = newVal)
@@ -92,8 +101,9 @@ public class EventsConfig {
                         // Rabbit Worker Highlight
                         .option(Option.<RabbitWorkerHighlight>createBuilder()
                                 .name(Text.literal("Rabbit Worker Highlight"))
-                                .description(OptionDescription.of(Text.literal(
-                                        "Highlights the most efficient upgrade ratio in the Chocolate Factory menu.")))
+                                .description(OptionDescription.createBuilder().text(Text.literal(
+                                        "Highlights the most efficient upgrade ratio in the Chocolate Factory menu."))
+                                        .build())
                                 .binding(defaults.events.rabbitWorkerHighlight,
                                         () -> config.events.rabbitWorkerHighlight,
                                         newVal -> config.events.rabbitWorkerHighlight = newVal)
@@ -102,8 +112,9 @@ public class EventsConfig {
                         // Stray Rabbit Alert
                         .option(Option.<StrayRabbitAlert>createBuilder()
                                 .name(Text.literal("Stray Rabbit Alert"))
-                                .description(OptionDescription.of(Text.literal(
-                                        "Alerts you when a stray rabbit appears in the Chocolate Factory menu.")))
+                                .description(OptionDescription.createBuilder().text(Text.literal(
+                                        "Alerts you when a stray rabbit appears in the Chocolate Factory menu."))
+                                        .build())
                                 .binding(defaults.events.strayRabbitAlert,
                                         () -> config.events.strayRabbitAlert,
                                         newVal -> config.events.strayRabbitAlert = newVal)
@@ -117,8 +128,9 @@ public class EventsConfig {
                         // Bingo Card Display
                         .option(Option.<BingoCardDisplay>createBuilder()
                                 .name(Text.literal("Bingo Card Display"))
-                                .description(OptionDescription.of(Text.literal(
-                                        "Displays the current bingo card goals on the screen.")))
+                                .description(OptionDescription.createBuilder().text(Text.literal(
+                                        "Displays the current bingo card goals on the screen."))
+                                        .build())
                                 .binding(defaults.events.bingoCardDisplay,
                                         () -> config.events.bingoCardDisplay,
                                         newVal -> config.events.bingoCardDisplay = newVal)
@@ -126,8 +138,9 @@ public class EventsConfig {
 
                         // Calendar Time
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Calendar Time"))
-                                .description(OptionDescription.of(Text.literal(
-                                        "Displays the real world start and end times of SkyBlock events in the calendar.")))
+                                .description(OptionDescription.createBuilder().text(Text.literal(
+                                        "Displays the real world start and end times of SkyBlock events in the calendar."))
+                                        .build())
                                 .binding(defaults.events.calendarTime,
                                         () -> config.events.calendarTime,
                                         newVal -> config.events.calendarTime = newVal)

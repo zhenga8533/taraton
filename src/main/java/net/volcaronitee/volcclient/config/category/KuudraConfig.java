@@ -17,8 +17,9 @@ public class KuudraConfig {
 
                         // Kuudra Profit
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Kuudra Profit"))
-                                .description(OptionDescription.of(Text.literal(
-                                        "Displays profit of any opened Kuudra chest on the screen.")))
+                                .description(OptionDescription.createBuilder().text(Text.literal(
+                                        "Displays profit of any opened Kuudra chest on the screen."))
+                                        .build())
                                 .binding(defaults.kuudra.kuudraProfit,
                                         () -> config.kuudra.kuudraProfit,
                                         newVal -> config.kuudra.kuudraProfit = newVal)
@@ -27,8 +28,9 @@ public class KuudraConfig {
                         // Kuudra Profit Tracker
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Kuudra Profit Tracker"))
-                                .description(OptionDescription
-                                        .of(Text.literal("Tracks Kuudra profit gains over time.")))
+                                .description(OptionDescription.createBuilder()
+                                        .text(Text.literal("Tracks Kuudra profit gains over time."))
+                                        .build())
                                 .binding(defaults.kuudra.kuudraProfitTracker,
                                         () -> config.kuudra.kuudraProfitTracker,
                                         newVal -> config.kuudra.kuudraProfitTracker = newVal)
@@ -37,8 +39,9 @@ public class KuudraConfig {
                         // Tabasco Included
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Tabasco Included"))
-                                .description(OptionDescription.of(Text.literal(
-                                        "Include Tabasco crafting in the profit calculations.")))
+                                .description(OptionDescription.createBuilder().text(Text.literal(
+                                        "Include Tabasco crafting in the profit calculations."))
+                                        .build())
                                 .binding(defaults.kuudra.tabascoIncluded,
                                         () -> config.kuudra.tabascoIncluded,
                                         newVal -> config.kuudra.tabascoIncluded = newVal)
@@ -51,8 +54,9 @@ public class KuudraConfig {
 
                         // Kuudra Alerts
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Kuudra Alerts"))
-                                .description(OptionDescription.of(Text.literal(
-                                        "Alerts for various Kuudra splits and events. Set tracked events using /vc toggles.")))
+                                .description(OptionDescription.createBuilder().text(Text.literal(
+                                        "Alerts for various Kuudra splits and events. Set tracked events using /vc toggles."))
+                                        .build())
                                 .binding(defaults.kuudra.kuudraAlerts,
                                         () -> config.kuudra.kuudraAlerts,
                                         newVal -> config.kuudra.kuudraAlerts = newVal)
@@ -61,8 +65,10 @@ public class KuudraConfig {
                         // Kuudra Crate Waypoints
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Kuudra Crate Waypoints"))
-                                .description(OptionDescription.of(Text
-                                        .literal("Displays waypoints for nearby Kuudra crates.")))
+                                .description(OptionDescription.createBuilder()
+                                        .text(Text.literal(
+                                                "Displays waypoints for nearby Kuudra crates."))
+                                        .build())
                                 .binding(defaults.kuudra.kuudraCrateWaypoints,
                                         () -> config.kuudra.kuudraCrateWaypoints,
                                         newVal -> config.kuudra.kuudraCrateWaypoints = newVal)
@@ -71,8 +77,9 @@ public class KuudraConfig {
                         // Kuudra Fresh Tracking
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Kuudra Fresh Tracking"))
-                                .description(OptionDescription.of(Text.literal(
-                                        "Sends chat message to party when fresh tools activates. Also tracks other players' fresh tools when announced.")))
+                                .description(OptionDescription.createBuilder().text(Text.literal(
+                                        "Sends chat message to party when fresh tools activates. Also tracks other players' fresh tools when announced."))
+                                        .build())
                                 .binding(defaults.kuudra.kuudraFreshTracking,
                                         () -> config.kuudra.kuudraFreshTracking,
                                         newVal -> config.kuudra.kuudraFreshTracking = newVal)
@@ -81,8 +88,9 @@ public class KuudraConfig {
                         // Kuudra HP Display
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Kuudra HP Display"))
-                                .description(OptionDescription
-                                        .of(Text.literal("Render Kuudra's HP bar on the screen.")))
+                                .description(OptionDescription.createBuilder()
+                                        .text(Text.literal("Render Kuudra's HP bar on the screen."))
+                                        .build())
                                 .binding(defaults.kuudra.kuudraHpDisplay,
                                         () -> config.kuudra.kuudraHpDisplay,
                                         newVal -> config.kuudra.kuudraHpDisplay = newVal)
@@ -91,8 +99,9 @@ public class KuudraConfig {
                         // Kuudra Spawn Alert
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Kuudra Spawn Alert"))
-                                .description(OptionDescription.of(Text.literal(
-                                        "Displays a title for where Kuudra spawns in P4. UAYOR: Uses ESP!")))
+                                .description(OptionDescription.createBuilder().text(Text.literal(
+                                        "Displays a title for where Kuudra spawns in P4. UAYOR: Uses ESP!"))
+                                        .build())
                                 .binding(defaults.kuudra.kuudraSpawnAlert,
                                         () -> config.kuudra.kuudraSpawnAlert,
                                         newVal -> config.kuudra.kuudraSpawnAlert = newVal)
@@ -101,8 +110,9 @@ public class KuudraConfig {
                         // Kuudra Splits Timer
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Kuudra Splits Timer"))
-                                .description(OptionDescription.of(Text.literal(
-                                        "Displays time taken for each Kuudra split on the screen. See Kuudra split records using /vc ks.")))
+                                .description(OptionDescription.createBuilder().text(Text.literal(
+                                        "Displays time taken for each Kuudra split on the screen. See Kuudra split records using /vc ks."))
+                                        .build())
                                 .binding(defaults.kuudra.kuudraSplitsTimer,
                                         () -> config.kuudra.kuudraSplitsTimer,
                                         newVal -> config.kuudra.kuudraSplitsTimer = newVal)
@@ -111,8 +121,9 @@ public class KuudraConfig {
                         // Kuudra Supply Piles
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Kuudra Supply Piles"))
-                                .description(OptionDescription.of(Text.literal(
-                                        "Displays waypoints for nearby incomplete supply piles.")))
+                                .description(OptionDescription.createBuilder().text(Text.literal(
+                                        "Displays waypoints for nearby incomplete supply piles."))
+                                        .build())
                                 .binding(defaults.kuudra.kuudraSupplyPiles,
                                         () -> config.kuudra.kuudraSupplyPiles,
                                         newVal -> config.kuudra.kuudraSupplyPiles = newVal)

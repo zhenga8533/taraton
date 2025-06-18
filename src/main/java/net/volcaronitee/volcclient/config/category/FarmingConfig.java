@@ -20,8 +20,9 @@ public class FarmingConfig {
                         // Composter Display
                         .option(Option.<ComposterDisplay>createBuilder()
                                 .name(Text.literal("Composter Display"))
-                                .description(OptionDescription.of(Text.literal(
-                                        "Displays a chat message and title when the composter is not active. Alternatively, you can choose to display activity time as an overlay on the screen.")))
+                                .description(OptionDescription.createBuilder().text(Text.literal(
+                                        "Displays a chat message and title when the composter is not active. Alternatively, you can choose to display activity time as an overlay on the screen."))
+                                        .build())
                                 .binding(defaults.farming.composterDisplay,
                                         () -> config.farming.composterDisplay,
                                         newVal -> config.farming.composterDisplay = newVal)
@@ -30,8 +31,9 @@ public class FarmingConfig {
                         // Plot Bounding Box
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Plot Bounding Box"))
-                                .description(OptionDescription.of(Text.literal(
-                                        "Displays a bounding box around the current garden plot.")))
+                                .description(OptionDescription.createBuilder().text(Text.literal(
+                                        "Displays a bounding box around the current garden plot."))
+                                        .build())
                                 .binding(defaults.farming.plotBoundingBox,
                                         () -> config.farming.plotBoundingBox,
                                         newVal -> config.farming.plotBoundingBox = newVal)
@@ -40,8 +42,9 @@ public class FarmingConfig {
                         // Visitor Display
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Visitor Display"))
-                                .description(OptionDescription.of(Text.literal(
-                                        "Displays the current list of garden visitors. Tracks visitor activity outside of the garden.")))
+                                .description(OptionDescription.createBuilder().text(Text.literal(
+                                        "Displays the current list of garden visitors. Tracks visitor activity outside of the garden."))
+                                        .build())
                                 .binding(defaults.farming.visitorDisplay,
                                         () -> config.farming.visitorDisplay,
                                         newVal -> config.farming.visitorDisplay = newVal)
@@ -54,8 +57,9 @@ public class FarmingConfig {
 
                         // Desk Highlight
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Desk Highlight"))
-                                .description(OptionDescription.of(Text.literal(
-                                        "Highlights plots with sprays and pests in the garden desk menu.")))
+                                .description(OptionDescription.createBuilder().text(Text.literal(
+                                        "Highlights plots with sprays and pests in the garden desk menu."))
+                                        .build())
                                 .binding(defaults.farming.deskHighlight,
                                         () -> config.farming.deskHighlight,
                                         newVal -> config.farming.deskHighlight = newVal)
@@ -64,8 +68,9 @@ public class FarmingConfig {
                         // Infestation Warning
                         .option(Option.<Integer>createBuilder()
                                 .name(Text.literal("Infestation Warning"))
-                                .description(OptionDescription.of(Text.literal(
-                                        "Displays a warning when pests are present in the garden. Sets the number of minimum number of pests to trigger the warning.")))
+                                .description(OptionDescription.createBuilder().text(Text.literal(
+                                        "Displays a warning when pests are present in the garden. Sets the number of minimum number of pests to trigger the warning."))
+                                        .build())
                                 .binding(defaults.farming.infestationWarning,
                                         () -> config.farming.infestationWarning,
                                         newVal -> config.farming.infestationWarning = newVal)
@@ -75,16 +80,19 @@ public class FarmingConfig {
 
                         // Pest Alert
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Pest Alert"))
-                                .description(OptionDescription.of(Text.literal(
-                                        "Displays a chat message and title when pests spawn in the garden.")))
+                                .description(OptionDescription.createBuilder().text(Text.literal(
+                                        "Displays a chat message and title when pests spawn in the garden."))
+                                        .build())
                                 .binding(defaults.farming.pestAlert, () -> config.farming.pestAlert,
                                         newVal -> config.farming.pestAlert = newVal)
                                 .controller(ConfigUtil::createBooleanController).build())
 
                         // Spray Display
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Spray Display"))
-                                .description(OptionDescription.of(
-                                        Text.literal("Displays all active sprays on the screen.")))
+                                .description(OptionDescription.createBuilder()
+                                        .text(Text.literal(
+                                                "Displays all active sprays on the screen."))
+                                        .build())
                                 .binding(defaults.farming.sprayDisplay,
                                         () -> config.farming.sprayDisplay,
                                         newVal -> config.farming.sprayDisplay = newVal)

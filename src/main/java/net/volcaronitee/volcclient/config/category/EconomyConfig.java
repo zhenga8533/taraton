@@ -20,8 +20,9 @@ public class EconomyConfig {
 
                         // Coin Tracker
                         .option(Option.<Integer>createBuilder().name(Text.literal("Coin Tracker"))
-                                .description(OptionDescription.of(Text.literal(
-                                        "Tracks coin purse gain/loss progress on the screen. Sets time in minutes of inactivity before tracking stops.")))
+                                .description(OptionDescription.createBuilder().text(Text.literal(
+                                        "Tracks coin purse gain/loss progress on the screen. Sets time in minutes of inactivity before tracking stops."))
+                                        .build())
                                 .binding(defaults.economy.coinTracker,
                                         () -> config.economy.coinTracker,
                                         newVal -> config.economy.coinTracker = newVal)
@@ -32,8 +33,9 @@ public class EconomyConfig {
                         // No Bits Warning
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("No Bits Warning"))
-                                .description(OptionDescription.of(Text.literal(
-                                        "Displays a chat warning and title when bits pool is empty.")))
+                                .description(OptionDescription.createBuilder().text(Text.literal(
+                                        "Displays a chat warning and title when bits pool is empty."))
+                                        .build())
                                 .binding(defaults.economy.noBitsWarning,
                                         () -> config.economy.noBitsWarning,
                                         newVal -> config.economy.noBitsWarning = newVal)
@@ -47,8 +49,9 @@ public class EconomyConfig {
                         // Container Value
                         .option(Option.<Integer>createBuilder()
                                 .name(Text.literal("Container Value"))
-                                .description(OptionDescription.of(Text.literal(
-                                        "Displays item values in container inventories. Set number of items to display before cutoff.")))
+                                .description(OptionDescription.createBuilder().text(Text.literal(
+                                        "Displays item values in container inventories. Set number of items to display before cutoff."))
+                                        .build())
                                 .binding(defaults.economy.containerValue,
                                         () -> config.economy.containerValue,
                                         newVal -> config.economy.containerValue = newVal)
@@ -59,8 +62,10 @@ public class EconomyConfig {
                         // Item Price
                         .option(Option.<EconomyConfig.ItemPrice>createBuilder()
                                 .name(Text.literal("Item Price"))
-                                .description(OptionDescription.of(Text.literal(
-                                        "Sets how item prices are displayed in the game.")))
+                                .description(OptionDescription.createBuilder()
+                                        .text(Text.literal(
+                                                "Sets how item prices are displayed in the game."))
+                                        .build())
                                 .binding(defaults.economy.itemPrice, () -> config.economy.itemPrice,
                                         newVal -> config.economy.itemPrice = newVal)
                                 .controller(ConfigUtil::createEnumController).build())
@@ -68,8 +73,9 @@ public class EconomyConfig {
                         // Single Attribute
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Single Attribute"))
-                                .description(OptionDescription.of(Text.literal(
-                                        "Displays only a single attribute for item prices.")))
+                                .description(OptionDescription.createBuilder().text(Text.literal(
+                                        "Displays only a single attribute for item prices."))
+                                        .build())
                                 .binding(defaults.economy.singleAttribute,
                                         () -> config.economy.singleAttribute,
                                         newVal -> config.economy.singleAttribute = newVal)
@@ -77,8 +83,9 @@ public class EconomyConfig {
 
                         // Price Type
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Price Type"))
-                                .description(OptionDescription.of(Text.literal(
-                                        "Sets the type of bazaar pricing used in item calculations.")))
+                                .description(OptionDescription.createBuilder().text(Text.literal(
+                                        "Sets the type of bazaar pricing used in item calculations."))
+                                        .build())
                                 .binding(defaults.economy.priceType, () -> config.economy.priceType,
                                         newVal -> config.economy.priceType = newVal)
                                 .controller(opt -> ConfigUtil.createBooleanController(opt, "Order",
@@ -88,8 +95,9 @@ public class EconomyConfig {
                         // Trade Evaluation
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Trade Evaluation"))
-                                .description(OptionDescription.of(Text.literal(
-                                        "Enables value comparison display when in trade menus.")))
+                                .description(OptionDescription.createBuilder().text(Text.literal(
+                                        "Enables value comparison display when in trade menus."))
+                                        .build())
                                 .binding(defaults.economy.tradeEvaluation,
                                         () -> config.economy.tradeEvaluation,
                                         newVal -> config.economy.tradeEvaluation = newVal)

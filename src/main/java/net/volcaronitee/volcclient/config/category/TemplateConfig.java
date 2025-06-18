@@ -23,7 +23,8 @@ public class TemplateConfig {
 
                         // Boolean
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Boolean"))
-                                .description(OptionDescription.of(Text.literal("Description")))
+                                .description(OptionDescription.createBuilder()
+                                        .text(Text.literal("Description")).build())
                                 .binding(defaults.template.bool, () -> config.template.bool,
                                         newVal -> config.template.bool = newVal)
                                 .controller(ConfigUtil::createBooleanController).build())
@@ -31,7 +32,8 @@ public class TemplateConfig {
                         // Boolean With Values
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Boolean With Values"))
-                                .description(OptionDescription.of(Text.literal("Description")))
+                                .description(OptionDescription.createBuilder()
+                                        .text(Text.literal("Description")).build())
                                 .binding(defaults.template.bool, () -> config.template.bool,
                                         newVal -> config.template.bool = newVal)
                                 .controller(opt -> ConfigUtil.createBooleanController(opt,
@@ -40,14 +42,16 @@ public class TemplateConfig {
 
                         // Tick Box
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Tick Box"))
-                                .description(OptionDescription.of(Text.literal("Description")))
+                                .description(OptionDescription.createBuilder()
+                                        .text(Text.literal("Description")).build())
                                 .binding(defaults.template.bool, () -> config.template.bool,
                                         newVal -> config.template.bool = newVal)
                                 .controller(opt -> TickBoxControllerBuilder.create(opt)).build())
 
                         // Integer Slider
                         .option(Option.<Integer>createBuilder().name(Text.literal("Integer Slider"))
-                                .description(OptionDescription.of(Text.literal("Description")))
+                                .description(OptionDescription.createBuilder()
+                                        .text(Text.literal("Description")).build())
                                 .binding(defaults.template.integer, () -> config.template.integer,
                                         newVal -> config.template.integer = newVal)
                                 .controller(opt -> IntegerSliderControllerBuilder.create(opt)
@@ -56,7 +60,8 @@ public class TemplateConfig {
 
                         // String
                         .option(Option.<String>createBuilder().name(Text.literal("String"))
-                                .description(OptionDescription.of(Text.literal("Description")))
+                                .description(OptionDescription.createBuilder()
+                                        .text(Text.literal("Description")).build())
                                 .binding(defaults.template.string, () -> config.template.string,
                                         newVal -> config.template.string = newVal)
                                 .controller(opt -> StringControllerBuilder.create(opt)).build())
@@ -64,14 +69,16 @@ public class TemplateConfig {
                         // Enum
                         .option(Option.<TemplateConfig.Imu>createBuilder()
                                 .name(Text.literal("Enum"))
-                                .description(OptionDescription.of(Text.literal("Description")))
+                                .description(OptionDescription.createBuilder()
+                                        .text(Text.literal("Description")).build())
                                 .binding(defaults.template.imu, () -> config.template.imu,
                                         newVal -> config.template.imu = newVal)
                                 .controller(ConfigUtil::createEnumController).build())
 
                         // Color
                         .option(Option.<Color>createBuilder().name(Text.literal("Color"))
-                                .description(OptionDescription.of(Text.literal("Description")))
+                                .description(OptionDescription.createBuilder()
+                                        .text(Text.literal("Description")).build())
                                 .binding(defaults.template.color, () -> config.template.color,
                                         newVal -> config.template.color = newVal)
                                 .controller(

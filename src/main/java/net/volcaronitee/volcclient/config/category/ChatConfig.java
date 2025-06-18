@@ -8,6 +8,7 @@ import dev.isxander.yacl3.api.OptionGroup;
 import dev.isxander.yacl3.api.controller.StringControllerBuilder;
 import dev.isxander.yacl3.config.v2.api.SerialEntry;
 import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
 import net.volcaronitee.volcclient.util.ConfigUtil;
 
 public class ChatConfig {
@@ -20,8 +21,11 @@ public class ChatConfig {
                         // Autocomplete Command
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Autocomplete Command"))
-                                .description(OptionDescription.of(Text.literal(
-                                        "Enables the autocomplete command feature. Autocompletes commands in chat.")))
+                                .description(OptionDescription.createBuilder().text(Text.literal(
+                                        "Enables the autocomplete command feature. Autocompletes commands in chat."))
+                                        .webpImage(Identifier.of("volc-client",
+                                                "config/chat/autocomplete_command.webp"))
+                                        .build())
                                 .binding(defaults.chat.autocompleteCommand,
                                         () -> config.chat.autocompleteCommand,
                                         newVal -> config.chat.autocompleteCommand = newVal)
@@ -30,8 +34,9 @@ public class ChatConfig {
                         // Autocorrect Command
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Autocorrect Command"))
-                                .description(OptionDescription.of(Text.literal(
-                                        "Enables the autocorrect command feature. Autocorrects commands in chat.")))
+                                .description(OptionDescription.createBuilder().text(Text.literal(
+                                        "Enables the autocorrect command feature. Autocorrects commands in chat."))
+                                        .build())
                                 .binding(defaults.chat.autocorrectCommand,
                                         () -> config.chat.autocorrectCommand,
                                         newVal -> config.chat.autocorrectCommand = newVal)
@@ -39,8 +44,9 @@ public class ChatConfig {
 
                         // Custom Emotes
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Custom Emotes"))
-                                .description(OptionDescription.of(Text.literal(
-                                        "Allows the use of MVP++ emotes in chat. Customize your emotes using /vc emotes.")))
+                                .description(OptionDescription.createBuilder().text(Text.literal(
+                                        "Allows the use of MVP++ emotes in chat. Customize your emotes using /vc emotes."))
+                                        .build())
                                 .binding(defaults.chat.customEmotes, () -> config.chat.customEmotes,
                                         newVal -> config.chat.customEmotes = newVal)
                                 .controller(ConfigUtil::createBooleanController).build())
@@ -48,8 +54,9 @@ public class ChatConfig {
                         // Playtime Warning
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Playtime Warning"))
-                                .description(OptionDescription.of(Text.literal(
-                                        "Warns you when you have been playing for too long.")))
+                                .description(OptionDescription.createBuilder().text(Text.literal(
+                                        "Warns you when you have been playing for too long."))
+                                        .build())
                                 .binding(defaults.chat.playtimeWarning,
                                         () -> config.chat.playtimeWarning,
                                         newVal -> config.chat.playtimeWarning = newVal)
@@ -57,8 +64,9 @@ public class ChatConfig {
 
                         // Spam Hider
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Spam Hider"))
-                                .description(OptionDescription.of(Text.literal(
-                                        "Hides spam messages in chat. Customize your spam filter using /vc spam.")))
+                                .description(OptionDescription.createBuilder().text(Text.literal(
+                                        "Hides spam messages in chat. Customize your spam filter using /vc spam."))
+                                        .build())
                                 .binding(defaults.chat.spamHider, () -> config.chat.spamHider,
                                         newVal -> config.chat.spamHider = newVal)
                                 .controller(ConfigUtil::createBooleanController).build())
@@ -66,8 +74,9 @@ public class ChatConfig {
                         // Word Substitution
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Text Substitution"))
-                                .description(OptionDescription.of(Text.literal(
-                                        "Substitutes user defined occurences of texts. Set text mapping using /vc text.")))
+                                .description(OptionDescription.createBuilder().text(Text.literal(
+                                        "Substitutes user defined occurences of texts. Set text mapping using /vc text."))
+                                        .build())
                                 .binding(defaults.chat.textSubstitution,
                                         () -> config.chat.textSubstitution,
                                         newVal -> config.chat.textSubstitution = newVal)
@@ -81,8 +90,9 @@ public class ChatConfig {
                         // Leader Commands
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Leader Commands"))
-                                .description(OptionDescription.of(Text.literal(
-                                        "Enables leader commands in chat. Toggle them using /vc toggles.")))
+                                .description(OptionDescription.createBuilder().text(Text.literal(
+                                        "Enables leader commands in chat. Toggle them using /vc toggles."))
+                                        .build())
                                 .binding(defaults.chat.leaderCommands,
                                         () -> config.chat.leaderCommands,
                                         newVal -> config.chat.leaderCommands = newVal)
@@ -90,8 +100,9 @@ public class ChatConfig {
 
                         // Party Commands
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Party Commands"))
-                                .description(OptionDescription.of(Text.literal(
-                                        "Enables party commands in chat. Toggle them using /vc toggles.")))
+                                .description(OptionDescription.createBuilder().text(Text.literal(
+                                        "Enables party commands in chat. Toggle them using /vc toggles."))
+                                        .build())
                                 .binding(defaults.chat.partyCommands,
                                         () -> config.chat.partyCommands,
                                         newVal -> config.chat.partyCommands = newVal)
@@ -100,8 +111,9 @@ public class ChatConfig {
                         // Guild Join Message
                         .option(Option.<String>createBuilder()
                                 .name(Text.literal("Guild Join Message"))
-                                .description(OptionDescription.of(Text.literal(
-                                        "Sends message when anyone joins your guild. Use %player% for their name.")))
+                                .description(OptionDescription.createBuilder().text(Text.literal(
+                                        "Sends message when anyone joins your guild. Use %player% for their name."))
+                                        .build())
                                 .binding(defaults.chat.guildJoinMessage,
                                         () -> config.chat.guildJoinMessage,
                                         newVal -> config.chat.guildJoinMessage = newVal)
@@ -110,8 +122,9 @@ public class ChatConfig {
                         // Party Join Message
                         .option(Option.<String>createBuilder()
                                 .name(Text.literal("Party Join Message"))
-                                .description(OptionDescription.of(Text.literal(
-                                        "Sends message when anyone joins your party. Use %player% for their name.")))
+                                .description(OptionDescription.createBuilder().text(Text.literal(
+                                        "Sends message when anyone joins your party. Use %player% for their name."))
+                                        .build())
                                 .binding(defaults.chat.partyJoinMessage,
                                         () -> config.chat.partyJoinMessage,
                                         newVal -> config.chat.partyJoinMessage = newVal)
@@ -120,8 +133,9 @@ public class ChatConfig {
                         // Party Leader Only
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Party Leader Only"))
-                                .description(OptionDescription.of(Text.literal(
-                                        "Only sends party join message when you are the party leader.")))
+                                .description(OptionDescription.createBuilder().text(Text.literal(
+                                        "Only sends party join message when you are the party leader."))
+                                        .build())
                                 .binding(defaults.chat.partyLeaderOnly,
                                         () -> config.chat.partyLeaderOnly,
                                         newVal -> config.chat.partyLeaderOnly = newVal)
@@ -135,8 +149,9 @@ public class ChatConfig {
                         // Anti-Ghost Party
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Anti-Ghost Party"))
-                                .description(OptionDescription.of(Text.literal(
-                                        "Prevents ghost parties from being created when partying multiple people.")))
+                                .description(OptionDescription.createBuilder().text(Text.literal(
+                                        "Prevents ghost parties from being created when partying multiple people."))
+                                        .build())
                                 .binding(defaults.chat.antiGhostParty,
                                         () -> config.chat.antiGhostParty,
                                         newVal -> config.chat.antiGhostParty = newVal)
@@ -144,16 +159,18 @@ public class ChatConfig {
 
                         // Join Reparty
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Join Reparty"))
-                                .description(OptionDescription.of(Text.literal(
-                                        "Automatically accepts reparty invites send within 60 seconds.")))
+                                .description(OptionDescription.createBuilder().text(Text.literal(
+                                        "Automatically accepts reparty invites send within 60 seconds."))
+                                        .build())
                                 .binding(defaults.chat.joinReparty, () -> config.chat.joinReparty,
                                         newVal -> config.chat.joinReparty = newVal)
                                 .controller(ConfigUtil::createBooleanController).build())
 
                         // Join Whitelist
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Join Whitelist"))
-                                .description(OptionDescription.of(Text.literal(
-                                        "Automatically accepts party invites from whitelisted players. Whitelist players using /vc wl.")))
+                                .description(OptionDescription.createBuilder().text(Text.literal(
+                                        "Automatically accepts party invites from whitelisted players. Whitelist players using /vc wl."))
+                                        .build())
                                 .binding(defaults.chat.joinWhitelist,
                                         () -> config.chat.joinWhitelist,
                                         newVal -> config.chat.joinWhitelist = newVal)
@@ -162,8 +179,9 @@ public class ChatConfig {
                         // Auto Transfer
                         .option(Option.<ChatConfig.AutoTransfer>createBuilder()
                                 .name(Text.literal("Auto Transfer"))
-                                .description(OptionDescription.of(Text.literal(
-                                        "Automatically transfers party leadership when you leave the party.")))
+                                .description(OptionDescription.createBuilder().text(Text.literal(
+                                        "Automatically transfers party leadership when you leave the party."))
+                                        .build())
                                 .binding(defaults.chat.autoTransfer, () -> config.chat.autoTransfer,
                                         newVal -> config.chat.autoTransfer = newVal)
                                 .controller(ConfigUtil::createEnumController).build())

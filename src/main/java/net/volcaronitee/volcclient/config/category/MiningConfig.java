@@ -19,8 +19,9 @@ public class MiningConfig {
                         // Commission Completion
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Commission Completion"))
-                                .description(OptionDescription.of(Text.literal(
-                                        "Displays a chat message and title when a commission is completed.")))
+                                .description(OptionDescription.createBuilder().text(Text.literal(
+                                        "Displays a chat message and title when a commission is completed."))
+                                        .build())
                                 .binding(defaults.mining.commissionCompletion,
                                         () -> config.mining.commissionCompletion,
                                         newVal -> config.mining.commissionCompletion = newVal)
@@ -29,8 +30,10 @@ public class MiningConfig {
                         // Commission Display
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Commission Display"))
-                                .description(OptionDescription.of(Text
-                                        .literal("Displays all active commissions on the screen.")))
+                                .description(OptionDescription.createBuilder()
+                                        .text(Text.literal(
+                                                "Displays all active commissions on the screen."))
+                                        .build())
                                 .binding(defaults.mining.commissionDisplay,
                                         () -> config.mining.commissionDisplay,
                                         newVal -> config.mining.commissionDisplay = newVal)
@@ -39,8 +42,9 @@ public class MiningConfig {
                         // Commission Waypoints
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Commission Waypoints"))
-                                .description(OptionDescription.of(Text.literal(
-                                        "Renders waypoints to commission locations in the Dwarven Mines.")))
+                                .description(OptionDescription.createBuilder().text(Text.literal(
+                                        "Renders waypoints to commission locations in the Dwarven Mines."))
+                                        .build())
                                 .binding(defaults.mining.commissionWaypoints,
                                         () -> config.mining.commissionWaypoints,
                                         newVal -> config.mining.commissionWaypoints = newVal)
@@ -54,8 +58,9 @@ public class MiningConfig {
                         // Powder Chest Highlight
                         .option(Option.<Integer>createBuilder()
                                 .name(Text.literal("Powder Chest Highlight"))
-                                .description(OptionDescription.of(Text.literal(
-                                        "Highlights nearby powder chests in the Crystal Hollows. Set the block radius to highlight.")))
+                                .description(OptionDescription.createBuilder().text(Text.literal(
+                                        "Highlights nearby powder chests in the Crystal Hollows. Set the block radius to highlight."))
+                                        .build())
                                 .binding(defaults.mining.powderChestHighlight,
                                         () -> config.mining.powderChestHighlight,
                                         newVal -> config.mining.powderChestHighlight = newVal)
@@ -65,8 +70,9 @@ public class MiningConfig {
 
                         // Powder Tracker
                         .option(Option.<Integer>createBuilder().name(Text.literal("Powder Tracker"))
-                                .description(OptionDescription.of(Text.literal(
-                                        "Tracks powder progress on the screen. Sets time in minutes of inactivity before tracking stops.")))
+                                .description(OptionDescription.createBuilder().text(Text.literal(
+                                        "Tracks powder progress on the screen. Sets time in minutes of inactivity before tracking stops."))
+                                        .build())
                                 .binding(defaults.mining.powderTracker,
                                         () -> config.mining.powderTracker,
                                         newVal -> config.mining.powderTracker = newVal)
@@ -82,8 +88,9 @@ public class MiningConfig {
                         // Pickaxe Ability Display
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Pickaxe Ability Display"))
-                                .description(OptionDescription.of(Text.literal(
-                                        "Displays all pickaxe abilities on the screen. Displays a chat message and title when any ability goes off cooldown.")))
+                                .description(OptionDescription.createBuilder().text(Text.literal(
+                                        "Displays all pickaxe abilities on the screen. Displays a chat message and title when any ability goes off cooldown."))
+                                        .build())
                                 .binding(defaults.mining.pickaxeAbilityDisplay,
                                         () -> config.mining.pickaxeAbilityDisplay,
                                         newVal -> config.mining.pickaxeAbilityDisplay = newVal)
@@ -92,8 +99,9 @@ public class MiningConfig {
                         // Wishing Compass Locator
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Wishing Compass Locator"))
-                                .description(OptionDescription.of(Text.literal(
-                                        "Renders a guess waypoint to the Wishing Compass location in the Crystal Hollows.")))
+                                .description(OptionDescription.createBuilder().text(Text.literal(
+                                        "Renders a guess waypoint to the Wishing Compass location in the Crystal Hollows."))
+                                        .build())
                                 .binding(defaults.mining.wishingCompassLocator,
                                         () -> config.mining.wishingCompassLocator,
                                         newVal -> config.mining.wishingCompassLocator = newVal)
@@ -107,8 +115,9 @@ public class MiningConfig {
                         // Corpse Waypoints
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Corpse Waypoints"))
-                                .description(OptionDescription.of(Text.literal(
-                                        "Renders waypoints to all nearby corpses in a mineshaft. UAYOR: This feature uses ESP!")))
+                                .description(OptionDescription.createBuilder().text(Text.literal(
+                                        "Renders waypoints to all nearby corpses in a mineshaft. UAYOR: This feature uses ESP!"))
+                                        .build())
                                 .binding(defaults.mining.corpseWaypoints,
                                         () -> config.mining.corpseWaypoints,
                                         newVal -> config.mining.corpseWaypoints = newVal)
@@ -116,8 +125,10 @@ public class MiningConfig {
 
                         // Fossil Solver
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Fossil Solver"))
-                                .description(OptionDescription.of(Text.literal(
-                                        "Automatically reveals fossils in the excavator.")))
+                                .description(OptionDescription.createBuilder()
+                                        .text(Text.literal(
+                                                "Automatically reveals fossils in the excavator."))
+                                        .build())
                                 .binding(defaults.mining.fossilSolver,
                                         () -> config.mining.fossilSolver,
                                         newVal -> config.mining.fossilSolver = newVal)

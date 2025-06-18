@@ -21,8 +21,9 @@ public class DungeonsConfig {
                         // Croseus Highlight
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Croseus Highlight"))
-                                .description(OptionDescription.of(Text.literal(
-                                        "Highlights unopened dungeon chests in Croseus menu.")))
+                                .description(OptionDescription.createBuilder().text(Text.literal(
+                                        "Highlights unopened dungeon chests in Croseus menu."))
+                                        .build())
                                 .binding(defaults.dungeons.croseusHighlight,
                                         () -> config.dungeons.croseusHighlight,
                                         newVal -> config.dungeons.croseusHighlight = newVal)
@@ -30,8 +31,9 @@ public class DungeonsConfig {
 
                         // Dungeon Profit
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Dungeon Profit"))
-                                .description(OptionDescription.of(Text.literal(
-                                        "Displays profit of any opened dungeon chest on the screen.")))
+                                .description(OptionDescription.createBuilder().text(Text.literal(
+                                        "Displays profit of any opened dungeon chest on the screen."))
+                                        .build())
                                 .binding(defaults.dungeons.dungeonProfit,
                                         () -> config.dungeons.dungeonProfit,
                                         newVal -> config.dungeons.dungeonProfit = newVal)
@@ -45,8 +47,10 @@ public class DungeonsConfig {
                         // Star Mob Highlight
                         .option(Option.<StarMobHighlight>createBuilder()
                                 .name(Text.literal("Star Mob Highlight"))
-                                .description(OptionDescription.of(
-                                        Text.literal("Highlights nearby star mobs in dungeons.")))
+                                .description(OptionDescription.createBuilder()
+                                        .text(Text.literal(
+                                                "Highlights nearby star mobs in dungeons."))
+                                        .build())
                                 .binding(defaults.dungeons.starMobHighlight,
                                         () -> config.dungeons.starMobHighlight,
                                         newVal -> config.dungeons.starMobHighlight = newVal)
@@ -55,8 +59,9 @@ public class DungeonsConfig {
                         // Star Highlight Color
                         .option(Option.<Color>createBuilder()
                                 .name(Text.literal("Star Highlight Color"))
-                                .description(OptionDescription
-                                        .of(Text.literal("Color of the star mob highlight.")))
+                                .description(OptionDescription.createBuilder()
+                                        .text(Text.literal("Color of the star mob highlight."))
+                                        .build())
                                 .binding(defaults.dungeons.starHighligColor,
                                         () -> config.dungeons.starHighligColor,
                                         newVal -> config.dungeons.starHighligColor = newVal)
