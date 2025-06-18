@@ -17,6 +17,9 @@ public class PlayerUtil {
     private PlayerRank playerRank = PlayerRank.NORMAL;
     private String prefix = "";
 
+    private static final long AFK_THRESHOLD = 5 * 60 * 1000L;
+    private long lastActivityTime = 0L;
+
     /**
      * Private constructor to prevent instantiation.
      */
@@ -90,6 +93,16 @@ public class PlayerUtil {
     }
 
     /**
+     * Checks if the player is currently AFK (Away From Keyboard).
+     * 
+     * @return True if the player is AFK, false otherwise.
+     */
+    public static boolean isAFK() {
+        long currentTime = System.currentTimeMillis();
+        return currentTime - INSTANCE.lastActivityTime > AFK_THRESHOLD;
+    }
+
+    /**
      * Returns a debug message containing the current player information.
      * 
      * @return A formatted string with the player's monthly package rank, package rank, player rank,
@@ -97,9 +110,9 @@ public class PlayerUtil {
      */
     public static String debugPlayer() {
         String debugMessage = String.format(
-                "Player Info:\nMonthly Package Rank: %s\nPackage Rank: %s\nPlayer Rank: %s\nPrefix: %s",
+                "Player Info:\nMonthly Package Rank: %s\nPackage Rank: %s\nPlayer Rank: %s\nPrefix: %s\nAFK: %b",
                 INSTANCE.monthlyPackageRank.name(), INSTANCE.packageRank.name(),
-                INSTANCE.playerRank.name(), INSTANCE.prefix);
+                INSTANCE.playerRank.name(), INSTANCE.prefix, isAFK());
         return debugMessage;
     }
 }
