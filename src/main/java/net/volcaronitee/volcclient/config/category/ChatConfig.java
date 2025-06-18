@@ -91,7 +91,7 @@ public class ChatConfig {
                                         .webpImage(Identifier.of("volc-client",
                                                 "config/chat/text_substitution.webp"))
                                         .text(Text.literal(
-                                                "Substitutes user defined occurences of texts. Set text mapping using /vc text."))
+                                                "Substitutes text keys with user defined values anywhere text is rendered. Set text mapping using /vc text."))
                                         .build())
                                 .binding(defaults.chat.textSubstitution,
                                         () -> config.chat.textSubstitution,
