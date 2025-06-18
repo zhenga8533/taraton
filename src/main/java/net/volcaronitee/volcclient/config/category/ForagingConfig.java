@@ -15,7 +15,7 @@ public class ForagingConfig {
                 // Option Group
                 .group(OptionGroup.createBuilder().name(Text.literal(""))
 
-                        // Option
+                        // TODO: Option
                         .option(Option.<Boolean>createBuilder().name(Text.literal(""))
                                 .description(OptionDescription.createBuilder()
                                         .text(Text.literal("")).build())

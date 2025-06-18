@@ -17,7 +17,7 @@ public class EventsConfig {
                 // Diana Option Group
                 .group(OptionGroup.createBuilder().name(Text.literal("Diana"))
 
-                        // Burrow Detection
+                        // TODO: Burrow Detection
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Burrow Detection"))
                                 .description(OptionDescription.createBuilder().text(Text.literal(
@@ -28,7 +28,7 @@ public class EventsConfig {
                                         newVal -> config.events.burrowDetection = newVal)
                                 .controller(ConfigUtil::createBooleanController).build())
 
-                        // Burrow Waypoints
+                        // TODO: Burrow Waypoints
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Burrow Waypoints"))
                                 .description(OptionDescription.createBuilder().text(Text.literal(
@@ -39,7 +39,7 @@ public class EventsConfig {
                                         newVal -> config.events.burrowWaypoints = newVal)
                                 .controller(ConfigUtil::createBooleanController).build())
 
-                        // Inquisitor Announce
+                        // TODO: Inquisitor Announce
                         .option(Option.<AnnounceWP>createBuilder()
                                 .name(Text.literal("Inquisitor Announce"))
                                 .description(OptionDescription.createBuilder()
@@ -51,7 +51,7 @@ public class EventsConfig {
                                         newVal -> config.events.inquisitorAnnounce = newVal)
                                 .controller(ConfigUtil::createEnumController).build())
 
-                        // Inquisitor Detection
+                        // TODO: Inquisitor Detection
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Inquisitor Detection"))
                                 .description(OptionDescription.createBuilder().text(Text.literal(
@@ -67,7 +67,7 @@ public class EventsConfig {
                 // Hoppity Option Group
                 .group(OptionGroup.createBuilder().name(Text.literal("Hoppity"))
 
-                        // Chocolate Factory Display
+                        // TODO: Chocolate Factory Display
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Chocolate Factory Display"))
                                 .description(OptionDescription.createBuilder().text(Text.literal(
@@ -78,7 +78,7 @@ public class EventsConfig {
                                         newVal -> config.events.chocolateFactoryDisplay = newVal)
                                 .controller(ConfigUtil::createBooleanController).build())
 
-                        // Egg Timers
+                        // TODO: Egg Timers
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Egg Timers"))
                                 .description(OptionDescription.createBuilder().text(Text.literal(
                                         "Displays timers for upcoming rabbit eggs on the screen."))
@@ -87,7 +87,7 @@ public class EventsConfig {
                                         newVal -> config.events.eggTimers = newVal)
                                 .controller(ConfigUtil::createBooleanController).build())
 
-                        // Egg Waypoints
+                        // TODO: Egg Waypoints
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Egg Waypoints"))
                                 .description(OptionDescription.createBuilder()
                                         .text(Text.literal(
@@ -98,7 +98,7 @@ public class EventsConfig {
                                         newVal -> config.events.eggWaypoints = newVal)
                                 .controller(ConfigUtil::createBooleanController).build())
 
-                        // Rabbit Worker Highlight
+                        // TODO: Rabbit Worker Highlight
                         .option(Option.<RabbitWorkerHighlight>createBuilder()
                                 .name(Text.literal("Rabbit Worker Highlight"))
                                 .description(OptionDescription.createBuilder().text(Text.literal(
@@ -109,7 +109,7 @@ public class EventsConfig {
                                         newVal -> config.events.rabbitWorkerHighlight = newVal)
                                 .controller(ConfigUtil::createEnumController).build())
 
-                        // Stray Rabbit Alert
+                        // TODO: Stray Rabbit Alert
                         .option(Option.<StrayRabbitAlert>createBuilder()
                                 .name(Text.literal("Stray Rabbit Alert"))
                                 .description(OptionDescription.createBuilder().text(Text.literal(
@@ -125,7 +125,7 @@ public class EventsConfig {
                 // SkyBlock Option Group
                 .group(OptionGroup.createBuilder().name(Text.literal("SkyBlock"))
 
-                        // Bingo Card Display
+                        // TODO: Bingo Card Display
                         .option(Option.<BingoCardDisplay>createBuilder()
                                 .name(Text.literal("Bingo Card Display"))
                                 .description(OptionDescription.createBuilder().text(Text.literal(
@@ -136,7 +136,7 @@ public class EventsConfig {
                                         newVal -> config.events.bingoCardDisplay = newVal)
                                 .controller(ConfigUtil::createEnumController).build())
 
-                        // Calendar Time
+                        // TODO: Calendar Time
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Calendar Time"))
                                 .description(OptionDescription.createBuilder().text(Text.literal(
                                         "Displays the real world start and end times of SkyBlock events in the calendar."))

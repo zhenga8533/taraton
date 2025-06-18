@@ -21,7 +21,7 @@ public class TemplateConfig {
                 // Option Group
                 .group(OptionGroup.createBuilder().name(Text.literal("Group"))
 
-                        // Boolean
+                        // TODO: Boolean
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Boolean"))
                                 .description(OptionDescription.createBuilder()
                                         .text(Text.literal("Description")).build())
@@ -29,7 +29,7 @@ public class TemplateConfig {
                                         newVal -> config.template.bool = newVal)
                                 .controller(ConfigUtil::createBooleanController).build())
 
-                        // Boolean With Values
+                        // TODO: Boolean With Values
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Boolean With Values"))
                                 .description(OptionDescription.createBuilder()
@@ -40,7 +40,7 @@ public class TemplateConfig {
                                         "trueString", "falseString"))
                                 .build())
 
-                        // Tick Box
+                        // TODO: Tick Box
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Tick Box"))
                                 .description(OptionDescription.createBuilder()
                                         .text(Text.literal("Description")).build())
@@ -48,7 +48,7 @@ public class TemplateConfig {
                                         newVal -> config.template.bool = newVal)
                                 .controller(opt -> TickBoxControllerBuilder.create(opt)).build())
 
-                        // Integer Slider
+                        // TODO: Integer Slider
                         .option(Option.<Integer>createBuilder().name(Text.literal("Integer Slider"))
                                 .description(OptionDescription.createBuilder()
                                         .text(Text.literal("Description")).build())
@@ -58,7 +58,7 @@ public class TemplateConfig {
                                         .range(0, 100).step(5))
                                 .build())
 
-                        // String
+                        // TODO: String
                         .option(Option.<String>createBuilder().name(Text.literal("String"))
                                 .description(OptionDescription.createBuilder()
                                         .text(Text.literal("Description")).build())
@@ -66,7 +66,7 @@ public class TemplateConfig {
                                         newVal -> config.template.string = newVal)
                                 .controller(opt -> StringControllerBuilder.create(opt)).build())
 
-                        // Enum
+                        // TODO: Enum
                         .option(Option.<TemplateConfig.Imu>createBuilder()
                                 .name(Text.literal("Enum"))
                                 .description(OptionDescription.createBuilder()
@@ -75,7 +75,7 @@ public class TemplateConfig {
                                         newVal -> config.template.imu = newVal)
                                 .controller(ConfigUtil::createEnumController).build())
 
-                        // Color
+                        // TODO: Color
                         .option(Option.<Color>createBuilder().name(Text.literal("Color"))
                                 .description(OptionDescription.createBuilder()
                                         .text(Text.literal("Description")).build())

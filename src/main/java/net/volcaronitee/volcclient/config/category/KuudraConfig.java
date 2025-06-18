@@ -15,7 +15,7 @@ public class KuudraConfig {
                 // Kuudra Profit Option Group
                 .group(OptionGroup.createBuilder().name(Text.literal("Kuudra Profit"))
 
-                        // Kuudra Profit
+                        // TODO: Kuudra Profit
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Kuudra Profit"))
                                 .description(OptionDescription.createBuilder().text(Text.literal(
                                         "Displays profit of any opened Kuudra chest on the screen."))
@@ -25,7 +25,7 @@ public class KuudraConfig {
                                         newVal -> config.kuudra.kuudraProfit = newVal)
                                 .controller(ConfigUtil::createBooleanController).build())
 
-                        // Kuudra Profit Tracker
+                        // TODO: Kuudra Profit Tracker
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Kuudra Profit Tracker"))
                                 .description(OptionDescription.createBuilder()
@@ -36,7 +36,7 @@ public class KuudraConfig {
                                         newVal -> config.kuudra.kuudraProfitTracker = newVal)
                                 .controller(ConfigUtil::createBooleanController).build())
 
-                        // Tabasco Included
+                        // TODO: Tabasco Included
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Tabasco Included"))
                                 .description(OptionDescription.createBuilder().text(Text.literal(
@@ -52,7 +52,7 @@ public class KuudraConfig {
                 // Kuudra Run Option Group
                 .group(OptionGroup.createBuilder().name(Text.literal("Kuudra Run"))
 
-                        // Kuudra Alerts
+                        // TODO: Kuudra Alerts
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Kuudra Alerts"))
                                 .description(OptionDescription.createBuilder().text(Text.literal(
                                         "Alerts for various Kuudra splits and events. Set tracked events using /vc toggles."))
@@ -62,7 +62,7 @@ public class KuudraConfig {
                                         newVal -> config.kuudra.kuudraAlerts = newVal)
                                 .controller(ConfigUtil::createBooleanController).build())
 
-                        // Kuudra Crate Waypoints
+                        // TODO: Kuudra Crate Waypoints
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Kuudra Crate Waypoints"))
                                 .description(OptionDescription.createBuilder()
@@ -74,7 +74,7 @@ public class KuudraConfig {
                                         newVal -> config.kuudra.kuudraCrateWaypoints = newVal)
                                 .controller(ConfigUtil::createBooleanController).build())
 
-                        // Kuudra Fresh Tracking
+                        // TODO: Kuudra Fresh Tracking
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Kuudra Fresh Tracking"))
                                 .description(OptionDescription.createBuilder().text(Text.literal(
@@ -85,7 +85,7 @@ public class KuudraConfig {
                                         newVal -> config.kuudra.kuudraFreshTracking = newVal)
                                 .controller(ConfigUtil::createBooleanController).build())
 
-                        // Kuudra HP Display
+                        // TODO: Kuudra HP Display
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Kuudra HP Display"))
                                 .description(OptionDescription.createBuilder()
@@ -96,7 +96,7 @@ public class KuudraConfig {
                                         newVal -> config.kuudra.kuudraHpDisplay = newVal)
                                 .controller(ConfigUtil::createBooleanController).build())
 
-                        // Kuudra Spawn Alert
+                        // TODO: Kuudra Spawn Alert
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Kuudra Spawn Alert"))
                                 .description(OptionDescription.createBuilder().text(Text.literal(
@@ -107,7 +107,7 @@ public class KuudraConfig {
                                         newVal -> config.kuudra.kuudraSpawnAlert = newVal)
                                 .controller(ConfigUtil::createBooleanController).build())
 
-                        // Kuudra Splits Timer
+                        // TODO: Kuudra Splits Timer
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Kuudra Splits Timer"))
                                 .description(OptionDescription.createBuilder().text(Text.literal(
@@ -118,7 +118,7 @@ public class KuudraConfig {
                                         newVal -> config.kuudra.kuudraSplitsTimer = newVal)
                                 .controller(ConfigUtil::createBooleanController).build())
 
-                        // Kuudra Supply Piles
+                        // TODO: Kuudra Supply Piles
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Kuudra Supply Piles"))
                                 .description(OptionDescription.createBuilder().text(Text.literal(

@@ -16,7 +16,7 @@ public class CrimsonIslesConfig {
                 // Fishing Option Group
                 .group(OptionGroup.createBuilder().name(Text.literal("Fishing"))
 
-                        // Mythic Lava Creature Announce
+                        // TODO: Mythic Lava Creature Announce
                         .option(Option.<AnnounceWP>createBuilder()
                                 .name(Text.literal("Mythic Lava Creature Announce"))
                                 .description(OptionDescription.createBuilder().text(Text.literal(
@@ -28,7 +28,7 @@ public class CrimsonIslesConfig {
                                                 newVal)
                                 .controller(ConfigUtil::createEnumController).build())
 
-                        // Mythic Lava Creature Highlight
+                        // TODO: Mythic Lava Creature Highlight
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Mythic Lava Creature Highlight"))
                                 .description(OptionDescription.createBuilder().text(Text.literal(
@@ -40,7 +40,7 @@ public class CrimsonIslesConfig {
                                                 newVal)
                                 .controller(ConfigUtil::createBooleanController).build())
 
-                        // Golden Fish Timer
+                        // TODO: Golden Fish Timer
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Golden Fish Timer"))
                                 .description(OptionDescription.createBuilder().text(Text.literal(
@@ -51,7 +51,7 @@ public class CrimsonIslesConfig {
                                         newVal -> config.crimsonIsles.goldenFishTimer = newVal)
                                 .controller(ConfigUtil::createBooleanController).build())
 
-                        // Trophy Fisher Display
+                        // TODO: Trophy Fisher Display
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Trophy Fisher Display"))
                                 .description(OptionDescription.createBuilder().text(Text.literal(
@@ -67,7 +67,7 @@ public class CrimsonIslesConfig {
                 // Vanquisher Option Group
                 .group(OptionGroup.createBuilder().name(Text.literal("Vanquisher"))
 
-                        // Vanquisher Announce
+                        // TODO: Vanquisher Announce
                         .option(Option.<AnnounceWP>createBuilder()
                                 .name(Text.literal("Vanquisher Announce"))
                                 .description(OptionDescription.createBuilder()
@@ -79,7 +79,7 @@ public class CrimsonIslesConfig {
                                         newVal -> config.crimsonIsles.vanquisherAnnounce = newVal)
                                 .controller(ConfigUtil::createEnumController).build())
 
-                        // Vanquisher Highlight
+                        // TODO: Vanquisher Highlight
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Vanquisher Highlight"))
                                 .description(OptionDescription.createBuilder().text(Text.literal(
@@ -90,7 +90,7 @@ public class CrimsonIslesConfig {
                                         newVal -> config.crimsonIsles.vanquisherHighlight = newVal)
                                 .controller(ConfigUtil::createBooleanController).build())
 
-                        // Vanquisher Warp
+                        // TODO: Vanquisher Warp
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Vanquisher Warp"))
                                 .description(OptionDescription.createBuilder().text(Text.literal(

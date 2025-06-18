@@ -16,7 +16,7 @@ public class MiningConfig {
                 // Commission Option Group
                 .group(OptionGroup.createBuilder().name(Text.literal("Commission"))
 
-                        // Commission Completion
+                        // TODO: Commission Completion
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Commission Completion"))
                                 .description(OptionDescription.createBuilder().text(Text.literal(
@@ -27,7 +27,7 @@ public class MiningConfig {
                                         newVal -> config.mining.commissionCompletion = newVal)
                                 .controller(ConfigUtil::createBooleanController).build())
 
-                        // Commission Display
+                        // TODO: Commission Display
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Commission Display"))
                                 .description(OptionDescription.createBuilder()
@@ -39,7 +39,7 @@ public class MiningConfig {
                                         newVal -> config.mining.commissionDisplay = newVal)
                                 .controller(ConfigUtil::createBooleanController).build())
 
-                        // Commission Waypoints
+                        // TODO: Commission Waypoints
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Commission Waypoints"))
                                 .description(OptionDescription.createBuilder().text(Text.literal(
@@ -55,7 +55,7 @@ public class MiningConfig {
                 // Jinx Option Group
                 .group(OptionGroup.createBuilder().name(Text.literal("Jinx"))
 
-                        // Powder Chest Highlight
+                        // TODO: Powder Chest Highlight
                         .option(Option.<Integer>createBuilder()
                                 .name(Text.literal("Powder Chest Highlight"))
                                 .description(OptionDescription.createBuilder().text(Text.literal(
@@ -68,7 +68,7 @@ public class MiningConfig {
                                         .range(0, 128).step(4))
                                 .build())
 
-                        // Powder Tracker
+                        // TODO: Powder Tracker
                         .option(Option.<Integer>createBuilder().name(Text.literal("Powder Tracker"))
                                 .description(OptionDescription.createBuilder().text(Text.literal(
                                         "Tracks powder progress on the screen. Sets time in minutes of inactivity before tracking stops."))
@@ -85,7 +85,7 @@ public class MiningConfig {
                 // Mining Option Group
                 .group(OptionGroup.createBuilder().name(Text.literal("Mining"))
 
-                        // Pickaxe Ability Display
+                        // TODO: Pickaxe Ability Display
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Pickaxe Ability Display"))
                                 .description(OptionDescription.createBuilder().text(Text.literal(
@@ -96,7 +96,7 @@ public class MiningConfig {
                                         newVal -> config.mining.pickaxeAbilityDisplay = newVal)
                                 .controller(ConfigUtil::createBooleanController).build())
 
-                        // Wishing Compass Locator
+                        // TODO: Wishing Compass Locator
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Wishing Compass Locator"))
                                 .description(OptionDescription.createBuilder().text(Text.literal(
@@ -112,7 +112,7 @@ public class MiningConfig {
                 // Shaft Option Group
                 .group(OptionGroup.createBuilder().name(Text.literal("Shaft"))
 
-                        // Corpse Waypoints
+                        // TODO: Corpse Waypoints
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Corpse Waypoints"))
                                 .description(OptionDescription.createBuilder().text(Text.literal(
@@ -123,7 +123,7 @@ public class MiningConfig {
                                         newVal -> config.mining.corpseWaypoints = newVal)
                                 .controller(ConfigUtil::createBooleanController).build())
 
-                        // Fossil Solver
+                        // TODO: Fossil Solver
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Fossil Solver"))
                                 .description(OptionDescription.createBuilder()
                                         .text(Text.literal(

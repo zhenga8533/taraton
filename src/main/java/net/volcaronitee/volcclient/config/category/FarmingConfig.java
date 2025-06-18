@@ -17,7 +17,7 @@ public class FarmingConfig {
                 // Garden Option Group
                 .group(OptionGroup.createBuilder().name(Text.literal("Garden"))
 
-                        // Composter Display
+                        // TODO: Composter Display
                         .option(Option.<ComposterDisplay>createBuilder()
                                 .name(Text.literal("Composter Display"))
                                 .description(OptionDescription.createBuilder().text(Text.literal(
@@ -28,7 +28,7 @@ public class FarmingConfig {
                                         newVal -> config.farming.composterDisplay = newVal)
                                 .controller(ConfigUtil::createEnumController).build())
 
-                        // Plot Bounding Box
+                        // TODO: Plot Bounding Box
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Plot Bounding Box"))
                                 .description(OptionDescription.createBuilder().text(Text.literal(
@@ -39,7 +39,7 @@ public class FarmingConfig {
                                         newVal -> config.farming.plotBoundingBox = newVal)
                                 .controller(ConfigUtil::createBooleanController).build())
 
-                        // Visitor Display
+                        // TODO: Visitor Display
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Visitor Display"))
                                 .description(OptionDescription.createBuilder().text(Text.literal(
@@ -55,7 +55,7 @@ public class FarmingConfig {
                 // Pests Option Group
                 .group(OptionGroup.createBuilder().name(Text.literal("Pests"))
 
-                        // Desk Highlight
+                        // TODO: Desk Highlight
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Desk Highlight"))
                                 .description(OptionDescription.createBuilder().text(Text.literal(
                                         "Highlights plots with sprays and pests in the garden desk menu."))
@@ -65,7 +65,7 @@ public class FarmingConfig {
                                         newVal -> config.farming.deskHighlight = newVal)
                                 .controller(ConfigUtil::createBooleanController).build())
 
-                        // Infestation Warning
+                        // TODO: Infestation Warning
                         .option(Option.<Integer>createBuilder()
                                 .name(Text.literal("Infestation Warning"))
                                 .description(OptionDescription.createBuilder().text(Text.literal(
@@ -78,7 +78,7 @@ public class FarmingConfig {
                                         .range(0, 8).step(1))
                                 .build())
 
-                        // Pest Alert
+                        // TODO: Pest Alert
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Pest Alert"))
                                 .description(OptionDescription.createBuilder().text(Text.literal(
                                         "Displays a chat message and title when pests spawn in the garden."))
@@ -87,7 +87,7 @@ public class FarmingConfig {
                                         newVal -> config.farming.pestAlert = newVal)
                                 .controller(ConfigUtil::createBooleanController).build())
 
-                        // Spray Display
+                        // TODO: Spray Display
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Spray Display"))
                                 .description(OptionDescription.createBuilder()
                                         .text(Text.literal(

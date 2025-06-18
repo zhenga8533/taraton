@@ -15,7 +15,7 @@ public class ContainerConfig {
                 // Container Option Group
                 .group(OptionGroup.createBuilder().name(Text.literal("Container"))
 
-                        // Container Preview
+                        // TODO: Container Preview
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Container Preview"))
                                 .description(OptionDescription.createBuilder().text(Text.literal(
@@ -26,7 +26,7 @@ public class ContainerConfig {
                                         newVal -> config.container.containerPreview = newVal)
                                 .controller(ConfigUtil::createBooleanController).build())
 
-                        // Searchbar
+                        // TODO: Searchbar
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Searchbar"))
                                 .description(OptionDescription.createBuilder()
                                         .text(Text.literal(
@@ -42,7 +42,7 @@ public class ContainerConfig {
                 // Container Option Group
                 .group(OptionGroup.createBuilder().name(Text.literal("Hotkey"))
 
-                        // Container Buttons
+                        // TODO: Container Buttons
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Container Buttons"))
                                 .description(OptionDescription.createBuilder().text(Text.literal(
@@ -53,7 +53,7 @@ public class ContainerConfig {
                                         newVal -> config.container.containerButtons = newVal)
                                 .controller(ConfigUtil::createBooleanController).build())
 
-                        // Slot Binding
+                        // TODO: Slot Binding
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Slot Binding"))
                                 .description(OptionDescription.createBuilder().text(Text.literal(
                                         "Allows you to bind inventory slots to one another. Ctrl + LC to swap binded slots. Set bindings using /vc bind."))
@@ -63,7 +63,7 @@ public class ContainerConfig {
                                         newVal -> config.container.slotBinding = newVal)
                                 .controller(ConfigUtil::createBooleanController).build())
 
-                        // Wardrobe Swap
+                        // TODO: Wardrobe Swap
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Wardrobe Swap"))
                                 .description(OptionDescription.createBuilder().text(Text.literal(
                                         "Allows you to fast swap armor in the wardrobe using keybinds. Set keybinds using /vc wardrobe."))
@@ -78,7 +78,7 @@ public class ContainerConfig {
                 // Items Option Group
                 .group(OptionGroup.createBuilder().name(Text.literal("Items"))
 
-                        // Attribute Abbreviation
+                        // TODO: Attribute Abbreviation
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Attribute Abbreviation"))
                                 .description(OptionDescription.createBuilder().text(Text.literal(
@@ -89,7 +89,7 @@ public class ContainerConfig {
                                         newVal -> config.container.attributeAbbreviation = newVal)
                                 .controller(ConfigUtil::createBooleanController).build())
 
-                        // Armor Display
+                        // TODO: Armor Display
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Armor Display"))
                                 .description(OptionDescription.createBuilder()
                                         .text(Text.literal(
@@ -100,7 +100,7 @@ public class ContainerConfig {
                                         newVal -> config.container.armorDisplay = newVal)
                                 .controller(ConfigUtil::createBooleanController).build())
 
-                        // Equipment Display
+                        // TODO: Equipment Display
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Equipment Display"))
                                 .description(OptionDescription.createBuilder()
@@ -112,7 +112,7 @@ public class ContainerConfig {
                                         newVal -> config.container.equipmentDisplay = newVal)
                                 .controller(ConfigUtil::createBooleanController).build())
 
-                        // Max Supercraft
+                        // TODO: Max Supercraft
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Max Supercraft"))
                                 .description(OptionDescription.createBuilder().text(Text.literal(
                                         "Displays the maximum supercraft quantity in the crafting description."))

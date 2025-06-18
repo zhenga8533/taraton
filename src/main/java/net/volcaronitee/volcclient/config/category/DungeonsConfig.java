@@ -18,7 +18,7 @@ public class DungeonsConfig {
                 // Chests Option Group
                 .group(OptionGroup.createBuilder().name(Text.literal("Chests"))
 
-                        // Croseus Highlight
+                        // TODO: Croseus Highlight
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Croseus Highlight"))
                                 .description(OptionDescription.createBuilder().text(Text.literal(
@@ -29,7 +29,7 @@ public class DungeonsConfig {
                                         newVal -> config.dungeons.croseusHighlight = newVal)
                                 .controller(ConfigUtil::createBooleanController).build())
 
-                        // Dungeon Profit
+                        // TODO: Dungeon Profit
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Dungeon Profit"))
                                 .description(OptionDescription.createBuilder().text(Text.literal(
                                         "Displays profit of any opened dungeon chest on the screen."))
@@ -44,7 +44,7 @@ public class DungeonsConfig {
                 // Star Detection Option Group
                 .group(OptionGroup.createBuilder().name(Text.literal("Star Detection"))
 
-                        // Star Mob Highlight
+                        // TODO: Star Mob Highlight
                         .option(Option.<StarMobHighlight>createBuilder()
                                 .name(Text.literal("Star Mob Highlight"))
                                 .description(OptionDescription.createBuilder()
@@ -56,7 +56,7 @@ public class DungeonsConfig {
                                         newVal -> config.dungeons.starMobHighlight = newVal)
                                 .controller(ConfigUtil::createEnumController).build())
 
-                        // Star Highlight Color
+                        // TODO: Star Highlight Color
                         .option(Option.<Color>createBuilder()
                                 .name(Text.literal("Star Highlight Color"))
                                 .description(OptionDescription.createBuilder()

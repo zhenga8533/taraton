@@ -20,7 +20,7 @@ public class CombatConfig {
                 // Bestiary Option Group
                 .group(OptionGroup.createBuilder().name(Text.literal("Bestiary"))
 
-                        // Bestiary Counter
+                        // TODO: Bestiary Counter
                         .option(Option.<BestiaryCounter>createBuilder()
                                 .name(Text.literal("Bestiary Counter"))
                                 .description(OptionDescription.createBuilder().text(Text.literal(
@@ -31,7 +31,7 @@ public class CombatConfig {
                                         newVal -> config.combat.bestiaryCounter = newVal)
                                 .controller(ConfigUtil::createEnumController).build())
 
-                        // Bestiary Menu
+                        // TODO: Bestiary Menu
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Bestiary Menu"))
                                 .description(OptionDescription.createBuilder().text(Text.literal(
                                         "Displays bestiary level as stack size and highlight uncompleted bestiary milestones."))
@@ -41,7 +41,7 @@ public class CombatConfig {
                                         newVal -> config.combat.bestiaryMenu = newVal)
                                 .controller(ConfigUtil::createBooleanController).build())
 
-                        // Hitbox Color
+                        // TODO: Hitbox Color
                         .option(Option.<Color>createBuilder().name(Text.literal("Hitbox Color"))
                                 .description(OptionDescription.createBuilder().text(Text.literal(
                                         "Sets the seed seed used for the color of entity hitboxes."))
@@ -53,7 +53,7 @@ public class CombatConfig {
                                         opt -> ColorControllerBuilder.create(opt).allowAlpha(true))
                                 .build())
 
-                        // Kill Tracker
+                        // TODO: Kill Tracker
                         .option(Option.<Integer>createBuilder().name(Text.literal("Kill Tracker"))
                                 .description(OptionDescription.createBuilder().text(Text.literal(
                                         "Tracks kills progress on the screen. Sets time in minutes of inactivity before tracking stops. Uses the bestiary widget to track kills."))
@@ -70,7 +70,7 @@ public class CombatConfig {
                 // Combat Option Group
                 .group(OptionGroup.createBuilder().name(Text.literal("Combat"))
 
-                        // Combo Display
+                        // TODO: Combo Display
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Combo Display"))
                                 .description(OptionDescription.createBuilder().text(Text.literal(
                                         "Removes grandma wolf combo chat messages and displays a combo overlay on the screen."))
@@ -80,7 +80,7 @@ public class CombatConfig {
                                         newVal -> config.combat.comboDisplay = newVal)
                                 .controller(ConfigUtil::createBooleanController).build())
 
-                        // Damage Tracer
+                        // TODO: Damage Tracer
                         .option(Option.<DamageTracer>createBuilder()
                                 .name(Text.literal("Damage Tracer"))
                                 .description(OptionDescription.createBuilder().text(Text.literal(
@@ -91,7 +91,7 @@ public class CombatConfig {
                                         newVal -> config.combat.damageTracer = newVal)
                                 .controller(ConfigUtil::createEnumController).build())
 
-                        // Low Health Warning
+                        // TODO: Low Health Warning
                         .option(Option.<Integer>createBuilder()
                                 .name(Text.literal("Low Health Warning"))
                                 .description(OptionDescription.createBuilder().text(Text.literal(
@@ -104,7 +104,7 @@ public class CombatConfig {
                                         .range(0, 100).step(5))
                                 .build())
 
-                        // Mana Drain Range
+                        // TODO: Mana Drain Range
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Mana Drain Range"))
                                 .description(OptionDescription.createBuilder().text(Text.literal(
@@ -115,7 +115,7 @@ public class CombatConfig {
                                         newVal -> config.combat.manaDrainRange = newVal)
                                 .controller(ConfigUtil::createBooleanController).build())
 
-                        // Ragnarok Detection
+                        // TODO: Ragnarok Detection
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Ragnarok Detection"))
                                 .description(OptionDescription.createBuilder().text(Text.literal(
@@ -131,7 +131,7 @@ public class CombatConfig {
                 // Slayer Option Group
                 .group(OptionGroup.createBuilder().name(Text.literal("Slayer"))
 
-                        // Slayer Boss Announce
+                        // TODO: Slayer Boss Announce
                         .option(Option.<AnnounceWP>createBuilder()
                                 .name(Text.literal("Slayer Boss Announce"))
                                 .description(OptionDescription.createBuilder()
@@ -143,7 +143,7 @@ public class CombatConfig {
                                         newVal -> config.combat.slayerBossAnnounce = newVal)
                                 .controller(ConfigUtil::createEnumController).build())
 
-                        // Slayer Boss Highlight
+                        // TODO: Slayer Boss Highlight
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Slayer Boss Highlight"))
                                 .description(OptionDescription.createBuilder().text(Text.literal(
@@ -154,7 +154,7 @@ public class CombatConfig {
                                         newVal -> config.combat.slayerBossHighlight = newVal)
                                 .controller(ConfigUtil::createBooleanController).build())
 
-                        // Slayer Miniboss Announce
+                        // TODO: Slayer Miniboss Announce
                         .option(Option.<AnnounceWP>createBuilder()
                                 .name(Text.literal("Slayer Miniboss Announce"))
                                 .description(OptionDescription.createBuilder()
@@ -166,7 +166,7 @@ public class CombatConfig {
                                         newVal -> config.combat.slayerMinibossAnnounce = newVal)
                                 .controller(ConfigUtil::createEnumController).build())
 
-                        // Slayer Miniboss Highlight
+                        // TODO: Slayer Miniboss Highlight
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Slayer Miniboss Highlight"))
                                 .description(OptionDescription.createBuilder().text(Text.literal(
@@ -177,7 +177,7 @@ public class CombatConfig {
                                         newVal -> config.combat.slayerMinibossHighlight = newVal)
                                 .controller(ConfigUtil::createBooleanController).build())
 
-                        // Slayer Spawn Warning
+                        // TODO: Slayer Spawn Warning
                         .option(Option.<Integer>createBuilder()
                                 .name(Text.literal("Slayer Spawn Warning"))
                                 .description(OptionDescription.createBuilder().text(Text.literal(

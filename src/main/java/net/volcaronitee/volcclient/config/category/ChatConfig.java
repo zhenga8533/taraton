@@ -18,7 +18,7 @@ public class ChatConfig {
                 // Correct Option Group
                 .group(OptionGroup.createBuilder().name(Text.literal("Correct"))
 
-                        // Autocomplete Command
+                        // TODO: Autocomplete Command
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Autocomplete Command"))
                                 .description(OptionDescription.createBuilder().text(Text.literal(
@@ -31,7 +31,7 @@ public class ChatConfig {
                                         newVal -> config.chat.autocompleteCommand = newVal)
                                 .controller(ConfigUtil::createBooleanController).build())
 
-                        // Autocorrect Command
+                        // TODO: Autocorrect Command
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Autocorrect Command"))
                                 .description(OptionDescription.createBuilder().text(Text.literal(
@@ -42,7 +42,7 @@ public class ChatConfig {
                                         newVal -> config.chat.autocorrectCommand = newVal)
                                 .controller(ConfigUtil::createBooleanController).build())
 
-                        // Custom Emotes
+                        // TODO: Custom Emotes
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Custom Emotes"))
                                 .description(OptionDescription.createBuilder().text(Text.literal(
                                         "Allows the use of MVP++ emotes in chat. Customize your emotes using /vc emotes."))
@@ -51,7 +51,7 @@ public class ChatConfig {
                                         newVal -> config.chat.customEmotes = newVal)
                                 .controller(ConfigUtil::createBooleanController).build())
 
-                        // Playtime Warning
+                        // TODO: Playtime Warning
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Playtime Warning"))
                                 .description(OptionDescription.createBuilder().text(Text.literal(
@@ -62,7 +62,7 @@ public class ChatConfig {
                                         newVal -> config.chat.playtimeWarning = newVal)
                                 .controller(ConfigUtil::createBooleanController).build())
 
-                        // Spam Hider
+                        // TODO: Spam Hider
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Spam Hider"))
                                 .description(OptionDescription.createBuilder().text(Text.literal(
                                         "Hides spam messages in chat. Customize your spam filter using /vc spam."))
@@ -71,7 +71,7 @@ public class ChatConfig {
                                         newVal -> config.chat.spamHider = newVal)
                                 .controller(ConfigUtil::createBooleanController).build())
 
-                        // Word Substitution
+                        // TODO: Word Substitution
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Text Substitution"))
                                 .description(OptionDescription.createBuilder().text(Text.literal(
@@ -87,7 +87,7 @@ public class ChatConfig {
                 // Message Option Group
                 .group(OptionGroup.createBuilder().name(Text.literal("Message"))
 
-                        // Leader Commands
+                        // TODO: Leader Commands
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Leader Commands"))
                                 .description(OptionDescription.createBuilder().text(Text.literal(
@@ -98,7 +98,7 @@ public class ChatConfig {
                                         newVal -> config.chat.leaderCommands = newVal)
                                 .controller(ConfigUtil::createBooleanController).build())
 
-                        // Party Commands
+                        // TODO: Party Commands
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Party Commands"))
                                 .description(OptionDescription.createBuilder().text(Text.literal(
                                         "Enables party commands in chat. Toggle them using /vc toggles."))
@@ -108,7 +108,7 @@ public class ChatConfig {
                                         newVal -> config.chat.partyCommands = newVal)
                                 .controller(ConfigUtil::createBooleanController).build())
 
-                        // Guild Join Message
+                        // TODO: Guild Join Message
                         .option(Option.<String>createBuilder()
                                 .name(Text.literal("Guild Join Message"))
                                 .description(OptionDescription.createBuilder().text(Text.literal(
@@ -119,7 +119,7 @@ public class ChatConfig {
                                         newVal -> config.chat.guildJoinMessage = newVal)
                                 .controller(opt -> StringControllerBuilder.create(opt)).build())
 
-                        // Party Join Message
+                        // TODO: Party Join Message
                         .option(Option.<String>createBuilder()
                                 .name(Text.literal("Party Join Message"))
                                 .description(OptionDescription.createBuilder().text(Text.literal(
@@ -130,7 +130,7 @@ public class ChatConfig {
                                         newVal -> config.chat.partyJoinMessage = newVal)
                                 .controller(opt -> StringControllerBuilder.create(opt)).build())
 
-                        // Party Leader Only
+                        // TODO: Party Leader Only
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Party Leader Only"))
                                 .description(OptionDescription.createBuilder().text(Text.literal(
@@ -146,7 +146,7 @@ public class ChatConfig {
                 // Party Option Group
                 .group(OptionGroup.createBuilder().name(Text.literal("Message"))
 
-                        // Anti-Ghost Party
+                        // TODO: Anti-Ghost Party
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Anti-Ghost Party"))
                                 .description(OptionDescription.createBuilder().text(Text.literal(
@@ -157,7 +157,7 @@ public class ChatConfig {
                                         newVal -> config.chat.antiGhostParty = newVal)
                                 .controller(ConfigUtil::createBooleanController).build())
 
-                        // Join Reparty
+                        // TODO: Join Reparty
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Join Reparty"))
                                 .description(OptionDescription.createBuilder().text(Text.literal(
                                         "Automatically accepts reparty invites send within 60 seconds."))
@@ -166,7 +166,7 @@ public class ChatConfig {
                                         newVal -> config.chat.joinReparty = newVal)
                                 .controller(ConfigUtil::createBooleanController).build())
 
-                        // Join Whitelist
+                        // TODO: Join Whitelist
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Join Whitelist"))
                                 .description(OptionDescription.createBuilder().text(Text.literal(
                                         "Automatically accepts party invites from whitelisted players. Whitelist players using /vc wl."))
@@ -176,7 +176,7 @@ public class ChatConfig {
                                         newVal -> config.chat.joinWhitelist = newVal)
                                 .controller(ConfigUtil::createBooleanController).build())
 
-                        // Auto Transfer
+                        // TODO: Auto Transfer
                         .option(Option.<ChatConfig.AutoTransfer>createBuilder()
                                 .name(Text.literal("Auto Transfer"))
                                 .description(OptionDescription.createBuilder().text(Text.literal(

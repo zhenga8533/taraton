@@ -18,7 +18,7 @@ public class EconomyConfig {
                 // Economy Option Group
                 .group(OptionGroup.createBuilder().name(Text.literal("Economy"))
 
-                        // Coin Tracker
+                        // TODO: Coin Tracker
                         .option(Option.<Integer>createBuilder().name(Text.literal("Coin Tracker"))
                                 .description(OptionDescription.createBuilder().text(Text.literal(
                                         "Tracks coin purse gain/loss progress on the screen. Sets time in minutes of inactivity before tracking stops."))
@@ -30,7 +30,7 @@ public class EconomyConfig {
                                         .range(0, 10).step(1))
                                 .build())
 
-                        // No Bits Warning
+                        // TODO: No Bits Warning
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("No Bits Warning"))
                                 .description(OptionDescription.createBuilder().text(Text.literal(
@@ -46,7 +46,7 @@ public class EconomyConfig {
                 // Item Value Option Group
                 .group(OptionGroup.createBuilder().name(Text.literal("Item Value"))
 
-                        // Container Value
+                        // TODO: Container Value
                         .option(Option.<Integer>createBuilder()
                                 .name(Text.literal("Container Value"))
                                 .description(OptionDescription.createBuilder().text(Text.literal(
@@ -59,7 +59,7 @@ public class EconomyConfig {
                                         .range(0, 54).step(1))
                                 .build())
 
-                        // Item Price
+                        // TODO: Item Price
                         .option(Option.<EconomyConfig.ItemPrice>createBuilder()
                                 .name(Text.literal("Item Price"))
                                 .description(OptionDescription.createBuilder()
@@ -70,7 +70,7 @@ public class EconomyConfig {
                                         newVal -> config.economy.itemPrice = newVal)
                                 .controller(ConfigUtil::createEnumController).build())
 
-                        // Single Attribute
+                        // TODO: Single Attribute
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Single Attribute"))
                                 .description(OptionDescription.createBuilder().text(Text.literal(
@@ -81,7 +81,7 @@ public class EconomyConfig {
                                         newVal -> config.economy.singleAttribute = newVal)
                                 .controller(ConfigUtil::createBooleanController).build())
 
-                        // Price Type
+                        // TODO: Price Type
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Price Type"))
                                 .description(OptionDescription.createBuilder().text(Text.literal(
                                         "Sets the type of bazaar pricing used in item calculations."))
@@ -92,7 +92,7 @@ public class EconomyConfig {
                                         "Insta"))
                                 .build())
 
-                        // Trade Evaluation
+                        // TODO: Trade Evaluation
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Trade Evaluation"))
                                 .description(OptionDescription.createBuilder().text(Text.literal(

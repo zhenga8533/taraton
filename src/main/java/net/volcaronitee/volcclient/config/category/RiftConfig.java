@@ -17,7 +17,7 @@ public class RiftConfig {
                 // Rift Option Group
                 .group(OptionGroup.createBuilder().name(Text.literal("Rift Tasks"))
 
-                        // DDR Helper
+                        // TODO: DDR Helper
                         .option(Option.<Boolean>createBuilder().name(Text.literal("DDR Helper"))
                                 .description(OptionDescription.createBuilder()
                                         .text(Text.literal(
@@ -27,7 +27,7 @@ public class RiftConfig {
                                         newVal -> config.rift.ddrHelper = newVal)
                                 .controller(ConfigUtil::createBooleanController).build())
 
-                        // Enigma Soul Waypoints
+                        // TODO: Enigma Soul Waypoints
                         .option(Option.<Integer>createBuilder()
                                 .name(Text.literal("Enigma Soul Waypoints"))
                                 .description(OptionDescription.createBuilder().text(Text.literal(
@@ -40,7 +40,7 @@ public class RiftConfig {
                                         .range(0, 128).step(4))
                                 .build())
 
-                        // Montezuma Soul Waypoints
+                        // TODO: Montezuma Soul Waypoints
                         .option(Option.<Integer>createBuilder()
                                 .name(Text.literal("Montezuma Soul Waypoints"))
                                 .description(OptionDescription.createBuilder().text(Text.literal(
@@ -58,7 +58,7 @@ public class RiftConfig {
                 // Vampire Slayer Option Group
                 .group(OptionGroup.createBuilder().name(Text.literal("Vampire Slayer"))
 
-                        // Announce Mania Phase
+                        // TODO: Announce Mania Phase
                         .option(Option.<AnnounceWP>createBuilder()
                                 .name(Text.literal("Announce Mania Phase"))
                                 .description(OptionDescription.createBuilder()
@@ -70,7 +70,7 @@ public class RiftConfig {
                                         newVal -> config.rift.announceManiaPhase = newVal)
                                 .controller(ConfigUtil::createEnumController).build())
 
-                        // Effigy Waypoint
+                        // TODO: Effigy Waypoint
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Effigy Waypoint"))
                                 .description(OptionDescription.createBuilder()
@@ -82,7 +82,7 @@ public class RiftConfig {
                                         newVal -> config.rift.effigyWaypoint = newVal)
                                 .controller(ConfigUtil::createBooleanController).build())
 
-                        // Vampire Attack Display
+                        // TODO: Vampire Attack Display
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Vampire Attack Display"))
                                 .description(OptionDescription.createBuilder().text(Text.literal(
