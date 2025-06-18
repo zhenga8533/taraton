@@ -10,7 +10,6 @@ import net.volcaronitee.volcclient.feature.chat.TextSubstitution;
 
 @Mixin(ItemStack.class)
 public class ItemStackMixin {
-
     @Inject(method = "getName", at = @At("RETURN"), cancellable = true)
     private void volcclient$modifyItemName(CallbackInfoReturnable<Text> cir) {
         Text originalName = cir.getReturnValue();
