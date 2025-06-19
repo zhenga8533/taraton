@@ -7,8 +7,12 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
+import net.volcaronitee.volcclient.util.ConfigUtil;
 import net.volcaronitee.volcclient.util.JsonUtil;
 
+/**
+ * Singleton class that tracks the player's playtime and sends a warning message
+ */
 public class PlaytimeWarning {
     private static final PlaytimeWarning INSTANCE = new PlaytimeWarning();
     private static final String FILENAME = "daily_playtime.json";
@@ -55,7 +59,8 @@ public class PlaytimeWarning {
 
         INSTANCE.playtimeTicks++;
 
-        if (INSTANCE.playtimeTicks % PLAYTIME_THRESHOLD == 0) { // Every 8 hour
+        if (ConfigUtil.getHandler().chat.playtimeWarning
+                && INSTANCE.playtimeTicks % PLAYTIME_THRESHOLD == 0) { // Every 8 hour
             int hours = INSTANCE.playtimeTicks / PLAYTIME_THRESHOLD;
             client.inGameHud.getChatHud()
                     .addMessage(Text.literal("You have played for " + hours + " hour(s)."));
