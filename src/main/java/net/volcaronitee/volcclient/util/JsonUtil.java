@@ -37,8 +37,8 @@ public class JsonUtil {
      * @param fileName The name of the JSON file to load.
      * @return The loaded JsonObject, or an empty JsonObject if the file doesn't exist.
      */
-    public static JsonObject loadJson(String fileName) {
-        Path filePath = JSON_DIR.resolve(fileName);
+    public static JsonObject loadJson(String fileDir, String fileName) {
+        Path filePath = JSON_DIR.resolve(fileDir).resolve(fileName);
 
         try {
             if (!Files.exists(filePath)) {
@@ -60,6 +60,16 @@ public class JsonUtil {
             e.printStackTrace();
             return new JsonObject();
         }
+    }
+
+    /**
+     * Loads a JSON file from the root JSON directory, creating it if it doesn't exist.
+     * 
+     * @param fileName The name of the JSON file to load.
+     * @return The loaded JsonObject, or an empty JsonObject if the file doesn't exist.
+     */
+    public static JsonObject loadJson(String fileName) {
+        return loadJson("", fileName);
     }
 
     /**
