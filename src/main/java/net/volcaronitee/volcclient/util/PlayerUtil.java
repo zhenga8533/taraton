@@ -59,7 +59,7 @@ public class PlayerUtil {
     /**
      * Updates the last activity time of the player when they move.
      */
-    public void clientPlayerEntity$onPlayerMove() {
+    public void clientPlayerEntity$move() {
         INSTANCE.lastActivityTime = System.currentTimeMillis();
     }
 
@@ -104,7 +104,7 @@ public class PlayerUtil {
      * 
      * @return True if the player is AFK, false otherwise.
      */
-    public static boolean isAFK() {
+    public static boolean isAfk() {
         long currentTime = System.currentTimeMillis();
         return currentTime - INSTANCE.lastActivityTime > AFK_THRESHOLD;
     }
@@ -119,7 +119,7 @@ public class PlayerUtil {
         String debugMessage = String.format(
                 "Player Info:\nMonthly Package Rank: %s\nPackage Rank: %s\nPlayer Rank: %s\nPrefix: %s\nAFK: %b",
                 INSTANCE.monthlyPackageRank.name(), INSTANCE.packageRank.name(),
-                INSTANCE.playerRank.name(), INSTANCE.prefix, isAFK());
+                INSTANCE.playerRank.name(), INSTANCE.prefix, isAfk());
         return debugMessage;
     }
 }
