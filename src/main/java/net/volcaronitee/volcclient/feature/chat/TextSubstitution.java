@@ -62,7 +62,7 @@ public class TextSubstitution {
      * @param originalText The original text to be processed.
      * @return The processed text with substitutions applied.
      */
-    public static Text textRenderer$redirectAsOrderedText(Text originalText) {
+    public static Text textRenderer$textRendererDrawLayer(Text originalText) {
         MutableText substitutedText = Text.empty().copy();
 
         // Visit each part of the original text and apply substitutions

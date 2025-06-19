@@ -25,7 +25,7 @@ public class TextRendererMixin {
             return true;
         });
 
-        Text modifiedText = TextSubstitution.textRenderer$redirectAsOrderedText(originalRichText);
+        Text modifiedText = TextSubstitution.textRenderer$textRendererDrawLayer(originalRichText);
         OrderedText orderedTextToProcess;
         if (!modifiedText.equals(originalRichText)) {
             orderedTextToProcess = modifiedText.asOrderedText();
