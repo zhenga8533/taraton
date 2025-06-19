@@ -68,8 +68,12 @@ public class CommandUtil {
             return 0;
         }
 
-        ScreenUtil screen = new ScreenUtil();
-        client.setScreen(ConfigUtil.createScreen(screen));
+        // Defer the screen opening to the main client thread
+        client.send(() -> {
+            ScreenUtil screen = new ScreenUtil();
+            client.setScreen(ConfigUtil.createScreen(screen));
+        });
+
         return 1;
     }
 
