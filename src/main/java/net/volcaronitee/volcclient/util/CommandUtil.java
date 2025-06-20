@@ -15,7 +15,7 @@ import net.minecraft.text.Text;
 public class CommandUtil {
     private static final String[] ALIASES = {"vc", "volc", "volcclient"};
 
-    /*
+    /**
      * Initializes the client command registration for Volc Client.
      */
     public static void init() {

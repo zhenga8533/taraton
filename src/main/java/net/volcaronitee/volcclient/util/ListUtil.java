@@ -58,8 +58,7 @@ public class ListUtil {
             MinecraftClient client = MinecraftClient.getInstance();
 
             client.send(() -> {
-                ScreenUtil screen = new ScreenUtil();
-                client.setScreen(createScreen(screen));
+                client.setScreen(createScreen(client.currentScreen));
             });
 
             return 1;
