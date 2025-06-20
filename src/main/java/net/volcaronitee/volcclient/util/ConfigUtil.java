@@ -12,6 +12,7 @@ import dev.isxander.yacl3.config.v2.api.serializer.GsonConfigSerializerBuilder;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.Text;
+import net.volcaronitee.volcclient.VolcClient;
 import net.volcaronitee.volcclient.config.category.ChatConfig;
 import net.volcaronitee.volcclient.config.category.CombatConfig;
 import net.volcaronitee.volcclient.config.category.ContainerConfig;
@@ -32,7 +33,7 @@ import net.volcaronitee.volcclient.config.category.TemplateConfig;
  */
 public class ConfigUtil {
     private static final Path CONFIG_PATH =
-            FabricLoader.getInstance().getConfigDir().resolve("volcclient/config.json");
+            FabricLoader.getInstance().getConfigDir().resolve(VolcClient.MOD_ID + "/config.json");
     private static final ConfigClassHandler<ConfigUtil> HANDLER =
             ConfigClassHandler.createBuilder(ConfigUtil.class)
                     .serializer(config -> GsonConfigSerializerBuilder.create(config)
