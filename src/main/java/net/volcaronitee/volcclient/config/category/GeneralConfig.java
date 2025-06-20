@@ -10,6 +10,7 @@ import dev.isxander.yacl3.api.controller.StringControllerBuilder;
 import dev.isxander.yacl3.config.v2.api.SerialEntry;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
+import net.volcaronitee.volcclient.VolcClient;
 import net.volcaronitee.volcclient.util.ConfigUtil;
 
 public class GeneralConfig {
@@ -22,7 +23,7 @@ public class GeneralConfig {
                         // TODO: Mod Enabled
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Mod Enabled"))
                                 .description(OptionDescription.createBuilder()
-                                        .webpImage(Identifier.of("volc-client",
+                                        .webpImage(Identifier.of(VolcClient.MOD_ID,
                                                 "config/general/mod_enabled.webp"))
                                         .text(Text.literal("Enables the mod.")).build())
                                 .binding(defaults.general.modEnabled,
@@ -33,7 +34,7 @@ public class GeneralConfig {
                         // TODO: SkyBlock Only
                         .option(Option.<Boolean>createBuilder().name(Text.literal("SkyBlock Only"))
                                 .description(OptionDescription.createBuilder()
-                                        .webpImage(Identifier.of("volc-client",
+                                        .webpImage(Identifier.of(VolcClient.MOD_ID,
                                                 "config/general/skyblock_only.webp"))
                                         .text(Text.literal("Enables the mod only in SkyBlock."))
                                         .build())
@@ -46,7 +47,7 @@ public class GeneralConfig {
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Socket Connection"))
                                 .description(OptionDescription.createBuilder()
-                                        .webpImage(Identifier.of("volc-client",
+                                        .webpImage(Identifier.of(VolcClient.MOD_ID,
                                                 "config/general/socket_connection.webp"))
                                         .text(Text.literal(
                                                 "Enables the socket connection for real-time updates."))
@@ -59,7 +60,7 @@ public class GeneralConfig {
                         // Discord Link
                         .option(ButtonOption.createBuilder().name(Text.literal("Discord Link"))
                                 .description(OptionDescription.createBuilder()
-                                        .webpImage(Identifier.of("volc-client",
+                                        .webpImage(Identifier.of(VolcClient.MOD_ID,
                                                 "config/general/discord_link.webp"))
                                         .text(Text.literal(
                                                 "Join our Discord server for support and updates."))
@@ -78,7 +79,7 @@ public class GeneralConfig {
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Remove Selfie Mode"))
                                 .description(OptionDescription.createBuilder()
-                                        .webpImage(Identifier.of("volc-client",
+                                        .webpImage(Identifier.of(VolcClient.MOD_ID,
                                                 "config/general/remove_selfie_mode.webp"))
                                         .text(Text.literal(
                                                 "Removes the first person mode from F5 perspective toggle."))
@@ -91,7 +92,7 @@ public class GeneralConfig {
                         // TODO: Skill Tracker
                         .option(Option.<Integer>createBuilder().name(Text.literal("Skill Tracker"))
                                 .description(OptionDescription.createBuilder()
-                                        .webpImage(Identifier.of("volc-client",
+                                        .webpImage(Identifier.of(VolcClient.MOD_ID,
                                                 "config/general/skill_tracker.webp"))
                                         .text(Text.literal(
                                                 "Tracks skill progress on the screen. Sets time in minutes of inactivity needed before tracking stops."))
@@ -107,7 +108,7 @@ public class GeneralConfig {
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("SkyBlock XP Alert"))
                                 .description(OptionDescription.createBuilder()
-                                        .webpImage(Identifier.of("volc-client",
+                                        .webpImage(Identifier.of(VolcClient.MOD_ID,
                                                 "config/general/skyblock_xp_alert.webp"))
                                         .text(Text.literal(
                                                 "Displays a chat message and title when you gain SkyBlock XP."))
@@ -121,7 +122,7 @@ public class GeneralConfig {
                         .option(Option.<Integer>createBuilder()
                                 .name(Text.literal("Waypoint Timeout"))
                                 .description(OptionDescription.createBuilder()
-                                        .webpImage(Identifier.of("volc-client",
+                                        .webpImage(Identifier.of(VolcClient.MOD_ID,
                                                 "config/general/waypoint_timeout.webp"))
                                         .text(Text.literal(
                                                 "Sets time in seconds before waypoints are removed."))
@@ -136,7 +137,7 @@ public class GeneralConfig {
                         // TODO: Widget Display
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Widget Display"))
                                 .description(OptionDescription.createBuilder()
-                                        .webpImage(Identifier.of("volc-client",
+                                        .webpImage(Identifier.of(VolcClient.MOD_ID,
                                                 "config/general/widget_display.webp"))
                                         .text(Text.literal(
                                                 "Displays SkyBlock widgets on the screen. Set which widgets to display using /vc widgets."))
@@ -155,7 +156,7 @@ public class GeneralConfig {
                         .option(Option.<Integer>createBuilder()
                                 .name(Text.literal("Fairy Soul Waypoints"))
                                 .description(OptionDescription.createBuilder()
-                                        .webpImage(Identifier.of("volc-client",
+                                        .webpImage(Identifier.of(VolcClient.MOD_ID,
                                                 "config/general/fairy_soul_waypoints.webp"))
                                         .text(Text.literal(
                                                 "Renders waypoints of Fairy Soul locations. Sets maximum distance for waypoints to be rendered."))
@@ -171,7 +172,7 @@ public class GeneralConfig {
                         .option(Option.<Integer>createBuilder()
                                 .name(Text.literal("Hide Far Entities"))
                                 .description(OptionDescription.createBuilder()
-                                        .webpImage(Identifier.of("volc-client",
+                                        .webpImage(Identifier.of(VolcClient.MOD_ID,
                                                 "config/general/hide_far_entities.webp"))
                                         .text(Text.literal(
                                                 "Sets the maximum distance an entity can be before it is hidden."))
@@ -187,7 +188,7 @@ public class GeneralConfig {
                         .option(Option.<Integer>createBuilder()
                                 .name(Text.literal("Hide Close Players"))
                                 .description(OptionDescription.createBuilder()
-                                        .webpImage(Identifier.of("volc-client",
+                                        .webpImage(Identifier.of(VolcClient.MOD_ID,
                                                 "config/general/hide_close_players.webp"))
                                         .text(Text.literal(
                                                 "Sets the minimum distance a player can be before they are hidden."))
@@ -203,7 +204,7 @@ public class GeneralConfig {
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Hide All Particles"))
                                 .description(OptionDescription.createBuilder()
-                                        .webpImage(Identifier.of("volc-client",
+                                        .webpImage(Identifier.of(VolcClient.MOD_ID,
                                                 "config/general/hide_all_particles.webp"))
                                         .text(Text.literal("Hides all particles in the game."))
                                         .build())
@@ -216,7 +217,7 @@ public class GeneralConfig {
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Server Rejoin Alert"))
                                 .description(OptionDescription.createBuilder()
-                                        .webpImage(Identifier.of("volc-client",
+                                        .webpImage(Identifier.of(VolcClient.MOD_ID,
                                                 "config/general/server_rejoin_alert.webp"))
                                         .text(Text.literal(
                                                 "Alerts you when you are rejoining a server."))
@@ -229,7 +230,7 @@ public class GeneralConfig {
                         // TODO: Server Status
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Server Status"))
                                 .description(OptionDescription.createBuilder()
-                                        .webpImage(Identifier.of("volc-client",
+                                        .webpImage(Identifier.of(VolcClient.MOD_ID,
                                                 "config/general/server_status.webp"))
                                         .text(Text.literal("Displays various server information."))
                                         .build())
@@ -241,7 +242,7 @@ public class GeneralConfig {
                         // TODO: Stats Display
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Stats Display"))
                                 .description(OptionDescription.createBuilder()
-                                        .webpImage(Identifier.of("volc-client",
+                                        .webpImage(Identifier.of(VolcClient.MOD_ID,
                                                 "config/general/stats_display.webp"))
                                         .text(Text.literal("Displays various player stats."))
                                         .build())
@@ -259,7 +260,7 @@ public class GeneralConfig {
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Item Cooldown Alert"))
                                 .description(OptionDescription.createBuilder()
-                                        .webpImage(Identifier.of("volc-client",
+                                        .webpImage(Identifier.of(VolcClient.MOD_ID,
                                                 "config/general/item_cooldown_alert.webp"))
                                         .text(Text.literal(
                                                 "Alerts you when an item is ready to use. Set item cooldowns using /vc cd."))
@@ -272,7 +273,7 @@ public class GeneralConfig {
                         // TODO: Reminder Text
                         .option(Option.<String>createBuilder().name(Text.literal("Reminder Text"))
                                 .description(OptionDescription.createBuilder()
-                                        .webpImage(Identifier.of("volc-client",
+                                        .webpImage(Identifier.of(VolcClient.MOD_ID,
                                                 "config/general/reminder_text.webp"))
                                         .text(Text.literal("Sets the text for the reminder alert."))
                                         .build())
@@ -284,7 +285,7 @@ public class GeneralConfig {
                         // TODO: Reminder Timer
                         .option(Option.<Integer>createBuilder().name(Text.literal("Reminder Timer"))
                                 .description(OptionDescription.createBuilder()
-                                        .webpImage(Identifier.of("volc-client",
+                                        .webpImage(Identifier.of(VolcClient.MOD_ID,
                                                 "config/general/reminder_timer.webp"))
                                         .text(Text.literal(
                                                 "Sets the time in seconds for the reminder alert."))

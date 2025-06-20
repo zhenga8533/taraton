@@ -8,6 +8,7 @@ import dev.isxander.yacl3.api.OptionGroup;
 import dev.isxander.yacl3.config.v2.api.SerialEntry;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
+import net.volcaronitee.volcclient.VolcClient;
 import net.volcaronitee.volcclient.util.ConfigUtil;
 import net.volcaronitee.volcclient.util.ConfigUtil.AnnounceWP;
 
@@ -22,7 +23,7 @@ public class EventsConfig {
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Burrow Detection"))
                                 .description(OptionDescription.createBuilder()
-                                        .webpImage(Identifier.of("volc-client",
+                                        .webpImage(Identifier.of(VolcClient.MOD_ID,
                                                 "config/events/burrow_detection.webp"))
                                         .text(Text.literal(
                                                 "Renders waypoints on nearby burrows and displays a chat message."))
@@ -36,7 +37,7 @@ public class EventsConfig {
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Burrow Waypoints"))
                                 .description(OptionDescription.createBuilder()
-                                        .webpImage(Identifier.of("volc-client",
+                                        .webpImage(Identifier.of(VolcClient.MOD_ID,
                                                 "config/events/burrow_waypoints.webp"))
                                         .text(Text.literal(
                                                 "Renders the best guess of a burrow location using ancestral spade particals and sounds."))
@@ -50,7 +51,7 @@ public class EventsConfig {
                         .option(Option.<AnnounceWP>createBuilder()
                                 .name(Text.literal("Inquisitor Announce"))
                                 .description(OptionDescription.createBuilder()
-                                        .webpImage(Identifier.of("volc-client",
+                                        .webpImage(Identifier.of(VolcClient.MOD_ID,
                                                 "config/events/inquisitor_announce.webp"))
                                         .text(Text.literal(
                                                 "Sends a chat message on inquisitor spawn."))
@@ -64,7 +65,7 @@ public class EventsConfig {
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Inquisitor Detection"))
                                 .description(OptionDescription.createBuilder()
-                                        .webpImage(Identifier.of("volc-client",
+                                        .webpImage(Identifier.of(VolcClient.MOD_ID,
                                                 "config/events/inquisitor_detection.webp"))
                                         .text(Text.literal(
                                                 "Highlights nearby inquisitors. This includes inquisitors spawned by other players."))
@@ -83,7 +84,7 @@ public class EventsConfig {
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Chocolate Factory Display"))
                                 .description(OptionDescription.createBuilder()
-                                        .webpImage(Identifier.of("volc-client",
+                                        .webpImage(Identifier.of(VolcClient.MOD_ID,
                                                 "config/events/chocolate_factory_display.webp"))
                                         .text(Text.literal(
                                                 "Displays Chocolate Factory production statistics on the screen."))
@@ -96,7 +97,7 @@ public class EventsConfig {
                         // TODO: Egg Timers
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Egg Timers"))
                                 .description(OptionDescription.createBuilder()
-                                        .webpImage(Identifier.of("volc-client",
+                                        .webpImage(Identifier.of(VolcClient.MOD_ID,
                                                 "config/events/egg_timers.webp"))
                                         .text(Text.literal(
                                                 "Displays timers for upcoming rabbit eggs on the screen."))
@@ -108,7 +109,7 @@ public class EventsConfig {
                         // TODO: Egg Waypoints
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Egg Waypoints"))
                                 .description(OptionDescription.createBuilder()
-                                        .webpImage(Identifier.of("volc-client",
+                                        .webpImage(Identifier.of(VolcClient.MOD_ID,
                                                 "config/events/egg_waypoints.webp"))
                                         .text(Text.literal(
                                                 "Renders waypoints on nearby rabbit eggs."))
@@ -122,7 +123,7 @@ public class EventsConfig {
                         .option(Option.<RabbitWorkerHighlight>createBuilder()
                                 .name(Text.literal("Rabbit Worker Highlight"))
                                 .description(OptionDescription.createBuilder()
-                                        .webpImage(Identifier.of("volc-client",
+                                        .webpImage(Identifier.of(VolcClient.MOD_ID,
                                                 "config/events/rabbit_worker_highlight.webp"))
                                         .text(Text.literal(
                                                 "Highlights the most efficient upgrade ratio in the Chocolate Factory menu."))
@@ -136,7 +137,7 @@ public class EventsConfig {
                         .option(Option.<StrayRabbitAlert>createBuilder()
                                 .name(Text.literal("Stray Rabbit Alert"))
                                 .description(OptionDescription.createBuilder()
-                                        .webpImage(Identifier.of("volc-client",
+                                        .webpImage(Identifier.of(VolcClient.MOD_ID,
                                                 "config/events/stray_rabbit_alert.webp"))
                                         .text(Text.literal(
                                                 "Alerts you when a stray rabbit appears in the Chocolate Factory menu."))
@@ -155,7 +156,7 @@ public class EventsConfig {
                         .option(Option.<BingoCardDisplay>createBuilder()
                                 .name(Text.literal("Bingo Card Display"))
                                 .description(OptionDescription.createBuilder()
-                                        .webpImage(Identifier.of("volc-client",
+                                        .webpImage(Identifier.of(VolcClient.MOD_ID,
                                                 "config/events/bingo_card_display.webp"))
                                         .text(Text.literal(
                                                 "Displays the current bingo card goals on the screen."))
@@ -168,7 +169,7 @@ public class EventsConfig {
                         // TODO: Calendar Time
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Calendar Time"))
                                 .description(OptionDescription.createBuilder()
-                                        .webpImage(Identifier.of("volc-client",
+                                        .webpImage(Identifier.of(VolcClient.MOD_ID,
                                                 "config/events/calendar_time.webp"))
                                         .text(Text.literal(
                                                 "Displays the real world start and end times of SkyBlock events in the calendar."))

@@ -10,6 +10,7 @@ import dev.isxander.yacl3.api.controller.IntegerSliderControllerBuilder;
 import dev.isxander.yacl3.config.v2.api.SerialEntry;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
+import net.volcaronitee.volcclient.VolcClient;
 import net.volcaronitee.volcclient.util.ConfigUtil;
 
 public class EconomyConfig {
@@ -22,7 +23,7 @@ public class EconomyConfig {
                         // TODO: Coin Tracker
                         .option(Option.<Integer>createBuilder().name(Text.literal("Coin Tracker"))
                                 .description(OptionDescription.createBuilder()
-                                        .webpImage(Identifier.of("volc-client",
+                                        .webpImage(Identifier.of(VolcClient.MOD_ID,
                                                 "config/economy/coin_tracker.webp"))
                                         .text(Text.literal(
                                                 "Tracks coin purse gain/loss progress on the screen. Sets time in minutes of inactivity before tracking stops."))
@@ -38,7 +39,7 @@ public class EconomyConfig {
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("No Bits Warning"))
                                 .description(OptionDescription.createBuilder()
-                                        .webpImage(Identifier.of("volc-client",
+                                        .webpImage(Identifier.of(VolcClient.MOD_ID,
                                                 "config/economy/no_bits_warning.webp"))
                                         .text(Text.literal(
                                                 "Displays a chat warning and title when bits pool is empty."))
@@ -57,7 +58,7 @@ public class EconomyConfig {
                         .option(Option.<Integer>createBuilder()
                                 .name(Text.literal("Container Value"))
                                 .description(OptionDescription.createBuilder()
-                                        .webpImage(Identifier.of("volc-client",
+                                        .webpImage(Identifier.of(VolcClient.MOD_ID,
                                                 "config/economy/container_value.webp"))
                                         .text(Text.literal(
                                                 "Displays item values in container inventories. Set number of items to display before cutoff."))
@@ -73,7 +74,7 @@ public class EconomyConfig {
                         .option(Option.<EconomyConfig.ItemPrice>createBuilder()
                                 .name(Text.literal("Item Price"))
                                 .description(OptionDescription.createBuilder()
-                                        .webpImage(Identifier.of("volc-client",
+                                        .webpImage(Identifier.of(VolcClient.MOD_ID,
                                                 "config/economy/item_price.webp"))
                                         .text(Text.literal(
                                                 "Sets how item prices are displayed in the game."))
@@ -86,7 +87,7 @@ public class EconomyConfig {
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Single Attribute"))
                                 .description(OptionDescription.createBuilder()
-                                        .webpImage(Identifier.of("volc-client",
+                                        .webpImage(Identifier.of(VolcClient.MOD_ID,
                                                 "config/economy/single_attribute.webp"))
                                         .text(Text.literal(
                                                 "Displays only a single attribute for item prices."))
@@ -99,7 +100,7 @@ public class EconomyConfig {
                         // TODO: Price Type
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Price Type"))
                                 .description(OptionDescription.createBuilder()
-                                        .webpImage(Identifier.of("volc-client",
+                                        .webpImage(Identifier.of(VolcClient.MOD_ID,
                                                 "config/economy/price_type.webp"))
                                         .text(Text.literal(
                                                 "Sets the type of bazaar pricing used in item calculations."))
@@ -114,7 +115,7 @@ public class EconomyConfig {
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Trade Evaluation"))
                                 .description(OptionDescription.createBuilder()
-                                        .webpImage(Identifier.of("volc-client",
+                                        .webpImage(Identifier.of(VolcClient.MOD_ID,
                                                 "config/economy/trade_evaluation.webp"))
                                         .text(Text.literal(
                                                 "Enables value comparison display when in trade menus."))

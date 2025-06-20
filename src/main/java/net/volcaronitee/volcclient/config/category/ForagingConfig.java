@@ -7,6 +7,7 @@ import dev.isxander.yacl3.api.OptionGroup;
 import dev.isxander.yacl3.config.v2.api.SerialEntry;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
+import net.volcaronitee.volcclient.VolcClient;
 import net.volcaronitee.volcclient.util.ConfigUtil;
 
 public class ForagingConfig {
@@ -19,7 +20,7 @@ public class ForagingConfig {
                         // TODO: Option
                         .option(Option.<Boolean>createBuilder().name(Text.literal(""))
                                 .description(OptionDescription.createBuilder()
-                                        .webpImage(Identifier.of("volc-client",
+                                        .webpImage(Identifier.of(VolcClient.MOD_ID,
                                                 "config/template/placeholder.webp"))
                                         .text(Text.literal("")).build())
                                 .binding(defaults.foraging.temp, () -> config.foraging.temp,

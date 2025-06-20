@@ -8,6 +8,7 @@ import dev.isxander.yacl3.api.controller.IntegerSliderControllerBuilder;
 import dev.isxander.yacl3.config.v2.api.SerialEntry;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
+import net.volcaronitee.volcclient.VolcClient;
 import net.volcaronitee.volcclient.util.ConfigUtil;
 
 public class MiningConfig {
@@ -21,7 +22,7 @@ public class MiningConfig {
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Commission Completion"))
                                 .description(OptionDescription.createBuilder()
-                                        .webpImage(Identifier.of("volc-client",
+                                        .webpImage(Identifier.of(VolcClient.MOD_ID,
                                                 "config/mining/commission_completion.webp"))
                                         .text(Text.literal(
                                                 "Displays a chat message and title when a commission is completed."))
@@ -35,7 +36,7 @@ public class MiningConfig {
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Commission Display"))
                                 .description(OptionDescription.createBuilder()
-                                        .webpImage(Identifier.of("volc-client",
+                                        .webpImage(Identifier.of(VolcClient.MOD_ID,
                                                 "config/mining/commission_display.webp"))
                                         .text(Text.literal(
                                                 "Displays all active commissions on the screen."))
@@ -49,7 +50,7 @@ public class MiningConfig {
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Commission Waypoints"))
                                 .description(OptionDescription.createBuilder()
-                                        .webpImage(Identifier.of("volc-client",
+                                        .webpImage(Identifier.of(VolcClient.MOD_ID,
                                                 "config/mining/commission_waypoints.webp"))
                                         .text(Text.literal(
                                                 "Renders waypoints to commission locations in the Dwarven Mines."))
@@ -68,7 +69,7 @@ public class MiningConfig {
                         .option(Option.<Integer>createBuilder()
                                 .name(Text.literal("Powder Chest Highlight"))
                                 .description(OptionDescription.createBuilder()
-                                        .webpImage(Identifier.of("volc-client",
+                                        .webpImage(Identifier.of(VolcClient.MOD_ID,
                                                 "config/mining/powder_chest_highlight.webp"))
                                         .text(Text.literal(
                                                 "Highlights nearby powder chests in the Crystal Hollows. Set the block radius to highlight."))
@@ -83,7 +84,7 @@ public class MiningConfig {
                         // TODO: Powder Tracker
                         .option(Option.<Integer>createBuilder().name(Text.literal("Powder Tracker"))
                                 .description(OptionDescription.createBuilder()
-                                        .webpImage(Identifier.of("volc-client",
+                                        .webpImage(Identifier.of(VolcClient.MOD_ID,
                                                 "config/mining/powder_tracker.webp"))
                                         .text(Text.literal(
                                                 "Tracks powder progress on the screen. Sets time in minutes of inactivity before tracking stops."))
@@ -104,7 +105,7 @@ public class MiningConfig {
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Pickaxe Ability Display"))
                                 .description(OptionDescription.createBuilder()
-                                        .webpImage(Identifier.of("volc-client",
+                                        .webpImage(Identifier.of(VolcClient.MOD_ID,
                                                 "config/mining/pickaxe_ability_display.webp"))
                                         .text(Text.literal(
                                                 "Displays all pickaxe abilities on the screen. Displays a chat message and title when any ability goes off cooldown."))
@@ -118,7 +119,7 @@ public class MiningConfig {
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Wishing Compass Locator"))
                                 .description(OptionDescription.createBuilder()
-                                        .webpImage(Identifier.of("volc-client",
+                                        .webpImage(Identifier.of(VolcClient.MOD_ID,
                                                 "config/mining/wishing_compass_locator.webp"))
                                         .text(Text.literal(
                                                 "Renders a guess waypoint to the Wishing Compass location in the Crystal Hollows."))
@@ -137,7 +138,7 @@ public class MiningConfig {
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Corpse Waypoints"))
                                 .description(OptionDescription.createBuilder()
-                                        .webpImage(Identifier.of("volc-client",
+                                        .webpImage(Identifier.of(VolcClient.MOD_ID,
                                                 "config/mining/corpse_waypoints.webp"))
                                         .text(Text.literal(
                                                 "Renders waypoints to all nearby corpses in a mineshaft. UAYOR: This feature uses ESP!"))
@@ -150,7 +151,7 @@ public class MiningConfig {
                         // TODO: Fossil Solver
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Fossil Solver"))
                                 .description(OptionDescription.createBuilder()
-                                        .webpImage(Identifier.of("volc-client",
+                                        .webpImage(Identifier.of(VolcClient.MOD_ID,
                                                 "config/mining/fossil_solver.webp"))
                                         .text(Text.literal(
                                                 "Automatically reveals fossils in the excavator."))
