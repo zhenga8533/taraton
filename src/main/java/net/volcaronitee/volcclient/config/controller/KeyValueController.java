@@ -1,4 +1,4 @@
-package net.volcaronitee.volcclient.config;
+package net.volcaronitee.volcclient.config.controller;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
