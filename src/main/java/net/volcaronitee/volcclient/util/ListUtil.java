@@ -73,7 +73,7 @@ public class ListUtil {
      * @param config The current configuration values.
      * @return A ConfigCategory instance representing the configuration category.
      */
-    public ConfigCategory create(ConfigUtil defaults, ConfigUtil config) {
+    public ConfigCategory create(ListUtil defaults, ListUtil config) {
         return ConfigCategory.createBuilder().name(Text.literal(this.title))
                 .option(ListOption.<String>createBuilder().name(Text.literal(title))
                         .binding(list, () -> list, newVal -> list = newVal)
@@ -89,8 +89,7 @@ public class ListUtil {
      */
     public Screen createScreen(Screen parent) {
         return YetAnotherConfigLib.create(handler, (defaults, config, builder) -> {
-            builder.title(Text.literal(this.title)).build();
-
+            builder.title(Text.literal(this.title)).category(create(defaults, config)).build();
             return builder;
         }).generateScreen(parent);
     }
