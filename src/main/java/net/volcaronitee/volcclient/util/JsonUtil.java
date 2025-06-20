@@ -21,6 +21,8 @@ public class JsonUtil {
 
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
+    public static final String DATA_DIR = "data";
+
     static {
         // Ensure directories exist
         try {

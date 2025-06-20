@@ -59,7 +59,7 @@ public class ChatConfig {
                                         newVal -> config.chat.customEmotes = newVal)
                                 .controller(ConfigUtil::createBooleanController).build())
 
-                        // TODO: Playtime Warning
+                        // Playtime Warning
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Playtime Warning"))
                                 .description(OptionDescription.createBuilder()

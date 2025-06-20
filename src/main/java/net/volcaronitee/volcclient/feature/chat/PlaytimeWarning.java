@@ -76,7 +76,7 @@ public class PlaytimeWarning {
     private static void onWorldUnload(MinecraftServer server, ServerWorld world) {
         JsonObject playtimeData = new JsonObject();
         playtimeData.addProperty("playtimeTicks", INSTANCE.playtimeTicks);
-        JsonUtil.saveJson("", FILENAME, playtimeData);
+        JsonUtil.saveJson(JsonUtil.DATA_DIR, FILENAME, playtimeData);
     }
 
     /**
