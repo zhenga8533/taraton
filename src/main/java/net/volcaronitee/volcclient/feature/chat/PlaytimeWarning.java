@@ -36,7 +36,7 @@ public class PlaytimeWarning {
 
     public static void register() {
         // Load the playtime data from the JSON file
-        JsonObject playtimeData = JsonUtil.loadJson(FILENAME);
+        JsonObject playtimeData = JsonUtil.loadJson(JsonUtil.DATA_DIR, FILENAME);
         if (!playtimeData.has("playtimeTicks")) {
             playtimeData.addProperty("playtimeTicks", 0);
         }
@@ -62,8 +62,8 @@ public class PlaytimeWarning {
         if (ConfigUtil.getHandler().chat.playtimeWarning
                 && INSTANCE.playtimeTicks % PLAYTIME_THRESHOLD == 0) { // Every 8 hour
             int hours = INSTANCE.playtimeTicks / PLAYTIME_THRESHOLD;
-            client.inGameHud.getChatHud()
-                    .addMessage(Text.literal("You have played for " + hours + " hour(s)."));
+            client.inGameHud.getChatHud().addMessage(Text.literal("You have played for " + hours
+                    + " hours. Excessive game playing may cause problems in your normal daily life."));
         }
     }
 

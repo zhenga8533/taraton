@@ -9,13 +9,14 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import net.fabricmc.loader.api.FabricLoader;
+import net.volcaronitee.volcclient.VolcClient;
 
 /**
  * Utility class for handling JSON file operations.
  */
 public class JsonUtil {
     private static final Path CONFIG_DIR =
-            FabricLoader.getInstance().getConfigDir().resolve("volcclient");
+            FabricLoader.getInstance().getConfigDir().resolve(VolcClient.MOD_ID);
     private static final Path JSON_DIR = CONFIG_DIR.resolve("json");
     private static final Path TEMPLATE_DIR = JSON_DIR.resolve("json_templates");
 
