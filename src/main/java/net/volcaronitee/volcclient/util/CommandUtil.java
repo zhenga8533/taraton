@@ -23,7 +23,7 @@ public class CommandUtil {
                 .register((CommandDispatcher<FabricClientCommandSource> dispatcher,
                         CommandRegistryAccess access) -> {
                     for (String alias : ALIASES) {
-                        dispatcher.register(literal(alias).executes(context -> help(context))
+                        dispatcher.register(literal(alias).executes(CommandUtil::settings)
 
                                 // Help command
                                 .then(literal("help").executes(CommandUtil::help))
@@ -70,8 +70,7 @@ public class CommandUtil {
 
         // Defer the screen opening to the main client thread
         client.send(() -> {
-            ScreenUtil screen = new ScreenUtil();
-            client.setScreen(ConfigUtil.createScreen(screen));
+            client.setScreen(ConfigUtil.createScreen(client.currentScreen));
         });
 
         return 1;
