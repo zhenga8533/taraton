@@ -8,6 +8,7 @@ import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.text.Text;
+import net.volcaronitee.volcclient.feature.chat.JoinWhitelist;
 
 /**
  * Utility class for handling client commands.
@@ -33,6 +34,9 @@ public class CommandUtil {
 
                                 // Debug command
                                 .then(literal("debug").executes(CommandUtil::debug))
+
+                                // Lists
+                                .then(JoinWhitelist.registerCommand())
 
                         // Command End
                         );

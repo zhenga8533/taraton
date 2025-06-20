@@ -24,11 +24,16 @@ import net.volcaronitee.volcclient.VolcClient;
  */
 public class ListUtil {
     private static final Path CONFIG_PATH =
-            FabricLoader.getInstance().getConfigDir().resolve(VolcClient.MOD_ID);
+            FabricLoader.getInstance().getConfigDir().resolve(VolcClient.MOD_ID + "/lists");
 
     private String title;
     private Path configPath;
     private ConfigClassHandler<ListUtil> handler;
+
+    /**
+     * Default constructor for ListUtil.
+     */
+    public ListUtil() {}
 
     /**
      * Creates a new ListUtil instance with the specified title and configuration path.
