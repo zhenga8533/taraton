@@ -1,7 +1,10 @@
 package net.volcaronitee.volcclient.config.category;
 
 import java.awt.Color;
+import java.util.ArrayList;
+import java.util.List;
 import dev.isxander.yacl3.api.ConfigCategory;
+import dev.isxander.yacl3.api.ListOption;
 import dev.isxander.yacl3.api.NameableEnum;
 import dev.isxander.yacl3.api.Option;
 import dev.isxander.yacl3.api.OptionDescription;
@@ -101,6 +104,16 @@ public class TemplateConfig {
                                         opt -> ColorControllerBuilder.create(opt).allowAlpha(true))
                                 .build())
 
+                        // TODO: List
+                        .option(ListOption.<String>createBuilder().name(Text.literal("List"))
+                                .description(OptionDescription.createBuilder()
+                                        .webpImage(Identifier.of(VolcClient.MOD_ID,
+                                                "config/template/placeholder.webp"))
+                                        .text(Text.literal("Description")).build())
+                                .binding(defaults.template.list, () -> config.template.list,
+                                        newVal -> config.template.list = newVal)
+                                .controller(StringControllerBuilder::create).build())
+
                         .build())
 
                 .build();
@@ -134,4 +147,7 @@ public class TemplateConfig {
 
     @SerialEntry
     public Color color = new Color(0, 0, 0, 255);
+
+    @SerialEntry
+    public List<String> list = new ArrayList<>();
 }
