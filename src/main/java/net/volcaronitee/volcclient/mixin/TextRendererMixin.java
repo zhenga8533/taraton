@@ -23,20 +23,13 @@ public class TextRendererMixin {
             CharacterVisitor visitor) {
         MutableText reconstructed = Text.empty();
 
-        // Rebuild a basic MutableText from OrderedText
         orderedText.accept((index, style, codePoint) -> {
-            reconstructed.append(
-                    Text.literal(String.valueOf(Character.toChars(codePoint))).setStyle(style));
+            String text = String.valueOf(Character.toChars(codePoint));
+            Text modified = TextSubstitution.modify(Text.literal(text).setStyle(style));
+            reconstructed.append(modified);
             return true;
         });
 
-        // Apply your substitution logic
-        Text modified = TextSubstitution.modify(reconstructed);
-
-        // Fallback to original if unchanged
-        OrderedText finalText =
-                modified.equals(reconstructed) ? orderedText : modified.asOrderedText();
-
-        return finalText.accept(visitor);
+        return reconstructed.asOrderedText().accept(visitor);
     }
 }

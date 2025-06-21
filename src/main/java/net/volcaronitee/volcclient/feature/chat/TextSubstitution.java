@@ -25,7 +25,6 @@ public class TextSubstitution {
             modified = modified.replace(entry.getKey(), entry.getValue());
         }
 
-        return modified.equals(original) ? originalText
-                : Text.literal(modified).setStyle(originalText.getStyle());
+        return Text.literal(modified).setStyle(originalText.getStyle());
     }
 }
