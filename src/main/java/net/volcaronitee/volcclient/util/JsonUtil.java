@@ -29,6 +29,7 @@ public class JsonUtil {
         try {
             Files.createDirectories(JSON_DIR);
             Files.createDirectories(TEMPLATE_DIR);
+            Files.createDirectories(CONFIG_DIR.resolve(DATA_DIR));
         } catch (IOException e) {
             e.printStackTrace();
         }

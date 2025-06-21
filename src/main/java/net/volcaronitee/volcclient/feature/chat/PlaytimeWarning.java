@@ -1,11 +1,9 @@
 package net.volcaronitee.volcclient.feature.chat;
 
 import com.google.gson.JsonObject;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
 import net.volcaronitee.volcclient.util.ConfigUtil;
 import net.volcaronitee.volcclient.util.JsonUtil;
@@ -44,7 +42,7 @@ public class PlaytimeWarning {
 
         // Register events
         ClientTickEvents.END_CLIENT_TICK.register(PlaytimeWarning::onEndClientTick);
-        ServerWorldEvents.UNLOAD.register(PlaytimeWarning::onWorldUnload);
+        ClientLifecycleEvents.CLIENT_STOPPING.register(PlaytimeWarning::onClientClose);
     }
 
     /**
@@ -70,10 +68,9 @@ public class PlaytimeWarning {
     /**
      * Handles the world unload event to save playtime data.
      * 
-     * @param server The Minecraft server instance.
-     * @param world The server world that is being unloaded.
+     * @param event The event triggered when the client is stopping.
      */
-    private static void onWorldUnload(MinecraftServer server, ServerWorld world) {
+    private static void onClientClose(MinecraftClient client) {
         JsonObject playtimeData = new JsonObject();
         playtimeData.addProperty("playtimeTicks", INSTANCE.playtimeTicks);
         JsonUtil.saveJson(JsonUtil.DATA_DIR, FILENAME, playtimeData);

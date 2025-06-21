@@ -50,6 +50,7 @@ public class ListUtil {
                                 .setPrettyPrinting().disableHtmlEscaping().serializeNulls())
                         .build())
                 .build();
+        this.handler.load();
     }
 
     /**
