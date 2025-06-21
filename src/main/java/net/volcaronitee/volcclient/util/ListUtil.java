@@ -81,7 +81,7 @@ public class ListUtil {
     public ConfigCategory createCategory(ListUtil defaults, ListUtil config) {
         return ConfigCategory.createBuilder().name(Text.literal(this.title))
                 .option(ListOption.<String>createBuilder().name(Text.literal(title))
-                        .binding(list, () -> list, newVal -> list = newVal)
+                        .binding(config.list, () -> config.list, newVal -> config.list = newVal)
                         .controller(StringControllerBuilder::create).initial("").build())
                 .build();
     }
