@@ -10,12 +10,13 @@ public class JoinWhitelist {
     private static final ListUtil WHITE_LIST = new ListUtil("White List", "white_list.json");
 
     /**
-     * Registers the whitelist command for the Volc Client.
+     * Registers a command that opens the whitelist configuration screen.
      * 
-     * @return A LiteralArgumentBuilder that defines the command structure.
+     * @param name The name of the command to be registered.
+     * @return A LiteralArgumentBuilder for the command that opens the whitelist screen.
      */
-    public static LiteralArgumentBuilder<FabricClientCommandSource> registerCommand() {
-        return literal("whitelist").executes(context -> {
+    public static LiteralArgumentBuilder<FabricClientCommandSource> registerCommand(String name) {
+        return literal(name).executes(context -> {
             MinecraftClient client = MinecraftClient.getInstance();
             if (client.player == null || client.world == null) {
                 return 0;
