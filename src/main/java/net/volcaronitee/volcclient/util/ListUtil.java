@@ -7,6 +7,7 @@ import java.util.List;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import dev.isxander.yacl3.api.ConfigCategory;
 import dev.isxander.yacl3.api.ListOption;
+import dev.isxander.yacl3.api.OptionDescription;
 import dev.isxander.yacl3.api.YetAnotherConfigLib;
 import dev.isxander.yacl3.api.controller.StringControllerBuilder;
 import dev.isxander.yacl3.config.v2.api.ConfigClassHandler;
@@ -29,6 +30,7 @@ public class ListUtil {
             FabricLoader.getInstance().getConfigDir().resolve(VolcClient.MOD_ID + "/lists");
 
     private String title;
+    private String description;
     private Path configPath;
     private ConfigClassHandler<ListUtil> handler;
     private Boolean isMap = false;
@@ -42,10 +44,12 @@ public class ListUtil {
      * Creates a new ListUtil instance with the specified title and configuration path.
      * 
      * @param title The title for the configuration screen.
+     * @param description A brief description of the configuration.
      * @param configPath The path to the configuration file relative to the config directory.
      */
-    public ListUtil(String title, String configPath) {
+    public ListUtil(String title, String description, String configPath) {
         this.title = title;
+        this.description = description;
         this.configPath = CONFIG_PATH.resolve(configPath);
         this.handler = ConfigClassHandler.createBuilder(ListUtil.class)
                 .serializer(config -> GsonConfigSerializerBuilder.create(config)
@@ -145,15 +149,15 @@ public class ListUtil {
     }
 
     public ConfigCategory createMapCategory(ListUtil defaults, ListUtil config) {
-        return ConfigCategory.createBuilder().name(Text.literal(title))
-                .option(ListOption.<KeyValuePair<String, String>>createBuilder()
-                        .name(Text.literal(title))
-                        .binding(config.map, () -> config.map, newVal -> config.map = newVal)
-                        .controller((option) -> KeyValueController.Builder.create(option)
-                                .keyController("Key", StringControllerBuilder::create)
-                                .valueController("Value", StringControllerBuilder::create))
-                        .initial(new KeyValuePair<>("", "")).build())
-                .build();
+        return ConfigCategory.createBuilder().name(Text.literal(title)).option(ListOption
+                .<KeyValuePair<String, String>>createBuilder().name(Text.literal(title))
+                .description(
+                        OptionDescription.createBuilder().text(Text.literal(description)).build())
+                .binding(config.map, () -> config.map, newVal -> config.map = newVal)
+                .controller((option) -> KeyValueController.Builder.create(option)
+                        .keyController("Key", StringControllerBuilder::create)
+                        .valueController("Value", StringControllerBuilder::create))
+                .initial(new KeyValuePair<>("", "")).build()).build();
     }
 
     @SerialEntry
