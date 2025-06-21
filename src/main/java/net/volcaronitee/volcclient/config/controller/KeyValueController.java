@@ -15,6 +15,7 @@ import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 import dev.isxander.yacl3.api.Controller;
 import dev.isxander.yacl3.api.Option;
+import dev.isxander.yacl3.api.StateManager;
 import dev.isxander.yacl3.api.controller.ControllerBuilder;
 import dev.isxander.yacl3.api.utils.Dimension;
 import dev.isxander.yacl3.gui.AbstractWidget;
@@ -75,13 +76,12 @@ public class KeyValueController<K, V> implements Controller<KeyValueController.K
      * @param set Consumer to set the new value of the key or value.
      * @return An Option<T> that is configured with the provided parameters.
      */
-    @SuppressWarnings("deprecation")
     private static <T> Option<T> dummyOption(@Nullable String name,
             Function<Option<T>, ControllerBuilder<T>> controller, Supplier<T> get,
             Consumer<T> set) {
-        return Option.<T>createBuilder()
-                .name(name != null ? Text.translatable(name) : Text.literal(""))
-                .binding(get.get(), get, set).instant(true).controller(controller).build();
+        return Option.<T>createBuilder().name(name != null ? Text.literal(name) : Text.literal(""))
+                .stateManager(StateManager.createInstant(get.get(), get, set))
+                .controller(controller).build();
     }
 
     /**
