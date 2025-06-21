@@ -9,6 +9,11 @@ import net.volcaronitee.volcclient.util.ListUtil;
 public class JoinWhitelist {
     private static final ListUtil WHITE_LIST = new ListUtil("White List", "white_list.json");
 
+    /**
+     * Registers the whitelist command for the Volc Client.
+     * 
+     * @return A LiteralArgumentBuilder that defines the command structure.
+     */
     public static LiteralArgumentBuilder<FabricClientCommandSource> registerCommand() {
         return literal("whitelist").executes(context -> {
             MinecraftClient client = MinecraftClient.getInstance();

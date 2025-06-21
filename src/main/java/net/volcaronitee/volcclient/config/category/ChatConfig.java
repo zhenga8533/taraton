@@ -204,7 +204,7 @@ public class ChatConfig {
                                         newVal -> config.chat.joinReparty = newVal)
                                 .controller(ConfigUtil::createBooleanController).build())
 
-                        // Join Whitelist
+                        // TODO: Join Whitelist
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Join Whitelist"))
                                 .description(OptionDescription.createBuilder()
                                         .webpImage(Identifier.of(VolcClient.MOD_ID,
