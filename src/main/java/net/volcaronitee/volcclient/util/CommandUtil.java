@@ -36,8 +36,8 @@ public class CommandUtil {
                                 .then(literal("debug").executes(CommandUtil::debug))
 
                                 // Lists
-                                .then(JoinWhitelist.registerCommand("whitelist"))
-                                .then(JoinWhitelist.registerCommand("wl"))
+                                .then(JoinWhitelist.WHITE_LIST.registerCommand("whitelist"))
+                                .then(JoinWhitelist.WHITE_LIST.registerCommand("wl"))
 
                         // Command End
                         );

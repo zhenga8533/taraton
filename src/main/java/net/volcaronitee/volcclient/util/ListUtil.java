@@ -99,6 +99,27 @@ public class ListUtil {
         }).generateScreen(parent);
     }
 
+    /**
+     * Registers a command that opens the whitelist configuration screen.
+     * 
+     * @param name The name of the command to be registered.
+     * @return A LiteralArgumentBuilder for the command that opens the whitelist screen.
+     */
+    public LiteralArgumentBuilder<FabricClientCommandSource> registerCommand(String name) {
+        return literal(name).executes(context -> {
+            MinecraftClient client = MinecraftClient.getInstance();
+            if (client.player == null || client.world == null) {
+                return 0;
+            }
+
+            client.send(() -> {
+                client.setScreen(createScreen(client.currentScreen));
+            });
+
+            return 1;
+        });
+    }
+
     @SerialEntry
     public List<String> list = new ArrayList<String>();
 }
