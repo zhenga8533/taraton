@@ -1,18 +1,19 @@
 package net.volcaronitee.volcclient.feature.chat;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
+import net.volcaronitee.volcclient.config.controller.KeyValueController;
+import net.volcaronitee.volcclient.util.ListUtil;
 
 public class TextSubstitution {
-    private static final Map<String, String> SUBSTITUTION_MAP = new HashMap<>();
+    public static final ListUtil SUBSTITUTION_MAP =
+            new ListUtil("Substitution Map", "substitution_map.json");
 
     static {
-        SUBSTITUTION_MAP.put("a", "§c@");
+        SUBSTITUTION_MAP.setIsMap(true);
     }
 
     /**
@@ -69,9 +70,9 @@ public class TextSubstitution {
         originalText.visit((style, textPart) -> {
             String currentProcessedPart = textPart;
 
-            for (Map.Entry<String, String> entry : SUBSTITUTION_MAP.entrySet()) {
-                String target = entry.getKey();
-                String replacement = entry.getValue();
+            for (KeyValueController.KeyValuePair<String, String> pair : SUBSTITUTION_MAP.map) {
+                String target = pair.getKey();
+                String replacement = pair.getValue();
 
                 if (currentProcessedPart.contains(target)) {
                     currentProcessedPart = currentProcessedPart.replace(target, replacement);

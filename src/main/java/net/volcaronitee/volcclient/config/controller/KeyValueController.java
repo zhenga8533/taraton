@@ -1,20 +1,21 @@
 package net.volcaronitee.volcclient.config.controller;
 
+import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Supplier;
+import org.jetbrains.annotations.Nullable;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
-import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 import dev.isxander.yacl3.api.Controller;
 import dev.isxander.yacl3.api.Option;
+import dev.isxander.yacl3.api.controller.ControllerBuilder;
 import dev.isxander.yacl3.api.utils.Dimension;
 import dev.isxander.yacl3.gui.AbstractWidget;
 import dev.isxander.yacl3.gui.YACLScreen;
@@ -22,18 +23,149 @@ import dev.isxander.yacl3.gui.controllers.ControllerWidget;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.text.Text;
 
+/**
+ * A controller for managing key-value pairs, allowing for separate controllers for keys and values.
+ * 
+ * Credit to:
+ * https://github.com/hashalite/sbutils/blob/ad8938d23d9d28685c2e33c79673d5fa09a182e0/src/main/java/net/xolt/sbutils/config/KeyValueController.java
+ */
 public class KeyValueController<K, V> implements Controller<KeyValueController.KeyValuePair<K, V>> {
     private final Option<KeyValuePair<K, V>> option;
     private final double ratio;
     private final Controller<K> keyController;
     private final Controller<V> valueController;
 
+    /**
+     * Creates a KeyValueController with specified options for key and value controllers.
+     * 
+     * @param option The option that holds the key-value pair.
+     * @param ratio The ratio of the width allocated to the key controller compared to the value
+     *        controller.
+     * @param keyName Optional name for the key controller, can be null.
+     * @param keyController Function to create the key controller, taking an Option<K> as input.
+     * @param valueName Optional name for the value controller, can be null.
+     * @param valueController Function to create the value controller, taking an Option<V> as input.
+     */
     public KeyValueController(Option<KeyValuePair<K, V>> option, double ratio,
-            Controller<K> keyController, Controller<V> valueController) {
+            @Nullable String keyName, Function<Option<K>, ControllerBuilder<K>> keyController,
+            @Nullable String valueName, Function<Option<V>, ControllerBuilder<V>> valueController) {
         this.option = option;
         this.ratio = ratio;
-        this.keyController = keyController;
-        this.valueController = valueController;
+
+        this.keyController =
+                dummyOption(keyName, keyController, () -> option.pendingValue().getKey(),
+                        (newKey) -> option.requestSet(
+                                new KeyValuePair<>(newKey, option.pendingValue().getValue())))
+                                        .controller();
+
+        this.valueController =
+                dummyOption(valueName, valueController, () -> option.pendingValue().getValue(),
+                        (newValue) -> option.requestSet(
+                                new KeyValuePair<>(option.pendingValue().getKey(), newValue)))
+                                        .controller();
+    }
+
+    /**
+     * Creates a dummy option for the key or value controller.
+     * 
+     * @param <T> The type of the key or value.
+     * @param name Optional name for the controller, can be null.
+     * @param controller Function to create the controller, taking an Option<T> as input.
+     * @param get Supplier to get the current value of the key or value.
+     * @param set Consumer to set the new value of the key or value.
+     * @return An Option<T> that is configured with the provided parameters.
+     */
+    @SuppressWarnings("deprecation")
+    private static <T> Option<T> dummyOption(@Nullable String name,
+            Function<Option<T>, ControllerBuilder<T>> controller, Supplier<T> get,
+            Consumer<T> set) {
+        return Option.<T>createBuilder()
+                .name(name != null ? Text.translatable(name) : Text.literal(""))
+                .binding(get.get(), get, set).instant(true).controller(controller).build();
+    }
+
+    /**
+     * Builder class for creating a KeyValueController.
+     */
+    public static class Builder<K, V>
+            implements ControllerBuilder<KeyValueController.KeyValuePair<K, V>> {
+        protected final Option<KeyValueController.KeyValuePair<K, V>> option;
+        private String keyName;
+        private Function<Option<K>, ControllerBuilder<K>> keyController;
+        private String valueName;
+        private Function<Option<V>, ControllerBuilder<V>> valueController;
+        private Double ratio = 0.5;
+
+        /**
+         * Creates a new Builder for KeyValueController.
+         * 
+         * @param option The option that holds the key-value pair.
+         */
+        public Builder(Option<KeyValueController.KeyValuePair<K, V>> option) {
+            this.option = option;
+        }
+
+        /**
+         * Creates a new Builder for KeyValueController with a specified option.
+         * 
+         * @param <C> The type of the key in the key-value pair.
+         * @param <D> The type of the value in the key-value pair.
+         * @param option The option that holds the key-value pair.
+         * @return A new Builder instance for KeyValueController.
+         */
+        public static <C, D> Builder<C, D> create(
+                Option<KeyValueController.KeyValuePair<C, D>> option) {
+            return new Builder<>(option);
+        }
+
+        /**
+         * Sets the key controller for the KeyValueController.
+         * 
+         * @param keyName Optional name for the key controller, can be null.
+         * @param keyController Function that takes an Option<K> and returns a ControllerBuilder<K>.
+         * @return This Builder instance for method chaining.
+         */
+        public Builder<K, V> keyController(String keyName,
+                Function<Option<K>, ControllerBuilder<K>> keyController) {
+            this.keyName = keyName;
+            this.keyController = keyController;
+            return this;
+        }
+
+        /**
+         * Sets the value controller for the KeyValueController.
+         * 
+         * @param valueName Optional name for the value controller, can be null.
+         * @param valueController Function that takes an Option<V> and returns a
+         * @return This Builder instance for method chaining.
+         */
+        public Builder<K, V> valueController(String valueName,
+                Function<Option<V>, ControllerBuilder<V>> valueController) {
+            this.valueName = valueName;
+            this.valueController = valueController;
+            return this;
+        }
+
+        /**
+         * Sets the ratio of the width allocated to the key controller compared to the value
+         * 
+         * @param ratio The ratio of the width allocated to the key controller compared to the value
+         * @return This Builder instance for method chaining.
+         */
+        public Builder<K, V> ratio(double ratio) {
+            this.ratio = ratio;
+            return this;
+        }
+
+        @Override
+        public Controller<KeyValueController.KeyValuePair<K, V>> build() {
+            if (keyController == null || valueController == null) {
+                throw new IllegalStateException(
+                        "Cannot build KeyValueController without setting keyController and valueController.");
+            }
+            return new KeyValueController<>(option, ratio, keyName, keyController, valueName,
+                    valueController);
+        }
     }
 
     @Override
@@ -43,8 +175,8 @@ public class KeyValueController<K, V> implements Controller<KeyValueController.K
 
     @Override
     public Text formatValue() {
-        KeyValuePair<K, V> pair = option.pendingValue();
-        return Text.literal("Key: " + pair.key + " -- Value: " + pair.value);
+        return keyController.formatValue().copy().append(" | ")
+                .append(valueController.formatValue());
     }
 
     @Override
@@ -60,12 +192,26 @@ public class KeyValueController<K, V> implements Controller<KeyValueController.K
                 valueControllerElement, ratio);
     }
 
+    /**
+     * A widget that combines two controllers (key and value) into a single element.
+     */
     public static class KeyValueControllerElement
             extends ControllerWidget<KeyValueController<?, ?>> {
         private final AbstractWidget keyElement;
         private final AbstractWidget valueElement;
         private final double ratio;
 
+        /**
+         * Creates a KeyValueControllerElement that combines key and value controllers.
+         * 
+         * @param control The KeyValueController that this element controls.
+         * @param screen The YACLScreen that this element is part of.
+         * @param dim The dimension of the element.
+         * @param keyElement The widget for the key controller.
+         * @param valueElement The widget for the value controller.
+         * @param ratio The ratio of the width allocated to the key controller compared to the value
+         *        controller.
+         */
         public KeyValueControllerElement(KeyValueController<?, ?> control, YACLScreen screen,
                 Dimension<Integer> dim, AbstractWidget keyElement, AbstractWidget valueElement,
                 double ratio) {
@@ -100,6 +246,16 @@ public class KeyValueController<K, V> implements Controller<KeyValueController.K
                 double deltaY) {
             boolean key = keyElement.mouseDragged(mouseX, mouseY, button, deltaX, deltaY);
             boolean value = valueElement.mouseDragged(mouseX, mouseY, button, deltaX, deltaY);
+            return key || value;
+        }
+
+        @Override
+        public boolean mouseScrolled(double mouseX, double mouseY, double horizontalAmount,
+                double verticalAmount) {
+            boolean key =
+                    keyElement.mouseScrolled(mouseX, mouseY, horizontalAmount, verticalAmount);
+            boolean value =
+                    valueElement.mouseScrolled(mouseX, mouseY, horizontalAmount, verticalAmount);
             return key || value;
         }
 
@@ -153,31 +309,70 @@ public class KeyValueController<K, V> implements Controller<KeyValueController.K
         }
     }
 
+    /**
+     * A simple key-value pair class that holds a key and a value.
+     */
     public static class KeyValuePair<K, V> {
         private K key;
         private V value;
 
+        /**
+         * Creates a KeyValuePair with the specified key and value.
+         * 
+         * @param key The key of the key-value pair.
+         * @param value The value of the key-value pair.
+         */
         public KeyValuePair(K key, V value) {
             this.key = key;
             this.value = value;
         }
 
+        /**
+         * Gets the key of the key-value pair.
+         * 
+         * @return The key of the key-value pair.
+         */
         public K getKey() {
             return key;
         }
 
+        /**
+         * Gets the value of the key-value pair.
+         * 
+         * @return The value of the key-value pair.
+         */
         public V getValue() {
             return value;
         }
 
+        /**
+         * Sets the key of the key-value pair.
+         * 
+         * @param key The new key for the key-value pair.
+         */
         public void setKey(K key) {
             this.key = key;
         }
 
+        /**
+         * Sets the value of the key-value pair.
+         * 
+         * @param value The new value for the key-value pair.
+         */
         public void setValue(V value) {
             this.value = value;
         }
 
+        @Override
+        public boolean equals(Object obj) {
+            if (!(obj instanceof KeyValuePair<?, ?> other))
+                return false;
+            return this.key.equals(other.key) && this.value.equals(other.value);
+        }
+
+        /**
+         * A Gson TypeAdapter for serializing and deserializing KeyValuePair objects.
+         */
         public static class KeyValueTypeAdapter implements JsonSerializer<KeyValuePair<?, ?>>,
                 JsonDeserializer<KeyValuePair<?, ?>> {
             @Override
@@ -186,82 +381,18 @@ public class KeyValueController<K, V> implements Controller<KeyValueController.K
                 JsonObject object = jsonElement.getAsJsonObject();
                 JsonElement key = object.get("key");
                 JsonElement value = object.get("value");
-                List<String> typeParameters = getTypeParameters(type);
-                return new KeyValuePair<>(getObject(key, typeParameters.get(0), context),
-                        getObject(value, typeParameters.get(1), context));
+                Type[] typeArgs = ((ParameterizedType) type).getActualTypeArguments();
+                return new KeyValuePair<>(context.deserialize(key, typeArgs[0]),
+                        context.deserialize(value, typeArgs[1]));
             }
 
             @Override
             public JsonElement serialize(KeyValuePair<?, ?> pair, Type type,
                     JsonSerializationContext context) {
                 JsonObject result = new JsonObject();
-                addProperty(result, "key", pair.getKey(), context);
-                addProperty(result, "value", pair.getValue(), context);
+                result.add("key", context.serialize(pair.key));
+                result.add("value", context.serialize(pair.value));
                 return result;
-            }
-
-            private List<String> getTypeParameters(Type type) {
-                String typeString = type.getTypeName();
-                return getTypeParameters(typeString);
-
-            }
-
-            private List<String> getTypeParameters(String typeString) {
-                typeString = typeString.replaceFirst(
-                        "net\\.xolt\\.sbutils\\.config\\.KeyValueController\\$KeyValuePair<", "");
-                typeString = typeString.substring(0, typeString.length() - 1);
-                Pattern paramPattern = Pattern.compile(
-                        "java\\.lang\\.[a-zA-Z]+|net\\.xolt\\.sbutils\\.config\\.KeyValueController\\$KeyValuePair<.*>");
-                Matcher matcher = paramPattern.matcher(typeString);
-                List<String> result = new ArrayList<>();
-                while (matcher.find()) {
-                    result.add(matcher.group(0));
-                }
-                return result;
-            }
-
-            private Object getObject(JsonElement element, String type,
-                    JsonDeserializationContext context) {
-                if (element.isJsonPrimitive()) {
-                    JsonPrimitive primitive = (JsonPrimitive) element;
-                    switch (type) {
-                        case "java.lang.String":
-                            return primitive.getAsString();
-                        case "java.lang.Double":
-                            return primitive.getAsDouble();
-                        case "java.lang.Float":
-                            return primitive.getAsFloat();
-                        case "java.lang.Long":
-                            return primitive.getAsLong();
-                        case "java.lang.Integer":
-                            return primitive.getAsInt();
-                        case "java.lang.Boolean":
-                            return primitive.getAsBoolean();
-                    }
-                } else if (element.isJsonObject()) {
-                    JsonObject object = element.getAsJsonObject();
-                    if (type.startsWith(
-                            "net.xolt.sbutils.config.KeyValueController$KeyValuePair")) {
-                        List<String> typeParams = getTypeParameters(type);
-                        return new KeyValuePair<>(
-                                getObject(object.get("key"), typeParams.get(0), context),
-                                getObject(object.get("value"), typeParams.get(1), context));
-                    }
-                }
-                return null;
-            }
-
-            private void addProperty(JsonObject object, String property, Object value,
-                    JsonSerializationContext jsonSerializationContext) {
-                if (value instanceof String) {
-                    object.addProperty(property, (String) value);
-                } else if (value instanceof Number) {
-                    object.addProperty(property, (Number) value);
-                } else if (value instanceof Boolean) {
-                    object.addProperty(property, (Boolean) value);
-                } else {
-                    object.add(property, jsonSerializationContext.serialize(value));
-                }
             }
         }
     }

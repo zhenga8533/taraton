@@ -9,6 +9,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.text.Text;
 import net.volcaronitee.volcclient.feature.chat.JoinWhitelist;
+import net.volcaronitee.volcclient.feature.chat.TextSubstitution;
 
 /**
  * Utility class for handling client commands.
@@ -38,6 +39,10 @@ public class CommandUtil {
                                 // Lists
                                 .then(JoinWhitelist.WHITE_LIST.registerCommand("whitelist"))
                                 .then(JoinWhitelist.WHITE_LIST.registerCommand("wl"))
+
+                                // Maps
+                                .then(TextSubstitution.SUBSTITUTION_MAP.registerCommand("submap"))
+                                .then(TextSubstitution.SUBSTITUTION_MAP.registerCommand("sm"))
 
                         // Command End
                         );

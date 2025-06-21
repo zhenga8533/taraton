@@ -18,6 +18,8 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.Text;
 import net.volcaronitee.volcclient.VolcClient;
+import net.volcaronitee.volcclient.config.controller.KeyValueController;
+import net.volcaronitee.volcclient.config.controller.KeyValueController.KeyValuePair;
 
 /**
  * Utility class for handling configuration settings in a list format.
@@ -29,6 +31,7 @@ public class ListUtil {
     private String title;
     private Path configPath;
     private ConfigClassHandler<ListUtil> handler;
+    private Boolean isMap = false;
 
     /**
      * Default constructor for ListUtil.
@@ -72,17 +75,29 @@ public class ListUtil {
     }
 
     /**
-     * Creates a configuration category for the specified title and configuration path.
+     * Creates a configuration category for the ListUtil instance.
      * 
      * @param defaults The default configuration values.
      * @param config The current configuration values.
      * @return A ConfigCategory instance representing the configuration category.
      */
-    public ConfigCategory createCategory(ListUtil defaults, ListUtil config) {
+    public ConfigCategory createListCategory(ListUtil defaults, ListUtil config) {
         return ConfigCategory.createBuilder().name(Text.literal(this.title))
                 .option(ListOption.<String>createBuilder().name(Text.literal(title))
                         .binding(config.list, () -> config.list, newVal -> config.list = newVal)
                         .controller(StringControllerBuilder::create).initial("").build())
+                .build();
+    }
+
+    public ConfigCategory createMapCategory(ListUtil defaults, ListUtil config) {
+        return ConfigCategory.createBuilder().name(Text.literal(this.title))
+                .option(ListOption.<KeyValuePair<String, String>>createBuilder()
+                        .name(Text.literal(title))
+                        .binding(config.map, () -> config.map, newVal -> config.map = newVal)
+                        .controller((option) -> KeyValueController.Builder.create(option)
+                                .keyController("Key", StringControllerBuilder::create)
+                                .valueController("Value", StringControllerBuilder::create))
+                        .initial(new KeyValuePair<>("", "")).build())
                 .build();
     }
 
@@ -94,7 +109,9 @@ public class ListUtil {
      */
     public Screen createScreen(Screen parent) {
         return YetAnotherConfigLib.create(handler, (defaults, config, builder) -> {
-            builder.title(Text.literal(this.title)).category(createCategory(defaults, config))
+            builder.title(Text.literal(this.title))
+                    .category(isMap ? createMapCategory(defaults, config)
+                            : createListCategory(defaults, config))
                     .build();
             return builder;
         }).generateScreen(parent);
@@ -121,6 +138,18 @@ public class ListUtil {
         });
     }
 
+    /**
+     * Sets whether the list is treated as a map.
+     * 
+     * @param isMap True if the list should be treated as a map, false otherwise.
+     */
+    public void setIsMap(boolean isMap) {
+        this.isMap = isMap;
+    }
+
     @SerialEntry
     public List<String> list = new ArrayList<String>();
+
+    @SerialEntry
+    public List<KeyValuePair<String, String>> map = new ArrayList<KeyValuePair<String, String>>();
 }
