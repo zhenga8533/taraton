@@ -57,48 +57,21 @@ public class ListUtil {
     }
 
     /**
-     * Creates a command that opens a configuration screen when executed.
+     * Gets the handler for this ListUtil instance.
      * 
-     * @param name The name of the command to be registered.
-     * @return A LiteralArgumentBuilder for the command that opens the configuration screen.
+     * @return The ConfigClassHandler for this ListUtil instance.
      */
-    public LiteralArgumentBuilder<FabricClientCommandSource> createCommand(String name) {
-        return literal(name).executes(context -> {
-            MinecraftClient client = MinecraftClient.getInstance();
-
-            client.send(() -> {
-                client.setScreen(createScreen(client.currentScreen));
-            });
-
-            return 1;
-        });
+    public ListUtil getHandler() {
+        return handler.instance();
     }
 
     /**
-     * Creates a configuration category for the ListUtil instance.
+     * Sets whether the list is treated as a map.
      * 
-     * @param defaults The default configuration values.
-     * @param config The current configuration values.
-     * @return A ConfigCategory instance representing the configuration category.
+     * @param isMap True if the list should be treated as a map, false otherwise.
      */
-    public ConfigCategory createListCategory(ListUtil defaults, ListUtil config) {
-        return ConfigCategory.createBuilder().name(Text.literal(this.title))
-                .option(ListOption.<String>createBuilder().name(Text.literal(title))
-                        .binding(config.list, () -> config.list, newVal -> config.list = newVal)
-                        .controller(StringControllerBuilder::create).initial("").build())
-                .build();
-    }
-
-    public ConfigCategory createMapCategory(ListUtil defaults, ListUtil config) {
-        return ConfigCategory.createBuilder().name(Text.literal(this.title))
-                .option(ListOption.<KeyValuePair<String, String>>createBuilder()
-                        .name(Text.literal(title))
-                        .binding(config.map, () -> config.map, newVal -> config.map = newVal)
-                        .controller((option) -> KeyValueController.Builder.create(option)
-                                .keyController("Key", StringControllerBuilder::create)
-                                .valueController("Value", StringControllerBuilder::create))
-                        .initial(new KeyValuePair<>("", "")).build())
-                .build();
+    public void setIsMap(boolean isMap) {
+        this.isMap = isMap;
     }
 
     /**
@@ -115,6 +88,24 @@ public class ListUtil {
                     .build();
             return builder;
         }).generateScreen(parent);
+    }
+
+    /**
+     * Creates a command that opens a configuration screen when executed.
+     * 
+     * @param name The name of the command to be registered.
+     * @return A LiteralArgumentBuilder for the command that opens the configuration screen.
+     */
+    public LiteralArgumentBuilder<FabricClientCommandSource> createCommand(String name) {
+        return literal(name).executes(context -> {
+            MinecraftClient client = MinecraftClient.getInstance();
+
+            client.send(() -> {
+                client.setScreen(createScreen(client.currentScreen));
+            });
+
+            return 1;
+        });
     }
 
     /**
@@ -139,12 +130,30 @@ public class ListUtil {
     }
 
     /**
-     * Sets whether the list is treated as a map.
+     * Creates a configuration category for the ListUtil instance.
      * 
-     * @param isMap True if the list should be treated as a map, false otherwise.
+     * @param defaults The default configuration values.
+     * @param config The current configuration values.
+     * @return A ConfigCategory instance representing the configuration category.
      */
-    public void setIsMap(boolean isMap) {
-        this.isMap = isMap;
+    public ConfigCategory createListCategory(ListUtil defaults, ListUtil config) {
+        return ConfigCategory.createBuilder().name(Text.literal(title))
+                .option(ListOption.<String>createBuilder().name(Text.literal(title))
+                        .binding(config.list, () -> config.list, newVal -> config.list = newVal)
+                        .controller(StringControllerBuilder::create).initial("").build())
+                .build();
+    }
+
+    public ConfigCategory createMapCategory(ListUtil defaults, ListUtil config) {
+        return ConfigCategory.createBuilder().name(Text.literal(title))
+                .option(ListOption.<KeyValuePair<String, String>>createBuilder()
+                        .name(Text.literal(title))
+                        .binding(config.map, () -> config.map, newVal -> config.map = newVal)
+                        .controller((option) -> KeyValueController.Builder.create(option)
+                                .keyController("Key", StringControllerBuilder::create)
+                                .valueController("Value", StringControllerBuilder::create))
+                        .initial(new KeyValuePair<>("", "")).build())
+                .build();
     }
 
     @SerialEntry

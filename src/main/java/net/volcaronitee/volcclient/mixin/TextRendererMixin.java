@@ -12,27 +12,31 @@ import net.volcaronitee.volcclient.feature.chat.TextSubstitution;
 
 @Mixin(TextRenderer.class)
 public class TextRendererMixin {
+
     @Redirect(
-            method = "drawLayer(Lnet/minecraft/text/OrderedText;FFIZLorg/joml/Matrix4f;Lnet/minecraft/client/render/VertexConsumerProvider;Lnet/minecraft/client/font/TextRenderer$TextLayerType;IIZ)F",
+            method = "drawLayer(Lnet/minecraft/text/OrderedText;FFIZLorg/joml/Matrix4f;"
+                    + "Lnet/minecraft/client/render/VertexConsumerProvider;"
+                    + "Lnet/minecraft/client/font/TextRenderer$TextLayerType;IIZ)F",
             at = @At(value = "INVOKE",
                     target = "Lnet/minecraft/text/OrderedText;accept(Lnet/minecraft/text/CharacterVisitor;)Z"))
-    private boolean volcclient$textRendererDrawLayer(OrderedText orderedTextInstance,
+    private boolean volcclient$redirectOrderedTextAccept(OrderedText orderedText,
             CharacterVisitor visitor) {
-        MutableText originalRichText = Text.empty().copy();
-        orderedTextInstance.accept((charIndex, style, codePoint) -> {
-            originalRichText.append(
+        MutableText reconstructed = Text.empty();
+
+        // Rebuild a basic MutableText from OrderedText
+        orderedText.accept((index, style, codePoint) -> {
+            reconstructed.append(
                     Text.literal(String.valueOf(Character.toChars(codePoint))).setStyle(style));
             return true;
         });
 
-        Text modifiedText = TextSubstitution.textRenderer$textRendererDrawLayer(originalRichText);
-        OrderedText orderedTextToProcess;
-        if (!modifiedText.equals(originalRichText)) {
-            orderedTextToProcess = modifiedText.asOrderedText();
-        } else {
-            orderedTextToProcess = orderedTextInstance;
-        }
+        // Apply your substitution logic
+        Text modified = TextSubstitution.modify(reconstructed);
 
-        return orderedTextToProcess.accept(visitor);
+        // Fallback to original if unchanged
+        OrderedText finalText =
+                modified.equals(reconstructed) ? orderedText : modified.asOrderedText();
+
+        return finalText.accept(visitor);
     }
 }
