@@ -85,7 +85,7 @@ public class ChatConfig {
                                         newVal -> config.chat.spamHider = newVal)
                                 .controller(ConfigUtil::createBooleanController).build())
 
-                        // TODO: Word Substitution
+                        // Text Substitution
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Text Substitution"))
                                 .description(OptionDescription.createBuilder()

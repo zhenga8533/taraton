@@ -5,32 +5,37 @@ import net.minecraft.text.Text;
 import net.volcaronitee.volcclient.config.controller.KeyValueController.KeyValuePair;
 import net.volcaronitee.volcclient.util.ListUtil;
 
+/**
+ * Feature for substituting text when rendering any text in the game,
+ */
 public class TextSubstitution {
     public static final ListUtil SUBSTITUTION_MAP = new ListUtil("Substitution Map",
     // @formatter:off
-            "A list of text substitutions to apply in chat messages. The following color and format codes are supported:\n\n"
-                    + "§0&0 - Black\n"
-                    + "§1&1 - Dark Blue\n"
-                    + "§2&2 - Dark Green\n"
-                    + "§3&3 - Dark Aqua\n"
-                    + "§4&4 - Dark Red\n"
-                    + "§5&5 - Dark Purple\n"
-                    + "§6&6 - Gold\n"
-                    + "§7&7 - Gray\n"
-                    + "§8&8 - Dark Gray\n"
-                    + "§9&9 - Blue\n"
-                    + "§a&a - Green\n"
-                    + "§b&b - Aqua\n"
-                    + "§c&c - Red\n"
-                    + "§d&d - Light Purple\n"
-                    + "§e&e - Yellow\n"
-                    + "§f&f - White\n"
-                    + "§k&k - Obfuscated\n"
-                    + "§l&l - Bold\n"
-                    + "§m&m - Strikethrough\n"
-                    + "§n&n - Underline\n"
-                    + "§o&o - Italic\n"
-                    + "§r&r - Reset\n",
+            "A list of text substitutions to apply in chat messages.\n"
+                    + "The following color and format codes are supported:\n\n"
+                    + "§00 - Black§r\n"
+                    + "§11 - Dark Blue§r\n"
+                    + "§22 - Dark Green§r\n"
+                    + "§33 - Dark Aqua§r\n"
+                    + "§44 - Dark Red§r\n"
+                    + "§55 - Dark Purple§r\n"
+                    + "§66 - Gold§r\n"
+                    + "§77 - Gray§r\n"
+                    + "§88 - Dark Gray§r\n"
+                    + "§99 - Blue§r\n"
+                    + "§aa - Green§r\n"
+                    + "§bb - Aqua§r\n"
+                    + "§cc - Red§r\n"
+                    + "§dd - Light Purple§r\n"
+                    + "§ee - Yellow§r\n"
+                    + "§ff - White§r\n"
+                    + "§kk - Obfuscated§r\n"
+                    + "§ll - Bold§r\n"
+                    + "§mm - Strikethrough§r\n"
+                    + "§nn - Underline§r\n"
+                    + "§oo - Italic§r\n"
+                    + "§rr - Reset§r\n\n"
+                    + "https://htmlcolorcodes.com/minecraft-color-codes/",
             "substitution_map.json");
     // @formatter:on
 
@@ -38,12 +43,16 @@ public class TextSubstitution {
         SUBSTITUTION_MAP.setIsMap(true);
     }
 
+    /**
+     * Modifies the given Text by applying substitutions defined in the
+     * 
+     * @param originalText The original Text to modify.
+     * @return A new Text instance with substitutions applied, or an empty Text if the original is
+     *         null.
+     */
     public static Text modify(Text originalText) {
-        if (originalText == null)
-            return Text.empty();
-
         String original = originalText.getString();
-        String modified = original.replace("Volcaronitee", "The Lion");
+        String modified = original.replace("Volcaronitee", "§6The Lion§r");
 
         List<KeyValuePair<String, String>> map = SUBSTITUTION_MAP.getHandler().map;
         for (KeyValuePair<String, String> entry : map) {
