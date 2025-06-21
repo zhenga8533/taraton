@@ -18,7 +18,7 @@ public class JsonUtil {
     private static final Path CONFIG_DIR =
             FabricLoader.getInstance().getConfigDir().resolve(VolcClient.MOD_ID);
     private static final Path JSON_DIR = CONFIG_DIR.resolve("json");
-    private static final Path TEMPLATE_DIR = JSON_DIR.resolve("json_templates");
+    private static final Path TEMPLATE_DIR = CONFIG_DIR.resolve("json_templates");
 
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
