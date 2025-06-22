@@ -4,6 +4,7 @@ import java.util.List;
 import net.minecraft.text.Text;
 import net.volcaronitee.volcclient.config.controller.KeyValueController.KeyValuePair;
 import net.volcaronitee.volcclient.util.ListUtil;
+import net.volcaronitee.volcclient.util.TextUtil;
 
 /**
  * Feature for substituting text when rendering any text in the game,
@@ -11,6 +12,7 @@ import net.volcaronitee.volcclient.util.ListUtil;
 public class TextSubstitution {
     public static final ListUtil SUBSTITUTION_MAP = new ListUtil("Substitution Map",
     // @formatter:off
+            Text.literal(
             "A list of text substitutions to apply in chat messages.\n"
                     + "The following color and format codes are supported:\n\n"
                     + "§00 - Black§r\n"
@@ -34,8 +36,8 @@ public class TextSubstitution {
                     + "§mm - Strikethrough§r\n"
                     + "§nn - Underline§r\n"
                     + "§oo - Italic§r\n"
-                    + "§rr - Reset§r\n\n"
-                    + "https://htmlcolorcodes.com/minecraft-color-codes/",
+                    + "§rr - Reset§r\n\n").append(TextUtil.createLink(
+                        "htmlcolorcodes.com/minecraft-color-codes/", "https://htmlcolorcodes.com/minecraft-color-codes/")),
             "substitution_map.json", null, null);
     // @formatter:on
 

@@ -8,6 +8,7 @@ import net.minecraft.text.Text;
 import net.volcaronitee.volcclient.util.ConfigUtil;
 import net.volcaronitee.volcclient.util.JsonUtil;
 import net.volcaronitee.volcclient.util.ListUtil;
+import net.volcaronitee.volcclient.util.TextUtil;
 
 /**
  * Feature to filter out spam messages in chat.
@@ -16,8 +17,9 @@ public class SpamHider {
     private static final JsonObject SPAM_JSON = JsonUtil.loadTemplate("spam.json");
     private static final List<String> DEFAULT_LIST = JsonUtil.parseList(SPAM_JSON, "spam");
     public static final ListUtil SPAM_LIST = new ListUtil("Spam List",
-            "A list of spam messages to hide in chat.\n\n"
-                    + "Use https://regex101.com to test your regex patterns.",
+            Text.literal("A list of spam messages to hide in chat.\n\nUse ")
+                    .append(TextUtil.createLink("regex101.com", "https://regex101.com"))
+                    .append(Text.literal(" to test your regex patterns.")),
             "spam_list.json", DEFAULT_LIST, null);
 
     private static List<Pattern> SPAM_PATTERNS = new java.util.ArrayList<>();

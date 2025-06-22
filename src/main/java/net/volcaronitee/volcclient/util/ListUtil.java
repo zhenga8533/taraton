@@ -36,7 +36,7 @@ public class ListUtil {
             FabricLoader.getInstance().getConfigDir().resolve(VolcClient.MOD_ID + "/lists");
 
     private String title;
-    private String description;
+    private Text description;
     private Path configPath;
     private Runnable saveCallback;
 
@@ -66,7 +66,7 @@ public class ListUtil {
      * @param defaultList An optional list of default values to initialize the list.
      * @param defaultMap An optional list of key-value pairs to initialize the map.
      */
-    public ListUtil(String title, String description, String configPath, List<String> defaultList,
+    public ListUtil(String title, Text description, String configPath, List<String> defaultList,
             List<KeyValuePair<String, String>> defaultMap) {
         this.title = title;
         this.description = description;
@@ -235,12 +235,12 @@ public class ListUtil {
      * @return A ConfigCategory instance representing the configuration category.
      */
     public ConfigCategory createListCategory(ListUtil defaults, ListUtil config) {
-        return ConfigCategory.createBuilder().name(Text.literal(title)).option(ListOption
-                .<String>createBuilder().name(Text.literal(title))
-                .description(
-                        OptionDescription.createBuilder().text(Text.literal(description)).build())
-                .binding(config.list, () -> config.list, newVal -> config.list = newVal)
-                .controller(StringControllerBuilder::create).initial("").build()).build();
+        return ConfigCategory.createBuilder().name(Text.literal(title))
+                .option(ListOption.<String>createBuilder().name(Text.literal(title))
+                        .description(OptionDescription.createBuilder().text(description).build())
+                        .binding(config.list, () -> config.list, newVal -> config.list = newVal)
+                        .controller(StringControllerBuilder::create).initial("").build())
+                .build();
     }
 
     /**
@@ -251,14 +251,15 @@ public class ListUtil {
      * @return A ConfigCategory instance representing the map configuration category.
      */
     public ConfigCategory createMapCategory(ListUtil defaults, ListUtil config) {
-        return ConfigCategory.createBuilder().name(Text.literal(title)).option(ListOption
-                .<KeyValuePair<String, String>>createBuilder().name(Text.literal(title))
-                .description(
-                        OptionDescription.createBuilder().text(Text.literal(description)).build())
-                .binding(config.map, () -> config.map, newVal -> config.map = newVal)
-                .controller((option) -> KeyValueController.Builder.create(option)
-                        .keyController("Key", StringControllerBuilder::create)
-                        .valueController("Value", StringControllerBuilder::create))
-                .initial(new KeyValuePair<>("", "")).build()).build();
+        return ConfigCategory.createBuilder().name(Text.literal(title))
+                .option(ListOption.<KeyValuePair<String, String>>createBuilder()
+                        .name(Text.literal(title))
+                        .description(OptionDescription.createBuilder().text(description).build())
+                        .binding(config.map, () -> config.map, newVal -> config.map = newVal)
+                        .controller((option) -> KeyValueController.Builder.create(option)
+                                .keyController("Key", StringControllerBuilder::create)
+                                .valueController("Value", StringControllerBuilder::create))
+                        .initial(new KeyValuePair<>("", "")).build())
+                .build();
     }
 }
