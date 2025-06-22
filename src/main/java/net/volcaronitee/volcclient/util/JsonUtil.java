@@ -24,7 +24,6 @@ import net.volcaronitee.volcclient.config.controller.KeyValueController.KeyValue
 public class JsonUtil {
     private static final Path CONFIG_DIR =
             FabricLoader.getInstance().getConfigDir().resolve(VolcClient.MOD_ID);
-    private static final Path JSON_DIR = CONFIG_DIR.resolve("json");
     private static final String TEMPLATE_PATH = "/json/";
 
     public static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
@@ -34,7 +33,6 @@ public class JsonUtil {
     static {
         // Ensure directories exist
         try {
-            Files.createDirectories(JSON_DIR);
             Files.createDirectories(CONFIG_DIR.resolve(DATA_DIR));
         } catch (IOException e) {
             e.printStackTrace();
@@ -48,7 +46,7 @@ public class JsonUtil {
      * @return The loaded JsonObject, or an empty JsonObject if the file doesn't exist.
      */
     public static JsonObject loadJson(String fileDir, String fileName) {
-        Path filePath = JSON_DIR.resolve(fileDir).resolve(fileName);
+        Path filePath = CONFIG_DIR.resolve(fileDir).resolve(fileName);
 
         try {
             if (!Files.exists(filePath)) {
@@ -57,10 +55,8 @@ public class JsonUtil {
                 try (InputStream templateStream =
                         JsonUtil.class.getResourceAsStream(templateResourceName)) {
                     if (templateStream != null) {
-                        Files.createDirectories(filePath.getParent());
                         Files.copy(templateStream, filePath);
                     } else {
-                        Files.createDirectories(filePath.getParent());
                         Files.write(filePath, "{}".getBytes(), StandardOpenOption.CREATE);
                     }
                 }
@@ -122,9 +118,9 @@ public class JsonUtil {
 
         // Handle root directory case
         if (fileDir == null || fileDir.isEmpty() || fileDir.equals("/")) {
-            filePath = JSON_DIR.resolve(fileName);
+            filePath = CONFIG_DIR.resolve(fileName);
         } else {
-            filePath = JSON_DIR.resolve(fileDir).resolve(fileName);
+            filePath = CONFIG_DIR.resolve(fileDir).resolve(fileName);
         }
 
         try {
