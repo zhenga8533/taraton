@@ -38,6 +38,7 @@ public class ListUtil {
     private String title;
     private String description;
     private Path configPath;
+    private Runnable saveCallback;
 
     private ConfigClassHandler<ListUtil> handler;
     private Boolean isMap = false;
@@ -94,6 +95,15 @@ public class ListUtil {
      */
     public ListUtil getHandler() {
         return handler.instance();
+    }
+
+    /**
+     * Sets a callback to be invoked when the configuration is saved.
+     * 
+     * @param saveCallback The callback to be executed when the configuration is saved.
+     */
+    public void setSaveCallback(Runnable saveCallback) {
+        this.saveCallback = saveCallback;
     }
 
     /**
@@ -181,7 +191,12 @@ public class ListUtil {
             builder.title(Text.literal(this.title))
                     .category(isMap ? createMapCategory(defaults, config)
                             : createListCategory(defaults, config))
-                    .build();
+                    .save(() -> {
+                        if (saveCallback != null) {
+                            saveCallback.run();
+                        }
+                        handler.save();
+                    }).build();
             return builder;
         }).generateScreen(parent);
     }
@@ -220,11 +235,12 @@ public class ListUtil {
      * @return A ConfigCategory instance representing the configuration category.
      */
     public ConfigCategory createListCategory(ListUtil defaults, ListUtil config) {
-        return ConfigCategory.createBuilder().name(Text.literal(title))
-                .option(ListOption.<String>createBuilder().name(Text.literal(title))
-                        .binding(config.list, () -> config.list, newVal -> config.list = newVal)
-                        .controller(StringControllerBuilder::create).initial("").build())
-                .build();
+        return ConfigCategory.createBuilder().name(Text.literal(title)).option(ListOption
+                .<String>createBuilder().name(Text.literal(title))
+                .description(
+                        OptionDescription.createBuilder().text(Text.literal(description)).build())
+                .binding(config.list, () -> config.list, newVal -> config.list = newVal)
+                .controller(StringControllerBuilder::create).initial("").build()).build();
     }
 
     /**

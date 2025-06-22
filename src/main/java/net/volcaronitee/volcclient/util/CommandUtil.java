@@ -10,6 +10,7 @@ import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.text.Text;
 import net.volcaronitee.volcclient.feature.chat.CustomEmote;
 import net.volcaronitee.volcclient.feature.chat.JoinWhitelist;
+import net.volcaronitee.volcclient.feature.chat.SpamHider;
 import net.volcaronitee.volcclient.feature.chat.TextSubstitution;
 
 /**
@@ -38,6 +39,8 @@ public class CommandUtil {
                                 .then(literal("debug").executes(CommandUtil::debug))
 
                                 // Lists
+                                .then(SpamHider.SPAM_LIST.createCommand("spamlist"))
+                                .then(SpamHider.SPAM_LIST.createCommand("sl"))
                                 .then(JoinWhitelist.WHITE_LIST.createCommand("whitelist"))
                                 .then(JoinWhitelist.WHITE_LIST.createCommand("wl"))
 

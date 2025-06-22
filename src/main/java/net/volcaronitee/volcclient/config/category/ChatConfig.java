@@ -73,13 +73,13 @@ public class ChatConfig {
                                         newVal -> config.chat.playtimeWarning = newVal)
                                 .controller(ConfigUtil::createBooleanController).build())
 
-                        // TODO: Spam Hider
+                        // Spam Hider
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Spam Hider"))
                                 .description(OptionDescription.createBuilder()
                                         .webpImage(Identifier.of(VolcClient.MOD_ID,
                                                 "config/chat/spam_hider.webp"))
                                         .text(Text.literal(
-                                                "Hides spam messages in chat. Customize your spam filter using §9/vc sl§f."))
+                                                "Hides spam messages in chat. Customize the spam filter using §9/vc sl§f."))
                                         .build())
                                 .binding(defaults.chat.spamHider, () -> config.chat.spamHider,
                                         newVal -> config.chat.spamHider = newVal)
