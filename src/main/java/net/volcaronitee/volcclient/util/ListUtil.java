@@ -23,6 +23,7 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 import net.volcaronitee.volcclient.VolcClient;
 import net.volcaronitee.volcclient.config.controller.KeyValueController;
 import net.volcaronitee.volcclient.config.controller.KeyValueController.KeyValuePair;
@@ -43,9 +44,12 @@ public class ListUtil {
 
     @SerialEntry
     public List<String> list = new ArrayList<String>();
+    private List<String> defaultList = new ArrayList<String>();
 
     @SerialEntry
     public List<KeyValuePair<String, String>> map = new ArrayList<KeyValuePair<String, String>>();
+    private List<KeyValuePair<String, String>> defaultMap =
+            new ArrayList<KeyValuePair<String, String>>();
 
     /**
      * Default constructor for ListUtil.
@@ -75,7 +79,11 @@ public class ListUtil {
                         .build())
                 .build();
 
+        // Initialize default values
+        this.defaultList = defaultList;
+        this.defaultMap = defaultMap;
         createDefaults(defaultList, defaultMap);
+
         this.handler.load();
     }
 
@@ -137,6 +145,23 @@ public class ListUtil {
     }
 
     /**
+     * Resets the configuration by deleting the configuration file and recreating the defaults.
+     */
+    public void reset() {
+        // Delete the configuration file
+        try {
+            Files.deleteIfExists(this.configPath);
+            VolcClient.LOGGER.info("Configuration file reset: " + this.configPath);
+        } catch (IOException e) {
+            VolcClient.LOGGER.error("Failed to reset configuration file: " + this.configPath, e);
+        }
+
+        // Recreate the defaults
+        createDefaults(this.defaultList, this.defaultMap);
+        this.handler.load();
+    }
+
+    /**
      * Sets whether the list is treated as a map.
      * 
      * @param isMap True if the list should be treated as a map, false otherwise.
@@ -162,30 +187,12 @@ public class ListUtil {
     }
 
     /**
-     * Creates a command that opens a configuration screen when executed.
-     * 
-     * @param name The name of the command to be registered.
-     * @return A LiteralArgumentBuilder for the command that opens the configuration screen.
-     */
-    public LiteralArgumentBuilder<FabricClientCommandSource> createCommand(String name) {
-        return literal(name).executes(context -> {
-            MinecraftClient client = MinecraftClient.getInstance();
-
-            client.send(() -> {
-                client.setScreen(createScreen(client.currentScreen));
-            });
-
-            return 1;
-        });
-    }
-
-    /**
-     * Registers a command that opens the whitelist configuration screen.
+     * Creates a command that opens the whitelist configuration screen.
      * 
      * @param name The name of the command to be registered.
      * @return A LiteralArgumentBuilder for the command that opens the whitelist screen.
      */
-    public LiteralArgumentBuilder<FabricClientCommandSource> registerCommand(String name) {
+    public LiteralArgumentBuilder<FabricClientCommandSource> createCommand(String name) {
         return literal(name).executes(context -> {
             MinecraftClient client = MinecraftClient.getInstance();
             if (client.player == null || client.world == null) {
@@ -197,7 +204,12 @@ public class ListUtil {
             });
 
             return 1;
-        });
+        }).then(literal("reset").executes(context -> {
+            reset();
+            context.getSource().sendFeedback(TextUtil.MOD_TITLE.copy()
+                    .append(Text.literal(" List reset successfully.").formatted(Formatting.GREEN)));
+            return 1;
+        }));
     }
 
     /**

@@ -38,14 +38,14 @@ public class CommandUtil {
                                 .then(literal("debug").executes(CommandUtil::debug))
 
                                 // Lists
-                                .then(JoinWhitelist.WHITE_LIST.registerCommand("whitelist"))
-                                .then(JoinWhitelist.WHITE_LIST.registerCommand("wl"))
+                                .then(JoinWhitelist.WHITE_LIST.createCommand("whitelist"))
+                                .then(JoinWhitelist.WHITE_LIST.createCommand("wl"))
 
                                 // Maps
-                                .then(CustomEmote.EMOTE_MAP.registerCommand("emotemap"))
-                                .then(CustomEmote.EMOTE_MAP.registerCommand("em"))
-                                .then(TextSubstitution.SUBSTITUTION_MAP.registerCommand("submap"))
-                                .then(TextSubstitution.SUBSTITUTION_MAP.registerCommand("sm"))
+                                .then(CustomEmote.EMOTE_MAP.createCommand("emotemap"))
+                                .then(CustomEmote.EMOTE_MAP.createCommand("em"))
+                                .then(TextSubstitution.SUBSTITUTION_MAP.createCommand("submap"))
+                                .then(TextSubstitution.SUBSTITUTION_MAP.createCommand("sm"))
 
                         // Command End
                         );
