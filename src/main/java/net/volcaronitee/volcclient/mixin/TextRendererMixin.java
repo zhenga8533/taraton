@@ -2,6 +2,7 @@ package net.volcaronitee.volcclient.mixin;
 
 import java.util.concurrent.atomic.AtomicReference;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
@@ -20,6 +21,7 @@ import net.volcaronitee.volcclient.feature.chat.TextSubstitution;
  */
 @Mixin(TextRenderer.class)
 public class TextRendererMixin {
+    @Unique
     private OrderedText volcclient$modifiedOrderedText = null;
 
     /**
@@ -47,7 +49,7 @@ public class TextRendererMixin {
             if (currentStyleRef.get() == null) {
                 currentStyleRef.set(style);
             } else if (!style.equals(currentStyleRef.get())) {
-                if (currentTextBuilder.length() > 0) {
+                if (!currentTextBuilder.isEmpty()) {
                     Text segmentToModify = Text.literal(currentTextBuilder.toString())
                             .setStyle(currentStyleRef.get());
                     Text modified = TextSubstitution.modify(segmentToModify);
@@ -61,7 +63,7 @@ public class TextRendererMixin {
             return true;
         });
 
-        if (currentTextBuilder.length() > 0) {
+        if (!currentTextBuilder.isEmpty()) {
             Text segmentToModify =
                     Text.literal(currentTextBuilder.toString()).setStyle(currentStyleRef.get());
             Text modified = TextSubstitution.modify(segmentToModify);

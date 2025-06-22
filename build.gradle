@@ -47,7 +47,7 @@ dependencies {
 	// Custom
 	modImplementation "dev.isxander:yet-another-config-lib:${project.yacl_version}"
 	modImplementation "com.terraformersmc:modmenu:${project.modmenu_version}"
-  	modImplementation "net.hypixel:mod-api:${project.hypixelmodapi_version}"
+  modImplementation "net.hypixel:mod-api:${project.hypixelmodapi_version}"
 }
 
 processResources {

@@ -10,8 +10,8 @@ import net.minecraft.util.math.Vec3d;
 import net.volcaronitee.volcclient.util.PlayerUtil;
 
 @Mixin(ClientPlayerEntity.class)
-public class ClientPlayerEntityMixin {
-    @Inject(method = "move", at = @At("HEAD"))
+public abstract class ClientPlayerEntityMixin {
+    @Inject(method = "move", at = @At(value = "HEAD"))
     private void volcclient$clientPlayerEntityMove(MovementType type, Vec3d movement,
             CallbackInfo info) {
         PlayerUtil.getInstance().clientPlayerEntity$move();
