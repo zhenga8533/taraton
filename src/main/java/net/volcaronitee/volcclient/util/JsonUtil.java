@@ -1,6 +1,8 @@
 package net.volcaronitee.volcclient.util;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
@@ -18,7 +20,7 @@ public class JsonUtil {
     private static final Path CONFIG_DIR =
             FabricLoader.getInstance().getConfigDir().resolve(VolcClient.MOD_ID);
     private static final Path JSON_DIR = CONFIG_DIR.resolve("json");
-    private static final Path TEMPLATE_DIR = CONFIG_DIR.resolve("json_templates");
+    private static final String TEMPLATE_PATH = "/json/";
 
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
@@ -28,7 +30,6 @@ public class JsonUtil {
         // Ensure directories exist
         try {
             Files.createDirectories(JSON_DIR);
-            Files.createDirectories(TEMPLATE_DIR);
             Files.createDirectories(CONFIG_DIR.resolve(DATA_DIR));
         } catch (IOException e) {
             e.printStackTrace();
@@ -46,14 +47,17 @@ public class JsonUtil {
 
         try {
             if (!Files.exists(filePath)) {
-                // Create from template if it doesn't exist
-                Path templatePath = TEMPLATE_DIR.resolve(fileName);
-                if (Files.exists(templatePath)) {
-                    // Copy template to JSON directory
-                    Files.copy(templatePath, filePath);
-                } else {
-                    // Create an empty JSON file if no template exists
-                    Files.write(filePath, "{}".getBytes(), StandardOpenOption.CREATE);
+                // If the file does not exist, create it with a template or an empty JSON object
+                String templateResourceName = TEMPLATE_PATH + fileName;
+                try (InputStream templateStream =
+                        JsonUtil.class.getResourceAsStream(templateResourceName)) {
+                    if (templateStream != null) {
+                        Files.createDirectories(filePath.getParent());
+                        Files.copy(templateStream, filePath);
+                    } else {
+                        Files.createDirectories(filePath.getParent());
+                        Files.write(filePath, "{}".getBytes(), StandardOpenOption.CREATE);
+                    }
                 }
             }
 
@@ -81,22 +85,23 @@ public class JsonUtil {
      * 
      * @param fileName The name of the template file to load.
      * @return The loaded JsonObject from the template file.
-     * @throws RuntimeException if the template file does not exist or cannot be read.
-     * @throws IOException if an I/O error occurs while reading the file.
+     * @throws RuntimeException If the template file does not exist or cannot be read.
+     * @throws IOException If an I/O error occurs while reading the file.
      */
     public static JsonObject loadTemplate(String fileName) {
-        Path templatePath = TEMPLATE_DIR.resolve(fileName);
-
-        try {
-            if (!Files.exists(templatePath)) {
-                throw new IOException("Template file does not exist: " + templatePath);
+        String templateResourceName = TEMPLATE_PATH + fileName;
+        try (InputStream templateStream =
+                JsonUtil.class.getResourceAsStream(templateResourceName)) {
+            if (templateStream == null) {
+                throw new IOException(
+                        "Bundled template resource not found: " + templateResourceName);
             }
 
-            String content = Files.readString(templatePath);
-            return JsonParser.parseString(content).getAsJsonObject();
+            // Use InputStreamReader to parse JSON from the stream
+            return JsonParser.parseReader(new InputStreamReader(templateStream)).getAsJsonObject();
         } catch (IOException e) {
             e.printStackTrace();
-            throw new RuntimeException("Failed to load template: " + fileName, e);
+            throw new RuntimeException("Failed to load bundled template: " + fileName, e);
         }
     }
 
