@@ -36,7 +36,7 @@ public class TextSubstitution {
                     + "§oo - Italic§r\n"
                     + "§rr - Reset§r\n\n"
                     + "https://htmlcolorcodes.com/minecraft-color-codes/",
-            "substitution_map.json");
+            "substitution_map.json", null, null);
     // @formatter:on
 
     static {

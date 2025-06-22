@@ -6,12 +6,17 @@ import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import net.fabricmc.loader.api.FabricLoader;
 import net.volcaronitee.volcclient.VolcClient;
+import net.volcaronitee.volcclient.config.controller.KeyValueController.KeyValuePair;
 
 /**
  * Utility class for handling JSON file operations.
@@ -22,7 +27,7 @@ public class JsonUtil {
     private static final Path JSON_DIR = CONFIG_DIR.resolve("json");
     private static final String TEMPLATE_PATH = "/json/";
 
-    private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
+    public static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
     public static final String DATA_DIR = "data";
 
@@ -129,5 +134,36 @@ public class JsonUtil {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Parses key-value pairs from a JsonObject under a specified key.
+     * 
+     * @param rootObject The root JsonObject containing the key-value pairs.
+     * @param mapKey The key under which the key-value pairs are stored in the root object.
+     * @return A list of KeyValuePair objects representing the key-value pairs found in the
+     *         specified map.
+     */
+    public static List<KeyValuePair<String, String>> parseKeyValuePairs(JsonObject rootObject,
+            String mapKey) {
+        List<KeyValuePair<String, String>> result = new ArrayList<>();
+
+        if (rootObject != null && mapKey != null && !mapKey.isEmpty()) {
+            if (rootObject.has(mapKey) && rootObject.get(mapKey).isJsonObject()) {
+                JsonObject targetMapObject = rootObject.getAsJsonObject(mapKey);
+
+                for (Map.Entry<String, JsonElement> entry : targetMapObject.entrySet()) {
+                    String key = entry.getKey();
+                    JsonElement valueElement = entry.getValue();
+
+                    if (valueElement.isJsonPrimitive()
+                            && valueElement.getAsJsonPrimitive().isString()) {
+                        String value = valueElement.getAsString();
+                        result.add(new KeyValuePair<>(key, value));
+                    }
+                }
+            }
+        }
+        return result;
     }
 }

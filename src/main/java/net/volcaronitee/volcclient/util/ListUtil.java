@@ -1,9 +1,14 @@
 package net.volcaronitee.volcclient.util;
 
 import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.literal;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import dev.isxander.yacl3.api.ConfigCategory;
 import dev.isxander.yacl3.api.ListOption;
@@ -32,8 +37,15 @@ public class ListUtil {
     private String title;
     private String description;
     private Path configPath;
+
     private ConfigClassHandler<ListUtil> handler;
     private Boolean isMap = false;
+
+    @SerialEntry
+    public List<String> list = new ArrayList<String>();
+
+    @SerialEntry
+    public List<KeyValuePair<String, String>> map = new ArrayList<KeyValuePair<String, String>>();
 
     /**
      * Default constructor for ListUtil.
@@ -46,17 +58,24 @@ public class ListUtil {
      * @param title The title for the configuration screen.
      * @param description A brief description of the configuration.
      * @param configPath The path to the configuration file relative to the config directory.
+     * @param defaultList An optional list of default values to initialize the list.
+     * @param defaultMap An optional list of key-value pairs to initialize the map.
      */
-    public ListUtil(String title, String description, String configPath) {
+    public ListUtil(String title, String description, String configPath, List<String> defaultList,
+            List<KeyValuePair<String, String>> defaultMap) {
         this.title = title;
         this.description = description;
         this.configPath = CONFIG_PATH.resolve(configPath);
+
+        // Create handler for this ListUtil instance
         this.handler = ConfigClassHandler.createBuilder(ListUtil.class)
                 .serializer(config -> GsonConfigSerializerBuilder.create(config)
                         .setPath(this.configPath).appendGsonBuilder(gsonBuilder -> gsonBuilder
                                 .setPrettyPrinting().disableHtmlEscaping().serializeNulls())
                         .build())
                 .build();
+
+        createDefaults(defaultList, defaultMap);
         this.handler.load();
     }
 
@@ -67,6 +86,54 @@ public class ListUtil {
      */
     public ListUtil getHandler() {
         return handler.instance();
+    }
+
+    /**
+     * Creates default values for the list and map if the configuration file does not exist.
+     * 
+     * @param defaultList The default list of strings to initialize if the config file is missing.
+     * @param defaultMap The default list of key-value pairs to initialize if the config file is
+     *        missing.
+     */
+    public void createDefaults(List<String> defaultList,
+            List<KeyValuePair<String, String>> defaultMap) {
+        if (!Files.exists(this.configPath)) {
+            // Ensure the parent directory exists
+            try {
+                Files.createDirectories(this.configPath.getParent());
+            } catch (IOException e) {
+                VolcClient.LOGGER.error("Failed to create config directory for " + this.configPath,
+                        e);
+            }
+
+            // Set default values and save the configuration
+            JsonObject defaultConfig = new JsonObject();
+            if (defaultList != null) {
+                JsonArray listArray = new JsonArray();
+                for (String item : defaultList) {
+                    listArray.add(item);
+                }
+                defaultConfig.add("list", listArray);
+            }
+            if (defaultMap != null) {
+                JsonArray mapArray = new JsonArray();
+                for (KeyValuePair<String, String> pair : defaultMap) {
+                    JsonObject pairObject = new JsonObject();
+                    pairObject.addProperty("key", pair.getKey());
+                    pairObject.addProperty("value", pair.getValue());
+                    mapArray.add(pairObject);
+                }
+                defaultConfig.add("map", mapArray);
+            }
+
+            // Save the default configuration to the file
+            try (BufferedWriter writer = Files.newBufferedWriter(this.configPath)) {
+                JsonUtil.GSON.toJson(defaultConfig, writer);
+                VolcClient.LOGGER.info("Default config written to: " + this.configPath);
+            } catch (IOException e) {
+                VolcClient.LOGGER.error("Failed to write default config to " + this.configPath, e);
+            }
+        }
     }
 
     /**
@@ -148,6 +215,13 @@ public class ListUtil {
                 .build();
     }
 
+    /**
+     * Creates a configuration category for a map-like structure in the ListUtil instance.
+     * 
+     * @param defaults The default configuration values for the map.
+     * @param config The current configuration values for the map.
+     * @return A ConfigCategory instance representing the map configuration category.
+     */
     public ConfigCategory createMapCategory(ListUtil defaults, ListUtil config) {
         return ConfigCategory.createBuilder().name(Text.literal(title)).option(ListOption
                 .<KeyValuePair<String, String>>createBuilder().name(Text.literal(title))
@@ -159,10 +233,4 @@ public class ListUtil {
                         .valueController("Value", StringControllerBuilder::create))
                 .initial(new KeyValuePair<>("", "")).build()).build();
     }
-
-    @SerialEntry
-    public List<String> list = new ArrayList<String>();
-
-    @SerialEntry
-    public List<KeyValuePair<String, String>> map = new ArrayList<KeyValuePair<String, String>>();
 }
