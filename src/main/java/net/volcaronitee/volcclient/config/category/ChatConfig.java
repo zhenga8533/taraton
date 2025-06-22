@@ -47,7 +47,7 @@ public class ChatConfig {
                                         newVal -> config.chat.autocorrectCommand = newVal)
                                 .controller(ConfigUtil::createBooleanController).build())
 
-                        // TODO: Custom Emotes
+                        // Custom Emotes
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Custom Emotes"))
                                 .description(OptionDescription.createBuilder()
                                         .webpImage(Identifier.of(VolcClient.MOD_ID,
