@@ -3,7 +3,7 @@
   "spam": [
     "^(?:This ability is on cooldown for (\\d+)s\\.|No more charges, next one in (\\d+)s!)$",
     "^There are blocks in the way!$",
-    "^Your Implosion hit (d+) enem(?:y|ies) for (d+) damage.$",
-    "^Your Molten Wave hit (d+) enem(?:y|ies) for (d+) damage.$"
+    "^Your Implosion hit (\\d+(?:,\\d{3})*(?:\\.\\d+)?) enem(?:y|ies) for (\\d+(?:,\\d{3})*(?:\\.\\d+)?) damage.$",
+    "^Your Molten Wave hit (\\d+(?:,\\d{3})*(?:\\.\\d+)?) enem(?:y|ies) for (\\d+(?:,\\d{3})*(?:\\.\\d+)?) damage.$"
   ]
 }
