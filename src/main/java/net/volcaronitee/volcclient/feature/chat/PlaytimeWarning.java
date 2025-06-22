@@ -5,8 +5,10 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 import net.volcaronitee.volcclient.util.ConfigUtil;
 import net.volcaronitee.volcclient.util.JsonUtil;
+import net.volcaronitee.volcclient.util.TextUtil;
 
 /**
  * Singleton class that tracks the player's playtime and sends a warning message
@@ -51,17 +53,19 @@ public class PlaytimeWarning {
      * @param client The Minecraft client instance.
      */
     private static void onEndClientTick(MinecraftClient client) {
-        if (client.world == null || client.player == null) {
+        if (client.world == null || client.player == null
+                || !ConfigUtil.getHandler().chat.playtimeWarning) {
             return;
         }
 
         INSTANCE.playtimeTicks++;
 
-        if (ConfigUtil.getHandler().chat.playtimeWarning
-                && INSTANCE.playtimeTicks % PLAYTIME_THRESHOLD == 0) { // Every 8 hour
-            int hours = INSTANCE.playtimeTicks / PLAYTIME_THRESHOLD;
-            client.inGameHud.getChatHud().addMessage(Text.literal("You have played for " + hours
-                    + " hours. Excessive game playing may cause problems in your normal daily life."));
+        if (INSTANCE.playtimeTicks % PLAYTIME_THRESHOLD == 0) { // Every 8 hour
+            int hours = INSTANCE.playtimeTicks / (20 * 3600);
+            client.inGameHud.getChatHud().addMessage(TextUtil.MOD_TITLE.copy()
+                    .append(Text.literal(" You have played for " + hours
+                            + " hours. Excessive game playing may cause problems in your normal daily life.")
+                            .formatted(Formatting.RED)));
         }
     }
 
