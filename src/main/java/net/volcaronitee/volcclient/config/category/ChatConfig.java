@@ -53,7 +53,7 @@ public class ChatConfig {
                                         .webpImage(Identifier.of(VolcClient.MOD_ID,
                                                 "config/chat/custom_emotes.webp"))
                                         .text(Text.literal(
-                                                "Allows the use of §6MVP§c++ §femotes in chat. Customize your emotes using /vc em§f."))
+                                                "Allows the use of §6MVP§c++ §femotes in chat. Customize your emotes using §e/vc em§f."))
                                         .build())
                                 .binding(defaults.chat.customEmotes, () -> config.chat.customEmotes,
                                         newVal -> config.chat.customEmotes = newVal)
@@ -79,7 +79,7 @@ public class ChatConfig {
                                         .webpImage(Identifier.of(VolcClient.MOD_ID,
                                                 "config/chat/spam_hider.webp"))
                                         .text(Text.literal(
-                                                "Hides spam messages in chat. Customize the spam filter using §9/vc sl§f."))
+                                                "Hides spam messages in chat. Customize the spam filter using §e/vc sl§f."))
                                         .build())
                                 .binding(defaults.chat.spamHider, () -> config.chat.spamHider,
                                         newVal -> config.chat.spamHider = newVal)
@@ -92,7 +92,7 @@ public class ChatConfig {
                                         .webpImage(Identifier.of(VolcClient.MOD_ID,
                                                 "config/chat/text_substitution.webp"))
                                         .text(Text.literal(
-                                                "Substitutes text keys with user defined values anywhere text is rendered. Set text mapping using /vc text."))
+                                                "Substitutes text keys with user defined values anywhere text is rendered. Set text mapping using §e/vc sm§f."))
                                         .build())
                                 .binding(defaults.chat.textSubstitution,
                                         () -> config.chat.textSubstitution,
