@@ -3,8 +3,11 @@ package net.volcaronitee.volcclient.mixin;
 import java.util.concurrent.atomic.AtomicReference;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.font.TextRenderer.GlyphDrawable;
 import net.minecraft.text.CharacterVisitor;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.OrderedText;
@@ -12,23 +15,34 @@ import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.volcaronitee.volcclient.feature.chat.TextSubstitution;
 
+/**
+ * Mixin for TextRenderer to modify the OrderedText before rendering.
+ */
 @Mixin(TextRenderer.class)
 public class TextRendererMixin {
+    private OrderedText volcclient$modifiedOrderedText = null;
 
-    @Redirect(
-            method = "drawLayer(Lnet/minecraft/text/OrderedText;FFIZLorg/joml/Matrix4f;"
-                    + "Lnet/minecraft/client/render/VertexConsumerProvider;"
-                    + "Lnet/minecraft/client/font/TextRenderer$TextLayerType;IIZ)F",
-            at = @At(value = "INVOKE",
-                    target = "Lnet/minecraft/text/OrderedText;accept(Lnet/minecraft/text/CharacterVisitor;)Z"))
-    private boolean volcclient$redirectOrderedTextAccept(OrderedText orderedText,
-            CharacterVisitor visitor) {
+    /**
+     * Injects into the prepare method of TextRenderer to modify the OrderedText
+     * 
+     * @param orderedText The OrderedText to prepare.
+     * @param x The x-coordinate for rendering.
+     * @param y The y-coordinate for rendering.
+     * @param color The color to apply to the text.
+     * @param shadow Whether to apply a shadow to the text.
+     * @param backgroundColor The background color for the text.
+     * @param cir The callback info for returning the GlyphDrawable.
+     */
+    @Inject(method = "prepare(Lnet/minecraft/text/OrderedText;FFIZI)Lnet/minecraft/client/font/TextRenderer$GlyphDrawable;",
+            at = @At("HEAD"))
+    private void volcclient$modifyOrderedTextHead(OrderedText orderedText, float x, float y,
+            int color, boolean shadow, int backgroundColor,
+            CallbackInfoReturnable<GlyphDrawable> cir) {
         MutableText reconstructed = Text.empty();
 
         StringBuilder currentTextBuilder = new StringBuilder();
         AtomicReference<Style> currentStyleRef = new AtomicReference<>();
 
-        // Use the visitor to reconstruct the text with substitutions applied
         orderedText.accept((index, style, codePoint) -> {
             if (currentStyleRef.get() == null) {
                 currentStyleRef.set(style);
@@ -44,11 +58,9 @@ public class TextRendererMixin {
             }
 
             currentTextBuilder.append(Character.toChars(codePoint));
-
             return true;
         });
 
-        // If there's any remaining text to process after the loop
         if (currentTextBuilder.length() > 0) {
             Text segmentToModify =
                     Text.literal(currentTextBuilder.toString()).setStyle(currentStyleRef.get());
@@ -56,6 +68,27 @@ public class TextRendererMixin {
             reconstructed.append(modified);
         }
 
-        return reconstructed.asOrderedText().accept(visitor);
+        this.volcclient$modifiedOrderedText = reconstructed.asOrderedText();
+    }
+
+    /**
+     * Redirects the accept method of OrderedText to use the modified OrderedText
+     * 
+     * @param originalOrderedText The original OrderedText to accept.
+     * @param drawer The CharacterVisitor to accept the text.
+     * @return True if the text was accepted, false otherwise.
+     */
+    @Redirect(
+            method = "prepare(Lnet/minecraft/text/OrderedText;FFIZI)Lnet/minecraft/client/font/TextRenderer$GlyphDrawable;",
+            at = @At(value = "INVOKE",
+                    target = "Lnet/minecraft/text/OrderedText;accept(Lnet/minecraft/text/CharacterVisitor;)Z"))
+    private boolean volcclient$redirectOrderedTextAccept(OrderedText originalOrderedText,
+            CharacterVisitor drawer) {
+        OrderedText textToAccept =
+                this.volcclient$modifiedOrderedText != null ? this.volcclient$modifiedOrderedText
+                        : originalOrderedText;
+        this.volcclient$modifiedOrderedText = null;
+
+        return textToAccept.accept(drawer);
     }
 }
