@@ -4,6 +4,7 @@ import java.util.List;
 import com.google.gson.JsonObject;
 import net.fabricmc.fabric.api.client.message.v1.ClientSendMessageEvents;
 import net.volcaronitee.volcclient.config.controller.KeyValueController.KeyValuePair;
+import net.volcaronitee.volcclient.util.ConfigUtil;
 import net.volcaronitee.volcclient.util.JsonUtil;
 import net.volcaronitee.volcclient.util.ListUtil;
 
@@ -26,6 +27,11 @@ public class CustomEmote {
      */
     public static void register() {
         ClientSendMessageEvents.MODIFY_CHAT.register(message -> {
+            if (!ConfigUtil.getHandler().chat.customEmotes) {
+                return message;
+            }
+
+            // Replace each emote key with its corresponding value in the message
             for (KeyValuePair<String, String> pair : EMOTE_MAP.getHandler().map) {
                 if (message.contains(pair.getKey())) {
                     message = message.replace(pair.getKey(), pair.getValue());
