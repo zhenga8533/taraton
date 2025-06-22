@@ -8,6 +8,7 @@ import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.text.Text;
+import net.volcaronitee.volcclient.feature.chat.CustomEmote;
 import net.volcaronitee.volcclient.feature.chat.JoinWhitelist;
 import net.volcaronitee.volcclient.feature.chat.TextSubstitution;
 
@@ -41,6 +42,8 @@ public class CommandUtil {
                                 .then(JoinWhitelist.WHITE_LIST.registerCommand("wl"))
 
                                 // Maps
+                                .then(CustomEmote.EMOTE_MAP.registerCommand("emotemap"))
+                                .then(CustomEmote.EMOTE_MAP.registerCommand("em"))
                                 .then(TextSubstitution.SUBSTITUTION_MAP.registerCommand("submap"))
                                 .then(TextSubstitution.SUBSTITUTION_MAP.registerCommand("sm"))
 
