@@ -5,13 +5,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 import com.google.gson.JsonObject;
-import net.fabricmc.fabric.api.client.rendering.v1.HudLayerRegistrationCallback;
-import net.fabricmc.fabric.api.client.rendering.v1.LayeredDrawerWrapper;
+import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.render.RenderTickCounter;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
+import net.volcaronitee.volcclient.VolcClient;
 
 /**
  * Utility class for handling overlays.
@@ -40,7 +42,8 @@ public class OverlayUtil {
      * Initializes the OverlayUtil by registering the overlay rendering callback.
      */
     public static void init() {
-        HudLayerRegistrationCallback.EVENT.register(OverlayUtil::renderOverlays);
+        HudElementRegistry.addFirst(Identifier.of(VolcClient.MOD_ID, "overlays"),
+                OverlayUtil::renderOverlays);
     }
 
     /**
@@ -85,9 +88,9 @@ public class OverlayUtil {
      * 
      * @param context The context to use for rendering overlays.
      */
-    public static void renderOverlays(LayeredDrawerWrapper context) {
+    public static void renderOverlays(DrawContext context, RenderTickCounter tickCounter) {
         for (Overlay overlay : OVERLAYS.values()) {
-            overlay.render((DrawContext) context);
+            overlay.render(context);
         }
     }
 

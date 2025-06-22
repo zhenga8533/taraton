@@ -13,7 +13,7 @@ import net.volcaronitee.volcclient.util.PlayerUtil;
 public class ClientPlayerEntityMixin {
     @Inject(method = "move", at = @At("HEAD"))
     private void volcclient$clientPlayerEntityMove(MovementType type, Vec3d movement,
-            CallbackInfo ci) {
+            CallbackInfo info) {
         PlayerUtil.getInstance().clientPlayerEntity$move();
     }
 }
