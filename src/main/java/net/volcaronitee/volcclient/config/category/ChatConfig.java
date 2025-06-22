@@ -53,7 +53,7 @@ public class ChatConfig {
                                         .webpImage(Identifier.of(VolcClient.MOD_ID,
                                                 "config/chat/custom_emotes.webp"))
                                         .text(Text.literal(
-                                                "Allows the use of MVP++ emotes in chat. Customize your emotes using /vc emotes."))
+                                                "Allows the use of §6MVP§c++ §femotes in chat. Customize your emotes using /vc em§f."))
                                         .build())
                                 .binding(defaults.chat.customEmotes, () -> config.chat.customEmotes,
                                         newVal -> config.chat.customEmotes = newVal)
@@ -79,7 +79,7 @@ public class ChatConfig {
                                         .webpImage(Identifier.of(VolcClient.MOD_ID,
                                                 "config/chat/spam_hider.webp"))
                                         .text(Text.literal(
-                                                "Hides spam messages in chat. Customize your spam filter using /vc spam."))
+                                                "Hides spam messages in chat. Customize your spam filter using §9/vc sl§f."))
                                         .build())
                                 .binding(defaults.chat.spamHider, () -> config.chat.spamHider,
                                         newVal -> config.chat.spamHider = newVal)

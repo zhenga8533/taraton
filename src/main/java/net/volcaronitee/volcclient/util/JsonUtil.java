@@ -133,6 +133,28 @@ public class JsonUtil {
     }
 
     /**
+     * Parses a list of strings from a JsonObject under a specified key.
+     * 
+     * @param rootObject The root JsonObject containing the list.
+     * @param listKey The key under which the list is stored in the root object.
+     * @return A list of strings representing the elements found in the specified list.
+     */
+    public static List<String> parseList(JsonObject rootObject, String listKey) {
+        List<String> result = new ArrayList<>();
+
+        if (rootObject != null && listKey != null && !listKey.isEmpty()) {
+            if (rootObject.has(listKey) && rootObject.get(listKey).isJsonArray()) {
+                for (JsonElement element : rootObject.getAsJsonArray(listKey)) {
+                    if (element.isJsonPrimitive() && element.getAsJsonPrimitive().isString()) {
+                        result.add(element.getAsString());
+                    }
+                }
+            }
+        }
+        return result;
+    }
+
+    /**
      * Parses key-value pairs from a JsonObject under a specified key.
      * 
      * @param rootObject The root JsonObject containing the key-value pairs.
