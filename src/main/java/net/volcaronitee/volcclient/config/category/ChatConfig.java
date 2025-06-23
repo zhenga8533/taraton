@@ -204,7 +204,7 @@ public class ChatConfig {
                                         newVal -> config.chat.joinReparty = newVal)
                                 .controller(ConfigUtil::createBooleanController).build())
 
-                        // TODO: Join Whitelist
+                        // Join Whitelist
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Join Whitelist"))
                                 .description(OptionDescription.createBuilder()
                                         .webpImage(Identifier.of(VolcClient.MOD_ID,
@@ -246,13 +246,13 @@ public class ChatConfig {
     public boolean customEmotes = false;
 
     @SerialEntry
-    public boolean playtimeWarning = false;
+    public boolean playtimeWarning = true;
 
     @SerialEntry
-    public boolean spamHider = false;
+    public boolean spamHider = true;
 
     @SerialEntry
-    public boolean textSubstitution = false;
+    public boolean textSubstitution = true;
 
     // Message Option Group
     @SerialEntry
