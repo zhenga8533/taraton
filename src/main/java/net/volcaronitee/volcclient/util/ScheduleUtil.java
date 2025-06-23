@@ -2,7 +2,7 @@ package net.volcaronitee.volcclient.util;
 
 import java.util.ArrayList;
 import java.util.List;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.util.Pair;
 
 /**
@@ -15,7 +15,7 @@ public class ScheduleUtil {
      * Initializes the ScheduleUtil by registering a server tick event listener.
      */
     public static void init() {
-        ServerTickEvents.END_SERVER_TICK.register(server -> {
+        ClientTickEvents.END_CLIENT_TICK.register(client -> {
             List<Pair<Runnable, Integer>> toRemove = new ArrayList<>();
             for (Pair<Runnable, Integer> task : tasks) {
                 task.setRight(task.getRight() - 1);
