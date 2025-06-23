@@ -5,11 +5,13 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import com.google.gson.JsonObject;
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.Text;
 import net.volcaronitee.volcclient.util.ConfigUtil;
 import net.volcaronitee.volcclient.util.JsonUtil;
 import net.volcaronitee.volcclient.util.ListUtil;
 import net.volcaronitee.volcclient.util.ParseUtil;
+import net.volcaronitee.volcclient.util.PartyUtil;
 
 /**
  * Feature for handling chat commands in the game.
@@ -27,6 +29,10 @@ public class ChatCommands {
             Pattern.compile("Guild > (?:\\[[^\\]]*\\+?\\] )?(\\w+)(?: \\[[^\\]]+\\])?: (.+)");
     private static final Pattern PARTY_PATTERN =
             Pattern.compile("Party > (?:\\[[^\\]]*\\+?\\] )?(\\w+): (.+)");
+
+    private enum CommandType {
+        ALL, GUILD, PARTY
+    }
 
     /**
      * Registers the chat command feature to listen for game messages.
@@ -51,16 +57,20 @@ public class ChatCommands {
 
         String username;
         String message;
+        CommandType commandType;
 
         if (allMatcher.matches()) {
             username = allMatcher.group(1);
             message = allMatcher.group(2);
+            commandType = CommandType.ALL;
         } else if (guildMatcher.matches()) {
             username = guildMatcher.group(1);
             message = guildMatcher.group(2);
+            commandType = CommandType.GUILD;
         } else if (partyMatcher.matches()) {
             username = partyMatcher.group(1);
             message = partyMatcher.group(2);
+            commandType = CommandType.PARTY;
         } else {
             return;
         }
@@ -81,7 +91,7 @@ public class ChatCommands {
         // Process the command
         String[] args = text.split(" ");
         handleLeaderCommand(username, args);
-        handlePartyCommand(username, args);
+        handlePartyCommand(username, commandType, args);
     }
 
     /**
@@ -91,24 +101,74 @@ public class ChatCommands {
      * @param args The arguments of the command.
      */
     private static void handleLeaderCommand(String player, String[] args) {
-        if (!ConfigUtil.getHandler().chat.leaderCommands) {
+        // Verify if the player is the party leader and if leader commands are enabled
+        String partyLeader = PartyUtil.getInstance().getLeader();
+        String clientUsername = MinecraftClient.getInstance().getSession().getUsername();
+        if (!ConfigUtil.getHandler().chat.leaderCommands || partyLeader != clientUsername) {
             return;
         }
 
-        // TODO
+        String command = args[0];
+
+        switch (command) {
+            case "invite":
+            case "inv":
+                break;
+            case "mute":
+                break;
+            case "warp":
+                break;
+            case "transfer":
+            case "ptme":
+            case "pt":
+            case "pm":
+                break;
+            case "promote":
+                break;
+            case "demote":
+                break;
+            case "allinvite":
+            case "allinv":
+                break;
+            case "streamopen":
+            case "stream":
+                break;
+            default:
+                break;
+        }
     }
 
     /**
      * Handles the party command logic when a message is received.
      * 
      * @param player The player who sent the command.
+     * @param commandType The type of command (ALL, GUILD, PARTY).
      * @param args The arguments of the command.
      */
-    private static void handlePartyCommand(String player, String[] args) {
+    private static void handlePartyCommand(String player, CommandType commandType, String[] args) {
         if (!ConfigUtil.getHandler().chat.partyCommands) {
             return;
         }
 
-        // TODO
+        String command = args[0];
+
+        switch (command) {
+            case "dice":
+            case "roll":
+                break;
+            case "coin":
+            case "flip":
+            case "coinflip":
+            case "cf":
+                break;
+            case "8ball":
+                break;
+            case "waifu":
+            case "women":
+            case "w":
+                break;
+            case "help":
+                break;
+        }
     }
 }
