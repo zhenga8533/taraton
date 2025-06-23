@@ -22,12 +22,10 @@ public class VolcClient implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
-        System.out.println("Initializing VolcClient...");
         CommandUtil.init();
         ConfigUtil.init();
         FeatureUtil.init();
         ScheduleUtil.init();
         OverlayUtil.init();
-        System.out.println("VolcClient initialized successfully!");
     }
 }
