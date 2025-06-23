@@ -1,5 +1,6 @@
 package net.volcaronitee.volcclient.util;
 
+import net.volcaronitee.volcclient.feature.chat.ChatCommands;
 import net.volcaronitee.volcclient.feature.chat.CustomEmote;
 import net.volcaronitee.volcclient.feature.chat.JoinWhitelist;
 import net.volcaronitee.volcclient.feature.chat.PlaytimeWarning;
@@ -12,6 +13,7 @@ public class FeatureUtil {
         RemoveSelfieMode.register();
 
         // Chat Features
+        ChatCommands.register();
         CustomEmote.register();
         JoinWhitelist.register();
         PlaytimeWarning.register();
