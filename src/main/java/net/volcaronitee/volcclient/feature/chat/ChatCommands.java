@@ -12,6 +12,7 @@ import net.volcaronitee.volcclient.util.JsonUtil;
 import net.volcaronitee.volcclient.util.ListUtil;
 import net.volcaronitee.volcclient.util.ParseUtil;
 import net.volcaronitee.volcclient.util.PartyUtil;
+import net.volcaronitee.volcclient.util.ToggleUtil;
 
 /**
  * Feature for handling chat commands in the game.
@@ -59,18 +60,21 @@ public class ChatCommands {
         String message;
         CommandType commandType;
 
-        if (allMatcher.matches()) {
+        if (ToggleUtil.getHandler().chat.allChat && allMatcher.matches()) {
             username = allMatcher.group(1);
             message = allMatcher.group(2);
             commandType = CommandType.ALL;
-        } else if (guildMatcher.matches()) {
+        } else if (ToggleUtil.getHandler().chat.guildChat && guildMatcher.matches()) {
             username = guildMatcher.group(1);
             message = guildMatcher.group(2);
             commandType = CommandType.GUILD;
-        } else if (partyMatcher.matches()) {
+        } else if (ToggleUtil.getHandler().chat.partyChat && partyMatcher.matches()) {
             username = partyMatcher.group(1);
             message = partyMatcher.group(2);
             commandType = CommandType.PARTY;
+        } else if (ToggleUtil.getHandler().chat.privateChat) {
+            // TODO: Handle private chat commands
+            return;
         } else {
             return;
         }
