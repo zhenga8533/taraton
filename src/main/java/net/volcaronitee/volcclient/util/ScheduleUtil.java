@@ -12,9 +12,9 @@ public class ScheduleUtil {
     private static List<Pair<Runnable, Integer>> tasks = new ArrayList<>();
 
     /**
-     * Registers the server tick event to process scheduled tasks.
+     * Initializes the ScheduleUtil by registering a server tick event listener.
      */
-    public static void register() {
+    public static void init() {
         ServerTickEvents.END_SERVER_TICK.register(server -> {
             List<Pair<Runnable, Integer>> toRemove = new ArrayList<>();
             for (Pair<Runnable, Integer> task : tasks) {

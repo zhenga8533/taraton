@@ -8,6 +8,7 @@ import net.volcaronitee.volcclient.util.CommandUtil;
 import net.volcaronitee.volcclient.util.ConfigUtil;
 import net.volcaronitee.volcclient.util.FeatureUtil;
 import net.volcaronitee.volcclient.util.OverlayUtil;
+import net.volcaronitee.volcclient.util.ScheduleUtil;
 
 public class VolcClient implements ClientModInitializer {
     public static final String MOD_ID = "volc-client";
@@ -25,6 +26,7 @@ public class VolcClient implements ClientModInitializer {
         CommandUtil.init();
         ConfigUtil.init();
         FeatureUtil.init();
+        ScheduleUtil.init();
         OverlayUtil.init();
         System.out.println("VolcClient initialized successfully!");
     }
