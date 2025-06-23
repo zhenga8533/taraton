@@ -17,7 +17,7 @@ public class JoinWhitelist {
             Text.literal("A list of players to automatically accept party invites from."),
             "white_list.json", null, null);
 
-    private static Pattern PARTY_INVITE_PATTERN = Pattern.compile(
+    private static final Pattern PARTY_INVITE_PATTERN = Pattern.compile(
             "-+\\n(?:\\[[^\\]]*\\+?\\] )?(\\w+) has invited you to join their party!\\nYou have \\d+ seconds to accept\\. Click here to join!\\n-+");
 
     /**
