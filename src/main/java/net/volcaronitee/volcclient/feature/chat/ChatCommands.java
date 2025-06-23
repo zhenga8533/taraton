@@ -92,6 +92,7 @@ public class ChatCommands {
         String[] args = text.split(" ");
         handleLeaderCommand(username, args);
         handlePartyCommand(username, commandType, args);
+        handleStatusCommand(username, commandType, args);
     }
 
     /**
@@ -133,6 +134,8 @@ public class ChatCommands {
             case "streamopen":
             case "stream":
                 break;
+            case "help":
+                break;
             default:
                 break;
         }
@@ -166,6 +169,44 @@ public class ChatCommands {
             case "waifu":
             case "women":
             case "w":
+                break;
+            case "help":
+                break;
+        }
+    }
+
+    /**
+     * Handles the status command logic when a message is received.
+     * 
+     * @param player The player who sent the command.
+     * @param commandType The type of command (ALL, GUILD, PARTY).
+     * @param args The arguments of the command.
+     */
+    private static void handleStatusCommand(String player, CommandType commandType, String[] args) {
+        if (!ConfigUtil.getHandler().chat.statusCommands) {
+            return;
+        }
+
+        String command = args[0];
+
+        switch (command) {
+            case "coords":
+            case "waypoint":
+            case "xyz":
+                break;
+            case "fps":
+                break;
+            case "ping":
+                break;
+            case "tps":
+                break;
+            case "limbo":
+            case "lobby":
+            case "l":
+                break;
+            case "leave":
+                break;
+            case "time":
                 break;
             case "help":
                 break;

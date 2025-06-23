@@ -131,6 +131,20 @@ public class ChatConfig {
                                         newVal -> config.chat.partyCommands = newVal)
                                 .controller(ConfigUtil::createBooleanController).build())
 
+                        // TODO: Status Commands
+                        .option(Option.<Boolean>createBuilder()
+                                .name(Text.literal("Status Commands"))
+                                .description(OptionDescription.createBuilder()
+                                        .webpImage(Identifier.of(VolcClient.MOD_ID,
+                                                "config/chat/status_commands.webp"))
+                                        .text(Text.literal(
+                                                "Enables status commands in chat. Toggle them using /vc toggles."))
+                                        .build())
+                                .binding(defaults.chat.statusCommands,
+                                        () -> config.chat.statusCommands,
+                                        newVal -> config.chat.statusCommands = newVal)
+                                .controller(ConfigUtil::createBooleanController).build())
+
                         // TODO: Guild Join Message
                         .option(Option.<String>createBuilder()
                                 .name(Text.literal("Guild Join Message"))
@@ -263,6 +277,9 @@ public class ChatConfig {
 
     @SerialEntry
     public boolean partyCommands = false;
+
+    @SerialEntry
+    public boolean statusCommands = false;
 
     @SerialEntry
     public String partyJoinMessage = "";
