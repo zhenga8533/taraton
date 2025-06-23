@@ -29,17 +29,29 @@ public class CustomEmote {
      */
     public static void register() {
         ClientSendMessageEvents.MODIFY_CHAT.register(message -> {
-            if (!ConfigUtil.getHandler().chat.customEmotes) {
-                return message;
-            }
-
-            // Replace each emote key with its corresponding value in the message
-            for (KeyValuePair<String, String> pair : EMOTE_MAP.getHandler().map) {
-                if (message.contains(pair.getKey())) {
-                    message = message.replace(pair.getKey(), pair.getValue());
-                }
-            }
-            return message;
+            return handleCustomEmote(message);
         });
+    }
+
+
+    /**
+     * Handles custom emote replacements in chat messages.
+     * 
+     * @param message The chat message to process.
+     * @return The modified chat message with custom emotes replaced.
+     */
+    private static String handleCustomEmote(String message) {
+        if (!ConfigUtil.getHandler().chat.customEmotes) {
+            return message;
+        }
+
+        // Replace each emote key with its corresponding value in the message
+        for (KeyValuePair<String, String> pair : EMOTE_MAP.getHandler().map) {
+            if (message.contains(pair.getKey())) {
+                message = message.replace(pair.getKey(), pair.getValue());
+            }
+        }
+
+        return message;
     }
 }
