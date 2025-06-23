@@ -6,6 +6,7 @@ import java.util.regex.Pattern;
 import com.google.gson.JsonObject;
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
 import net.minecraft.text.Text;
+import net.volcaronitee.volcclient.util.ConfigUtil;
 import net.volcaronitee.volcclient.util.JsonUtil;
 import net.volcaronitee.volcclient.util.ListUtil;
 import net.volcaronitee.volcclient.util.ParseUtil;
@@ -77,9 +78,37 @@ public class ChatCommands {
             return;
         }
 
+        // Process the command
         String[] args = text.split(" ");
-        System.out.println("Chat Command Detected:");
-        System.out.println("Username: " + username);
-        System.out.println("Message: " + message);
+        handleLeaderCommand(username, args);
+        handlePartyCommand(username, args);
+    }
+
+    /**
+     * Handles the leader command logic when a message is received.
+     * 
+     * @param player The player who sent the command.
+     * @param args The arguments of the command.
+     */
+    private static void handleLeaderCommand(String player, String[] args) {
+        if (!ConfigUtil.getHandler().chat.leaderCommands) {
+            return;
+        }
+
+        // TODO
+    }
+
+    /**
+     * Handles the party command logic when a message is received.
+     * 
+     * @param player The player who sent the command.
+     * @param args The arguments of the command.
+     */
+    private static void handlePartyCommand(String player, String[] args) {
+        if (!ConfigUtil.getHandler().chat.partyCommands) {
+            return;
+        }
+
+        // TODO
     }
 }

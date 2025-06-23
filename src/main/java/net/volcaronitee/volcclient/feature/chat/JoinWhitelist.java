@@ -4,6 +4,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.text.Text;
 import net.volcaronitee.volcclient.util.ConfigUtil;
 import net.volcaronitee.volcclient.util.ListUtil;
@@ -35,8 +36,7 @@ public class JoinWhitelist {
      * @param message The message received from the game chat.
      */
     private static void handleJoinWhitelist(Text message) {
-        MinecraftClient client = MinecraftClient.getInstance();
-        if (client.player == null || !ConfigUtil.getHandler().chat.joinWhitelist) {
+        if (!ConfigUtil.getHandler().chat.joinWhitelist) {
             return;
         }
 
@@ -48,11 +48,12 @@ public class JoinWhitelist {
         }
 
         // Match username from the invite
+        ClientPlayerEntity player = MinecraftClient.getInstance().player;
         String username = matcher.group(1);
         if (WHITE_LIST.getHandler().list.contains(username)) {
             // Accept the party invite after 4 ticks
             ScheduleUtil.schedule(() -> {
-                client.player.networkHandler.sendChatCommand("party accept " + username);
+                player.networkHandler.sendChatCommand("party accept " + username);
             }, 4);
         }
     }

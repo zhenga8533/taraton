@@ -3,6 +3,7 @@ package net.volcaronitee.volcclient.feature.chat;
 import java.util.List;
 import net.minecraft.text.Text;
 import net.volcaronitee.volcclient.config.controller.KeyValueController.KeyValuePair;
+import net.volcaronitee.volcclient.util.ConfigUtil;
 import net.volcaronitee.volcclient.util.ListUtil;
 import net.volcaronitee.volcclient.util.TextUtil;
 
@@ -53,6 +54,10 @@ public class TextSubstitution {
      *         null.
      */
     public static Text modify(Text originalText) {
+        if (!ConfigUtil.getHandler().chat.textSubstitution) {
+            return originalText;
+        }
+
         String original = originalText.getString();
         String modified = original.replace("Volcaronitee", "§6The Lion§r");
 
