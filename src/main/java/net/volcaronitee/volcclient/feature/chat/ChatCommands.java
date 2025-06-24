@@ -125,12 +125,20 @@ public class ChatCommands {
         String args1 = args.length > 1 ? args[1] : null;
 
         switch (command) {
-            case "invite":
-            case "inv":
+            case "allinvite":
+            case "allinv":
                 break;
             case "mute":
                 break;
+            case "streamopen":
+            case "stream":
+                break;
             case "warp":
+                break;
+            case "invite":
+            case "inv":
+                break;
+            case "kick":
                 break;
             case "transfer":
             case "ptme":
@@ -140,12 +148,6 @@ public class ChatCommands {
             case "promote":
                 break;
             case "demote":
-                break;
-            case "allinvite":
-            case "allinv":
-                break;
-            case "streamopen":
-            case "stream":
                 break;
             case "help":
                 break;
@@ -171,15 +173,15 @@ public class ChatCommands {
         String command = args[0];
 
         switch (command) {
-            case "dice":
-            case "roll":
+            case "8ball":
                 break;
             case "coin":
             case "flip":
             case "coinflip":
             case "cf":
                 break;
-            case "8ball":
+            case "dice":
+            case "roll":
                 break;
             case "waifu":
             case "women":
