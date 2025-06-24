@@ -387,7 +387,7 @@ public class ChatToggle {
     public boolean privateChat = true;
 
     @SerialEntry
-    public boolean whitelistLock = true;
+    public boolean whitelistLock = false;
 
     // Leader Commands Option Group
     @SerialEntry
@@ -453,10 +453,10 @@ public class ChatToggle {
     public boolean tps = true;
 
     @SerialEntry
-    public boolean leave = true;
+    public boolean leave = false;
 
     @SerialEntry
-    public boolean limbo = true;
+    public boolean limbo = false;
 
     @SerialEntry
     public boolean ping = true;
