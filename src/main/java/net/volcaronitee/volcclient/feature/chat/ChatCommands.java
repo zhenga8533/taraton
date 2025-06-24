@@ -25,11 +25,11 @@ public class ChatCommands {
             DEFAULT_LIST, null);
 
     private static final Pattern ALL_PATTERN =
-            Pattern.compile("(?:\\[\\d+\\] )?(?:\\[[^\\]]*\\+?\\] )?(\\w+): (.+)");
+            Pattern.compile("(?:\\[\\d+\\] )?" + ParseUtil.PLAYER_PATTERN + ": (.+)");
     private static final Pattern GUILD_PATTERN =
-            Pattern.compile("Guild > (?:\\[[^\\]]*\\+?\\] )?(\\w+)(?: \\[[^\\]]+\\])?: (.+)");
+            Pattern.compile("Guild > " + ParseUtil.PLAYER_PATTERN + "(?: \\[[^\\]]+\\])?: (.+)");
     private static final Pattern PARTY_PATTERN =
-            Pattern.compile("Party > (?:\\[[^\\]]*\\+?\\] )?(\\w+): (.+)");
+            Pattern.compile("Party > " + ParseUtil.PLAYER_PATTERN + ": (.+)");
 
     private enum CommandType {
         ALL, GUILD, PARTY
@@ -40,7 +40,7 @@ public class ChatCommands {
      */
     public static void register() {
         ClientReceiveMessageEvents.GAME.register((message, overlay) -> {
-            handleChatCommand(message.getString());
+            handleChatCommand(ParseUtil.removeFormatting(message.getString()));
         });
     }
 
