@@ -24,15 +24,16 @@ public class ChatCommands {
             Text.literal("A list of prefixes to detect for chat commands."), "prefix_list.json",
             DEFAULT_LIST, null);
 
-    private static final Pattern ALL_PATTERN =
-            Pattern.compile("(?:\\[\\d+\\] )?" + ParseUtil.PLAYER_PATTERN + ": (.+)");
+    private static final Pattern ALL_PATTERN = Pattern.compile(ParseUtil.PLAYER_PATTERN + ": (.+)");
     private static final Pattern GUILD_PATTERN =
-            Pattern.compile("Guild > " + ParseUtil.PLAYER_PATTERN + "(?: \\[[^\\]]+\\])?: (.+)");
+            Pattern.compile("Guild > " + ParseUtil.PLAYER_PATTERN + ": (.+)");
     private static final Pattern PARTY_PATTERN =
             Pattern.compile("Party > " + ParseUtil.PLAYER_PATTERN + ": (.+)");
+    private static final Pattern PRIVATE_PATTERN =
+            Pattern.compile("From " + ParseUtil.PLAYER_PATTERN + ": (.+)");
 
     private enum CommandType {
-        ALL, GUILD, PARTY
+        ALL, GUILD, PARTY, PRIVATE
     }
 
     /**
@@ -55,6 +56,7 @@ public class ChatCommands {
         Matcher allMatcher = ALL_PATTERN.matcher(text);
         Matcher guildMatcher = GUILD_PATTERN.matcher(text);
         Matcher partyMatcher = PARTY_PATTERN.matcher(text);
+        Matcher privateMatcher = PRIVATE_PATTERN.matcher(text);
 
         String username;
         String message;
@@ -72,9 +74,11 @@ public class ChatCommands {
             username = partyMatcher.group(1);
             message = partyMatcher.group(2);
             commandType = CommandType.PARTY;
-        } else if (ToggleUtil.getHandler().chat.privateChat) {
-            // TODO: Handle private chat commands
-            return;
+        } else if (ToggleUtil.getHandler().chat.privateChat && privateMatcher.matches()) {
+            username = privateMatcher.group(1);
+            message = privateMatcher.group(2);
+            commandType = CommandType.PRIVATE;
+
         } else {
             return;
         }

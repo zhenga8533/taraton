@@ -4,7 +4,8 @@ package net.volcaronitee.volcclient.util;
  * Utility class for parsing and cleaning text by removing formatting characters.
  */
 public class ParseUtil {
-    public static final String PLAYER_PATTERN = "(?:\\[[^\\]]*\\+?\\] )?(\\w+)";
+    public static final String PLAYER_PATTERN =
+            "(?:\\[\\d+\\] )?(?:\\[[^\\]]*\\+?\\] )?(\\w+)(?: \\[[^\\]]+\\])?";
 
     /**
      * Removes formatting characters from the given text.
