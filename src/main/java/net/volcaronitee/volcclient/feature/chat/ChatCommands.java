@@ -130,46 +130,46 @@ public class ChatCommands {
                 if (!ToggleUtil.getHandler().chat.allInvite) {
                     return;
                 }
-
+                // TODO
                 break;
             case "mute":
                 if (!ToggleUtil.getHandler().chat.mute) {
                     return;
                 }
-
+                // TODO
                 break;
             case "streamopen":
             case "stream":
                 if (!ToggleUtil.getHandler().chat.stream) {
                     return;
                 }
-
+                // TODO
                 break;
             case "warp":
                 if (!ToggleUtil.getHandler().chat.warp) {
                     return;
                 }
-
+                // TODO
                 break;
             case "instance":
             case "join":
                 if (!ToggleUtil.getHandler().chat.instance) {
                     return;
                 }
-
+                // TODO
                 break;
             case "invite":
             case "inv":
                 if (!ToggleUtil.getHandler().chat.invite) {
                     return;
                 }
-
+                // TODO
                 break;
             case "kick":
                 if (!ToggleUtil.getHandler().chat.kick) {
                     return;
                 }
-
+                // TODO
                 break;
             case "transfer":
             case "ptme":
@@ -177,19 +177,19 @@ public class ChatCommands {
                 if (!ToggleUtil.getHandler().chat.transfer) {
                     return;
                 }
-
+                // TODO
                 break;
             case "promote":
                 if (!ToggleUtil.getHandler().chat.promote) {
                     return;
                 }
-
+                // TODO
                 break;
             case "demote":
                 if (!ToggleUtil.getHandler().chat.demote) {
                     return;
                 }
-
+                // TODO
                 break;
             case "help":
             case "leaderhelp":
@@ -197,7 +197,7 @@ public class ChatCommands {
                 if (!ToggleUtil.getHandler().chat.leaderHelp) {
                     return;
                 }
-
+                // TODO
                 break;
         }
     }
@@ -223,7 +223,7 @@ public class ChatCommands {
                 if (!ToggleUtil.getHandler().chat.eightBall) {
                     return;
                 }
-
+                // TODO
                 break;
             case "coin":
             case "flip":
@@ -232,14 +232,14 @@ public class ChatCommands {
                 if (!ToggleUtil.getHandler().chat.coinFlip) {
                     return;
                 }
-
+                // TODO
                 break;
             case "dice":
             case "roll":
                 if (!ToggleUtil.getHandler().chat.diceRoll) {
                     return;
                 }
-
+                // TODO
                 break;
             case "waifu":
             case "women":
@@ -247,7 +247,7 @@ public class ChatCommands {
                 if (!ToggleUtil.getHandler().chat.waifu) {
                     return;
                 }
-
+                // TODO
                 break;
             case "help":
             case "partyhelp":
@@ -255,7 +255,7 @@ public class ChatCommands {
                 if (!ToggleUtil.getHandler().chat.partyHelp) {
                     return;
                 }
-
+                // TODO
                 break;
         }
     }
@@ -283,25 +283,25 @@ public class ChatCommands {
                 if (!ToggleUtil.getHandler().chat.coords) {
                     return;
                 }
-
+                // TODO
                 break;
             case "fps":
                 if (!ToggleUtil.getHandler().chat.fps) {
                     return;
                 }
-
+                // TODO
                 break;
             case "tps":
                 if (!ToggleUtil.getHandler().chat.tps) {
                     return;
                 }
-
+                // TODO
                 break;
             case "leave":
                 if (!ToggleUtil.getHandler().chat.leave) {
                     return;
                 }
-
+                // TODO
                 break;
             case "limbo":
             case "lobby":
@@ -309,33 +309,33 @@ public class ChatCommands {
                 if (!ToggleUtil.getHandler().chat.limbo) {
                     return;
                 }
-
+                // TODO
                 break;
             case "ping":
                 if (!ToggleUtil.getHandler().chat.ping) {
                     return;
                 }
-
+                // TODO
                 break;
             case "playtime":
             case "pt":
                 if (!ToggleUtil.getHandler().chat.playtime) {
                     return;
                 }
-
+                // TODO
                 break;
             case "stats":
             case "stat":
                 if (!ToggleUtil.getHandler().chat.stats) {
                     return;
                 }
-
+                // TODO
                 break;
             case "time":
                 if (!ToggleUtil.getHandler().chat.time) {
                     return;
                 }
-
+                // TODO
                 break;
             case "help":
             case "statushelp":
@@ -343,7 +343,7 @@ public class ChatCommands {
                 if (!ToggleUtil.getHandler().chat.statusHelp) {
                     return;
                 }
-
+                // TODO
                 break;
         }
     }
