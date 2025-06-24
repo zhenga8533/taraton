@@ -127,33 +127,77 @@ public class ChatCommands {
         switch (command) {
             case "allinvite":
             case "allinv":
+                if (!ToggleUtil.getHandler().chat.allInvite) {
+                    return;
+                }
+
                 break;
             case "mute":
+                if (!ToggleUtil.getHandler().chat.mute) {
+                    return;
+                }
+
                 break;
             case "streamopen":
             case "stream":
+                if (!ToggleUtil.getHandler().chat.stream) {
+                    return;
+                }
+
                 break;
             case "warp":
+                if (!ToggleUtil.getHandler().chat.warp) {
+                    return;
+                }
+
                 break;
-            case "join":
             case "instance":
+            case "join":
+                if (!ToggleUtil.getHandler().chat.instance) {
+                    return;
+                }
+
                 break;
             case "invite":
             case "inv":
+                if (!ToggleUtil.getHandler().chat.invite) {
+                    return;
+                }
+
                 break;
             case "kick":
+                if (!ToggleUtil.getHandler().chat.kick) {
+                    return;
+                }
+
                 break;
             case "transfer":
             case "ptme":
             case "pm":
+                if (!ToggleUtil.getHandler().chat.transfer) {
+                    return;
+                }
+
                 break;
             case "promote":
+                if (!ToggleUtil.getHandler().chat.promote) {
+                    return;
+                }
+
                 break;
             case "demote":
+                if (!ToggleUtil.getHandler().chat.demote) {
+                    return;
+                }
+
                 break;
             case "help":
             case "leaderhelp":
             case "lhelp":
+                if (!ToggleUtil.getHandler().chat.leaderHelp) {
+                    return;
+                }
+
                 break;
         }
     }
@@ -176,22 +220,42 @@ public class ChatCommands {
 
         switch (command) {
             case "8ball":
+                if (!ToggleUtil.getHandler().chat.eightBall) {
+                    return;
+                }
+
                 break;
             case "coin":
             case "flip":
             case "coinflip":
             case "cf":
+                if (!ToggleUtil.getHandler().chat.coinFlip) {
+                    return;
+                }
+
                 break;
             case "dice":
             case "roll":
+                if (!ToggleUtil.getHandler().chat.diceRoll) {
+                    return;
+                }
+
                 break;
             case "waifu":
             case "women":
             case "w":
+                if (!ToggleUtil.getHandler().chat.waifu) {
+                    return;
+                }
+
                 break;
             case "help":
             case "partyhelp":
             case "phelp":
+                if (!ToggleUtil.getHandler().chat.partyHelp) {
+                    return;
+                }
+
                 break;
         }
     }
@@ -216,33 +280,70 @@ public class ChatCommands {
             case "coords":
             case "waypoint":
             case "xyz":
+                if (!ToggleUtil.getHandler().chat.coords) {
+                    return;
+                }
+
                 break;
             case "fps":
+                if (!ToggleUtil.getHandler().chat.fps) {
+                    return;
+                }
+
                 break;
             case "tps":
+                if (!ToggleUtil.getHandler().chat.tps) {
+                    return;
+                }
+
                 break;
             case "leave":
+                if (!ToggleUtil.getHandler().chat.leave) {
+                    return;
+                }
+
                 break;
             case "limbo":
             case "lobby":
             case "l":
+                if (!ToggleUtil.getHandler().chat.limbo) {
+                    return;
+                }
+
                 break;
             case "ping":
+                if (!ToggleUtil.getHandler().chat.ping) {
+                    return;
+                }
+
                 break;
             case "playtime":
             case "pt":
+                if (!ToggleUtil.getHandler().chat.playtime) {
+                    return;
+                }
+
                 break;
             case "stats":
             case "stat":
+                if (!ToggleUtil.getHandler().chat.stats) {
+                    return;
+                }
+
                 break;
             case "time":
-                break;
-            case "version":
-            case "ver":
+                if (!ToggleUtil.getHandler().chat.time) {
+                    return;
+                }
+
                 break;
             case "help":
             case "statushelp":
             case "shelp":
+                if (!ToggleUtil.getHandler().chat.statusHelp) {
+                    return;
+                }
+
                 break;
         }
     }

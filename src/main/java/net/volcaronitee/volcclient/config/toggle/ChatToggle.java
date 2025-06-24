@@ -309,14 +309,6 @@ public class ChatToggle {
                                         newVal -> config.chat.time = newVal)
                                 .controller(TickBoxControllerBuilder::create).build())
 
-                        // Version
-                        .option(Option.<Boolean>createBuilder().name(Text.literal("Version"))
-                                .description(createDescription("Enables the version command.",
-                                        List.of("version", "ver")))
-                                .binding(defaults.chat.version, () -> config.chat.version,
-                                        newVal -> config.chat.version = newVal)
-                                .controller(TickBoxControllerBuilder::create).build())
-
                         // Status Help
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Status Help"))
                                 .description(createDescription("Enables status help requests.",
@@ -477,9 +469,6 @@ public class ChatToggle {
 
     @SerialEntry
     public boolean time = true;
-
-    @SerialEntry
-    public boolean version = true;
 
     @SerialEntry
     public boolean statusHelp = true;
