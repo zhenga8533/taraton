@@ -6,6 +6,7 @@ import java.util.regex.Pattern;
 import com.google.gson.JsonObject;
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.text.Text;
 import net.volcaronitee.volcclient.util.ConfigUtil;
 import net.volcaronitee.volcclient.util.JsonUtil;
@@ -97,19 +98,22 @@ public class ChatCommands {
         }
 
         // Process the command
+        ClientPlayerEntity player = MinecraftClient.getInstance().player;
         String[] args = text.split(" ");
-        handleLeaderCommand(username, args);
-        handlePartyCommand(username, commandType, args);
-        handleStatusCommand(username, commandType, args);
+        handleLeaderCommand(player, username, args);
+        handlePartyCommand(player, username, commandType, args);
+        handleStatusCommand(player, username, commandType, args);
     }
 
     /**
      * Handles the leader command logic when a message is received.
      * 
      * @param player The player who sent the command.
+     * @param username The username of the player who sent the command.
      * @param args The arguments of the command.
      */
-    private static void handleLeaderCommand(String player, String[] args) {
+    private static void handleLeaderCommand(ClientPlayerEntity player, String username,
+            String[] args) {
         // Verify if the player is the party leader and if leader commands are enabled
         String partyLeader = PartyUtil.getInstance().getLeader();
         String clientUsername = MinecraftClient.getInstance().getSession().getUsername();
@@ -117,7 +121,8 @@ public class ChatCommands {
             return;
         }
 
-        String command = args[0];
+        String command = args.length > 0 ? args[0].toLowerCase() : "";
+        String args1 = args.length > 1 ? args[1] : null;
 
         switch (command) {
             case "invite":
@@ -153,10 +158,12 @@ public class ChatCommands {
      * Handles the party command logic when a message is received.
      * 
      * @param player The player who sent the command.
+     * @param username The username of the player who sent the command.
      * @param commandType The type of command (ALL, GUILD, PARTY).
      * @param args The arguments of the command.
      */
-    private static void handlePartyCommand(String player, CommandType commandType, String[] args) {
+    private static void handlePartyCommand(ClientPlayerEntity player, String username,
+            CommandType commandType, String[] args) {
         if (!ConfigUtil.getHandler().chat.partyCommands) {
             return;
         }
@@ -187,10 +194,12 @@ public class ChatCommands {
      * Handles the status command logic when a message is received.
      * 
      * @param player The player who sent the command.
+     * @param username The username of the player who sent the command.
      * @param commandType The type of command (ALL, GUILD, PARTY).
      * @param args The arguments of the command.
      */
-    private static void handleStatusCommand(String player, CommandType commandType, String[] args) {
+    private static void handleStatusCommand(ClientPlayerEntity player, String username,
+            CommandType commandType, String[] args) {
         if (!ConfigUtil.getHandler().chat.statusCommands) {
             return;
         }
