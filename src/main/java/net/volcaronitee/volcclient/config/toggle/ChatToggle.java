@@ -59,20 +59,29 @@ public class ChatToggle {
                                         newVal -> config.chat.privateChat = newVal)
                                 .controller(TickBoxControllerBuilder::create).build())
 
+                        .build())
+
+                // Leader Commands Option Group
+                .group(OptionGroup.createBuilder().name(Text.literal("Leader Commands"))
+
+                        // Leader Lock
+                        .option(Option.<Boolean>createBuilder().name(Text.literal("Leader Lock"))
+                                .description(OptionDescription.createBuilder().text(Text.literal(
+                                        "Enables a leader lock for leader commands. This will prevent you from using leader commands if you are the party leader."))
+                                        .build())
+                                .binding(defaults.chat.leaderLock, () -> config.chat.leaderLock,
+                                        newVal -> config.chat.leaderLock = newVal)
+                                .controller(TickBoxControllerBuilder::create).build())
+
                         // Whitelist Lock
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Whitelist Lock"))
                                 .description(OptionDescription.createBuilder().text(Text.literal(
-                                        "Enables a whitelist lock for chat commands. This will only allow commands from whitelisted players."))
+                                        "Enables a whitelist lock for leader commands. This will only allow commands from whitelisted players."))
                                         .build())
                                 .binding(defaults.chat.whitelistLock,
                                         () -> config.chat.whitelistLock,
                                         newVal -> config.chat.whitelistLock = newVal)
                                 .controller(TickBoxControllerBuilder::create).build())
-
-                        .build())
-
-                // Leader Commands Option Group
-                .group(OptionGroup.createBuilder().name(Text.literal("Leader Commands"))
 
                         // All Invite
                         .option(Option.<Boolean>createBuilder().name(Text.literal("All Invite"))
@@ -386,10 +395,13 @@ public class ChatToggle {
     @SerialEntry
     public boolean privateChat = true;
 
+    // Leader Commands Option Group
+    @SerialEntry
+    public boolean leaderLock = true;
+
     @SerialEntry
     public boolean whitelistLock = false;
 
-    // Leader Commands Option Group
     @SerialEntry
     public boolean allInvite = true;
 

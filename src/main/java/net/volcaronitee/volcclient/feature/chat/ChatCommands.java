@@ -13,12 +13,15 @@ import net.volcaronitee.volcclient.util.JsonUtil;
 import net.volcaronitee.volcclient.util.ListUtil;
 import net.volcaronitee.volcclient.util.ParseUtil;
 import net.volcaronitee.volcclient.util.PartyUtil;
+import net.volcaronitee.volcclient.util.ScheduleUtil;
 import net.volcaronitee.volcclient.util.ToggleUtil;
 
 /**
  * Feature for handling chat commands in the game.
  */
 public class ChatCommands {
+    private static final ChatCommands INSTANCE = new ChatCommands();
+
     private static final JsonObject PREFIX_JSON = JsonUtil.loadTemplate("prefix.json");
     private static final List<String> DEFAULT_LIST = JsonUtil.parseList(PREFIX_JSON, "prefix");
     public static final ListUtil PREFIX_MAP = new ListUtil("Prefix List",
@@ -32,6 +35,8 @@ public class ChatCommands {
             Pattern.compile("Party > " + ParseUtil.PLAYER_PATTERN + ": (.+)");
     private static final Pattern PRIVATE_PATTERN =
             Pattern.compile("From " + ParseUtil.PLAYER_PATTERN + ": (.+)");
+
+    private int ticks = 0;
 
     private enum CommandType {
         ALL, GUILD, PARTY, PRIVATE
@@ -106,6 +111,20 @@ public class ChatCommands {
     }
 
     /**
+     * Schedules a command to be executed after a delay.
+     * 
+     * @param command The command to be executed.
+     */
+    private static void scheduleCommand(String command) {
+        INSTANCE.ticks += 5;
+        ScheduleUtil.schedule(() -> {
+            MinecraftClient.getInstance().player.networkHandler.sendChatCommand(command);
+            INSTANCE.ticks -= 20;
+        }, INSTANCE.ticks);
+        INSTANCE.ticks += 15;
+    }
+
+    /**
      * Handles the leader command logic when a message is received.
      * 
      * @param player The player who sent the command.
@@ -117,12 +136,15 @@ public class ChatCommands {
         // Verify if the player is the party leader and if leader commands are enabled
         String partyLeader = PartyUtil.getInstance().getLeader();
         String clientUsername = MinecraftClient.getInstance().getSession().getUsername();
-        if (!ConfigUtil.getHandler().chat.leaderCommands || partyLeader != clientUsername) {
+        if (!ConfigUtil.getHandler().chat.leaderCommands
+                || (ToggleUtil.getHandler().chat.leaderLock && partyLeader != clientUsername)
+                || !PartyUtil.getInstance().isInParty()
+                || PartyUtil.getInstance().getLeader() != clientUsername) {
             return;
         }
 
         String command = args.length > 0 ? args[0].toLowerCase() : "";
-        String args1 = args.length > 1 ? args[1] : null;
+        String arg1 = args.length > 1 ? args[1] : "";
 
         switch (command) {
             case "allinvite":
@@ -130,26 +152,31 @@ public class ChatCommands {
                 if (!ToggleUtil.getHandler().chat.allInvite) {
                     return;
                 }
-                // TODO
+
+                scheduleCommand("p settings allinvite");
                 break;
             case "mute":
                 if (!ToggleUtil.getHandler().chat.mute) {
                     return;
                 }
-                // TODO
+
+                scheduleCommand("p mute");
                 break;
             case "streamopen":
             case "stream":
                 if (!ToggleUtil.getHandler().chat.stream) {
                     return;
                 }
-                // TODO
+
+                String size = ParseUtil.isNumeric(arg1) ? arg1 : "10";
+                scheduleCommand("stream open " + size);
                 break;
             case "warp":
                 if (!ToggleUtil.getHandler().chat.warp) {
                     return;
                 }
-                // TODO
+
+                scheduleCommand("p warp");
                 break;
             case "instance":
             case "join":
@@ -160,16 +187,22 @@ public class ChatCommands {
                 break;
             case "invite":
             case "inv":
-                if (!ToggleUtil.getHandler().chat.invite) {
+                if (!ToggleUtil.getHandler().chat.invite || arg1.isEmpty()) {
                     return;
                 }
-                // TODO
+
+                scheduleCommand("p " + arg1);
                 break;
             case "kick":
                 if (!ToggleUtil.getHandler().chat.kick) {
                     return;
                 }
-                // TODO
+
+                if (arg1.isEmpty()) {
+                    scheduleCommand("p kick " + username);
+                } else {
+                    scheduleCommand("p kick " + arg1);
+                }
                 break;
             case "transfer":
             case "ptme":
@@ -177,19 +210,34 @@ public class ChatCommands {
                 if (!ToggleUtil.getHandler().chat.transfer) {
                     return;
                 }
-                // TODO
+
+                if (arg1.isEmpty()) {
+                    scheduleCommand("p transfer " + username);
+                } else {
+                    scheduleCommand("p transfer " + arg1);
+                }
                 break;
             case "promote":
                 if (!ToggleUtil.getHandler().chat.promote) {
                     return;
                 }
-                // TODO
+
+                if (arg1.isEmpty()) {
+                    scheduleCommand("p promote " + username);
+                } else {
+                    scheduleCommand("p promote " + arg1);
+                }
                 break;
             case "demote":
                 if (!ToggleUtil.getHandler().chat.demote) {
                     return;
                 }
-                // TODO
+
+                if (arg1.isEmpty()) {
+                    scheduleCommand("p demote " + username);
+                } else {
+                    scheduleCommand("p demote " + arg1);
+                }
                 break;
             case "help":
             case "leaderhelp":

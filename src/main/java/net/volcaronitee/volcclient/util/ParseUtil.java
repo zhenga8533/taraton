@@ -8,6 +8,16 @@ public class ParseUtil {
             "(?:\\[\\d+\\] )?(?:\\[[^\\]]*\\+?\\] )?(\\w+)(?: \\[[^\\]]+\\])?";
 
     /**
+     * Checks if the given string is a valid numeric string.
+     * 
+     * @param str The string to check.
+     * @return True if the string is numeric, false otherwise.
+     */
+    public static boolean isNumeric(String str) {
+        return str.matches("[-+]?\\d*\\.?\\d+") || str.matches("[-+]?\\d+\\.\\d*");
+    }
+
+    /**
      * Removes formatting characters from the given text.
      * 
      * @param text The text to clean.
