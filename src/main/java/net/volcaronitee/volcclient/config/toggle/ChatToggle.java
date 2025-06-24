@@ -139,7 +139,7 @@ public class ChatToggle {
                         // Transfer
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Transfer"))
                                 .description(createDescription("Enables party transfer requests.",
-                                        List.of("transfer", "ptme", "pt", "pm"),
+                                        List.of("transfer", "ptme", "pm"),
                                         Map.of("[player]",
                                                 "The player to transfer the party leadership to. If not specified, the party will be transferred to the player who sent the command.")))
                                 .binding(defaults.chat.transfer, () -> config.chat.transfer,
@@ -167,9 +167,9 @@ public class ChatToggle {
                                 .controller(TickBoxControllerBuilder::create).build())
 
                         // Leader Help
-                        .option(Option.<Boolean>createBuilder().name(Text.literal("Help"))
+                        .option(Option.<Boolean>createBuilder().name(Text.literal("Leader Help"))
                                 .description(createDescription("Enables leader help requests.",
-                                        List.of("help", "leaderhelp", "lh", "lhelp")))
+                                        List.of("help", "leaderhelp", "lhelp")))
                                 .binding(defaults.chat.leaderHelp, () -> config.chat.leaderHelp,
                                         newVal -> config.chat.leaderHelp = newVal)
                                 .controller(TickBoxControllerBuilder::create).build())
@@ -224,11 +224,120 @@ public class ChatToggle {
                                         newVal -> config.chat.waifu = newVal)
                                 .controller(TickBoxControllerBuilder::create).build())
 
+                        // Party Help
+                        .option(Option.<Boolean>createBuilder().name(Text.literal("Party Help"))
+                                .description(createDescription("Enables party help requests.",
+                                        List.of("help", "partyhelp", "phelp")))
+                                .binding(defaults.chat.partyHelp, () -> config.chat.partyHelp,
+                                        newVal -> config.chat.partyHelp = newVal)
+                                .controller(TickBoxControllerBuilder::create).build())
+
+                        .build())
+
+                // Status Commands Option Group
+                .group(OptionGroup.createBuilder().name(Text.literal("Status Commands"))
+
+                        // Coords
+                        .option(Option.<Boolean>createBuilder().name(Text.literal("Coords"))
+                                .description(createDescription("Enables the coords command.",
+                                        List.of("coords", "waypoint", "xyz")))
+                                .binding(defaults.chat.coords, () -> config.chat.coords,
+                                        newVal -> config.chat.coords = newVal)
+                                .controller(TickBoxControllerBuilder::create).build())
+
+                        // FPS
+                        .option(Option.<Boolean>createBuilder().name(Text.literal("FPS"))
+                                .description(createDescription("Enables the fps command.",
+                                        List.of("fps")))
+                                .binding(defaults.chat.fps, () -> config.chat.fps,
+                                        newVal -> config.chat.fps = newVal)
+                                .controller(TickBoxControllerBuilder::create).build())
+
+                        // TPS
+                        .option(Option.<Boolean>createBuilder().name(Text.literal("TPS"))
+                                .description(createDescription("Enables the tps command.",
+                                        List.of("tps")))
+                                .binding(defaults.chat.tps, () -> config.chat.tps,
+                                        newVal -> config.chat.tps = newVal)
+                                .controller(TickBoxControllerBuilder::create).build())
+
+                        // Leave
+                        .option(Option.<Boolean>createBuilder().name(Text.literal("Leave"))
+                                .description(createDescription("Enables the leave command.",
+                                        List.of("leave")))
+                                .binding(defaults.chat.leave, () -> config.chat.leave,
+                                        newVal -> config.chat.leave = newVal)
+                                .controller(TickBoxControllerBuilder::create).build())
+
+                        // Limbo
+                        .option(Option.<Boolean>createBuilder().name(Text.literal("Limbo"))
+                                .description(createDescription("Enables the limbo command.",
+                                        List.of("limbo", "lobby", "l")))
+                                .binding(defaults.chat.limbo, () -> config.chat.limbo,
+                                        newVal -> config.chat.limbo = newVal)
+                                .controller(TickBoxControllerBuilder::create).build())
+
+                        // Ping
+                        .option(Option.<Boolean>createBuilder().name(Text.literal("Ping"))
+                                .description(createDescription("Enables the ping command.",
+                                        List.of("ping")))
+                                .binding(defaults.chat.ping, () -> config.chat.ping,
+                                        newVal -> config.chat.ping = newVal)
+                                .controller(TickBoxControllerBuilder::create).build())
+
+                        // Playtime
+                        .option(Option.<Boolean>createBuilder().name(Text.literal("Playtime"))
+                                .description(createDescription("Enables the playtime command.",
+                                        List.of("playtime", "pt")))
+                                .binding(defaults.chat.playtime, () -> config.chat.playtime,
+                                        newVal -> config.chat.playtime = newVal)
+                                .controller(TickBoxControllerBuilder::create).build())
+
+                        // Stats
+                        .option(Option.<Boolean>createBuilder().name(Text.literal("Stats"))
+                                .description(createDescription("Enables the stats command.",
+                                        List.of("stats", "stat")))
+                                .binding(defaults.chat.stats, () -> config.chat.stats,
+                                        newVal -> config.chat.stats = newVal)
+                                .controller(TickBoxControllerBuilder::create).build())
+
+                        // Time
+                        .option(Option.<Boolean>createBuilder().name(Text.literal("Time"))
+                                .description(createDescription("Enables the time command.",
+                                        List.of("time")))
+                                .binding(defaults.chat.time, () -> config.chat.time,
+                                        newVal -> config.chat.time = newVal)
+                                .controller(TickBoxControllerBuilder::create).build())
+
+                        // Version
+                        .option(Option.<Boolean>createBuilder().name(Text.literal("Version"))
+                                .description(createDescription("Enables the version command.",
+                                        List.of("version", "ver")))
+                                .binding(defaults.chat.version, () -> config.chat.version,
+                                        newVal -> config.chat.version = newVal)
+                                .controller(TickBoxControllerBuilder::create).build())
+
+                        // Status Help
+                        .option(Option.<Boolean>createBuilder().name(Text.literal("Status Help"))
+                                .description(createDescription("Enables status help requests.",
+                                        List.of("help", "statushelp", "shelp")))
+                                .binding(defaults.chat.statusHelp, () -> config.chat.statusHelp,
+                                        newVal -> config.chat.statusHelp = newVal)
+                                .controller(TickBoxControllerBuilder::create).build())
+
                         .build())
 
                 .build();
     }
 
+    /**
+     * Creates an OptionDescription with the given text, aliases, and arguments.
+     * 
+     * @param text The description text for the command.
+     * @param aliases A list of aliases for the command.
+     * @param arguments A map of argument names to their descriptions.
+     * @return An OptionDescription with the formatted text and aliases.
+     */
     private static OptionDescription createDescription(String text, List<String> aliases,
             Map<String, String> arguments) {
         MutableText description = Text.literal(text);
@@ -261,6 +370,13 @@ public class ChatToggle {
         return OptionDescription.createBuilder().text(description).build();
     }
 
+    /**
+     * Creates an OptionDescription with the given text and aliases, without any arguments.
+     * 
+     * @param text The description text for the command.
+     * @param aliases A list of aliases for the command.
+     * @return An OptionDescription with the formatted text and aliases.
+     */
     private static OptionDescription createDescription(String text, List<String> aliases) {
         return createDescription(text, aliases, Map.of());
     }
@@ -330,4 +446,41 @@ public class ChatToggle {
 
     @SerialEntry
     public boolean waifu = true;
+
+    @SerialEntry
+    public boolean partyHelp = true;
+
+    // Status Commands Option Group
+    @SerialEntry
+    public boolean coords = true;
+
+    @SerialEntry
+    public boolean fps = true;
+
+    @SerialEntry
+    public boolean tps = true;
+
+    @SerialEntry
+    public boolean leave = true;
+
+    @SerialEntry
+    public boolean limbo = true;
+
+    @SerialEntry
+    public boolean ping = true;
+
+    @SerialEntry
+    public boolean playtime = true;
+
+    @SerialEntry
+    public boolean stats = true;
+
+    @SerialEntry
+    public boolean time = true;
+
+    @SerialEntry
+    public boolean version = true;
+
+    @SerialEntry
+    public boolean statusHelp = true;
 }

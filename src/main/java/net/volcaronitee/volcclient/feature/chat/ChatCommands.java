@@ -135,6 +135,9 @@ public class ChatCommands {
                 break;
             case "warp":
                 break;
+            case "join":
+            case "instance":
+                break;
             case "invite":
             case "inv":
                 break;
@@ -142,7 +145,6 @@ public class ChatCommands {
                 break;
             case "transfer":
             case "ptme":
-            case "pt":
             case "pm":
                 break;
             case "promote":
@@ -150,8 +152,8 @@ public class ChatCommands {
             case "demote":
                 break;
             case "help":
-                break;
-            default:
+            case "leaderhelp":
+            case "lhelp":
                 break;
         }
     }
@@ -188,6 +190,8 @@ public class ChatCommands {
             case "w":
                 break;
             case "help":
+            case "partyhelp":
+            case "phelp":
                 break;
         }
     }
@@ -215,19 +219,30 @@ public class ChatCommands {
                 break;
             case "fps":
                 break;
-            case "ping":
-                break;
             case "tps":
+                break;
+            case "leave":
                 break;
             case "limbo":
             case "lobby":
             case "l":
                 break;
-            case "leave":
+            case "ping":
+                break;
+            case "playtime":
+            case "pt":
+                break;
+            case "stats":
+            case "stat":
                 break;
             case "time":
                 break;
+            case "version":
+            case "ver":
+                break;
             case "help":
+            case "statushelp":
+            case "shelp":
                 break;
         }
     }
