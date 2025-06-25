@@ -16,6 +16,11 @@ public class ServerStatus {
     private int angle = 0;
     private float day = 0.0f;
 
+    /**
+     * Private constructor to prevent instantiation.
+     */
+    private ServerStatus() {}
+
     public static ServerStatus getInstance() {
         return INSTANCE;
     }

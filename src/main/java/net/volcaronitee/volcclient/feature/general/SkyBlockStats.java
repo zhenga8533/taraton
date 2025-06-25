@@ -7,6 +7,11 @@ public class SkyBlockStats {
     private int soulflow = 0;
     private int legion = 0;
 
+    /**
+     * Private constructor to prevent instantiation.
+     */
+    private SkyBlockStats() {}
+
     public static SkyBlockStats getInstance() {
         return INSTANCE;
     }
