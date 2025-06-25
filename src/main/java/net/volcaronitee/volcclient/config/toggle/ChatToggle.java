@@ -61,8 +61,8 @@ public class ChatToggle {
 
                         .build())
 
-                // Leader Commands Option Group
-                .group(OptionGroup.createBuilder().name(Text.literal("Leader Commands"))
+                // Locks Option Group
+                .group(OptionGroup.createBuilder().name(Text.literal("Locks"))
 
                         // Leader Lock
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Leader Lock"))
@@ -82,6 +82,11 @@ public class ChatToggle {
                                         () -> config.chat.whitelistLock,
                                         newVal -> config.chat.whitelistLock = newVal)
                                 .controller(TickBoxControllerBuilder::create).build())
+
+                        .build())
+
+                // Leader Commands Option Group
+                .group(OptionGroup.createBuilder().name(Text.literal("Leader Commands"))
 
                         // All Invite
                         .option(Option.<Boolean>createBuilder().name(Text.literal("All Invite"))
@@ -346,9 +351,9 @@ public class ChatToggle {
 
         // Format the aliases and arguments
         String argumentsStr = "";
-        String argumentsText = "\nArgument descriptions:\n\n";
+        String argumentsText = "\nArguments:\n\n";
         argumentsText +=
-                "- §b<prefix>§r: Any command prefix used to trigger the command. Set prefixes using §e/vc pl§r.";
+                "- §b<prefix>§r: Any command prefix used to trigger the command. Set prefixes using §e/vc pl§r.\n";
 
         for (Map.Entry<String, String> entry : arguments.entrySet()) {
             argumentsStr += entry.getKey() + " ";
@@ -395,13 +400,14 @@ public class ChatToggle {
     @SerialEntry
     public boolean privateChat = true;
 
-    // Leader Commands Option Group
+    // Locks Option Group
     @SerialEntry
     public boolean leaderLock = true;
 
     @SerialEntry
     public boolean whitelistLock = false;
 
+    // Leader Commands Option Group
     @SerialEntry
     public boolean allInvite = true;
 

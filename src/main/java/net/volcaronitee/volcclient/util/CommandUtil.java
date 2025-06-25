@@ -35,16 +35,19 @@ public class CommandUtil {
                                 // Settings command
                                 .then(literal("settings").executes(CommandUtil::settings))
 
+                                // Toggles command
+                                .then(literal("toggles").executes(CommandUtil::toggles))
+
                                 // Debug command
                                 .then(literal("debug").executes(CommandUtil::debug))
 
-                                // Lists
+                                // Lists commands
                                 .then(SpamHider.SPAM_LIST.createCommand("spamlist"))
                                 .then(SpamHider.SPAM_LIST.createCommand("sl"))
                                 .then(JoinWhitelist.WHITE_LIST.createCommand("whitelist"))
                                 .then(JoinWhitelist.WHITE_LIST.createCommand("wl"))
 
-                                // Maps
+                                // Maps commands
                                 .then(CustomEmote.EMOTE_MAP.createCommand("emotemap"))
                                 .then(CustomEmote.EMOTE_MAP.createCommand("em"))
                                 .then(TextSubstitution.SUBSTITUTION_MAP.createCommand("submap"))
@@ -87,6 +90,26 @@ public class CommandUtil {
         // Defer the screen opening to the main client thread
         client.send(() -> {
             client.setScreen(ConfigUtil.createScreen(client.currentScreen));
+        });
+
+        return 1;
+    }
+
+    /**
+     * Opens the toggles screen for Volc Client.
+     *
+     * @param context The command context containing the source and arguments.
+     * @return 1 if the command was executed successfully, 0 otherwise.
+     */
+    private static int toggles(CommandContext<FabricClientCommandSource> context) {
+        MinecraftClient client = MinecraftClient.getInstance();
+        if (client.player == null || client.world == null) {
+            return 0;
+        }
+
+        // Defer the screen opening to the main client thread
+        client.send(() -> {
+            client.setScreen(ToggleUtil.createScreen(client.currentScreen));
         });
 
         return 1;
