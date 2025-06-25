@@ -43,6 +43,20 @@ public class GeneralConfig {
                                         newVal -> config.general.skyblockOnly = newVal)
                                 .controller(ConfigUtil::createBooleanController).build())
 
+                        // TODO: Performance Mode
+                        .option(Option.<Boolean>createBuilder()
+                                .name(Text.literal("Performance Mode"))
+                                .description(OptionDescription.createBuilder()
+                                        .webpImage(Identifier.of(VolcClient.MOD_ID,
+                                                "config/general/performance_mode.webp"))
+                                        .text(Text.literal(
+                                                "Enables performance optimizations for better FPS. This causes all feature enabling/disabling to require a restart, including this one."))
+                                        .build())
+                                .binding(defaults.general.performanceMode,
+                                        () -> config.general.performanceMode,
+                                        newVal -> config.general.performanceMode = newVal)
+                                .controller(ConfigUtil::createBooleanController).build())
+
                         // TODO: Socket Connection
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Socket Connection"))
@@ -310,6 +324,9 @@ public class GeneralConfig {
 
     @SerialEntry
     public boolean skyblockOnly = true;
+
+    @SerialEntry
+    public boolean performanceMode = false;
 
     @SerialEntry
     public boolean socketConnection = true;
