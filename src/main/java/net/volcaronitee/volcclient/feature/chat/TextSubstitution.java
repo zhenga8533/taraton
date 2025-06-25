@@ -54,16 +54,14 @@ public class TextSubstitution {
      *         null.
      */
     public static Text modify(Text originalText) {
-        if (!ConfigUtil.getHandler().chat.textSubstitution) {
-            return originalText;
-        }
-
         String original = originalText.getString();
         String modified = original.replace("Volcaronitee", "§6The Lion§r");
 
-        List<KeyValuePair<String, String>> map = SUBSTITUTION_MAP.getHandler().map;
-        for (KeyValuePair<String, String> entry : map) {
-            modified = modified.replace(entry.getKey(), entry.getValue());
+        if (ConfigUtil.getHandler().chat.textSubstitution) {
+            List<KeyValuePair<String, String>> map = SUBSTITUTION_MAP.getHandler().map;
+            for (KeyValuePair<String, String> entry : map) {
+                modified = modified.replace(entry.getKey(), entry.getValue());
+            }
         }
 
         return Text.literal(modified).setStyle(originalText.getStyle());
