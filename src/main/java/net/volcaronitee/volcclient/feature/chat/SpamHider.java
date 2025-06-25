@@ -35,11 +35,11 @@ public class SpamHider {
     public static void register() {
         ClientReceiveMessageEvents.ALLOW_CHAT
                 .register((message, signedMessage, sender, params, timestamp) -> {
-                    return !isSpam(message);
+                    return !isSpam(message, false);
                 });
 
         ClientReceiveMessageEvents.ALLOW_GAME.register((message, overlay) -> {
-            return !isSpam(message);
+            return !isSpam(message, overlay);
         });
     }
 
@@ -49,8 +49,8 @@ public class SpamHider {
      * @param message The message to check.
      * @return True if the message is considered spam, false otherwise.
      */
-    private static boolean isSpam(Text message) {
-        if (!ConfigUtil.getHandler().chat.spamHider) {
+    private static boolean isSpam(Text message, boolean overlay) {
+        if (!ConfigUtil.getHandler().chat.spamHider || overlay) {
             return false;
         }
 

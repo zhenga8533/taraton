@@ -25,18 +25,17 @@ public class JoinWhitelist {
      * Registers the join whitelist feature to listen for game messages.
      */
     public static void register() {
-        ClientReceiveMessageEvents.GAME.register((message, overlay) -> {
-            handleJoinWhitelist(message);
-        });
+        ClientReceiveMessageEvents.GAME.register(JoinWhitelist::handleJoinWhitelist);
     }
 
     /**
      * Handles the join whitelist logic when a message is received.
      * 
      * @param message The message received from the game chat.
+     * @param overlay Whether the message is an overlay message.
      */
-    private static void handleJoinWhitelist(Text message) {
-        if (!ConfigUtil.getHandler().chat.joinWhitelist) {
+    private static void handleJoinWhitelist(Text message, boolean overlay) {
+        if (!ConfigUtil.getHandler().chat.joinWhitelist || overlay) {
             return;
         }
 

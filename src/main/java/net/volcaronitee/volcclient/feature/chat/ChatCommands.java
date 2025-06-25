@@ -46,17 +46,22 @@ public class ChatCommands {
      * Registers the chat command feature to listen for game messages.
      */
     public static void register() {
-        ClientReceiveMessageEvents.GAME.register((message, overlay) -> {
-            handleChatCommand(ParseUtil.removeFormatting(message.getString()));
-        });
+        ClientReceiveMessageEvents.GAME.register(ChatCommands::handleChatCommand);
     }
 
     /**
      * Handles the chat command logic when a message is received.
      * 
-     * @param text The text received from the game chat.
+     * @param message The text received from the game chat.
+     * @param overlay Whether the message is an overlay message.
      */
-    private static void handleChatCommand(String text) {
+    private static void handleChatCommand(Text message, boolean overlay) {
+        if (overlay) {
+            return;
+        }
+
+        String text = ParseUtil.removeFormatting(message.getString());
+
         // Check if the text matches any of the defined patterns
         text = ParseUtil.removeFormatting(text);
         Matcher allMatcher = ALL_PATTERN.matcher(text);
@@ -65,26 +70,25 @@ public class ChatCommands {
         Matcher privateMatcher = PRIVATE_PATTERN.matcher(text);
 
         String username;
-        String message;
+        String chatMessage;
         CommandType commandType;
 
         if (ToggleUtil.getHandler().chat.allChat && allMatcher.matches()) {
             username = allMatcher.group(1);
-            message = allMatcher.group(2);
+            chatMessage = allMatcher.group(2);
             commandType = CommandType.ALL;
         } else if (ToggleUtil.getHandler().chat.guildChat && guildMatcher.matches()) {
             username = guildMatcher.group(1);
-            message = guildMatcher.group(2);
+            chatMessage = guildMatcher.group(2);
             commandType = CommandType.GUILD;
         } else if (ToggleUtil.getHandler().chat.partyChat && partyMatcher.matches()) {
             username = partyMatcher.group(1);
-            message = partyMatcher.group(2);
+            chatMessage = partyMatcher.group(2);
             commandType = CommandType.PARTY;
         } else if (ToggleUtil.getHandler().chat.privateChat && privateMatcher.matches()) {
             username = privateMatcher.group(1);
-            message = privateMatcher.group(2);
+            chatMessage = privateMatcher.group(2);
             commandType = CommandType.PRIVATE;
-
         } else {
             return;
         }
@@ -92,8 +96,8 @@ public class ChatCommands {
         // Check if the text starts with any of the defined prefixes
         boolean isCommand = false;
         for (String prefix : PREFIX_MAP.getHandler().list) {
-            if (message.startsWith(prefix)) {
-                message = message.substring(prefix.length());
+            if (chatMessage.startsWith(prefix)) {
+                chatMessage = chatMessage.substring(prefix.length());
                 isCommand = true;
                 break;
             }

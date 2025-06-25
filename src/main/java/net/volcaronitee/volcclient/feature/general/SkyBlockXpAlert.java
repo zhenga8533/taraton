@@ -24,9 +24,7 @@ public class SkyBlockXpAlert {
      * Private constructor to prevent instantiation.
      */
     public static void register() {
-        ClientReceiveMessageEvents.GAME.register((message, overlay) -> {
-            parseMessage(message, overlay);
-        });
+        ClientReceiveMessageEvents.GAME.register(SkyBlockXpAlert::parseMessage);
     }
 
     /**
