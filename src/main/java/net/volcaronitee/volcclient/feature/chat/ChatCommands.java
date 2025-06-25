@@ -156,6 +156,19 @@ public class ChatCommands {
     }
 
     /**
+     * Appends a command to the StringBuilder if the condition is true.
+     * 
+     * @param builder The StringBuilder to append to.
+     * @param command The command to append.
+     * @param condition The condition to check before appending the command.
+     */
+    private static void appendCommand(StringBuilder builder, String command, boolean condition) {
+        if (condition) {
+            builder.append(command + ", ");
+        }
+    }
+
+    /**
      * Handles the leader command logic when a message is received.
      * 
      * @param player The player who sent the command.
@@ -235,11 +248,8 @@ public class ChatCommands {
                     return;
                 }
 
-                if (arg1.isEmpty()) {
-                    scheduleCommand("p kick " + username);
-                } else {
-                    scheduleCommand("p kick " + arg1);
-                }
+                String kick = arg1.isEmpty() ? username : arg1;
+                scheduleCommand("p kick " + kick);
                 break;
             // Party transfer commands
             case "transfer":
@@ -249,11 +259,8 @@ public class ChatCommands {
                     return;
                 }
 
-                if (arg1.isEmpty()) {
-                    scheduleCommand("p transfer " + username);
-                } else {
-                    scheduleCommand("p transfer " + arg1);
-                }
+                String transfer = arg1.isEmpty() ? username : arg1;
+                scheduleCommand("p transfer " + transfer);
                 break;
             // Party promote commands
             case "promote":
@@ -261,11 +268,8 @@ public class ChatCommands {
                     return;
                 }
 
-                if (arg1.isEmpty()) {
-                    scheduleCommand("p promote " + username);
-                } else {
-                    scheduleCommand("p promote " + arg1);
-                }
+                String promote = arg1.isEmpty() ? username : arg1;
+                scheduleCommand("p promote " + promote);
                 break;
             // Party demote commands
             case "demote":
@@ -273,11 +277,8 @@ public class ChatCommands {
                     return;
                 }
 
-                if (arg1.isEmpty()) {
-                    scheduleCommand("p demote " + username);
-                } else {
-                    scheduleCommand("p demote " + arg1);
-                }
+                String demote = arg1.isEmpty() ? username : arg1;
+                scheduleCommand("p demote " + demote);
                 break;
             // Leader help commands
             case "help":
@@ -287,8 +288,23 @@ public class ChatCommands {
                     return;
                 }
 
-                String helpMessage =
-                        "Leader Commands: allinvite, mute, streamopen [size], warp, join <instance>, invite <player>, kick [player], transfer [player], promote [player], demote [player], lhelp";
+                // Build the help message with available leader commands
+                StringBuilder helpMessage = new StringBuilder("Leader Commands: ");
+                appendCommand(helpMessage, "allinv", ToggleUtil.getHandler().chat.allInvite);
+                appendCommand(helpMessage, "mute", ToggleUtil.getHandler().chat.mute);
+                appendCommand(helpMessage, "stream [max]", ToggleUtil.getHandler().chat.stream);
+                appendCommand(helpMessage, "warp", ToggleUtil.getHandler().chat.warp);
+                appendCommand(helpMessage, "instance [name]",
+                        ToggleUtil.getHandler().chat.instance);
+                appendCommand(helpMessage, "invite <player>", ToggleUtil.getHandler().chat.invite);
+                appendCommand(helpMessage, "kick [player]", ToggleUtil.getHandler().chat.kick);
+                appendCommand(helpMessage, "transfer [player]",
+                        ToggleUtil.getHandler().chat.transfer);
+                appendCommand(helpMessage, "promote [player]",
+                        ToggleUtil.getHandler().chat.promote);
+                appendCommand(helpMessage, "demote [player]", ToggleUtil.getHandler().chat.demote);
+                appendCommand(helpMessage, "lhelp", ToggleUtil.getHandler().chat.leaderHelp);
+                helpMessage.setLength(helpMessage.length() - 2);
                 scheduleCommand("pc " + helpMessage);
                 break;
         }
@@ -362,7 +378,13 @@ public class ChatCommands {
                     return;
                 }
 
-                String helpMessage = "Party Commands: 8ball, cf, dice [sides], waifu, phelp";
+                // Build the help message with available party commands
+                StringBuilder helpMessage = new StringBuilder("Party Commands: ");
+                appendCommand(helpMessage, "8ball", ToggleUtil.getHandler().chat.eightBall);
+                appendCommand(helpMessage, "cf", ToggleUtil.getHandler().chat.coinFlip);
+                appendCommand(helpMessage, "dice [sides]", ToggleUtil.getHandler().chat.diceRoll);
+                appendCommand(helpMessage, "waifu", ToggleUtil.getHandler().chat.waifu);
+                appendCommand(helpMessage, "phelp", ToggleUtil.getHandler().chat.partyHelp);
                 scheduleCommand(head + " " + helpMessage);
                 break;
         }
@@ -479,8 +501,19 @@ public class ChatCommands {
                     return;
                 }
 
-                String helpMessage =
-                        "Status Commands: coords, fps, tps, leave, limbo, ping, playtime, stats, time, shelp";
+                // Build the help message with available status commands
+                StringBuilder helpMessage = new StringBuilder("Status Commands: ");
+                appendCommand(helpMessage, "coords", ToggleUtil.getHandler().chat.coords);
+                appendCommand(helpMessage, "fps", ToggleUtil.getHandler().chat.fps);
+                appendCommand(helpMessage, "tps", ToggleUtil.getHandler().chat.tps);
+                appendCommand(helpMessage, "leave", ToggleUtil.getHandler().chat.leave);
+                appendCommand(helpMessage, "limbo", ToggleUtil.getHandler().chat.limbo);
+                appendCommand(helpMessage, "ping", ToggleUtil.getHandler().chat.ping);
+                appendCommand(helpMessage, "playtime", ToggleUtil.getHandler().chat.playtime);
+                appendCommand(helpMessage, "stats", ToggleUtil.getHandler().chat.stats);
+                appendCommand(helpMessage, "time", ToggleUtil.getHandler().chat.time);
+                appendCommand(helpMessage, "shelp", ToggleUtil.getHandler().chat.statusHelp);
+                helpMessage.setLength(helpMessage.length() - 2);
                 scheduleCommand(head + " " + helpMessage);
                 break;
         }
