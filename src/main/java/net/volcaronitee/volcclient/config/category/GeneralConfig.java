@@ -89,6 +89,19 @@ public class GeneralConfig {
                 // General Option Group
                 .group(OptionGroup.createBuilder().name(Text.literal("General"))
 
+                        // TODO: Image Bypass
+                        .option(Option.<Boolean>createBuilder().name(Text.literal("Image Bypass"))
+                                .description(OptionDescription.createBuilder()
+                                        .webpImage(Identifier.of(VolcClient.MOD_ID,
+                                                "config/general/image_bypass.webp"))
+                                        .text(Text.literal(
+                                                "Bypasses the Hypixel image block. Converts image urls into special strings that can be rendered by other Volc Client users."))
+                                        .build())
+                                .binding(defaults.general.imageBypass,
+                                        () -> config.general.imageBypass,
+                                        newVal -> config.general.imageBypass = newVal)
+                                .controller(ConfigUtil::createBooleanController).build())
+
                         // Remove Selfie Mode
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Remove Selfie Mode"))
@@ -345,6 +358,9 @@ public class GeneralConfig {
     public boolean socketConnection = true;
 
     // General Option Group
+    @SerialEntry
+    public boolean imageBypass = false;
+
     @SerialEntry
     public boolean removeSelfieMode = false;
 
