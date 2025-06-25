@@ -254,7 +254,7 @@ public class ChatConfig {
     public boolean autocompleteCommand = false;
 
     @SerialEntry
-    public boolean autocorrectCommand = false;
+    public boolean autocorrectCommand = true;
 
     @SerialEntry
     public boolean customEmotes = false;
@@ -298,7 +298,7 @@ public class ChatConfig {
     public boolean joinReparty = false;
 
     @SerialEntry
-    public boolean joinWhitelist = false;
+    public boolean joinWhitelist = true;
 
     @SerialEntry
     public AutoTransfer autoTransfer = AutoTransfer.OFF;

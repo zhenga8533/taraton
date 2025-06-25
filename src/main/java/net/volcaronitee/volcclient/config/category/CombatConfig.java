@@ -255,7 +255,7 @@ public class CombatConfig {
     }
 
     @SerialEntry
-    public boolean bestiaryMenu = false;
+    public boolean bestiaryMenu = true;
 
     @SerialEntry
     public Color hitboxColor = new Color(255, 255, 255, 255);
@@ -290,7 +290,7 @@ public class CombatConfig {
     public boolean manaDrainRange = false;
 
     @SerialEntry
-    public boolean ragnarokDetection = false;
+    public boolean ragnarokDetection = true;
 
     // Slayer Option Group
     @SerialEntry

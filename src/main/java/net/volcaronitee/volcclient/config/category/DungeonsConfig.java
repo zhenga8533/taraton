@@ -88,7 +88,7 @@ public class DungeonsConfig {
 
     // Chests Option Group
     @SerialEntry
-    public boolean croseusHighlight = false;
+    public boolean croseusHighlight = true;
 
     @SerialEntry
     public boolean dungeonProfit = false;

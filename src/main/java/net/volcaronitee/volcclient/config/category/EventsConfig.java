@@ -10,72 +10,10 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.volcaronitee.volcclient.VolcClient;
 import net.volcaronitee.volcclient.util.ConfigUtil;
-import net.volcaronitee.volcclient.util.ConfigUtil.AnnounceWP;
 
 public class EventsConfig {
     public static ConfigCategory create(ConfigUtil defaults, ConfigUtil config) {
         return ConfigCategory.createBuilder().name(Text.literal("Events"))
-
-                // Diana Option Group
-                .group(OptionGroup.createBuilder().name(Text.literal("Diana"))
-
-                        // TODO: Burrow Detection
-                        .option(Option.<Boolean>createBuilder()
-                                .name(Text.literal("Burrow Detection"))
-                                .description(OptionDescription.createBuilder()
-                                        .webpImage(Identifier.of(VolcClient.MOD_ID,
-                                                "config/events/burrow_detection.webp"))
-                                        .text(Text.literal(
-                                                "Renders waypoints on nearby burrows and displays a chat message."))
-                                        .build())
-                                .binding(defaults.events.burrowDetection,
-                                        () -> config.events.burrowDetection,
-                                        newVal -> config.events.burrowDetection = newVal)
-                                .controller(ConfigUtil::createBooleanController).build())
-
-                        // TODO: Burrow Waypoints
-                        .option(Option.<Boolean>createBuilder()
-                                .name(Text.literal("Burrow Waypoints"))
-                                .description(OptionDescription.createBuilder()
-                                        .webpImage(Identifier.of(VolcClient.MOD_ID,
-                                                "config/events/burrow_waypoints.webp"))
-                                        .text(Text.literal(
-                                                "Renders the best guess of a burrow location using ancestral spade particals and sounds."))
-                                        .build())
-                                .binding(defaults.events.burrowWaypoints,
-                                        () -> config.events.burrowWaypoints,
-                                        newVal -> config.events.burrowWaypoints = newVal)
-                                .controller(ConfigUtil::createBooleanController).build())
-
-                        // TODO: Inquisitor Announce
-                        .option(Option.<AnnounceWP>createBuilder()
-                                .name(Text.literal("Inquisitor Announce"))
-                                .description(OptionDescription.createBuilder()
-                                        .webpImage(Identifier.of(VolcClient.MOD_ID,
-                                                "config/events/inquisitor_announce.webp"))
-                                        .text(Text.literal(
-                                                "Sends a chat message on inquisitor spawn."))
-                                        .build())
-                                .binding(defaults.events.inquisitorAnnounce,
-                                        () -> config.events.inquisitorAnnounce,
-                                        newVal -> config.events.inquisitorAnnounce = newVal)
-                                .controller(ConfigUtil::createEnumController).build())
-
-                        // TODO: Inquisitor Detection
-                        .option(Option.<Boolean>createBuilder()
-                                .name(Text.literal("Inquisitor Detection"))
-                                .description(OptionDescription.createBuilder()
-                                        .webpImage(Identifier.of(VolcClient.MOD_ID,
-                                                "config/events/inquisitor_detection.webp"))
-                                        .text(Text.literal(
-                                                "Highlights nearby inquisitors. This includes inquisitors spawned by other players."))
-                                        .build())
-                                .binding(defaults.events.inquisitorDetection,
-                                        () -> config.events.inquisitorDetection,
-                                        newVal -> config.events.inquisitorDetection = newVal)
-                                .controller(ConfigUtil::createBooleanController).build())
-
-                        .build())
 
                 // Hoppity Option Group
                 .group(OptionGroup.createBuilder().name(Text.literal("Hoppity"))
@@ -183,19 +121,6 @@ public class EventsConfig {
 
                 .build();
     }
-
-    // Diana Option Group
-    @SerialEntry
-    public boolean burrowDetection = false;
-
-    @SerialEntry
-    public boolean burrowWaypoints = false;
-
-    @SerialEntry
-    public AnnounceWP inquisitorAnnounce = AnnounceWP.OFF;
-
-    @SerialEntry
-    public boolean inquisitorDetection = false;
 
     // Hoppity Option Group
     @SerialEntry

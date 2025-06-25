@@ -162,13 +162,13 @@ public class ContainerConfig {
 
     // Hotkey Option Group
     @SerialEntry
-    public boolean containerButtons = false;
+    public boolean containerButtons = true;
 
     @SerialEntry
-    public boolean slotBinding = false;
+    public boolean slotBinding = true;
 
     @SerialEntry
-    public boolean wardrobeSwap = false;
+    public boolean wardrobeSwap = true;
 
     // Items Option Group
     @SerialEntry
