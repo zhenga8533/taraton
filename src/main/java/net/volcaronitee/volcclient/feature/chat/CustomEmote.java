@@ -13,7 +13,7 @@ import net.volcaronitee.volcclient.util.ListUtil;
  * Handles custom emote mappings for chat messages.
  */
 public class CustomEmote {
-    private static final JsonObject EMOTE_JSON = JsonUtil.loadTemplate("emotes.json");
+    private static final JsonObject EMOTE_JSON = JsonUtil.loadTemplate("lists/emotes.json");
     private static final List<KeyValuePair<String, String>> DEFAULT_MAP =
             JsonUtil.parseKeyValuePairs(EMOTE_JSON, "emotes");
     public static final ListUtil EMOTE_MAP = new ListUtil("Emote Map",

@@ -70,7 +70,7 @@ public class ListUtil {
             List<KeyValuePair<String, String>> defaultMap) {
         this.title = title;
         this.description = description;
-        this.configPath = CONFIG_PATH.resolve("lists/" + configPath);
+        this.configPath = CONFIG_PATH.resolve(configPath);
 
         // Create handler for this ListUtil instance
         this.handler = ConfigClassHandler.createBuilder(ListUtil.class)
