@@ -6,6 +6,7 @@ import net.volcaronitee.volcclient.feature.chat.JoinWhitelist;
 import net.volcaronitee.volcclient.feature.chat.PlaytimeWarning;
 import net.volcaronitee.volcclient.feature.chat.SpamHider;
 import net.volcaronitee.volcclient.feature.general.RemoveSelfieMode;
+import net.volcaronitee.volcclient.feature.general.SkyBlockXpAlert;
 
 public class FeatureUtil {
     public static void init() {
@@ -18,5 +19,6 @@ public class FeatureUtil {
         JoinWhitelist.register();
         PlaytimeWarning.register();
         SpamHider.register();
+        SkyBlockXpAlert.register();
     }
 }
