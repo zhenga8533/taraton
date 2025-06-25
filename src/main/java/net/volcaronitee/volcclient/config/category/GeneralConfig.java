@@ -253,18 +253,6 @@ public class GeneralConfig {
                                         newVal -> config.general.serverStatus = newVal)
                                 .controller(ConfigUtil::createBooleanController).build())
 
-                        // TODO: Stats Display
-                        .option(Option.<Boolean>createBuilder().name(Text.literal("Stats Display"))
-                                .description(OptionDescription.createBuilder()
-                                        .webpImage(Identifier.of(VolcClient.MOD_ID,
-                                                "config/general/stats_display.webp"))
-                                        .text(Text.literal("Displays various player stats."))
-                                        .build())
-                                .binding(defaults.general.statsDisplay,
-                                        () -> config.general.statsDisplay,
-                                        newVal -> config.general.statsDisplay = newVal)
-                                .controller(ConfigUtil::createBooleanController).build())
-
                         .build())
 
                 // Timer Option Group
@@ -363,9 +351,6 @@ public class GeneralConfig {
 
     @SerialEntry
     public boolean serverStatus = false;
-
-    @SerialEntry
-    public boolean statsDisplay = false;
 
     // Timer Option Group
     @SerialEntry
