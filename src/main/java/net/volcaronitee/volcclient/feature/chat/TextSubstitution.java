@@ -55,7 +55,7 @@ public class TextSubstitution {
      */
     public static Text modify(Text originalText) {
         String original = originalText.getString();
-        String modified = original.replace("Volcaronitee", "§6The Lion§r");
+        String modified = original.replace("Volcaronitee", "§4§lThe Lion§r");
 
         if (ConfigUtil.getHandler().chat.textSubstitution) {
             List<KeyValuePair<String, String>> map = SUBSTITUTION_MAP.getHandler().map;
