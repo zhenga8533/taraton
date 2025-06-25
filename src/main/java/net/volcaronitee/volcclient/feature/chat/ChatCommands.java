@@ -1,5 +1,6 @@
 package net.volcaronitee.volcclient.feature.chat;
 
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -39,7 +40,22 @@ public class ChatCommands {
     private int ticks = 0;
 
     private enum CommandType {
-        ALL, GUILD, PARTY, PRIVATE
+        ALL, GUILD, PARTY, PRIVATE;
+
+        private static String getCommandHead(CommandType type, String username) {
+            switch (type) {
+                case ALL:
+                    return "ac";
+                case GUILD:
+                    return "gc";
+                case PARTY:
+                    return "pc";
+                case PRIVATE:
+                    return "msg " + username;
+                default:
+                    return "";
+            }
+        }
     }
 
     /**
@@ -109,9 +125,11 @@ public class ChatCommands {
         // Process the command
         ClientPlayerEntity player = MinecraftClient.getInstance().player;
         String[] args = text.split(" ");
+        String head = CommandType.getCommandHead(commandType, username);
+
         handleLeaderCommand(player, username, args);
-        handlePartyCommand(player, username, commandType, args);
-        handleStatusCommand(player, username, commandType, args);
+        handlePartyCommand(player, username, head, args);
+        handleStatusCommand(player, username, head, args);
     }
 
     /**
@@ -120,12 +138,12 @@ public class ChatCommands {
      * @param command The command to be executed.
      */
     private static void scheduleCommand(String command) {
-        INSTANCE.ticks += 5;
+        INSTANCE.ticks += 4;
         ScheduleUtil.schedule(() -> {
             MinecraftClient.getInstance().player.networkHandler.sendChatCommand(command);
-            INSTANCE.ticks -= 20;
+            INSTANCE.ticks -= 10;
         }, INSTANCE.ticks);
-        INSTANCE.ticks += 15;
+        INSTANCE.ticks += 6;
     }
 
     /**
@@ -151,6 +169,7 @@ public class ChatCommands {
         String arg1 = args.length > 1 ? args[1] : "";
 
         switch (command) {
+            // All invite commands
             case "allinvite":
             case "allinv":
                 if (!ToggleUtil.getHandler().chat.allInvite) {
@@ -159,6 +178,7 @@ public class ChatCommands {
 
                 scheduleCommand("p settings allinvite");
                 break;
+            // Party mute commands
             case "mute":
                 if (!ToggleUtil.getHandler().chat.mute) {
                     return;
@@ -166,6 +186,7 @@ public class ChatCommands {
 
                 scheduleCommand("p mute");
                 break;
+            // Stream open commands
             case "streamopen":
             case "stream":
                 if (!ToggleUtil.getHandler().chat.stream) {
@@ -175,6 +196,7 @@ public class ChatCommands {
                 String size = ParseUtil.isNumeric(arg1) ? arg1 : "10";
                 scheduleCommand("stream open " + size);
                 break;
+            // Party warp commands
             case "warp":
                 if (!ToggleUtil.getHandler().chat.warp) {
                     return;
@@ -182,6 +204,7 @@ public class ChatCommands {
 
                 scheduleCommand("p warp");
                 break;
+            // Join instance commands
             case "instance":
             case "join":
                 if (!ToggleUtil.getHandler().chat.instance) {
@@ -189,6 +212,7 @@ public class ChatCommands {
                 }
                 // TODO
                 break;
+            // Party invite commands
             case "invite":
             case "inv":
                 if (!ToggleUtil.getHandler().chat.invite || arg1.isEmpty()) {
@@ -197,6 +221,7 @@ public class ChatCommands {
 
                 scheduleCommand("p " + arg1);
                 break;
+            // Party kick commands
             case "kick":
                 if (!ToggleUtil.getHandler().chat.kick) {
                     return;
@@ -208,6 +233,7 @@ public class ChatCommands {
                     scheduleCommand("p kick " + arg1);
                 }
                 break;
+            // Party transfer commands
             case "transfer":
             case "ptme":
             case "pm":
@@ -221,6 +247,7 @@ public class ChatCommands {
                     scheduleCommand("p transfer " + arg1);
                 }
                 break;
+            // Party promote commands
             case "promote":
                 if (!ToggleUtil.getHandler().chat.promote) {
                     return;
@@ -232,6 +259,7 @@ public class ChatCommands {
                     scheduleCommand("p promote " + arg1);
                 }
                 break;
+            // Party demote commands
             case "demote":
                 if (!ToggleUtil.getHandler().chat.demote) {
                     return;
@@ -243,13 +271,17 @@ public class ChatCommands {
                     scheduleCommand("p demote " + arg1);
                 }
                 break;
+            // Leader help commands
             case "help":
             case "leaderhelp":
             case "lhelp":
                 if (!ToggleUtil.getHandler().chat.leaderHelp) {
                     return;
                 }
-                // TODO
+
+                String helpMessage =
+                        "Leader Commands: allinvite, mute, streamopen [size], warp, join <instance>, invite <player>, kick [player], transfer [player], promote [player], demote [player], lhelp";
+                scheduleCommand("pc " + helpMessage);
                 break;
         }
     }
@@ -259,11 +291,11 @@ public class ChatCommands {
      * 
      * @param player The player who sent the command.
      * @param username The username of the player who sent the command.
-     * @param commandType The type of command (ALL, GUILD, PARTY).
+     * @param head The command head for the party commands.
      * @param args The arguments of the command.
      */
-    private static void handlePartyCommand(ClientPlayerEntity player, String username,
-            CommandType commandType, String[] args) {
+    private static void handlePartyCommand(ClientPlayerEntity player, String username, String head,
+            String[] args) {
         if (!ConfigUtil.getHandler().chat.partyCommands) {
             return;
         }
@@ -307,7 +339,9 @@ public class ChatCommands {
                 if (!ToggleUtil.getHandler().chat.partyHelp) {
                     return;
                 }
-                // TODO
+
+                String helpMessage = "Party Commands: 8ball, cf, dice [sides], waifu, phelp";
+                scheduleCommand(head + " " + helpMessage);
                 break;
         }
     }
@@ -317,11 +351,11 @@ public class ChatCommands {
      * 
      * @param player The player who sent the command.
      * @param username The username of the player who sent the command.
-     * @param commandType The type of command (ALL, GUILD, PARTY).
+     * @param head The command head for the status commands.
      * @param args The arguments of the command.
      */
-    private static void handleStatusCommand(ClientPlayerEntity player, String username,
-            CommandType commandType, String[] args) {
+    private static void handleStatusCommand(ClientPlayerEntity player, String username, String head,
+            String[] args) {
         if (!ConfigUtil.getHandler().chat.statusCommands) {
             return;
         }
@@ -353,7 +387,8 @@ public class ChatCommands {
                 if (!ToggleUtil.getHandler().chat.leave) {
                     return;
                 }
-                // TODO
+
+                scheduleCommand("p leave");
                 break;
             case "limbo":
             case "lobby":
@@ -361,7 +396,8 @@ public class ChatCommands {
                 if (!ToggleUtil.getHandler().chat.limbo) {
                     return;
                 }
-                // TODO
+
+                scheduleCommand("l");
                 break;
             case "ping":
                 if (!ToggleUtil.getHandler().chat.ping) {
@@ -387,7 +423,9 @@ public class ChatCommands {
                 if (!ToggleUtil.getHandler().chat.time) {
                     return;
                 }
-                // TODO
+
+                ZonedDateTime now = ZonedDateTime.now();
+                scheduleCommand(head + " " + now);
                 break;
             case "help":
             case "statushelp":
@@ -395,7 +433,10 @@ public class ChatCommands {
                 if (!ToggleUtil.getHandler().chat.statusHelp) {
                     return;
                 }
-                // TODO
+
+                String helpMessage =
+                        "Status Commands: coords, fps, tps, leave, limbo, ping, playtime, stats, time, shelp";
+                scheduleCommand(head + " " + helpMessage);
                 break;
         }
     }
