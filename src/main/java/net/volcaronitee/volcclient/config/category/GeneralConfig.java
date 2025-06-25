@@ -104,7 +104,21 @@ public class GeneralConfig {
                                         .range(0, 10).step(1))
                                 .build())
 
-                        // TODO: SkyBlock XP Alert
+                        // SkyBlock Level Up Alert
+                        .option(Option.<Boolean>createBuilder()
+                                .name(Text.literal("SkyBlock Level Up Alert"))
+                                .description(OptionDescription.createBuilder()
+                                        .webpImage(Identifier.of(VolcClient.MOD_ID,
+                                                "config/general/skyblock_level_up_alert.webp"))
+                                        .text(Text.literal(
+                                                "Displays a chat message and title when you level up in SkyBlock."))
+                                        .build())
+                                .binding(defaults.general.skyblockLevelUpAlert,
+                                        () -> config.general.skyblockLevelUpAlert,
+                                        newVal -> config.general.skyblockLevelUpAlert = newVal)
+                                .controller(ConfigUtil::createBooleanController).build())
+
+                        // SkyBlock XP Alert
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("SkyBlock XP Alert"))
                                 .description(OptionDescription.createBuilder()
@@ -318,6 +332,9 @@ public class GeneralConfig {
 
     @SerialEntry
     public int skillTracker = 0;
+
+    @SerialEntry
+    public boolean skyblockLevelUpAlert = true;
 
     @SerialEntry
     public boolean skyblockXpAlert = true;
