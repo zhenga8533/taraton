@@ -39,6 +39,13 @@ public class ChatCommands {
     private static final Pattern PRIVATE_PATTERN =
             Pattern.compile("From " + ParseUtil.PLAYER_PATTERN + ": (.+)");
 
+    private static final String[] EIGHT_BALL = {"As I see it, yes", "It is certain",
+            "It is decidedly so", "Most likely", "Outlook good", "Signs point to yes",
+            "Without a doubt", "Yes", "Yes - definitely", "You may rely on it",
+            "Reply hazy, try again", "Ask again later", "Better not tell you now",
+            "Cannot predict now", "Concentrate and ask again", "Don't count on it",
+            "My reply is no", "My sources say no", "Outlook not so good", "Very doubtful"};
+
     private int ticks = 0;
 
     private enum CommandType {
@@ -310,7 +317,9 @@ public class ChatCommands {
                 if (!ToggleUtil.getHandler().chat.eightBall) {
                     return;
                 }
-                // TODO
+
+                String response = EIGHT_BALL[(int) (Math.random() * EIGHT_BALL.length)];
+                scheduleCommand(head + " @" + username + ", " + response);
                 break;
             // Coin flip commands
             case "coin":
@@ -320,7 +329,10 @@ public class ChatCommands {
                 if (!ToggleUtil.getHandler().chat.coinFlip) {
                     return;
                 }
-                // TODO
+
+                boolean heads = Math.random() < 0.5;
+                String result = heads ? "Heads!" : "Tails!";
+                scheduleCommand(head + " " + username + " flipped a " + result);
                 break;
             // Dice roll commands
             case "dice":
@@ -328,7 +340,10 @@ public class ChatCommands {
                 if (!ToggleUtil.getHandler().chat.diceRoll) {
                     return;
                 }
-                // TODO
+
+                int sides = ParseUtil.isNumeric(arg1) ? Integer.parseInt(arg1) : 6;
+                int roll = (int) (Math.random() * sides) + 1;
+                scheduleCommand(head + " " + username + " rolled a " + roll + "!");
                 break;
             // Waifu commands
             case "waifu":
@@ -377,7 +392,12 @@ public class ChatCommands {
                 if (!ToggleUtil.getHandler().chat.coords) {
                     return;
                 }
-                // TODO
+
+                long x = Math.round(player.getX());
+                long y = Math.round(player.getY());
+                long z = Math.round(player.getZ());
+                String coords = String.format("x: %d, y: %d, z: %d", x, y, z);
+                scheduleCommand(head + " " + coords);
                 break;
             // FPS commands
             case "fps":
