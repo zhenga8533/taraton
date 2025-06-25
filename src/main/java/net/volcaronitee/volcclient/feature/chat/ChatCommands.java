@@ -9,6 +9,8 @@ import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.text.Text;
+import net.volcaronitee.volcclient.feature.general.ServerStatus;
+import net.volcaronitee.volcclient.feature.general.SkyBlockStats;
 import net.volcaronitee.volcclient.util.ConfigUtil;
 import net.volcaronitee.volcclient.util.JsonUtil;
 import net.volcaronitee.volcclient.util.ListUtil;
@@ -23,7 +25,7 @@ import net.volcaronitee.volcclient.util.ToggleUtil;
 public class ChatCommands {
     private static final ChatCommands INSTANCE = new ChatCommands();
 
-    private static final JsonObject PREFIX_JSON = JsonUtil.loadTemplate("prefix.json");
+    private static final JsonObject PREFIX_JSON = JsonUtil.loadTemplate("lists/prefix.json");
     private static final List<String> DEFAULT_LIST = JsonUtil.parseList(PREFIX_JSON, "prefix");
     public static final ListUtil PREFIX_MAP = new ListUtil("Prefix List",
             Text.literal("A list of prefixes to detect for chat commands."), "prefix_list.json",
@@ -156,12 +158,11 @@ public class ChatCommands {
     private static void handleLeaderCommand(ClientPlayerEntity player, String username,
             String[] args) {
         // Verify if the player is the party leader and if leader commands are enabled
-        String partyLeader = PartyUtil.getInstance().getLeader();
+        String partyLeader = PartyUtil.getLeader();
         String clientUsername = MinecraftClient.getInstance().getSession().getUsername();
         if (!ConfigUtil.getHandler().chat.leaderCommands
                 || (ToggleUtil.getHandler().chat.leaderLock && partyLeader != clientUsername)
-                || !PartyUtil.getInstance().isInParty()
-                || PartyUtil.getInstance().getLeader() != clientUsername) {
+                || !PartyUtil.isInParty() || PartyUtil.getLeader() != clientUsername) {
             return;
         }
 
@@ -300,15 +301,18 @@ public class ChatCommands {
             return;
         }
 
-        String command = args[0];
+        String command = args.length > 0 ? args[0].toLowerCase() : "";
+        String arg1 = args.length > 1 ? args[1] : "";
 
         switch (command) {
+            // 8ball commands
             case "8ball":
                 if (!ToggleUtil.getHandler().chat.eightBall) {
                     return;
                 }
                 // TODO
                 break;
+            // Coin flip commands
             case "coin":
             case "flip":
             case "coinflip":
@@ -318,6 +322,7 @@ public class ChatCommands {
                 }
                 // TODO
                 break;
+            // Dice roll commands
             case "dice":
             case "roll":
                 if (!ToggleUtil.getHandler().chat.diceRoll) {
@@ -325,6 +330,7 @@ public class ChatCommands {
                 }
                 // TODO
                 break;
+            // Waifu commands
             case "waifu":
             case "women":
             case "w":
@@ -333,6 +339,7 @@ public class ChatCommands {
                 }
                 // TODO
                 break;
+            // Party help commands
             case "help":
             case "partyhelp":
             case "phelp":
@@ -363,6 +370,7 @@ public class ChatCommands {
         String command = args[0];
 
         switch (command) {
+            // Coordinates commands
             case "coords":
             case "waypoint":
             case "xyz":
@@ -371,18 +379,25 @@ public class ChatCommands {
                 }
                 // TODO
                 break;
+            // FPS commands
             case "fps":
                 if (!ToggleUtil.getHandler().chat.fps) {
                     return;
                 }
-                // TODO
+
+                int fps = MinecraftClient.getInstance().getCurrentFps();
+                scheduleCommand(head + " " + fps + " FPS");
                 break;
+            // TPS commands
             case "tps":
                 if (!ToggleUtil.getHandler().chat.tps) {
                     return;
                 }
-                // TODO
+
+                int tps = ServerStatus.getTps();
+                scheduleCommand(head + " " + tps + " TPS");
                 break;
+            // Leave party commands
             case "leave":
                 if (!ToggleUtil.getHandler().chat.leave) {
                     return;
@@ -390,6 +405,7 @@ public class ChatCommands {
 
                 scheduleCommand("p leave");
                 break;
+            // Limbo or lobby commands
             case "limbo":
             case "lobby":
             case "l":
@@ -399,19 +415,26 @@ public class ChatCommands {
 
                 scheduleCommand("l");
                 break;
+            // Ping commands
             case "ping":
                 if (!ToggleUtil.getHandler().chat.ping) {
                     return;
                 }
-                // TODO
+
+                int ping = ServerStatus.getPing();
+                scheduleCommand(command + " " + ping + "ms");
                 break;
+            // Playtime commands
             case "playtime":
             case "pt":
                 if (!ToggleUtil.getHandler().chat.playtime) {
                     return;
                 }
-                // TODO
+
+                String playtime = SkyBlockStats.getPlaytime();
+                scheduleCommand(head + " " + playtime + " playtime");
                 break;
+            // Stats commands
             case "stats":
             case "stat":
                 if (!ToggleUtil.getHandler().chat.stats) {
@@ -419,6 +442,7 @@ public class ChatCommands {
                 }
                 // TODO
                 break;
+            // Time commands
             case "time":
                 if (!ToggleUtil.getHandler().chat.time) {
                     return;
@@ -427,6 +451,7 @@ public class ChatCommands {
                 ZonedDateTime now = ZonedDateTime.now();
                 scheduleCommand(head + " " + now);
                 break;
+            // Status help commands
             case "help":
             case "statushelp":
             case "shelp":

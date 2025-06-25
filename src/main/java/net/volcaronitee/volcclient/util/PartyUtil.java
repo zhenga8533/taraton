@@ -22,15 +22,6 @@ public class PartyUtil {
     private PartyUtil() {}
 
     /**
-     * Returns the singleton instance of PartyUtil.
-     * 
-     * @return The PartyUtil instance.
-     */
-    public static PartyUtil getInstance() {
-        return INSTANCE;
-    }
-
-    /**
      * Registers the packet listener for Hypixel party updates.
      */
     public static void register() {
@@ -69,8 +60,8 @@ public class PartyUtil {
      * 
      * @return True if the player is in a party, false otherwise.
      */
-    public boolean isInParty() {
-        return inParty;
+    public static boolean isInParty() {
+        return INSTANCE.inParty;
     }
 
     /**
@@ -78,8 +69,8 @@ public class PartyUtil {
      * 
      * @return The username of the party leader, or an empty string if not in a party.
      */
-    public String getLeader() {
-        return leader;
+    public static String getLeader() {
+        return INSTANCE.leader;
     }
 
     /**
@@ -87,8 +78,8 @@ public class PartyUtil {
      * 
      * @return A set of usernames of party moderators, or an empty set if not in a party.
      */
-    public Set<String> getModerators() {
-        return moderators;
+    public static Set<String> getModerators() {
+        return INSTANCE.moderators;
     }
 
     /**
@@ -96,8 +87,8 @@ public class PartyUtil {
      * 
      * @return A set of usernames of party members, or an empty set if not in a party.
      */
-    public Set<String> getMembers() {
-        return members;
+    public static Set<String> getMembers() {
+        return INSTANCE.members;
     }
 
     /**

@@ -104,7 +104,7 @@ public class ChatConfig {
                 // Message Option Group
                 .group(OptionGroup.createBuilder().name(Text.literal("Message"))
 
-                        // TODO: Leader Commands
+                        // Leader Commands
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Leader Commands"))
                                 .description(OptionDescription.createBuilder()
@@ -118,7 +118,7 @@ public class ChatConfig {
                                         newVal -> config.chat.leaderCommands = newVal)
                                 .controller(ConfigUtil::createBooleanController).build())
 
-                        // TODO: Party Commands
+                        // Party Commands
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Party Commands"))
                                 .description(OptionDescription.createBuilder()
                                         .webpImage(Identifier.of(VolcClient.MOD_ID,
@@ -131,7 +131,7 @@ public class ChatConfig {
                                         newVal -> config.chat.partyCommands = newVal)
                                 .controller(ConfigUtil::createBooleanController).build())
 
-                        // TODO: Status Commands
+                        // Status Commands
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Status Commands"))
                                 .description(OptionDescription.createBuilder()

@@ -26,15 +26,6 @@ public class PlayerUtil {
     private PlayerUtil() {}
 
     /**
-     * Returns the singleton instance of PlayerUtil.
-     * 
-     * @return The PlayerUtil instance.
-     */
-    public static PlayerUtil getInstance() {
-        return INSTANCE;
-    }
-
-    /**
      * Registers the packet listener for Hypixel player updates.
      */
     public static void register() {
@@ -59,7 +50,7 @@ public class PlayerUtil {
     /**
      * Updates the last activity time of the player when they move.
      */
-    public void clientPlayerEntity$move() {
+    public static void clientPlayerEntity$move() {
         INSTANCE.lastActivityTime = System.currentTimeMillis();
     }
 

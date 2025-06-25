@@ -4,6 +4,9 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.network.PlayerListEntry;
 
+/**
+ * Feature that tracks server status such as ping, FPS, TPS, and player angles.
+ */
 public class ServerStatus {
     private final static ServerStatus INSTANCE = new ServerStatus();
 
@@ -21,22 +24,35 @@ public class ServerStatus {
      */
     private ServerStatus() {}
 
-    public static ServerStatus getInstance() {
-        return INSTANCE;
-    }
-
-    public int getPing() {
-        return ping;
-    }
-
-    private void setPing() {
+    /**
+     * Sets the current latency ping of the client.
+     */
+    private static void setPing() {
         MinecraftClient client = MinecraftClient.getInstance();
         ClientPlayNetworkHandler networkHandler = client.getNetworkHandler();
         PlayerListEntry clientPlayer = networkHandler.getPlayerListEntry(client.player.getUuid());
         if (clientPlayer != null) {
-            this.ping = clientPlayer.getLatency();
+            INSTANCE.ping = clientPlayer.getLatency();
         } else {
-            this.ping = 0;
+            INSTANCE.ping = 0;
         }
+    }
+
+    /**
+     * Gets the current latency ping of the client.
+     * 
+     * @return The current ping in milliseconds.
+     */
+    public static int getPing() {
+        return INSTANCE.ping;
+    }
+
+    /**
+     * Gets the current TPS of the server.
+     * 
+     * @return The current TPS (Ticks Per Second).
+     */
+    public static int getTps() {
+        return INSTANCE.tps;
     }
 }

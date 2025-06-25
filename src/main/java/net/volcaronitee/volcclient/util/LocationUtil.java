@@ -78,15 +78,6 @@ public class LocationUtil {
      */
     private LocationUtil() {}
 
-    /**
-     * Returns the singleton instance of LocationUtil.
-     * 
-     * @return The LocationUtil instance.
-     */
-    public static LocationUtil getInstance() {
-        return INSTANCE;
-    }
-
     public static void register() {
         HypixelModAPI.getInstance().subscribeToEventPacket(ClientboundLocationPacket.class);
         HypixelModAPI.getInstance().createHandler(ClientboundLocationPacket.class,
@@ -113,8 +104,8 @@ public class LocationUtil {
      * 
      * @return The name of the server.
      */
-    public String getServerName() {
-        return serverName;
+    public static String getServerName() {
+        return INSTANCE.serverName;
     }
 
     /**
@@ -122,8 +113,8 @@ public class LocationUtil {
      * 
      * @return The name of the lobby, or an empty string if not available.
      */
-    public String getLobbyName() {
-        return lobbyName;
+    public static String getLobbyName() {
+        return INSTANCE.lobbyName;
     }
 
     /**
@@ -131,8 +122,8 @@ public class LocationUtil {
      * 
      * @return The name of the map, or an empty string if not available.
      */
-    public String getMap() {
-        return map;
+    public static String getMap() {
+        return INSTANCE.map;
     }
 
     /**
@@ -140,8 +131,8 @@ public class LocationUtil {
      * 
      * @return The mode of the game, or an empty string if not available.
      */
-    public String getMode() {
-        return mode;
+    public static String getMode() {
+        return INSTANCE.mode;
     }
 
     /**
@@ -149,8 +140,8 @@ public class LocationUtil {
      * 
      * @return The type of the server, or UNKNOWN if not available.
      */
-    public ServerType getServerType() {
-        return serverType;
+    public static ServerType getServerType() {
+        return INSTANCE.serverType;
     }
 
     /**
@@ -158,8 +149,8 @@ public class LocationUtil {
      * 
      * @return The World enum constant representing the current world, or UNKNOWN if not recognized.
      */
-    public World getWorld() {
-        return world;
+    public static World getWorld() {
+        return INSTANCE.world;
     }
 
     /**

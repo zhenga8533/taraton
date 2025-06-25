@@ -25,15 +25,6 @@ public class PlaytimeWarning {
      */
     private PlaytimeWarning() {}
 
-    /**
-     * Returns the singleton instance of PlaytimeWarning.
-     * 
-     * @return The PlaytimeWarning instance.
-     */
-    public static PlaytimeWarning getInstance() {
-        return INSTANCE;
-    }
-
     public static void register() {
         // Load the playtime data from the JSON file
         JsonObject playtimeData = JsonUtil.loadJson(JsonUtil.DATA_DIR, FILENAME);

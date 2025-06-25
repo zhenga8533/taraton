@@ -14,6 +14,6 @@ public abstract class ClientPlayerEntityMixin {
     @Inject(method = "move", at = @At(value = "HEAD"))
     private void volcclient$clientPlayerEntityMove(MovementType type, Vec3d movement,
             CallbackInfo info) {
-        PlayerUtil.getInstance().clientPlayerEntity$move();
+        PlayerUtil.clientPlayerEntity$move();
     }
 }

@@ -21,17 +21,8 @@ import net.volcaronitee.volcclient.VolcClient;
 public class OverlayUtil {
     private static final OverlayUtil INSTANCE = new OverlayUtil();
 
-    /**
-     * Returns the singleton instance of OverlayUtil.
-     * 
-     * @return The OverlayUtil instance.
-     */
-    public static OverlayUtil getInstance() {
-        return INSTANCE;
-    }
-
     private static final Map<String, Overlay> OVERLAYS = new java.util.HashMap<>();
-    public static boolean globalMoveMode = false;
+    public boolean globalMoveMode = false;
 
     /**
      * Private constructor to prevent instantiation.
@@ -192,7 +183,7 @@ public class OverlayUtil {
 
             float lineHeight = 18 * scale;
 
-            List<LineContent> linesToRender = globalMoveMode ? templateLines : activeLines;
+            List<LineContent> linesToRender = INSTANCE.globalMoveMode ? templateLines : activeLines;
 
             for (int i = 0; i < linesToRender.size(); i++) {
                 LineContent line = linesToRender.get(i);
