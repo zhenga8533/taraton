@@ -49,14 +49,14 @@ public class SkyBlockLevelUpAlert {
         }
 
         // Extract the level up text from the matched group
-        text = text.replace("Level ", "Level §8");
+        text = text.replace("Level ", "§bLevel §8");
         text = text.replace("[", "[§b");
         INSTANCE.levelUpText = text.replace("]", "§8]");
 
         ScheduleUtil.schedule(() -> {
             MinecraftClient client = MinecraftClient.getInstance();
             client.inGameHud.getChatHud().addMessage(TextUtil.MOD_TITLE.copy()
-                    .append(Text.literal(" §3§lSKYBLOCK LEVEL UP§r §b" + INSTANCE.levelUpText)));
+                    .append(Text.literal(" §3§lSKYBLOCK LEVEL UP§r " + INSTANCE.levelUpText)));
             client.inGameHud.setTitle(Text.literal(INSTANCE.levelUpText));
         }, 2);
 
