@@ -18,6 +18,7 @@ public class SkyBlockXpAlert {
     private static final Pattern SKYBLOCK_XP_PATTERN =
             Pattern.compile("(§b\\+\\d+ SkyBlock XP §7\\([^§]*§7\\)§b \\(\\d+\\/100\\))");
 
+    private String lastXpText = "";
     private boolean cooldown = false;
 
     /**
@@ -34,7 +35,7 @@ public class SkyBlockXpAlert {
      * @param overlay Whether the message is an overlay message.
      */
     private static void parseMessage(Text message, boolean overlay) {
-        if (!ConfigUtil.getHandler().general.skyblockXpAlert || !overlay || INSTANCE.cooldown) {
+        if (!ConfigUtil.getHandler().general.skyblockXpAlert || !overlay) {
             return;
         }
 
@@ -47,6 +48,11 @@ public class SkyBlockXpAlert {
 
         // Extract the XP text from the matched group
         String xpText = matcher.group(1);
+        if (INSTANCE.cooldown && !xpText.equals(INSTANCE.lastXpText)) {
+            return;
+        }
+        INSTANCE.lastXpText = xpText;
+
         MinecraftClient client = MinecraftClient.getInstance();
         client.inGameHud.getChatHud()
                 .addMessage(TextUtil.MOD_TITLE.copy().append(Text.literal(" " + xpText)));
