@@ -5,6 +5,7 @@ import net.volcaronitee.volcclient.feature.chat.CustomEmote;
 import net.volcaronitee.volcclient.feature.chat.JoinWhitelist;
 import net.volcaronitee.volcclient.feature.chat.PlaytimeWarning;
 import net.volcaronitee.volcclient.feature.chat.SpamHider;
+import net.volcaronitee.volcclient.feature.container.Searchbar;
 import net.volcaronitee.volcclient.feature.general.RemoveSelfieMode;
 import net.volcaronitee.volcclient.feature.general.ServerStatus;
 import net.volcaronitee.volcclient.feature.general.SkyBlockLevelUpAlert;
@@ -24,5 +25,8 @@ public class FeatureUtil {
         SpamHider.register();
         SkyBlockLevelUpAlert.register();
         SkyBlockXpAlert.register();
+
+        // Container Features
+        Searchbar.register();
     }
 }

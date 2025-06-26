@@ -233,20 +233,15 @@ public class OverlayUtil {
             this.text = text;
         }
 
+        /**
+         * Creates a new LineContent instance with the specified start text and text.
+         * 
+         * @param startText The text to display at the start of the line.
+         * @param text The text to display in the line.
+         */
         public LineContent(String startText, String text) {
             this.items = new ArrayList<>();
             this.startText = startText;
-            this.text = text;
-        }
-
-        /**
-         * Creates a new LineContent instance with the specified text.
-         * 
-         * @param text The text to display in the line.
-         */
-        public LineContent(String text) {
-            this.items = new ArrayList<>();
-            this.startText = "";
             this.text = text;
         }
 
@@ -258,6 +253,13 @@ public class OverlayUtil {
         public void changeText(String newText) {
             this.text = newText;
         }
+    }
+
+    /**
+     * Represents a special render function that can be used to render custom content
+     */
+    public interface SpecialRender {
+        void render(DrawContext context);
     }
 
     /**
@@ -276,6 +278,8 @@ public class OverlayUtil {
 
         private float dx = 0;
         private float dy = 0;
+
+        private SpecialRender specialRender = null;
 
         /**
          * Creates a new Overlay instance.
@@ -296,6 +300,10 @@ public class OverlayUtil {
             this.templateLines = templateLines;
         }
 
+        public void setSpecialRender(SpecialRender specialRender) {
+            this.specialRender = specialRender;
+        }
+
         /**
          * Renders the overlay using the provided context.
          * 
@@ -304,6 +312,12 @@ public class OverlayUtil {
         private void render(DrawContext context) {
             if (!shouldRender.get())
                 return;
+
+            // If special render is set, use it
+            if (specialRender != null) {
+                specialRender.render(context);
+                return;
+            }
 
             // Recalculate size if width or height is not initialized
             if (width < 0 || height < 0) {
