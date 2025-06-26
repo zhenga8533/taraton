@@ -1,5 +1,6 @@
 package net.volcaronitee.volcclient.feature.general;
 
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
@@ -18,8 +19,7 @@ public class SkyBlockXpAlert {
     private static final Pattern SKYBLOCK_XP_PATTERN =
             Pattern.compile("(§b\\+\\d+ SkyBlock XP §7\\([^§]*§7\\)§b \\(\\d+\\/100\\))");
 
-    private String lastXpText = "";
-    private boolean cooldown = false;
+    private static final Set<String> XP_TEXTS = Set.of();
 
     /**
      * Private constructor to prevent instantiation.
@@ -48,10 +48,10 @@ public class SkyBlockXpAlert {
 
         // Extract the XP text from the matched group
         String xpText = matcher.group(1);
-        if (INSTANCE.cooldown && xpText.equals(INSTANCE.lastXpText)) {
+        if (XP_TEXTS.contains(xpText)) {
             return;
         }
-        INSTANCE.lastXpText = xpText;
+        XP_TEXTS.add(xpText);
 
         MinecraftClient client = MinecraftClient.getInstance();
         client.inGameHud.getChatHud()
@@ -59,9 +59,8 @@ public class SkyBlockXpAlert {
         client.inGameHud.setTitle(Text.literal(xpText));
 
         // Set a cooldown to prevent spamming the alert
-        INSTANCE.cooldown = true;
         ScheduleUtil.schedule(() -> {
-            INSTANCE.cooldown = false;
+            XP_TEXTS.remove(xpText);
         }, 100);
     }
 }
