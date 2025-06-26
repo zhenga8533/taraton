@@ -48,10 +48,18 @@ public class JsonUtil {
     public static JsonObject loadJson(String fileDir, String fileName) {
         Path filePath = CONFIG_DIR.resolve(fileDir).resolve(fileName);
 
+        // Create parent directories if they do not exist
         try {
+            Files.createDirectories(filePath.getParent());
+        } catch (IOException e) {
+            e.printStackTrace();
+            return new JsonObject();
+        }
+
+        try {
+            // If the file does not exist, create it with a template or an empty JSON object
             if (!Files.exists(filePath)) {
-                // If the file does not exist, create it with a template or an empty JSON object
-                String templateResourceName = TEMPLATE_PATH + fileName;
+                String templateResourceName = TEMPLATE_PATH + fileDir + "/" + fileName;
                 try (InputStream templateStream =
                         JsonUtil.class.getResourceAsStream(templateResourceName)) {
                     if (templateStream != null) {

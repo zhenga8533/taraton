@@ -12,6 +12,7 @@ import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.render.RenderTickCounter;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
+import net.minecraft.util.Colors;
 import net.minecraft.util.Identifier;
 import net.volcaronitee.volcclient.VolcClient;
 
@@ -22,7 +23,9 @@ public class OverlayUtil {
     private static final OverlayUtil INSTANCE = new OverlayUtil();
 
     private static final Map<String, Overlay> OVERLAYS = new java.util.HashMap<>();
-    public boolean globalMoveMode = false;
+    public boolean globalMoveMode = true;
+
+    private static final int FONT_SIZE = 9;
 
     /**
      * Private constructor to prevent instantiation.
@@ -33,7 +36,7 @@ public class OverlayUtil {
      * Initializes the OverlayUtil by registering the overlay rendering callback.
      */
     public static void init() {
-        HudElementRegistry.addFirst(Identifier.of(VolcClient.MOD_ID, "overlays"),
+        HudElementRegistry.addLast(Identifier.of(VolcClient.MOD_ID, "overlays"),
                 OverlayUtil::renderOverlays);
     }
 
@@ -44,14 +47,17 @@ public class OverlayUtil {
      * @param shouldRender A supplier that determines if the overlay should be rendered.
      * @param templateLines The template lines to be displayed in the overlay.
      */
-    public static void createOverlay(String name, Supplier<Boolean> shouldRender,
+    public static Overlay createOverlay(String name, Supplier<Boolean> shouldRender,
             List<LineContent> templateLines) {
-        JsonObject overlayJson = JsonUtil.loadJson(name + ".json");
+        JsonObject overlayJson = JsonUtil.loadJson("overlays", name + ".json");
         int x = overlayJson.has("x") ? overlayJson.get("x").getAsInt() : 0;
         int y = overlayJson.has("y") ? overlayJson.get("y").getAsInt() : 0;
         float scale = overlayJson.has("scale") ? overlayJson.get("scale").getAsFloat() : 1.0f;
 
-        OVERLAYS.put(name, new Overlay(x, y, scale, shouldRender, templateLines));
+        Overlay overlay = new Overlay(x, y, scale, shouldRender, templateLines);
+        OVERLAYS.put(name, overlay);
+
+        return overlay;
     }
 
     /**
@@ -125,6 +131,16 @@ public class OverlayUtil {
         }
 
         /**
+         * Creates a new LineContent instance with the specified text.
+         * 
+         * @param text The text to display in the line.
+         */
+        public LineContent(Text text) {
+            this.items = new ArrayList<>();
+            this.text = text;
+        }
+
+        /**
          * Changes the text of this line content to a new Text instance.
          * 
          * @param newText The new Text instance to set for this line content.
@@ -167,7 +183,6 @@ public class OverlayUtil {
             this.shouldRender = shouldRender;
             this.activeLines = new ArrayList<>(templateLines);
             this.templateLines = templateLines;
-            recalculateSize();
         }
 
         /**
@@ -181,7 +196,7 @@ public class OverlayUtil {
 
             TextRenderer tr = MinecraftClient.getInstance().textRenderer;
 
-            float lineHeight = 18 * scale;
+            float lineHeight = FONT_SIZE * scale;
 
             List<LineContent> linesToRender = INSTANCE.globalMoveMode ? templateLines : activeLines;
 
@@ -192,11 +207,11 @@ public class OverlayUtil {
 
                 for (ItemStack stack : line.items) {
                     context.drawItem(stack, (int) (x + offsetX), (int) drawY);
-                    offsetX += 18 * scale;
+                    offsetX += FONT_SIZE * scale;
                 }
 
-                context.drawText(tr, line.text, (int) (x + offsetX), (int) (drawY + 4 * scale),
-                        0xAAAAAA, true);
+                context.drawTextWithShadow(tr, line.text, (int) (x + offsetX), (int) drawY,
+                        Colors.WHITE);
             }
         }
 
@@ -234,10 +249,10 @@ public class OverlayUtil {
 
             float maxWidth = 0;
             float totalHeight = 0;
-            float lineHeight = 18 * scale;
+            float lineHeight = FONT_SIZE * scale;
 
             for (LineContent line : templateLines) {
-                float lineWidth = (line.items.size() * 18 + tr.getWidth(line.text) * scale);
+                float lineWidth = (line.items.size() * FONT_SIZE + tr.getWidth(line.text) * scale);
                 maxWidth = Math.max(maxWidth, lineWidth);
                 totalHeight += lineHeight;
             }
