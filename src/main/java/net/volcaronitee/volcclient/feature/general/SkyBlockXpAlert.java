@@ -48,7 +48,7 @@ public class SkyBlockXpAlert {
 
         // Extract the XP text from the matched group
         String xpText = matcher.group(1);
-        if (INSTANCE.cooldown && !xpText.equals(INSTANCE.lastXpText)) {
+        if (INSTANCE.cooldown && xpText.equals(INSTANCE.lastXpText)) {
             return;
         }
         INSTANCE.lastXpText = xpText;
