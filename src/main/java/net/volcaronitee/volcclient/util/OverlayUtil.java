@@ -217,8 +217,9 @@ public class OverlayUtil {
      * Represents the content of a line in an overlay, containing a list of item stacks and text.
      */
     public static class LineContent {
-        public final List<ItemStack> items;
-        public Text text;
+        private final List<ItemStack> items;
+        private final String startText;
+        private String text;
 
         /**
          * Creates a new LineContent instance with the specified items and text.
@@ -226,8 +227,15 @@ public class OverlayUtil {
          * @param items The list of item stacks to display in the line.
          * @param text The text to display in the line.
          */
-        public LineContent(List<ItemStack> items, Text text) {
+        public LineContent(List<ItemStack> items, String text) {
             this.items = items;
+            this.startText = "";
+            this.text = text;
+        }
+
+        public LineContent(String startText, String text) {
+            this.items = new ArrayList<>();
+            this.startText = startText;
             this.text = text;
         }
 
@@ -236,8 +244,9 @@ public class OverlayUtil {
          * 
          * @param text The text to display in the line.
          */
-        public LineContent(Text text) {
+        public LineContent(String text) {
             this.items = new ArrayList<>();
+            this.startText = "";
             this.text = text;
         }
 
@@ -246,7 +255,7 @@ public class OverlayUtil {
          * 
          * @param newText The new Text instance to set for this line content.
          */
-        public void changeText(Text newText) {
+        public void changeText(String newText) {
             this.text = newText;
         }
     }
@@ -314,6 +323,7 @@ public class OverlayUtil {
 
             List<LineContent> linesToRender = INSTANCE.globalMoveMode ? templateLines : activeLines;
 
+            // Render each line of content
             for (int i = 0; i < linesToRender.size(); i++) {
                 LineContent line = linesToRender.get(i);
                 float offsetX = 0;
@@ -324,8 +334,8 @@ public class OverlayUtil {
                     offsetX += FONT_SIZE * scale;
                 }
 
-                context.drawTextWithShadow(tr, line.text, (int) (x + offsetX), (int) drawY,
-                        Colors.WHITE);
+                context.drawTextWithShadow(tr, line.startText + line.text, (int) (x + offsetX),
+                        (int) drawY, Colors.WHITE);
             }
 
             // Render alignment lines if this is the current overlay
@@ -355,7 +365,8 @@ public class OverlayUtil {
             float lineHeight = FONT_SIZE * scale;
 
             for (LineContent line : templateLines) {
-                float lineWidth = (line.items.size() * FONT_SIZE + tr.getWidth(line.text) * scale);
+                float lineWidth = (line.items.size() * FONT_SIZE + tr.getWidth(line.text)
+                        + tr.getWidth(line.startText)) * scale;
                 maxWidth = Math.max(maxWidth, lineWidth);
                 totalHeight += lineHeight;
             }
