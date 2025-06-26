@@ -8,6 +8,7 @@ import com.google.gson.JsonObject;
 import com.mojang.brigadier.context.CommandContext;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.hud.VanillaHudElements;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
@@ -41,8 +42,8 @@ public class OverlayUtil {
      * Initializes the OverlayUtil by registering the overlay rendering callback.
      */
     public static void init() {
-        HudElementRegistry.addLast(Identifier.of(VolcClient.MOD_ID, "overlays"),
-                OverlayUtil::renderOverlays);
+        HudElementRegistry.attachElementBefore(VanillaHudElements.SCOREBOARD,
+                Identifier.of(VolcClient.MOD_ID, "overlays"), OverlayUtil::renderOverlays);
     }
 
     /**
@@ -175,23 +176,37 @@ public class OverlayUtil {
                 float deltaTicks) {}
 
         @Override
+        public void mouseMoved(double mouseX, double mouseY) {
+            boolean hovered = false;
+            for (Overlay overlay : OVERLAYS.values()) {
+                if (overlay.isMouseOver(mouseX, mouseY) && !hovered) {
+                    overlay.hovering = true;
+                    hovered = true;
+                } else {
+                    overlay.hovering = false;
+                }
+            }
+            super.mouseMoved(mouseX, mouseY);
+        }
+
+        @Override
         public boolean mouseClicked(double mouseX, double mouseY, int button) {
             for (Overlay overlay : OVERLAYS.values()) {
-                if (mouseX >= overlay.x - MARGIN && mouseX <= overlay.x + overlay.width + MARGIN
-                        && mouseY >= overlay.y - MARGIN
-                        && mouseY <= overlay.y + overlay.height + MARGIN) {
+                if (overlay.isMouseOver(mouseX, mouseY)) {
                     INSTANCE.currentOverlay = overlay;
                     INSTANCE.currentOverlay.dx = (float) mouseX - overlay.x;
                     INSTANCE.currentOverlay.dy = (float) mouseY - overlay.y;
                     break;
                 }
             }
+
             return super.mouseClicked(mouseX, mouseY, button);
         }
 
         @Override
         public boolean mouseReleased(double mouseX, double mouseY, int button) {
             INSTANCE.currentOverlay = null;
+
             return super.mouseReleased(mouseX, mouseY, button);
         }
 
@@ -202,6 +217,7 @@ public class OverlayUtil {
                 INSTANCE.currentOverlay.x = (int) (mouseX - INSTANCE.currentOverlay.dx);
                 INSTANCE.currentOverlay.y = (int) (mouseY - INSTANCE.currentOverlay.dy);
             }
+
             return super.mouseDragged(mouseX, mouseY, button, deltaX, deltaY);
         }
 
@@ -278,6 +294,7 @@ public class OverlayUtil {
 
         private float dx = 0;
         private float dy = 0;
+        private boolean hovering = false;
 
         private SpecialRender specialRender = null;
 
@@ -329,8 +346,10 @@ public class OverlayUtil {
             int boxY1 = (int) y - MARGIN;
             int boxX2 = (int) (x + width + MARGIN);
             int boxY2 = (int) (y + height + MARGIN);
-            context.fill(boxX1, boxY1, boxX2, boxY2, 0x80000000);
-            context.drawBorder(boxX1, boxY1, boxX2 - boxX1, boxY2 - boxY1, 0xFFDDDDDD);
+            int fillColor = hovering ? 0x8000FF00 : 0x80000000;
+            int borderColor = hovering ? 0xFF00FF00 : 0xFFDDDDDD;
+            context.fill(boxX1, boxY1, boxX2, boxY2, fillColor);
+            context.drawBorder(boxX1, boxY1, boxX2 - boxX1, boxY2 - boxY1, borderColor);
 
             TextRenderer tr = MinecraftClient.getInstance().textRenderer;
             float lineHeight = FONT_SIZE * scale;
@@ -386,7 +405,12 @@ public class OverlayUtil {
             }
 
             this.width = maxWidth;
-            this.height = totalHeight;
+            this.height = totalHeight - (MARGIN / 2);
+        }
+
+        private boolean isMouseOver(double mouseX, double mouseY) {
+            return mouseX >= x - MARGIN && mouseX <= x + width + MARGIN && mouseY >= y - MARGIN
+                    && mouseY <= y + height + MARGIN;
         }
     }
 }
