@@ -1,5 +1,6 @@
 package net.volcaronitee.volcclient.feature.general;
 
+import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -14,12 +15,10 @@ import net.volcaronitee.volcclient.util.TextUtil;
  * Feature that alerts the player when they gain SkyBlock XP.
  */
 public class SkyBlockXpAlert {
-    private static final SkyBlockXpAlert INSTANCE = new SkyBlockXpAlert();
-
     private static final Pattern SKYBLOCK_XP_PATTERN =
             Pattern.compile("(§b\\+\\d+ SkyBlock XP §7\\([^§]*§7\\)§b \\(\\d+\\/100\\))");
 
-    private static final Set<String> XP_TEXTS = Set.of();
+    private static final Set<String> XP_TEXTS = new HashSet<>();
 
     /**
      * Private constructor to prevent instantiation.
