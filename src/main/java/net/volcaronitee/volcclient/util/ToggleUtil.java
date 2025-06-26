@@ -10,6 +10,7 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.Text;
 import net.volcaronitee.volcclient.VolcClient;
 import net.volcaronitee.volcclient.config.toggle.ChatToggle;
+import net.volcaronitee.volcclient.config.toggle.GeneralToggle;
 
 /**
  * Utility class for handling configuration toggles in Volc Client.
@@ -59,4 +60,7 @@ public class ToggleUtil {
     // Toggle Categories
     @SerialEntry
     public ChatToggle chat = new ChatToggle();
+
+    @SerialEntry
+    public GeneralToggle general = new GeneralToggle();
 }

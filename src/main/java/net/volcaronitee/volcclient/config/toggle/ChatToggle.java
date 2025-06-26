@@ -16,8 +16,8 @@ public class ChatToggle {
     public static ConfigCategory create(ToggleUtil defaults, ToggleUtil config) {
         return ConfigCategory.createBuilder().name(Text.literal("Chat"))
 
-                // Chat Option Group
-                .group(OptionGroup.createBuilder().name(Text.literal("Correct"))
+                // Chats Option Group
+                .group(OptionGroup.createBuilder().name(Text.literal("Chats"))
 
                         // All Chat
                         .option(Option.<Boolean>createBuilder().name(Text.literal("All Chat"))
@@ -387,7 +387,7 @@ public class ChatToggle {
         return createDescription(text, aliases, Map.of());
     }
 
-    // Chat Option Group
+    // Chats Option Group
     @SerialEntry
     public boolean allChat = false;
 
