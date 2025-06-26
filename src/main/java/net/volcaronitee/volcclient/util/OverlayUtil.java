@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 import com.google.gson.JsonObject;
+import com.mojang.brigadier.context.CommandContext;
+import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
@@ -23,9 +25,11 @@ public class OverlayUtil {
     private static final OverlayUtil INSTANCE = new OverlayUtil();
 
     private static final Map<String, Overlay> OVERLAYS = new java.util.HashMap<>();
-    public boolean globalMoveMode = true;
+    private boolean globalMoveMode = false;
+    private Overlay currentOverlay = null;
 
     private static final int FONT_SIZE = 9;
+    private static final int MARGIN = 4;
 
     /**
      * Private constructor to prevent instantiation.
@@ -61,37 +65,6 @@ public class OverlayUtil {
     }
 
     /**
-     * Resets the overlay with the specified name to its template values.
-     * 
-     * @param name The name of the overlay to reset.
-     */
-    public void resetOverlay(String name) {
-        Overlay overlay = OVERLAYS.get(name);
-        if (overlay != null) {
-            JsonObject templateJson = JsonUtil.loadTemplate("overlays/" + name + ".json");
-            int x = templateJson.has("x") ? templateJson.get("x").getAsInt() : 0;
-            int y = templateJson.has("y") ? templateJson.get("y").getAsInt() : 0;
-            float scale = templateJson.has("scale") ? templateJson.get("scale").getAsFloat() : 1.0f;
-
-            overlay.x = x;
-            overlay.y = y;
-            overlay.scale = scale;
-            overlay.recalculateSize();
-        }
-    }
-
-    /**
-     * Renders all overlays using the provided context.
-     * 
-     * @param context The context to use for rendering overlays.
-     */
-    public static void renderOverlays(DrawContext context, RenderTickCounter tickCounter) {
-        for (Overlay overlay : OVERLAYS.values()) {
-            overlay.render(context);
-        }
-    }
-
-    /**
      * Updates the mouse position and state for all overlays.
      * 
      * @param mx The mouse X position.
@@ -110,6 +83,116 @@ public class OverlayUtil {
 
             JsonUtil.saveJson("overlays", name + ".json", overlayJson);
         }
+    }
+
+    /**
+     * Resets the overlay with the specified name to its template values.
+     * 
+     * @param name The name of the overlay to reset.
+     */
+    public void resetOverlay(String name) {
+        Overlay overlay = OVERLAYS.get(name);
+        if (overlay != null) {
+            JsonObject templateJson = JsonUtil.loadTemplate("overlays/" + name + ".json");
+            int x = templateJson.has("x") ? templateJson.get("x").getAsInt() : 0;
+            int y = templateJson.has("y") ? templateJson.get("y").getAsInt() : 0;
+            float scale = templateJson.has("scale") ? templateJson.get("scale").getAsFloat() : 1.0f;
+
+            overlay.x = x;
+            overlay.y = y;
+            overlay.scale = scale;
+            overlay.calcSize();
+        }
+    }
+
+    /**
+     * Renders all overlays using the provided context.
+     * 
+     * @param context The context to use for rendering overlays.
+     */
+    public static void renderOverlays(DrawContext context, RenderTickCounter tickCounter) {
+        if (INSTANCE.globalMoveMode) {
+            return;
+        }
+
+        for (Overlay overlay : OVERLAYS.values()) {
+            overlay.render(context);
+        }
+    }
+
+    /**
+     * Moves the GUI to a new screen for overlay management.
+     * 
+     * @param context The command context containing the source of the command.
+     */
+    public static int moveGui(CommandContext<FabricClientCommandSource> context) {
+        INSTANCE.globalMoveMode = true;
+
+        // Recalculate the size of all overlays and reset dragging state
+        for (Map.Entry<String, Overlay> entry : OVERLAYS.entrySet()) {
+            Overlay overlay = entry.getValue();
+            overlay.calcSize();
+        }
+
+        // Create a new screen for managing overlays
+        MinecraftClient.getInstance().send(() -> {
+            ScreenUtil screen = new ScreenUtil() {
+                @Override
+                public void render(DrawContext context, int mouseX, int mouseY, float delta) {
+                    context.fill(0, 0, this.width, this.height, 0x60007BFF);
+                    for (Overlay overlay : OVERLAYS.values()) {
+                        overlay.render(context);
+                    }
+                    super.render(context, mouseX, mouseY, delta);
+                }
+
+                @Override
+                public void renderBackground(DrawContext context, int mouseX, int mouseY,
+                        float deltaTicks) {}
+
+                @Override
+                public boolean mouseClicked(double mouseX, double mouseY, int button) {
+                    for (Overlay overlay : OVERLAYS.values()) {
+                        if (mouseX >= overlay.x - MARGIN
+                                && mouseX <= overlay.x + overlay.width + MARGIN
+                                && mouseY >= overlay.y - MARGIN
+                                && mouseY <= overlay.y + overlay.height + MARGIN) {
+                            INSTANCE.currentOverlay = overlay;
+                            INSTANCE.currentOverlay.dx = (float) mouseX - overlay.x;
+                            INSTANCE.currentOverlay.dy = (float) mouseY - overlay.y;
+                            break;
+                        }
+                    }
+                    return super.mouseClicked(mouseX, mouseY, button);
+                }
+
+                @Override
+                public boolean mouseReleased(double mouseX, double mouseY, int button) {
+                    INSTANCE.currentOverlay = null;
+                    return super.mouseReleased(mouseX, mouseY, button);
+                }
+
+                @Override
+                public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX,
+                        double deltaY) {
+                    if (INSTANCE.currentOverlay != null) {
+                        INSTANCE.currentOverlay.x = (int) (mouseX - INSTANCE.currentOverlay.dx);
+                        INSTANCE.currentOverlay.y = (int) (mouseY - INSTANCE.currentOverlay.dy);
+                    }
+                    return super.mouseDragged(mouseX, mouseY, button, deltaX, deltaY);
+                }
+
+                @Override
+                public void close() {
+                    INSTANCE.globalMoveMode = false;
+                    OverlayUtil.saveOverlays();
+                    super.close();
+                }
+            };
+            context.getSource().getClient().setScreen(screen);
+        });
+
+        return 1;
     }
 
     /**
@@ -156,15 +239,16 @@ public class OverlayUtil {
     public static class Overlay {
         private int x, y;
         private float scale;
-        private boolean dragging = false;
-        private int offsetX, offsetY;
 
         private final Supplier<Boolean> shouldRender;
         private final List<LineContent> activeLines;
         private final List<LineContent> templateLines;
 
-        private float width = 0;
-        private float height = 0;
+        private float width = -1;
+        private float height = -1;
+
+        private float dx = 0;
+        private float dy = 0;
 
         /**
          * Creates a new Overlay instance.
@@ -194,8 +278,20 @@ public class OverlayUtil {
             if (!shouldRender.get())
                 return;
 
-            TextRenderer tr = MinecraftClient.getInstance().textRenderer;
+            // Recalculate size if width or height is not initialized
+            if (width < 0 || height < 0) {
+                calcSize();
+            }
 
+            // Draw the overlay box
+            int boxX1 = (int) x - MARGIN;
+            int boxY1 = (int) y - MARGIN;
+            int boxX2 = (int) (x + width + MARGIN);
+            int boxY2 = (int) (y + height + MARGIN);
+            context.fill(boxX1, boxY1, boxX2, boxY2, 0x80000000);
+            context.drawBorder(boxX1, boxY1, boxX2 - boxX1, boxY2 - boxY1, 0xFFDDDDDD);
+
+            TextRenderer tr = MinecraftClient.getInstance().textRenderer;
             float lineHeight = FONT_SIZE * scale;
 
             List<LineContent> linesToRender = INSTANCE.globalMoveMode ? templateLines : activeLines;
@@ -216,35 +312,9 @@ public class OverlayUtil {
         }
 
         /**
-         * Updates the mouse position and state for the overlay, allowing it to be dragged.
-         * 
-         * @param mx The mouse X position.
-         * @param my The mouse Y position.
-         * @param isDown Whether the mouse button is pressed.
-         */
-        public void updateMouse(double mx, double my, boolean isDown) {
-            // Check if the mouse is within the overlay bounds
-            if (mx >= x && mx <= x + width && my >= y && my <= y + height) {
-                if (isDown && !dragging) {
-                    dragging = true;
-                    offsetX = (int) mx - x;
-                    offsetY = (int) mx - y;
-                }
-            }
-
-            if (!isDown)
-                dragging = false;
-
-            if (dragging) {
-                x = (int) mx - offsetX;
-                y = (int) mx - offsetY;
-            }
-        }
-
-        /**
          * Recalculates the size of the overlay based on its content.
          */
-        public void recalculateSize() {
+        private void calcSize() {
             TextRenderer tr = MinecraftClient.getInstance().textRenderer;
 
             float maxWidth = 0;

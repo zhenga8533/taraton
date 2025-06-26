@@ -38,6 +38,9 @@ public class CommandUtil {
                                 // Toggles command
                                 .then(literal("toggles").executes(CommandUtil::toggles))
 
+                                // GUI command
+                                .then(literal("gui").executes(OverlayUtil::moveGui))
+
                                 // Debug command
                                 .then(literal("debug").executes(CommandUtil::debug))
 
