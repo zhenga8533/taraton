@@ -11,6 +11,7 @@ import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.render.RenderTickCounter;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
@@ -136,64 +137,81 @@ public class OverlayUtil {
 
         // Create a new screen for managing overlays
         MinecraftClient.getInstance().send(() -> {
-            ScreenUtil screen = new ScreenUtil() {
-                @Override
-                public void render(DrawContext context, int mouseX, int mouseY, float delta) {
-                    context.fill(0, 0, this.width, this.height, 0x40007BFF);
-                    for (Overlay overlay : OVERLAYS.values()) {
-                        overlay.render(context);
-                    }
-                    super.render(context, mouseX, mouseY, delta);
-                }
-
-                @Override
-                public void renderBackground(DrawContext context, int mouseX, int mouseY,
-                        float deltaTicks) {}
-
-                @Override
-                public boolean mouseClicked(double mouseX, double mouseY, int button) {
-                    for (Overlay overlay : OVERLAYS.values()) {
-                        if (mouseX >= overlay.x - MARGIN
-                                && mouseX <= overlay.x + overlay.width + MARGIN
-                                && mouseY >= overlay.y - MARGIN
-                                && mouseY <= overlay.y + overlay.height + MARGIN) {
-                            INSTANCE.currentOverlay = overlay;
-                            INSTANCE.currentOverlay.dx = (float) mouseX - overlay.x;
-                            INSTANCE.currentOverlay.dy = (float) mouseY - overlay.y;
-                            break;
-                        }
-                    }
-                    return super.mouseClicked(mouseX, mouseY, button);
-                }
-
-                @Override
-                public boolean mouseReleased(double mouseX, double mouseY, int button) {
-                    INSTANCE.currentOverlay = null;
-                    return super.mouseReleased(mouseX, mouseY, button);
-                }
-
-                @Override
-                public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX,
-                        double deltaY) {
-                    if (INSTANCE.currentOverlay != null) {
-                        INSTANCE.currentOverlay.x = (int) (mouseX - INSTANCE.currentOverlay.dx);
-                        INSTANCE.currentOverlay.y = (int) (mouseY - INSTANCE.currentOverlay.dy);
-                    }
-                    return super.mouseDragged(mouseX, mouseY, button, deltaX, deltaY);
-                }
-
-                @Override
-                public void close() {
-                    INSTANCE.globalMoveMode = false;
-                    OverlayUtil.saveOverlays();
-                    super.close();
-                }
-            };
+            OverlayScreen screen = new OverlayScreen();
             context.getSource().getClient().setScreen(screen);
         });
 
         return 1;
     }
+
+    /**
+     * Screen for managing overlays, allowing users to drag and drop overlays around the screen.
+     */
+    private static class OverlayScreen extends Screen {
+        /**
+         * Creates a new OverlayScreen instance with the title set to the current Volc Client
+         * version.
+         */
+        public OverlayScreen() {
+            super(Text.literal("Overlay Management - Volc Client " + VolcClient.MOD_VERSION));
+        }
+
+        @Override
+        protected void init() {
+            super.init();
+        }
+
+        @Override
+        public void render(DrawContext context, int mouseX, int mouseY, float delta) {
+            context.fill(0, 0, this.width, this.height, 0x40007BFF);
+            for (Overlay overlay : OVERLAYS.values()) {
+                overlay.render(context);
+            }
+            super.render(context, mouseX, mouseY, delta);
+        }
+
+        @Override
+        public void renderBackground(DrawContext context, int mouseX, int mouseY,
+                float deltaTicks) {}
+
+        @Override
+        public boolean mouseClicked(double mouseX, double mouseY, int button) {
+            for (Overlay overlay : OVERLAYS.values()) {
+                if (mouseX >= overlay.x - MARGIN && mouseX <= overlay.x + overlay.width + MARGIN
+                        && mouseY >= overlay.y - MARGIN
+                        && mouseY <= overlay.y + overlay.height + MARGIN) {
+                    INSTANCE.currentOverlay = overlay;
+                    INSTANCE.currentOverlay.dx = (float) mouseX - overlay.x;
+                    INSTANCE.currentOverlay.dy = (float) mouseY - overlay.y;
+                    break;
+                }
+            }
+            return super.mouseClicked(mouseX, mouseY, button);
+        }
+
+        @Override
+        public boolean mouseReleased(double mouseX, double mouseY, int button) {
+            INSTANCE.currentOverlay = null;
+            return super.mouseReleased(mouseX, mouseY, button);
+        }
+
+        @Override
+        public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX,
+                double deltaY) {
+            if (INSTANCE.currentOverlay != null) {
+                INSTANCE.currentOverlay.x = (int) (mouseX - INSTANCE.currentOverlay.dx);
+                INSTANCE.currentOverlay.y = (int) (mouseY - INSTANCE.currentOverlay.dy);
+            }
+            return super.mouseDragged(mouseX, mouseY, button, deltaX, deltaY);
+        }
+
+        @Override
+        public void close() {
+            INSTANCE.globalMoveMode = false;
+            OverlayUtil.saveOverlays();
+            super.close();
+        }
+    };
 
     /**
      * Represents the content of a line in an overlay, containing a list of item stacks and text.
