@@ -139,7 +139,7 @@ public class OverlayUtil {
             ScreenUtil screen = new ScreenUtil() {
                 @Override
                 public void render(DrawContext context, int mouseX, int mouseY, float delta) {
-                    context.fill(0, 0, this.width, this.height, 0x60007BFF);
+                    context.fill(0, 0, this.width, this.height, 0x40007BFF);
                     for (Overlay overlay : OVERLAYS.values()) {
                         overlay.render(context);
                     }
@@ -307,6 +307,21 @@ public class OverlayUtil {
                 }
 
                 context.drawTextWithShadow(tr, line.text, (int) (x + offsetX), (int) drawY,
+                        Colors.WHITE);
+            }
+
+            // Render alignment lines if this is the current overlay
+            if (this == INSTANCE.currentOverlay) {
+                // Draw vertical and horizontal lines
+                MinecraftClient client = MinecraftClient.getInstance();
+                int screenWidth = client.getWindow().getScaledWidth();
+                int screenHeight = client.getWindow().getScaledHeight();
+                context.fill(0, y - 1, screenWidth, y, 0xFFFFFFFF);
+                context.fill(x - 1, 0, x, screenHeight, 0xFFFFFFFF);
+
+                // Draw position text
+                String positionText = String.format("X: %d, Y: %d", x, y);
+                context.drawTextWithShadow(tr, Text.literal(positionText), x + 2, y - 2 - FONT_SIZE,
                         Colors.WHITE);
             }
         }
