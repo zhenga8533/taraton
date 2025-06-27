@@ -7,10 +7,22 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import net.minecraft.client.Mouse;
 import net.volcaronitee.volcclient.feature.general.ServerStatus;
 
+/**
+ * Mixin for the Mouse class to inject custom behavior
+ */
 @Mixin(Mouse.class)
 public class MouseMixin {
+    /**
+     * Injects custom behavior into the onMouseButton method of Mouse.
+     * 
+     * @param window
+     * @param button
+     * @param action
+     * @param mods
+     * @param ci
+     */
     @Inject(method = "onMouseButton", at = @At("HEAD"))
-    public void volcclient$onMouseButton(long window, int button, int action, int mods,
+    public void volcclient$mouseOnMouseButton(long window, int button, int action, int mods,
             CallbackInfo ci) {
         ServerStatus.getInstance().onClick(button, action);
     }

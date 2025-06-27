@@ -9,8 +9,18 @@ import net.minecraft.entity.MovementType;
 import net.minecraft.util.math.Vec3d;
 import net.volcaronitee.volcclient.util.PlayerUtil;
 
+/**
+ * Mixin for the ClientPlayerEntity class to inject custom behavior
+ */
 @Mixin(ClientPlayerEntity.class)
 public abstract class ClientPlayerEntityMixin {
+    /**
+     * Injects custom behavior into the move method of ClientPlayerEntity.
+     * 
+     * @param type The type of movement (e.g., walking, flying)
+     * @param movement The movement vector indicating how much to move in each direction
+     * @param info Callback information for the method call
+     */
     @Inject(method = "move", at = @At(value = "HEAD"))
     private void volcclient$clientPlayerEntityMove(MovementType type, Vec3d movement,
             CallbackInfo info) {

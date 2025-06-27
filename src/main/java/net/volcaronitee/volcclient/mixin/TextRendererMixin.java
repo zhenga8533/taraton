@@ -37,7 +37,7 @@ public class TextRendererMixin {
      */
     @Inject(method = "prepare(Lnet/minecraft/text/OrderedText;FFIZI)Lnet/minecraft/client/font/TextRenderer$GlyphDrawable;",
             at = @At("HEAD"))
-    private void volcclient$modifyOrderedTextHead(OrderedText orderedText, float x, float y,
+    private void volcclient$textRendererPrepareInject(OrderedText orderedText, float x, float y,
             int color, boolean shadow, int backgroundColor,
             CallbackInfoReturnable<GlyphDrawable> cir) {
         MutableText reconstructed = Text.empty();
@@ -84,7 +84,7 @@ public class TextRendererMixin {
             method = "prepare(Lnet/minecraft/text/OrderedText;FFIZI)Lnet/minecraft/client/font/TextRenderer$GlyphDrawable;",
             at = @At(value = "INVOKE",
                     target = "Lnet/minecraft/text/OrderedText;accept(Lnet/minecraft/text/CharacterVisitor;)Z"))
-    private boolean volcclient$redirectOrderedTextAccept(OrderedText originalOrderedText,
+    private boolean volcclient$textRendererPrepareRedirect(OrderedText originalOrderedText,
             CharacterVisitor drawer) {
         OrderedText textToAccept =
                 this.volcclient$modifiedOrderedText != null ? this.volcclient$modifiedOrderedText
