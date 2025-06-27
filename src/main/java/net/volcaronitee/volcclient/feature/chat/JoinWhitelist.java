@@ -14,6 +14,8 @@ import net.volcaronitee.volcclient.util.ScheduleUtil;
  * JoinWhitelist is a feature that automatically accepts party invites
  */
 public class JoinWhitelist {
+    private static final JoinWhitelist INSTANCE = new JoinWhitelist();
+
     public static final ListUtil WHITE_LIST = new ListUtil("White List",
             Text.literal("A list of players to automatically accept party invites from."),
             "white_list.json", null, null);
@@ -22,10 +24,15 @@ public class JoinWhitelist {
             "-+\\n(?:\\[[^\\]]*\\+?\\] )?(\\w+) has invited you to join their party!\\nYou have \\d+ seconds to accept\\. Click here to join!\\n-+");
 
     /**
+     * Private constructor to prevent instantiation.
+     */
+    private JoinWhitelist() {}
+
+    /**
      * Registers the join whitelist feature to listen for game messages.
      */
     public static void register() {
-        ClientReceiveMessageEvents.GAME.register(JoinWhitelist::handleJoinWhitelist);
+        ClientReceiveMessageEvents.GAME.register(INSTANCE::handleJoinWhitelist);
     }
 
     /**
@@ -34,7 +41,7 @@ public class JoinWhitelist {
      * @param message The message received from the game chat.
      * @param overlay Whether the message is an overlay message.
      */
-    private static void handleJoinWhitelist(Text message, boolean overlay) {
+    private void handleJoinWhitelist(Text message, boolean overlay) {
         if (!ConfigUtil.getHandler().chat.joinWhitelist || overlay) {
             return;
         }

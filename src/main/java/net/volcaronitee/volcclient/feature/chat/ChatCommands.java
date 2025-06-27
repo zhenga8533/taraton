@@ -25,12 +25,14 @@ import net.volcaronitee.volcclient.util.ToggleUtil;
 public class ChatCommands {
     private static final ChatCommands INSTANCE = new ChatCommands();
 
+    // List of prefixes for chat commands
     private static final JsonObject PREFIX_JSON = JsonUtil.loadTemplate("lists/prefix.json");
     private static final List<String> DEFAULT_LIST = JsonUtil.parseList(PREFIX_JSON, "prefix");
     public static final ListUtil PREFIX_MAP = new ListUtil("Prefix List",
             Text.literal("A list of prefixes to detect for chat commands."), "prefix_list.json",
             DEFAULT_LIST, null);
 
+    // Patterns for matching chat messages
     private static final Pattern ALL_PATTERN = Pattern.compile(ParseUtil.PLAYER_PATTERN + ": (.+)");
     private static final Pattern GUILD_PATTERN =
             Pattern.compile("Guild > " + ParseUtil.PLAYER_PATTERN + ": (.+)");
@@ -39,6 +41,7 @@ public class ChatCommands {
     private static final Pattern PRIVATE_PATTERN =
             Pattern.compile("From " + ParseUtil.PLAYER_PATTERN + ": (.+)");
 
+    // List of responses for the 8-ball command
     private static final String[] EIGHT_BALL = {"As I see it, yes", "It is certain",
             "It is decidedly so", "Most likely", "Outlook good", "Signs point to yes",
             "Without a doubt", "Yes", "Yes - definitely", "You may rely on it",
@@ -46,11 +49,21 @@ public class ChatCommands {
             "Cannot predict now", "Concentrate and ask again", "Don't count on it",
             "My reply is no", "My sources say no", "Outlook not so good", "Very doubtful"};
 
-    private int ticks = 0;
+    private int delay = 0;
 
+    /**
+     * Enum representing the type of chat command.
+     */
     private enum CommandType {
         ALL, GUILD, PARTY, PRIVATE;
 
+        /**
+         * Returns the command head based on the command type and username.
+         * 
+         * @param type The type of command.
+         * @param username The username of the player sending the command.
+         * @return
+         */
         private static String getCommandHead(CommandType type, String username) {
             switch (type) {
                 case ALL:
@@ -68,10 +81,15 @@ public class ChatCommands {
     }
 
     /**
+     * Private constructor to prevent instantiation.
+     */
+    private ChatCommands() {}
+
+    /**
      * Registers the chat command feature to listen for game messages.
      */
     public static void register() {
-        ClientReceiveMessageEvents.GAME.register(ChatCommands::handleChatCommand);
+        ClientReceiveMessageEvents.GAME.register(INSTANCE::handleChatCommand);
     }
 
     /**
@@ -80,7 +98,7 @@ public class ChatCommands {
      * @param message The text received from the game chat.
      * @param overlay Whether the message is an overlay message.
      */
-    private static void handleChatCommand(Text message, boolean overlay) {
+    private void handleChatCommand(Text message, boolean overlay) {
         if (overlay) {
             return;
         }
@@ -146,13 +164,13 @@ public class ChatCommands {
      * 
      * @param command The command to be executed.
      */
-    private static void scheduleCommand(String command) {
-        INSTANCE.ticks += 4;
+    private void scheduleCommand(String command) {
+        INSTANCE.delay += 4;
         ScheduleUtil.schedule(() -> {
             MinecraftClient.getInstance().player.networkHandler.sendChatCommand(command);
-            INSTANCE.ticks -= 10;
-        }, INSTANCE.ticks);
-        INSTANCE.ticks += 6;
+            INSTANCE.delay -= 10;
+        }, INSTANCE.delay);
+        INSTANCE.delay += 6;
     }
 
     /**
@@ -162,7 +180,7 @@ public class ChatCommands {
      * @param command The command to append.
      * @param condition The condition to check before appending the command.
      */
-    private static void appendCommand(StringBuilder builder, String command, boolean condition) {
+    private void appendCommand(StringBuilder builder, String command, boolean condition) {
         if (condition) {
             builder.append(command + ", ");
         }
@@ -175,8 +193,7 @@ public class ChatCommands {
      * @param username The username of the player who sent the command.
      * @param args The arguments of the command.
      */
-    private static void handleLeaderCommand(ClientPlayerEntity player, String username,
-            String[] args) {
+    private void handleLeaderCommand(ClientPlayerEntity player, String username, String[] args) {
         // Verify if the player is the party leader and if leader commands are enabled
         String partyLeader = PartyUtil.getLeader();
         String clientUsername = MinecraftClient.getInstance().getSession().getUsername();
@@ -318,7 +335,7 @@ public class ChatCommands {
      * @param head The command head for the party commands.
      * @param args The arguments of the command.
      */
-    private static void handlePartyCommand(ClientPlayerEntity player, String username, String head,
+    private void handlePartyCommand(ClientPlayerEntity player, String username, String head,
             String[] args) {
         if (!ConfigUtil.getHandler().chat.partyCommands) {
             return;
@@ -398,7 +415,7 @@ public class ChatCommands {
      * @param head The command head for the status commands.
      * @param args The arguments of the command.
      */
-    private static void handleStatusCommand(ClientPlayerEntity player, String username, String head,
+    private void handleStatusCommand(ClientPlayerEntity player, String username, String head,
             String[] args) {
         if (!ConfigUtil.getHandler().chat.statusCommands) {
             return;
@@ -473,7 +490,7 @@ public class ChatCommands {
                     return;
                 }
 
-                String playtime = SkyBlockStats.getPlaytime();
+                String playtime = SkyBlockStats.getInstance().getPlaytime();
                 scheduleCommand(head + " " + playtime + " playtime");
                 break;
             // Stats commands

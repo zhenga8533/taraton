@@ -18,11 +18,27 @@ public class SkyBlockStats {
     private SkyBlockStats() {}
 
     /**
+     * Gets the singleton instance of the SkyBlockStats feature.
+     * 
+     * @return The SkyBlockStats instance.
+     */
+    public static SkyBlockStats getInstance() {
+        return INSTANCE;
+    }
+
+    /**
+     * Registers the SkyBlock stats feature.
+     */
+    public static void register() {
+
+    }
+
+    /**
      * Gets the daily playtime in the format HH:MM:SS.
      * 
      * @return The formatted playtime string.
      */
-    public static String getPlaytime() {
+    public String getPlaytime() {
         int totalSeconds = PlaytimeWarning.getPlaytimeTicks() / 20;
         int hours = totalSeconds / 3600;
         int minutes = (totalSeconds % 3600) / 60;

@@ -52,7 +52,7 @@ public class TextRendererMixin {
                 if (!currentTextBuilder.isEmpty()) {
                     Text segmentToModify = Text.literal(currentTextBuilder.toString())
                             .setStyle(currentStyleRef.get());
-                    Text modified = TextSubstitution.modify(segmentToModify);
+                    Text modified = TextSubstitution.getInstance().modify(segmentToModify);
                     reconstructed.append(modified);
                 }
                 currentTextBuilder.setLength(0);
@@ -66,7 +66,7 @@ public class TextRendererMixin {
         if (!currentTextBuilder.isEmpty()) {
             Text segmentToModify =
                     Text.literal(currentTextBuilder.toString()).setStyle(currentStyleRef.get());
-            Text modified = TextSubstitution.modify(segmentToModify);
+            Text modified = TextSubstitution.getInstance().modify(segmentToModify);
             reconstructed.append(modified);
         }
 

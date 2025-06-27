@@ -11,6 +11,8 @@ import net.volcaronitee.volcclient.util.TextUtil;
  * Feature for substituting text when rendering any text in the game,
  */
 public class TextSubstitution {
+    private static final TextSubstitution INSTANCE = new TextSubstitution();
+
     public static final ListUtil SUBSTITUTION_MAP = new ListUtil("Substitution Map",
     // @formatter:off
             Text.literal(
@@ -47,13 +49,27 @@ public class TextSubstitution {
     }
 
     /**
+     * Private constructor to prevent instantiation.
+     */
+    private TextSubstitution() {}
+
+    /**
+     * Returns the singleton instance of TextSubstitution.
+     * 
+     * @return The singleton instance of TextSubstitution.
+     */
+    public static TextSubstitution getInstance() {
+        return INSTANCE;
+    }
+
+    /**
      * Modifies the given Text by applying substitutions defined in the
      * 
      * @param originalText The original Text to modify.
      * @return A new Text instance with substitutions applied, or an empty Text if the original is
      *         null.
      */
-    public static Text modify(Text originalText) {
+    public Text modify(Text originalText) {
         String original = originalText.getString();
         String modified = original.replace("Volcaronitee", "§4§lThe Lion§r");
 

@@ -14,6 +14,8 @@ import net.volcaronitee.volcclient.util.TextUtil;
  * Feature to filter out spam messages in chat.
  */
 public class SpamHider {
+    private static final SpamHider INSTANCE = new SpamHider();
+
     private static final JsonObject SPAM_JSON = JsonUtil.loadTemplate("lists/spam.json");
     private static final List<String> DEFAULT_LIST = JsonUtil.parseList(SPAM_JSON, "spam");
     public static final ListUtil SPAM_LIST = new ListUtil("Spam List",
@@ -25,9 +27,14 @@ public class SpamHider {
     private static List<Pattern> SPAM_PATTERNS = new java.util.ArrayList<>();
 
     static {
-        SPAM_LIST.setSaveCallback(SpamHider::onSave);
-        onSave();
+        SPAM_LIST.setSaveCallback(INSTANCE::onSave);
+        INSTANCE.onSave();
     }
+
+    /**
+     * Private constructor to prevent instantiation.
+     */
+    private SpamHider() {}
 
     /**
      * Registers the spam hider to filter out spam messages from chat.
@@ -35,40 +42,38 @@ public class SpamHider {
     public static void register() {
         ClientReceiveMessageEvents.ALLOW_CHAT
                 .register((message, signedMessage, sender, params, timestamp) -> {
-                    return !isSpam(message, false);
+                    return INSTANCE.allowMessage(message, false);
                 });
-
-        ClientReceiveMessageEvents.ALLOW_GAME.register((message, overlay) -> {
-            return !isSpam(message, overlay);
-        });
+        ClientReceiveMessageEvents.ALLOW_GAME.register(INSTANCE::allowMessage);
     }
 
     /**
-     * Checks if the given message matches any spam patterns.
+     * Checks if a message is considered spam based on the configured patterns.
      * 
      * @param message The message to check.
-     * @return True if the message is considered spam, false otherwise.
+     * @param overlay Whether the message is an overlay message.
+     * @return True if the message is not spam, false if it is spam.
      */
-    private static boolean isSpam(Text message, boolean overlay) {
+    private boolean allowMessage(Text message, boolean overlay) {
         if (!ConfigUtil.getHandler().chat.spamHider || overlay) {
-            return false;
+            return true;
         }
 
         String text = message.getString();
 
         for (Pattern pattern : SPAM_PATTERNS) {
             if (pattern.matcher(text).find()) {
-                return true;
+                return false;
             }
         }
 
-        return false;
+        return true;
     }
 
     /**
      * Callback to save the spam patterns when the list is modified.
      */
-    private static void onSave() {
+    private void onSave() {
         SPAM_PATTERNS.clear();
         for (String pattern : SPAM_LIST.getHandler().list) {
             SPAM_PATTERNS.add(Pattern.compile(pattern));

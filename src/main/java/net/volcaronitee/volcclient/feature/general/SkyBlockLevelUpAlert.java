@@ -23,8 +23,13 @@ public class SkyBlockLevelUpAlert {
     /**
      * Private constructor to prevent instantiation.
      */
+    private SkyBlockLevelUpAlert() {}
+
+    /**
+     * Registers the SkyBlock level up alert feature to listen for incoming messages.
+     */
     public static void register() {
-        ClientReceiveMessageEvents.GAME.register(SkyBlockLevelUpAlert::parseMessage);
+        ClientReceiveMessageEvents.GAME.register(INSTANCE::parseMessage);
     }
 
     /**
@@ -33,7 +38,7 @@ public class SkyBlockLevelUpAlert {
      * @param message The message received from the game.
      * @param overlay Whether the message is an overlay message.
      */
-    private static void parseMessage(Text message, boolean overlay) {
+    private void parseMessage(Text message, boolean overlay) {
         if (!ConfigUtil.getHandler().general.skyblockLevelUpAlert || overlay) {
             return;
         }

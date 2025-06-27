@@ -15,6 +15,7 @@ import net.volcaronitee.volcclient.util.TextUtil;
  */
 public class PlaytimeWarning {
     private static final PlaytimeWarning INSTANCE = new PlaytimeWarning();
+
     private static final String FILENAME = "daily_playtime.json";
     private static final int PLAYTIME_THRESHOLD = 20 * 3600 * 8; // 8 hours in ticks
 
@@ -25,6 +26,9 @@ public class PlaytimeWarning {
      */
     private PlaytimeWarning() {}
 
+    /**
+     * Registers the playtime warning feature to listen for client tick and lifecycle events.
+     */
     public static void register() {
         // Load the playtime data from the JSON file
         JsonObject playtimeData = JsonUtil.loadJson(JsonUtil.DATA_DIR, FILENAME);
@@ -34,8 +38,8 @@ public class PlaytimeWarning {
         INSTANCE.playtimeTicks = playtimeData.get("playtimeTicks").getAsInt();
 
         // Register events
-        ClientTickEvents.END_CLIENT_TICK.register(PlaytimeWarning::onEndClientTick);
-        ClientLifecycleEvents.CLIENT_STOPPING.register(PlaytimeWarning::onClientClose);
+        ClientTickEvents.END_CLIENT_TICK.register(INSTANCE::onEndClientTick);
+        ClientLifecycleEvents.CLIENT_STOPPING.register(INSTANCE::onClientClose);
     }
 
     /**
@@ -43,7 +47,7 @@ public class PlaytimeWarning {
      * 
      * @param client The Minecraft client instance.
      */
-    private static void onEndClientTick(MinecraftClient client) {
+    private void onEndClientTick(MinecraftClient client) {
         if (client.world == null || client.player == null
                 || !ConfigUtil.getHandler().chat.playtimeWarning) {
             return;
@@ -65,7 +69,7 @@ public class PlaytimeWarning {
      * 
      * @param event The event triggered when the client is stopping.
      */
-    private static void onClientClose(MinecraftClient client) {
+    private void onClientClose(MinecraftClient client) {
         JsonObject playtimeData = new JsonObject();
         playtimeData.addProperty("playtimeTicks", INSTANCE.playtimeTicks);
         JsonUtil.saveJson(JsonUtil.DATA_DIR, FILENAME, playtimeData);

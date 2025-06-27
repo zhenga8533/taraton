@@ -15,6 +15,8 @@ import net.volcaronitee.volcclient.util.TextUtil;
  * Feature that alerts the player when they gain SkyBlock XP.
  */
 public class SkyBlockXpAlert {
+    private static final SkyBlockXpAlert INSTANCE = new SkyBlockXpAlert();
+
     private static final Pattern SKYBLOCK_XP_PATTERN =
             Pattern.compile("(§b\\+\\d+ SkyBlock XP §7\\([^§]*§7\\)§b \\(\\d+\\/100\\))");
 
@@ -24,7 +26,7 @@ public class SkyBlockXpAlert {
      * Private constructor to prevent instantiation.
      */
     public static void register() {
-        ClientReceiveMessageEvents.GAME.register(SkyBlockXpAlert::parseMessage);
+        ClientReceiveMessageEvents.GAME.register(INSTANCE::parseMessage);
     }
 
     /**
@@ -33,7 +35,7 @@ public class SkyBlockXpAlert {
      * @param message The message received from the game.
      * @param overlay Whether the message is an overlay message.
      */
-    private static void parseMessage(Text message, boolean overlay) {
+    private void parseMessage(Text message, boolean overlay) {
         if (!ConfigUtil.getHandler().general.skyblockXpAlert || !overlay) {
             return;
         }

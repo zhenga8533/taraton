@@ -13,6 +13,8 @@ import net.volcaronitee.volcclient.util.ListUtil;
  * Handles custom emote mappings for chat messages.
  */
 public class CustomEmote {
+    private static final CustomEmote INSTANCE = new CustomEmote();
+
     private static final JsonObject EMOTE_JSON = JsonUtil.loadTemplate("lists/emotes.json");
     private static final List<KeyValuePair<String, String>> DEFAULT_MAP =
             JsonUtil.parseKeyValuePairs(EMOTE_JSON, "emotes");
@@ -25,14 +27,16 @@ public class CustomEmote {
     }
 
     /**
+     * Private constructor to prevent instantiation.
+     */
+    private CustomEmote() {}
+
+    /**
      * Registers the custom emote mapping to modify chat messages.
      */
     public static void register() {
-        ClientSendMessageEvents.MODIFY_CHAT.register(message -> {
-            return handleCustomEmote(message);
-        });
+        ClientSendMessageEvents.MODIFY_CHAT.register(INSTANCE::handleCustomEmote);
     }
-
 
     /**
      * Handles custom emote replacements in chat messages.
@@ -40,7 +44,7 @@ public class CustomEmote {
      * @param message The chat message to process.
      * @return The modified chat message with custom emotes replaced.
      */
-    private static String handleCustomEmote(String message) {
+    private String handleCustomEmote(String message) {
         if (!ConfigUtil.getHandler().chat.customEmotes) {
             return message;
         }
