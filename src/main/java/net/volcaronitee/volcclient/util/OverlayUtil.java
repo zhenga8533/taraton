@@ -223,6 +223,10 @@ public class OverlayUtil {
 
         @Override
         public void close() {
+            for (Overlay overlay : OVERLAYS.values()) {
+                overlay.hovering = false;
+            }
+
             INSTANCE.globalMoveMode = false;
             OverlayUtil.saveOverlays();
             super.close();
@@ -236,38 +240,29 @@ public class OverlayUtil {
         private final List<ItemStack> items;
         private final String startText;
         private String text;
-
-        /**
-         * Creates a new LineContent instance with the specified items and text.
-         * 
-         * @param items The list of item stacks to display in the line.
-         * @param text The text to display in the line.
-         */
-        public LineContent(List<ItemStack> items, String text) {
-            this.items = items;
-            this.startText = "";
-            this.text = text;
-        }
+        private Supplier<Boolean> shouldRender = () -> true;
 
         /**
          * Creates a new LineContent instance with the specified start text and text.
          * 
          * @param startText The text to display at the start of the line.
          * @param text The text to display in the line.
+         * @param shouldRender A supplier that determines if the line should be rendered.
          */
-        public LineContent(String startText, String text) {
+        public LineContent(String startText, String text, Supplier<Boolean> shouldRender) {
             this.items = new ArrayList<>();
             this.startText = startText;
             this.text = text;
+            this.shouldRender = shouldRender;
         }
 
         /**
-         * Changes the text of this line content to a new Text instance.
+         * Adds an item stack to the line content.
          * 
-         * @param newText The new Text instance to set for this line content.
+         * @param text The text to display for the item.
          */
-        public void changeText(String newText) {
-            this.text = newText;
+        public void setText(String text) {
+            this.text = text;
         }
     }
 
@@ -286,8 +281,7 @@ public class OverlayUtil {
         private float scale;
 
         private final Supplier<Boolean> shouldRender;
-        private final List<LineContent> activeLines;
-        private final List<LineContent> templateLines;
+        private final List<LineContent> lines;
 
         private float width = -1;
         private float height = -1;
@@ -295,6 +289,7 @@ public class OverlayUtil {
         private float dx = 0;
         private float dy = 0;
         private boolean hovering = false;
+        private boolean changed = true;
 
         private SpecialRender specialRender = null;
 
@@ -305,18 +300,22 @@ public class OverlayUtil {
          * @param initialY The initial Y position of the overlay.
          * @param scale The scale factor for the overlay.
          * @param shouldRender A supplier that determines if the overlay should be rendered.
-         * @param templateLines The template lines to be displayed in the overlay.
+         * @param lines The template lines to be displayed in the overlay.
          */
         public Overlay(int initialX, int initialY, float scale, Supplier<Boolean> shouldRender,
-                List<LineContent> templateLines) {
+                List<LineContent> lines) {
             this.x = initialX;
             this.y = initialY;
             this.scale = scale;
             this.shouldRender = shouldRender;
-            this.activeLines = new ArrayList<>(templateLines);
-            this.templateLines = templateLines;
+            this.lines = lines;
         }
 
+        /**
+         * Sets a special render function for this overlay.
+         * 
+         * @param specialRender The special render function to set.
+         */
         public void setSpecialRender(SpecialRender specialRender) {
             this.specialRender = specialRender;
         }
@@ -337,7 +336,7 @@ public class OverlayUtil {
             }
 
             // Recalculate size if width or height is not initialized
-            if (width < 0 || height < 0) {
+            if (changed) {
                 calcSize();
             }
 
@@ -354,11 +353,16 @@ public class OverlayUtil {
             TextRenderer tr = MinecraftClient.getInstance().textRenderer;
             float lineHeight = FONT_SIZE * scale;
 
-            List<LineContent> linesToRender = INSTANCE.globalMoveMode ? templateLines : activeLines;
-
             // Render each line of content
-            for (int i = 0; i < linesToRender.size(); i++) {
-                LineContent line = linesToRender.get(i);
+            for (int i = 0; i < lines.size(); i++) {
+                LineContent line = lines.get(i);
+
+                // Skip lines that should not be rendered
+                if (!line.shouldRender.get()) {
+                    continue;
+                }
+
+                // Calculate the position and render the items and text
                 float offsetX = 0;
                 float drawY = y + (i * lineHeight);
 
@@ -390,14 +394,20 @@ public class OverlayUtil {
         /**
          * Recalculates the size of the overlay based on its content.
          */
-        private void calcSize() {
+        public void calcSize() {
             TextRenderer tr = MinecraftClient.getInstance().textRenderer;
 
             float maxWidth = 0;
             float totalHeight = 0;
             float lineHeight = FONT_SIZE * scale;
 
-            for (LineContent line : templateLines) {
+            for (LineContent line : lines) {
+                // Skip lines that should not be rendered
+                if (!line.shouldRender.get()) {
+                    continue;
+                }
+
+                // Calculate the width of the line based on items and text
                 float lineWidth = (line.items.size() * FONT_SIZE + tr.getWidth(line.text)
                         + tr.getWidth(line.startText)) * scale;
                 maxWidth = Math.max(maxWidth, lineWidth);
@@ -408,6 +418,13 @@ public class OverlayUtil {
             this.height = totalHeight - (MARGIN / 2);
         }
 
+        /**
+         * Checks if the mouse is over this overlay.
+         * 
+         * @param mouseX The mouse X position.
+         * @param mouseY The mouse Y position.
+         * @return True if the mouse is over the overlay, false otherwise.
+         */
         private boolean isMouseOver(double mouseX, double mouseY) {
             return mouseX >= x - MARGIN && mouseX <= x + width + MARGIN && mouseY >= y - MARGIN
                     && mouseY <= y + height + MARGIN;

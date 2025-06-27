@@ -83,16 +83,6 @@ public class GeneralToggle {
                                         newVal -> config.general.cps = newVal)
                                 .controller(TickBoxControllerBuilder::create).build())
 
-                        // Day
-                        .option(Option.<Boolean>createBuilder().name(Text.literal("Day"))
-                                .description(OptionDescription.createBuilder()
-                                        .text(Text.literal(
-                                                "Enables the Day in the server status overlay."))
-                                        .build())
-                                .binding(defaults.general.day, () -> config.general.day,
-                                        newVal -> config.general.day = newVal)
-                                .controller(TickBoxControllerBuilder::create).build())
-
                         .build())
 
                 .build();
@@ -119,7 +109,4 @@ public class GeneralToggle {
 
     @SerialEntry
     public boolean cps = true;
-
-    @SerialEntry
-    public boolean day = true;
 }

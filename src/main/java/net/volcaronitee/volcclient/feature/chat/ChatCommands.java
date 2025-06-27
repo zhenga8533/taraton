@@ -436,8 +436,8 @@ public class ChatCommands {
                     return;
                 }
 
-                int tps = ServerStatus.getTps();
-                scheduleCommand(head + " " + tps + " TPS");
+                double tps = ServerStatus.getTps();
+                scheduleCommand(head + " " + String.format("%.2f TPS", tps));
                 break;
             // Leave party commands
             case "leave":
