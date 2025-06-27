@@ -3,11 +3,11 @@ package net.volcaronitee.volcclient.feature.general;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.function.Supplier;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.PlayerListEntry;
 import net.minecraft.text.Text;
+import net.volcaronitee.volcclient.config.controller.KeyValueController.KeyValuePair;
 import net.volcaronitee.volcclient.util.ListUtil;
 import net.volcaronitee.volcclient.util.OverlayUtil;
 import net.volcaronitee.volcclient.util.OverlayUtil.LineContent;
@@ -22,8 +22,8 @@ public class WidgetDisplay {
     private static final Set<Widget> WIDGETS = new HashSet<>();
 
     static {
-        for (String widget : WIDGET_LIST.getHandler().list) {
-            WIDGETS.add(new Widget(widget));
+        for (KeyValuePair<String, Boolean> widget : WIDGET_LIST.getHandler().list) {
+            WIDGETS.add(new Widget(widget.getKey()));
         }
     }
 
@@ -77,12 +77,10 @@ public class WidgetDisplay {
          * @param name The name of the widget to display.
          */
         public Widget(String name) {
-            Supplier<Boolean> isEnabled = () -> WIDGET_LIST.getHandler().list.contains(name);
-            lines = List.of(new LineContent("§b§l" + name + ":", isEnabled),
-                    new LineContent(" Placeholder", isEnabled));
+            lines = List.of(new LineContent("§b§l" + name + ":"), new LineContent(" Placeholder"));
 
-            OverlayUtil.createOverlay(name, () -> WIDGET_LIST.getHandler().list.contains(name),
-                    lines);
+            OverlayUtil.createOverlay(name, () -> WIDGET_LIST.getHandler().list.stream()
+                    .anyMatch(pair -> pair.getKey().equals(name)), lines);
         }
     }
 }

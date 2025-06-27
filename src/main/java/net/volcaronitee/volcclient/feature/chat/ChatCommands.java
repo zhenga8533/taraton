@@ -9,6 +9,7 @@ import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.text.Text;
+import net.volcaronitee.volcclient.config.controller.KeyValueController.KeyValuePair;
 import net.volcaronitee.volcclient.feature.general.ServerStatus;
 import net.volcaronitee.volcclient.feature.general.SkyBlockStats;
 import net.volcaronitee.volcclient.util.ConfigUtil;
@@ -27,7 +28,8 @@ public class ChatCommands {
 
     // List of prefixes for chat commands
     private static final JsonObject PREFIX_JSON = JsonUtil.loadTemplate("lists/prefix.json");
-    private static final List<String> DEFAULT_LIST = ListUtil.parseList(PREFIX_JSON, "prefix");
+    private static final List<KeyValuePair<String, Boolean>> DEFAULT_LIST =
+            ListUtil.parseList(PREFIX_JSON, "prefix");
     public static final ListUtil PREFIX_MAP = new ListUtil("Prefix List",
             Text.literal("A list of prefixes to detect for chat commands."), "prefix_list.json",
             DEFAULT_LIST, null);
@@ -138,7 +140,13 @@ public class ChatCommands {
 
         // Check if the text starts with any of the defined prefixes
         boolean isCommand = false;
-        for (String prefix : PREFIX_MAP.getHandler().list) {
+        for (KeyValuePair<String, Boolean> prefixPair : PREFIX_MAP.getHandler().list) {
+            // Skip prefixes that are disabled
+            if (!prefixPair.getValue()) {
+                continue;
+            }
+
+            String prefix = prefixPair.getKey();
             if (chatMessage.startsWith(prefix)) {
                 chatMessage = chatMessage.substring(prefix.length());
                 isCommand = true;

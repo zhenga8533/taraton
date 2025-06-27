@@ -5,6 +5,7 @@ import java.util.regex.Pattern;
 import com.google.gson.JsonObject;
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
 import net.minecraft.text.Text;
+import net.volcaronitee.volcclient.config.controller.KeyValueController.KeyValuePair;
 import net.volcaronitee.volcclient.util.ConfigUtil;
 import net.volcaronitee.volcclient.util.JsonUtil;
 import net.volcaronitee.volcclient.util.ListUtil;
@@ -17,7 +18,8 @@ public class SpamHider {
     private static final SpamHider INSTANCE = new SpamHider();
 
     private static final JsonObject SPAM_JSON = JsonUtil.loadTemplate("lists/spam.json");
-    private static final List<String> DEFAULT_LIST = ListUtil.parseList(SPAM_JSON, "spam");
+    private static final List<KeyValuePair<String, Boolean>> DEFAULT_LIST =
+            ListUtil.parseList(SPAM_JSON, "spam");
     public static final ListUtil SPAM_LIST = new ListUtil("Spam List",
             Text.literal("A list of spam messages to hide in chat.\n\nUse ")
                     .append(TextUtil.createLink("regex101.com", "https://regex101.com"))
@@ -75,8 +77,13 @@ public class SpamHider {
      */
     private void onSave() {
         SPAM_PATTERNS.clear();
-        for (String pattern : SPAM_LIST.getHandler().list) {
-            SPAM_PATTERNS.add(Pattern.compile(pattern));
+        for (KeyValuePair<String, Boolean> pattern : SPAM_LIST.getHandler().list) {
+            // Skip patterns that are disabled
+            if (!pattern.getValue()) {
+                continue;
+            }
+
+            SPAM_PATTERNS.add(Pattern.compile(pattern.getKey()));
         }
     }
 }

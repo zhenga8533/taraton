@@ -1,9 +1,13 @@
 {
   "version": "1.0",
   "spam": [
-    "^(?:This ability is on cooldown for (\\d+)s\\.|No more charges, next one in (\\d+)s!)$",
-    "^There are blocks in the way!$",
-    "^Your Implosion hit (\\d+(?:,\\d{3})*(?:\\.\\d+)?) enem(?:y|ies) for (\\d+(?:,\\d{3})*(?:\\.\\d+)?) damage.$",
-    "^Your Molten Wave hit (\\d+(?:,\\d{3})*(?:\\.\\d+)?) enem(?:y|ies) for (\\d+(?:,\\d{3})*(?:\\.\\d+)?) damage.$"
+    { "^(?:This ability is on cooldown for (\\d+)s\\.|No more charges, next one in (\\d+)s!)$": true },
+    { "^There are blocks in the way!$": true },
+    {
+      "^Your Implosion hit (\\d+(?:,\\d{3})*(?:\\.\\d+)?) enem(?:y|ies) for (\\d+(?:,\\d{3})*(?:\\.\\d+)?) damage.$": true
+    },
+    {
+      "^Your Molten Wave hit (\\d+(?:,\\d{3})*(?:\\.\\d+)?) enem(?:y|ies) for (\\d+(?:,\\d{3})*(?:\\.\\d+)?) damage.$": true
+    }
   ]
 }

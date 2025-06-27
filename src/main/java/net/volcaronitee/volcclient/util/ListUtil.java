@@ -47,19 +47,16 @@ public class ListUtil {
     private Boolean isMap = false;
 
     @SerialEntry
-    public List<String> list = new ArrayList<String>();
-    private List<String> defaultList = new ArrayList<String>();
+    public List<KeyValuePair<String, Boolean>> list =
+            new ArrayList<KeyValuePair<String, Boolean>>();
+    private List<KeyValuePair<String, Boolean>> defaultList =
+            new ArrayList<KeyValuePair<String, Boolean>>();
 
     @SerialEntry
     public List<KeyValuePair<String, KeyValuePair<String, Boolean>>> map =
             new ArrayList<KeyValuePair<String, KeyValuePair<String, Boolean>>>();
     private List<KeyValuePair<String, KeyValuePair<String, Boolean>>> defaultMap =
             new ArrayList<KeyValuePair<String, KeyValuePair<String, Boolean>>>();
-
-    /**
-     * Default constructor for ListUtil.
-     */
-    public ListUtil() {}
 
     /**
      * Creates a new ListUtil instance with the specified title and configuration path.
@@ -70,7 +67,8 @@ public class ListUtil {
      * @param defaultList An optional list of default values to initialize the list.
      * @param defaultMap An optional list of key-value pairs to initialize the map.
      */
-    public ListUtil(String title, Text description, String configPath, List<String> defaultList,
+    public ListUtil(String title, Text description, String configPath,
+            List<KeyValuePair<String, Boolean>> defaultList,
             List<KeyValuePair<String, KeyValuePair<String, Boolean>>> defaultMap) {
         this.title = title;
         this.description = description;
@@ -117,7 +115,7 @@ public class ListUtil {
      * @param defaultMap The default list of key-value pairs to initialize if the config file is
      *        missing.
      */
-    public void createDefaults(List<String> defaultList,
+    public void createDefaults(List<KeyValuePair<String, Boolean>> defaultList,
             List<KeyValuePair<String, KeyValuePair<String, Boolean>>> defaultMap) {
         if (!Files.exists(this.configPath)) {
             // Ensure the parent directory exists
@@ -132,8 +130,11 @@ public class ListUtil {
             JsonObject defaultConfig = new JsonObject();
             if (defaultList != null) {
                 JsonArray listArray = new JsonArray();
-                for (String item : defaultList) {
-                    listArray.add(item);
+                for (KeyValuePair<String, Boolean> item : defaultList) {
+                    JsonObject itemObject = new JsonObject();
+                    itemObject.addProperty("key", item.getKey());
+                    itemObject.addProperty("value", item.getValue());
+                    listArray.add(itemObject);
                 }
                 defaultConfig.add("list", listArray);
             }
@@ -242,10 +243,14 @@ public class ListUtil {
      */
     public ConfigCategory createListCategory(ListUtil defaults, ListUtil config) {
         return ConfigCategory.createBuilder().name(Text.literal(title))
-                .option(ListOption.<String>createBuilder().name(Text.literal(title))
+                .option(ListOption.<KeyValuePair<String, Boolean>>createBuilder()
+                        .name(Text.literal(title))
                         .description(OptionDescription.createBuilder().text(description).build())
                         .binding(config.list, () -> config.list, newVal -> config.list = newVal)
-                        .controller(StringControllerBuilder::create).initial("").build())
+                        .controller((option) -> KeyValueController.Builder.create(option)
+                                .keyController("Key", StringControllerBuilder::create)
+                                .valueController("Enabled", TickBoxControllerBuilder::create))
+                        .initial(new KeyValuePair<>("", true)).build())
                 .build();
     }
 
@@ -278,18 +283,28 @@ public class ListUtil {
      * @param listKey The key under which the list is stored in the root object.
      * @return A list of strings representing the elements found in the specified list.
      */
-    public static List<String> parseList(JsonObject rootObject, String listKey) {
-        List<String> result = new ArrayList<>();
+    public static List<KeyValuePair<String, Boolean>> parseList(JsonObject rootObject,
+            String listKey) {
+        List<KeyValuePair<String, Boolean>> result = new ArrayList<>();
 
         if (rootObject != null && listKey != null && !listKey.isEmpty()) {
             if (rootObject.has(listKey) && rootObject.get(listKey).isJsonArray()) {
                 for (JsonElement element : rootObject.getAsJsonArray(listKey)) {
-                    if (element.isJsonPrimitive() && element.getAsJsonPrimitive().isString()) {
-                        result.add(element.getAsString());
+                    if (element.isJsonObject()) {
+                        JsonObject itemObject = element.getAsJsonObject();
+                        String key =
+                                itemObject.has("key") ? itemObject.get("key").getAsString() : "";
+                        boolean value =
+                                itemObject.has("value") && itemObject.get("value").getAsBoolean();
+                        result.add(new KeyValuePair<>(key, value));
+                    } else if (element.isJsonPrimitive()
+                            && element.getAsJsonPrimitive().isString()) {
+                        result.add(new KeyValuePair<>(element.getAsString(), true));
                     }
                 }
             }
         }
+
         return result;
     }
 
@@ -314,14 +329,13 @@ public class ListUtil {
                     String key = entry.getKey();
                     JsonElement valueElement = entry.getValue();
 
-                    // Check if the value is a JsonObject with "value" and "enabled" fields
+                    // Check if the value is a JsonObject
                     if (valueElement.isJsonObject()) {
                         JsonObject valueObject = valueElement.getAsJsonObject();
                         String value =
-                                valueObject.has("value") ? valueObject.get("value").getAsString()
-                                        : "";
-                        boolean enabled = valueObject.has("enabled")
-                                && valueObject.get("enabled").getAsBoolean();
+                                valueObject.has("key") ? valueObject.get("key").getAsString() : "";
+                        boolean enabled =
+                                valueObject.has("value") && valueObject.get("value").getAsBoolean();
 
                         result.add(new KeyValuePair<>(key, new KeyValuePair<>(value, enabled)));
                     } else if (valueElement.isJsonPrimitive()
