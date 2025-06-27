@@ -69,7 +69,7 @@ public class WidgetDisplay {
      * Widget is a class that represents a single widget in the overlay.
      */
     private static class Widget {
-        private static List<LineContent> lines;
+        private List<LineContent> lines;
 
         /**
          * Constructor for Widget.
