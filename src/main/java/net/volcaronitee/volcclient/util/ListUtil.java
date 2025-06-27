@@ -15,6 +15,7 @@ import dev.isxander.yacl3.api.ListOption;
 import dev.isxander.yacl3.api.OptionDescription;
 import dev.isxander.yacl3.api.YetAnotherConfigLib;
 import dev.isxander.yacl3.api.controller.StringControllerBuilder;
+import dev.isxander.yacl3.api.controller.TickBoxControllerBuilder;
 import dev.isxander.yacl3.config.v2.api.ConfigClassHandler;
 import dev.isxander.yacl3.config.v2.api.SerialEntry;
 import dev.isxander.yacl3.config.v2.api.serializer.GsonConfigSerializerBuilder;
@@ -48,9 +49,10 @@ public class ListUtil {
     private List<String> defaultList = new ArrayList<String>();
 
     @SerialEntry
-    public List<KeyValuePair<String, String>> map = new ArrayList<KeyValuePair<String, String>>();
-    private List<KeyValuePair<String, String>> defaultMap =
-            new ArrayList<KeyValuePair<String, String>>();
+    public List<KeyValuePair<String, KeyValuePair<String, Boolean>>> map =
+            new ArrayList<KeyValuePair<String, KeyValuePair<String, Boolean>>>();
+    private List<KeyValuePair<String, KeyValuePair<String, Boolean>>> defaultMap =
+            new ArrayList<KeyValuePair<String, KeyValuePair<String, Boolean>>>();
 
     /**
      * Default constructor for ListUtil.
@@ -67,7 +69,7 @@ public class ListUtil {
      * @param defaultMap An optional list of key-value pairs to initialize the map.
      */
     public ListUtil(String title, Text description, String configPath, List<String> defaultList,
-            List<KeyValuePair<String, String>> defaultMap) {
+            List<KeyValuePair<String, KeyValuePair<String, Boolean>>> defaultMap) {
         this.title = title;
         this.description = description;
         this.configPath = CONFIG_PATH.resolve(configPath);
@@ -114,7 +116,7 @@ public class ListUtil {
      *        missing.
      */
     public void createDefaults(List<String> defaultList,
-            List<KeyValuePair<String, String>> defaultMap) {
+            List<KeyValuePair<String, KeyValuePair<String, Boolean>>> defaultMap) {
         if (!Files.exists(this.configPath)) {
             // Ensure the parent directory exists
             try {
@@ -135,10 +137,12 @@ public class ListUtil {
             }
             if (defaultMap != null) {
                 JsonArray mapArray = new JsonArray();
-                for (KeyValuePair<String, String> pair : defaultMap) {
+                for (KeyValuePair<String, KeyValuePair<String, Boolean>> pair : defaultMap) {
                     JsonObject pairObject = new JsonObject();
                     pairObject.addProperty("key", pair.getKey());
-                    pairObject.addProperty("value", pair.getValue());
+                    JsonObject valueObject = new JsonObject();
+                    valueObject.addProperty("key", pair.getValue().getKey());
+                    valueObject.addProperty("value", pair.getValue().getValue());
                     mapArray.add(pairObject);
                 }
                 defaultConfig.add("map", mapArray);
@@ -251,15 +255,17 @@ public class ListUtil {
      * @return A ConfigCategory instance representing the map configuration category.
      */
     public ConfigCategory createMapCategory(ListUtil defaults, ListUtil config) {
-        return ConfigCategory.createBuilder().name(Text.literal(title))
-                .option(ListOption.<KeyValuePair<String, String>>createBuilder()
-                        .name(Text.literal(title))
-                        .description(OptionDescription.createBuilder().text(description).build())
-                        .binding(config.map, () -> config.map, newVal -> config.map = newVal)
-                        .controller((option) -> KeyValueController.Builder.create(option)
-                                .keyController("Key", StringControllerBuilder::create)
-                                .valueController("Value", StringControllerBuilder::create))
-                        .initial(new KeyValuePair<>("", "")).build())
-                .build();
+        return ConfigCategory.createBuilder().name(Text.literal(title)).option(ListOption
+                .<KeyValuePair<String, KeyValuePair<String, Boolean>>>createBuilder()
+                .name(Text.literal(title))
+                .description(OptionDescription.createBuilder().text(description).build())
+                .binding(config.map, () -> config.map, newVal -> config.map = newVal)
+                .controller((option) -> KeyValueController.Builder.create(option)
+                        .keyController("Key", StringControllerBuilder::create).valueController(null,
+                                (subOption) -> KeyValueController.Builder.create(subOption)
+                                        .keyController("Value", StringControllerBuilder::create)
+                                        .valueController("Enabled",
+                                                TickBoxControllerBuilder::create)))
+                .initial(new KeyValuePair<>("", new KeyValuePair<>("", true))).build()).build();
     }
 }

@@ -170,22 +170,33 @@ public class JsonUtil {
      * @return A list of KeyValuePair objects representing the key-value pairs found in the
      *         specified map.
      */
-    public static List<KeyValuePair<String, String>> parseKeyValuePairs(JsonObject rootObject,
-            String mapKey) {
-        List<KeyValuePair<String, String>> result = new ArrayList<>();
+    public static List<KeyValuePair<String, KeyValuePair<String, Boolean>>> parseKeyValuePairs(
+            JsonObject rootObject, String mapKey) {
+        List<KeyValuePair<String, KeyValuePair<String, Boolean>>> result = new ArrayList<>();
 
         if (rootObject != null && mapKey != null && !mapKey.isEmpty()) {
             if (rootObject.has(mapKey) && rootObject.get(mapKey).isJsonObject()) {
                 JsonObject targetMapObject = rootObject.getAsJsonObject(mapKey);
 
+                // Iterate through the entries of the JsonObject
                 for (Map.Entry<String, JsonElement> entry : targetMapObject.entrySet()) {
                     String key = entry.getKey();
                     JsonElement valueElement = entry.getValue();
 
-                    if (valueElement.isJsonPrimitive()
+                    // Check if the value is a JsonObject with "value" and "enabled" fields
+                    if (valueElement.isJsonObject()) {
+                        JsonObject valueObject = valueElement.getAsJsonObject();
+                        String value =
+                                valueObject.has("value") ? valueObject.get("value").getAsString()
+                                        : "";
+                        boolean enabled = valueObject.has("enabled")
+                                && valueObject.get("enabled").getAsBoolean();
+
+                        result.add(new KeyValuePair<>(key, new KeyValuePair<>(value, enabled)));
+                    } else if (valueElement.isJsonPrimitive()
                             && valueElement.getAsJsonPrimitive().isString()) {
-                        String value = valueElement.getAsString();
-                        result.add(new KeyValuePair<>(key, value));
+                        result.add(new KeyValuePair<>(key,
+                                new KeyValuePair<>(valueElement.getAsString(), true)));
                     }
                 }
             }

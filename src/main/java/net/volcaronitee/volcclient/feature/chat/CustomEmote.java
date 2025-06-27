@@ -16,7 +16,7 @@ public class CustomEmote {
     private static final CustomEmote INSTANCE = new CustomEmote();
 
     private static final JsonObject EMOTE_JSON = JsonUtil.loadTemplate("lists/emotes.json");
-    private static final List<KeyValuePair<String, String>> DEFAULT_MAP =
+    private static final List<KeyValuePair<String, KeyValuePair<String, Boolean>>> DEFAULT_MAP =
             JsonUtil.parseKeyValuePairs(EMOTE_JSON, "emotes");
     public static final ListUtil EMOTE_MAP = new ListUtil("Emote Map",
             Text.literal("A list of custom emote mappings to use in chat."), "emote_map.json", null,
@@ -50,10 +50,14 @@ public class CustomEmote {
         }
 
         // Replace each emote key with its corresponding value in the message
-        for (KeyValuePair<String, String> pair : EMOTE_MAP.getHandler().map) {
-            if (message.contains(pair.getKey())) {
-                message = message.replace(pair.getKey(), pair.getValue());
+        for (KeyValuePair<String, KeyValuePair<String, Boolean>> pair : EMOTE_MAP
+                .getHandler().map) {
+            // Skip if the emote is disabled
+            if (!pair.getValue().getValue() || !message.contains(pair.getKey())) {
+                continue;
             }
+
+            message = message.replace(pair.getKey(), pair.getValue().getKey());
         }
 
         return message;

@@ -74,9 +74,15 @@ public class TextSubstitution {
         String modified = original.replace("Volcaronitee", "§4§lThe Lion§r");
 
         if (ConfigUtil.getHandler().chat.textSubstitution) {
-            List<KeyValuePair<String, String>> map = SUBSTITUTION_MAP.getHandler().map;
-            for (KeyValuePair<String, String> entry : map) {
-                modified = modified.replace(entry.getKey(), entry.getValue());
+            List<KeyValuePair<String, KeyValuePair<String, Boolean>>> map =
+                    SUBSTITUTION_MAP.getHandler().map;
+            for (KeyValuePair<String, KeyValuePair<String, Boolean>> entry : map) {
+                // Skip if the substitution is disabled
+                if (!entry.getValue().getValue()) {
+                    continue;
+                }
+
+                modified = modified.replace(entry.getKey(), entry.getValue().getKey());
             }
         }
 
