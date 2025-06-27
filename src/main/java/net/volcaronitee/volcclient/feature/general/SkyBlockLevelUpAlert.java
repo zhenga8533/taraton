@@ -19,7 +19,6 @@ public class SkyBlockLevelUpAlert {
     private static final Pattern LEVEL_UP_PATTERN = Pattern.compile("Level \\d+ ➡ \\[\\d+\\]");
 
     private String levelUpText = "";
-    private boolean cooldown = false;
 
     /**
      * Private constructor to prevent instantiation.
@@ -35,7 +34,7 @@ public class SkyBlockLevelUpAlert {
      * @param overlay Whether the message is an overlay message.
      */
     private static void parseMessage(Text message, boolean overlay) {
-        if (!ConfigUtil.getHandler().general.skyblockLevelUpAlert || overlay || INSTANCE.cooldown) {
+        if (!ConfigUtil.getHandler().general.skyblockLevelUpAlert || overlay) {
             return;
         }
 
@@ -57,11 +56,5 @@ public class SkyBlockLevelUpAlert {
                     .append(Text.literal(" §3§lSKYBLOCK LEVEL UP§r " + INSTANCE.levelUpText)));
             client.inGameHud.setTitle(Text.literal(INSTANCE.levelUpText));
         }, 2);
-
-        // Set a cooldown to prevent spamming the alert
-        INSTANCE.cooldown = true;
-        ScheduleUtil.schedule(() -> {
-            INSTANCE.cooldown = false;
-        }, 100);
     }
 }
