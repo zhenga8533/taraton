@@ -394,7 +394,7 @@ public class OverlayUtil {
         /**
          * Recalculates the size of the overlay based on its content.
          */
-        public void calcSize() {
+        private void calcSize() {
             TextRenderer tr = MinecraftClient.getInstance().textRenderer;
 
             float maxWidth = 0;
@@ -428,6 +428,13 @@ public class OverlayUtil {
         private boolean isMouseOver(double mouseX, double mouseY) {
             return mouseX >= x - MARGIN && mouseX <= x + width + MARGIN && mouseY >= y - MARGIN
                     && mouseY <= y + height + MARGIN;
+        }
+
+        /**
+         * Sets the overlay as changed, indicating that it needs to be recalculated or redrawn.
+         */
+        public void setChanged() {
+            this.changed = true;
         }
     }
 }

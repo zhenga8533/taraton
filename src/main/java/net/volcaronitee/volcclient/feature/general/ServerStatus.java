@@ -1,13 +1,11 @@
 package net.volcaronitee.volcclient.feature.general;
 
-import java.util.Deque;
-import java.util.LinkedList;
 import java.util.List;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.client.network.PlayerListEntry;
-import net.minecraft.util.Util; // Keep Util for System.currentTimeMillis() equivalent
+import net.minecraft.network.packet.c2s.play.ClientStatusC2SPacket;
+import net.minecraft.network.packet.c2s.play.ClientStatusC2SPacket.Mode;
 import net.volcaronitee.volcclient.util.ConfigUtil;
 import net.volcaronitee.volcclient.util.OverlayUtil;
 import net.volcaronitee.volcclient.util.OverlayUtil.LineContent;
@@ -33,50 +31,47 @@ public class ServerStatus {
             new LineContent("§8[§6TPS§8]§r ", "§a19.8 §7tps",
                     () -> ToggleUtil.getHandler().general.tps),
             new LineContent("§8[§6CPS§8]§r ", "§a0 §7: §a0",
-                    () -> ToggleUtil.getHandler().general.cps));
+                    () -> ToggleUtil.getHandler().general.cps),
+            new LineContent("§8[§6DAY§8]§r ", "§a0.75", () -> ToggleUtil.getHandler().general.day));
     private static final Overlay OVERLAY = OverlayUtil.createOverlay("server_status",
             () -> ConfigUtil.getHandler().general.serverStatus, LINES);
 
-    private final static ServerStatus INSTANCE = new ServerStatus();
-
     // Fields to store server status information
-    private int x = 0;
-    private int y = 0;
-    private int z = 0;
-    private double yaw = 0.0;
-    private double pitch = 0.0;
-    private String direction = "Unknown";
-    private int ping = 0;
-    private int fps = 0;
-    private double tps = 20.0;
-    private int leftCps = 0;
-    private int rightCps = 0;
+    private static int x = 0;
+    private static int y = 0;
+    private static int z = 0;
+    private static double yaw = 0.0;
+    private static double pitch = 0.0;
+    private static String direction = "Unknown";
+    private static int ping = 0;
+    private static int fps = 0;
+    private static double tps = 20.0;
+    private static int leftCps = 0;
+    private static int rightCps = 0;
+    private static double day = 0.0;
 
-    // TPS tracking fields
-    private static final int HISTORY_SIZE = 100;
-    private final Deque<Long> tickTimestamps = new LinkedList<>();
+    // Ping measurement fields
+    private static long lastPingTime = 0;
+    private static boolean awaitingPing = false;
+    private static int pingTickCounter = 0;
 
-    /**
-     * Private constructor to prevent instantiation.
-     */
+    // TPS measurement fields
+    private static long lastTickTime = -1;
+    private static final int TICK_SAMPLE_SIZE = 20;
+    private static final double[] tickIntervals = new double[TICK_SAMPLE_SIZE];
+    private static int tickIndex = 0;
+
     private ServerStatus() {}
 
     /**
-     * Gets the singleton instance of ServerStatus. Required for Mixin access.
-     */
-    public static ServerStatus getInstance() {
-        return INSTANCE;
-    }
-
-    /**
-     * Registers the server status feature to update the overlay.
+     * Registers the server status feature to update every client tick.
      */
     public static void register() {
         ClientTickEvents.END_CLIENT_TICK.register(ServerStatus::updateStatus);
     }
 
     /**
-     * Updates the server status information based on the current player state.
+     * Updates the server status information.
      * 
      * @param client The Minecraft client instance.
      */
@@ -87,133 +82,153 @@ public class ServerStatus {
 
         ClientPlayerEntity player = client.player;
 
-        // Update XYZ
-        INSTANCE.x = (int) player.getX();
-        INSTANCE.y = (int) player.getY();
-        INSTANCE.z = (int) player.getZ();
+        x = (int) player.getX();
+        y = (int) player.getY();
+        z = (int) player.getZ();
 
-        // Update Yaw and Pitch
-        INSTANCE.yaw = player.getYaw();
-        INSTANCE.pitch = player.getPitch();
+        yaw = player.getYaw();
+        pitch = player.getPitch();
+        direction = player.getHorizontalFacing().name().toLowerCase();
 
-        // Update direction
-        INSTANCE.direction = player.getHorizontalFacing().name().toLowerCase();
-
-        // Update ping
-        PlayerListEntry playerEntry =
-                client.player.networkHandler.getPlayerListEntry(client.player.getUuid());
-        if (playerEntry != null) {
-            INSTANCE.ping = playerEntry.getLatency();
+        // Request ping every 60 ticks (3 seconds)
+        if (++pingTickCounter >= 60) {
+            pingTickCounter = 0;
+            if (!awaitingPing) {
+                lastPingTime = System.currentTimeMillis();
+                awaitingPing = true;
+                client.getNetworkHandler()
+                        .sendPacket(new ClientStatusC2SPacket(Mode.REQUEST_STATS));
+            }
         }
 
-        // TPS is updated via the Mixin directly calling recordServerTick()
-        // No need to update INSTANCE.tps here directly, it's already managed.
+        // Timeout if no ping reply received within 5s
+        if (awaitingPing && System.currentTimeMillis() - lastPingTime > 5000) {
+            awaitingPing = false;
+            lastPingTime = 0;
+        }
 
-        // Update FPS
-        INSTANCE.fps = client.getCurrentFps();
+        fps = client.getCurrentFps();
+        day = MinecraftClient.getInstance().world.getTime() / 24000.0f;
 
-        // Update the overlay with the new status
         updateOverlay();
+    }
+
+    /**
+     * Called when a ping response is received from the server.
+     */
+    public static void onPingResponse() {
+        if (awaitingPing && lastPingTime != 0) {
+            ping = (int) (System.currentTimeMillis() - lastPingTime);
+            awaitingPing = false;
+            lastPingTime = 0;
+        }
+    }
+
+    /**
+     * Records a server tick to calculate TPS. Actually fires every second for now...
+     */
+    public static void recordServerTick() {
+        long now = System.currentTimeMillis();
+
+        if (lastTickTime != -1) {
+            double interval = now - lastTickTime;
+            tickIntervals[tickIndex % TICK_SAMPLE_SIZE] = interval;
+            tickIndex++;
+
+            double avg = 0;
+            int count = Math.min(tickIndex, TICK_SAMPLE_SIZE);
+            for (int i = 0; i < count; i++) {
+                avg += tickIntervals[i];
+            }
+            avg /= count;
+
+            // TPS = 1000ms / (avg tick duration)
+            tps = Math.min(20.0, 20 * 1000.0 / avg);
+        }
+
+        lastTickTime = now;
     }
 
     /**
      * Updates the overlay with the current server status information.
      */
     private static void updateOverlay() {
-        if (!ConfigUtil.getHandler().general.serverStatus) {
+        if (!ConfigUtil.getHandler().general.serverStatus)
             return;
-        }
 
-        LINES.get(0).setText("§7" + INSTANCE.x + ", " + INSTANCE.y + ", " + INSTANCE.z);
-        LINES.get(1).setText("§7" + String.format("%.2f", INSTANCE.yaw) + " / "
-                + String.format("%.2f", INSTANCE.pitch));
-        LINES.get(2).setText("§7" + INSTANCE.direction);
-        LINES.get(3).setText("§a" + INSTANCE.ping + " §7ms");
-        LINES.get(4).setText("§a" + INSTANCE.fps + " §7fps");
-        LINES.get(5).setText("§a" + String.format("%.2f", INSTANCE.tps) + " §7tps");
-        LINES.get(6).setText("§a" + INSTANCE.leftCps + " §7: §a" + INSTANCE.rightCps);
-        OVERLAY.calcSize();
+        // Update the overlay lines with the current values
+        LINES.get(0).setText("§7" + x + ", " + y + ", " + z);
+        LINES.get(1)
+                .setText("§7" + String.format("%.2f", yaw) + " / " + String.format("%.2f", pitch));
+        LINES.get(2).setText("§7" + direction);
+
+        // Update ping line with color coding
+        String pingColor =
+                ping < 50 ? "§a" : ping < 100 ? "§2" : ping < 200 ? "§e" : ping < 400 ? "§c" : "§4";
+        LINES.get(3).setText(pingColor + ping + " §7ms");
+
+        // Update FPS with color coding
+        int maxFps = MinecraftClient.getInstance().options.getMaxFps().getValue();
+        String fpsColor = fps >= maxFps * 0.9 ? "§a"
+                : fps >= maxFps * 0.7 ? "§2"
+                        : fps >= maxFps * 0.6 ? "§e" : fps >= maxFps * 0.5 ? "§c" : "§4";
+        LINES.get(4).setText(fpsColor + fps + " §7fps");
+
+        // Update TPS with color coding
+        String tpsColor = tps >= 19.0 ? "§a"
+                : tps >= 15.0 ? "§2" : tps >= 10.0 ? "§e" : tps >= 5.0 ? "§c" : "§4";
+        LINES.get(5).setText(tpsColor + String.format("%.2f", tps) + " §7tps");
+
+        // Update CPS with color coding
+        String leftCpsColor = leftCps < 3 ? "§a"
+                : leftCps < 6 ? "§2" : leftCps < 10 ? "§e" : leftCps < 16 ? "§c" : "§4";
+        String rightCpsColor = rightCps < 3 ? "§a"
+                : rightCps < 6 ? "§2" : rightCps < 10 ? "§e" : rightCps < 16 ? "§c" : "§4";
+        LINES.get(6).setText(leftCpsColor + leftCps + " §7: " + rightCpsColor + rightCps);
+
+        // Update day with color coding
+        String dayColor =
+                day < 0.25 ? "§a" : day < 3 ? "§2" : day < 7 ? "§e" : day < 14 ? "§c" : "§4";
+        LINES.get(7).setText(dayColor + String.format("%.2f", day));
+
+        // Update the overlay with the new lines
+        OVERLAY.setChanged();
     }
 
     /**
-     * Handles mouse button clicks to track CPS (Clicks Per Second).
+     * Handles mouse click events to update CPS.
      * 
      * @param button The mouse button that was clicked (0 for left, 1 for right).
-     * @param action The action performed on the button (1 for press, 0 for release).
+     * @param action The action of the click (1 for press, 0 for release).
      */
     public static void onClick(int button, int action) {
-        // Only handle clicks if the action is "press"
-        if (action != 1) {
+        if (action != 1)
             return;
-        }
 
-        // Increment the CPS count for the respective button
         if (button == 0) {
-            INSTANCE.leftCps++;
-            ScheduleUtil.schedule(() -> {
-                INSTANCE.leftCps--;
-            }, 20);
+            leftCps++;
+            ScheduleUtil.schedule(() -> leftCps--, 20);
         } else if (button == 1) {
-            INSTANCE.rightCps++;
-            ScheduleUtil.schedule(() -> {
-                INSTANCE.rightCps--;
-            }, 20);
+            rightCps++;
+            ScheduleUtil.schedule(() -> rightCps--, 20);
         }
     }
 
     /**
-     * Called by Mixin when a WorldTimeUpdateS2CPacket is received. This method records the
-     * timestamp and updates the estimated TPS.
-     */
-    public void recordServerTick() {
-        long currentTime = Util.getMeasuringTimeMs(); // Use Minecraft's utility for time
-
-        if (tickTimestamps.size() >= HISTORY_SIZE) {
-            tickTimestamps.poll(); // Remove the oldest timestamp
-        }
-        tickTimestamps.offer(currentTime); // Add the new timestamp
-
-        // Calculate and update the estimated TPS immediately
-        if (tickTimestamps.size() < 2) {
-            this.tps = 20.0; // Not enough data to calculate an average yet
-            return;
-        }
-
-        long firstTime = tickTimestamps.peek();
-        long lastTime = tickTimestamps.peekLast();
-        int numIntervals = tickTimestamps.size() - 1; // Number of intervals between N timestamps
-
-        if (numIntervals > 0) {
-            double totalDurationMs = (double) (lastTime - firstTime);
-            double averageMsPerTick = totalDurationMs / numIntervals;
-
-            // Cap at 20.0 TPS, and ensure we don't divide by zero or near-zero
-            if (averageMsPerTick > 0.1) { // Small threshold to prevent extreme values if time diff
-                                          // is too small
-                this.tps = Math.min(20.0, 1000.0 / averageMsPerTick);
-            } else {
-                this.tps = 20.0; // Assume ideal if calculation is problematic
-            }
-        } else {
-            this.tps = 20.0; // Still not enough data for an interval
-        }
-    }
-
-    /**
-     * Gets the current latency ping of the client.
+     * Gets the current ping of the client.
      * 
      * @return The current ping in milliseconds.
      */
     public static int getPing() {
-        return INSTANCE.ping;
+        return ping;
     }
 
     /**
      * Gets the current TPS of the server.
      * 
-     * @return The current TPS (Ticks Per Second).
+     * @return The current TPS of the server.
      */
     public static double getTps() {
-        return INSTANCE.tps;
+        return tps;
     }
 }

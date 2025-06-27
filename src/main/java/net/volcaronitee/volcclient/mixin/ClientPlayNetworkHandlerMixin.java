@@ -5,13 +5,20 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
+import net.minecraft.network.packet.s2c.play.StatisticsS2CPacket;
 import net.minecraft.network.packet.s2c.play.WorldTimeUpdateS2CPacket;
-import net.volcaronitee.volcclient.feature.general.ServerStatus; // Import your ServerStatus class
+import net.volcaronitee.volcclient.feature.general.ServerStatus;
 
 @Mixin(ClientPlayNetworkHandler.class)
-public abstract class ClientPlayNetworkHandlerMixin {
-    @Inject(method = "onWorldTimeUpdate", at = @At("HEAD"), cancellable = false)
+public class ClientPlayNetworkHandlerMixin {
+    @Inject(method = "onStatistics", at = @At("HEAD"))
+    private void onStatistics(StatisticsS2CPacket packet, CallbackInfo ci) {
+        ServerStatus.onPingResponse();
+    }
+
+    @Inject(method = "onWorldTimeUpdate", at = @At("TAIL"))
     private void volcclient_onWorldTimeUpdate(WorldTimeUpdateS2CPacket packet, CallbackInfo ci) {
-        ServerStatus.getInstance().recordServerTick();
+        System.out.println("E");
+        ServerStatus.recordServerTick();
     }
 }
