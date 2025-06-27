@@ -12,7 +12,17 @@ import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.volcaronitee.volcclient.util.ToggleUtil;
 
+/**
+ * Configuration for chat toggles in VolcClient.
+ */
 public class ChatToggle {
+    /**
+     * Creates a new {@link ConfigCategory} for the chat toggles.
+     * 
+     * @param defaults The default configuration values.
+     * @param config The current configuration values.
+     * @return A new {@link ConfigCategory} for the chat toggles.
+     */
     public static ConfigCategory create(ToggleUtil defaults, ToggleUtil config) {
         return ConfigCategory.createBuilder().name(Text.literal("Chat"))
 

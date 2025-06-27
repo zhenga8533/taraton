@@ -12,7 +12,17 @@ import net.minecraft.util.Identifier;
 import net.volcaronitee.volcclient.VolcClient;
 import net.volcaronitee.volcclient.util.ConfigUtil;
 
+/**
+ * Configuration for the Chat features in VolcClient.
+ */
 public class ChatConfig {
+    /**
+     * Creates a new {@link ConfigCategory} for the Chat features.
+     * 
+     * @param defaults The default configuration values.
+     * @param config The current configuration values.
+     * @return A new {@link ConfigCategory} for the Chat features.
+     */
     public static ConfigCategory create(ConfigUtil defaults, ConfigUtil config) {
         return ConfigCategory.createBuilder().name(Text.literal("Chat"))
 

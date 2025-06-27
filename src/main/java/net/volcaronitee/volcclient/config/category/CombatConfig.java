@@ -15,7 +15,17 @@ import net.volcaronitee.volcclient.VolcClient;
 import net.volcaronitee.volcclient.util.ConfigUtil;
 import net.volcaronitee.volcclient.util.ConfigUtil.AnnounceWP;
 
+/**
+ * Configuration for the Combat features in VolcClient.
+ */
 public class CombatConfig {
+    /**
+     * Creates a new {@link ConfigCategory} for the Combat features.
+     * 
+     * @param defaults The default configuration values.
+     * @param config The current configuration values.
+     * @return A new {@link ConfigCategory} for the Combat features.
+     */
     public static ConfigCategory create(ConfigUtil defaults, ConfigUtil config) {
         return ConfigCategory.createBuilder().name(Text.literal("Combat"))
 

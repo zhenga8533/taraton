@@ -13,7 +13,17 @@ import net.minecraft.util.Identifier;
 import net.volcaronitee.volcclient.VolcClient;
 import net.volcaronitee.volcclient.util.ConfigUtil;
 
+/**
+ * Configuration for the Economy features in VolcClient.
+ */
 public class EconomyConfig {
+    /**
+     * Creates a new {@link ConfigCategory} for the Economy features.
+     * 
+     * @param defaults The default configuration values.
+     * @param config The current configuration values.
+     * @return A new {@link ConfigCategory} for the Economy features.
+     */
     public static ConfigCategory create(ConfigUtil defaults, ConfigUtil config) {
         return ConfigCategory.createBuilder().name(Text.literal("Economy"))
 

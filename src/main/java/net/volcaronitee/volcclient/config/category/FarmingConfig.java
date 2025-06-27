@@ -12,7 +12,17 @@ import net.minecraft.util.Identifier;
 import net.volcaronitee.volcclient.VolcClient;
 import net.volcaronitee.volcclient.util.ConfigUtil;
 
+/**
+ * Configuration for the Farming features in VolcClient.
+ */
 public class FarmingConfig {
+    /**
+     * Creates a new {@link ConfigCategory} for the Farming features.
+     * 
+     * @param defaults The default configuration values.
+     * @param config The current configuration values.
+     * @return A new {@link ConfigCategory} for the Farming features.
+     */
     public static ConfigCategory create(ConfigUtil defaults, ConfigUtil config) {
         return ConfigCategory.createBuilder().name(Text.literal("Farming"))
 

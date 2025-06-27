@@ -9,7 +9,17 @@ import dev.isxander.yacl3.config.v2.api.SerialEntry;
 import net.minecraft.text.Text;
 import net.volcaronitee.volcclient.util.ToggleUtil;
 
+/**
+ * Configuration for general toggles in VolcClient.
+ */
 public class GeneralToggle {
+    /**
+     * Creates a new {@link ConfigCategory} for the general toggles.
+     * 
+     * @param defaults The default configuration values.
+     * @param config The current configuration values.
+     * @return A new {@link ConfigCategory} for the general toggles.
+     */
     public static ConfigCategory create(ToggleUtil defaults, ToggleUtil config) {
         return ConfigCategory.createBuilder().name(Text.literal("Chat"))
 

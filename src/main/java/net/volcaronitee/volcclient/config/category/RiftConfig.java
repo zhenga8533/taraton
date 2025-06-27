@@ -12,7 +12,17 @@ import net.volcaronitee.volcclient.VolcClient;
 import net.volcaronitee.volcclient.util.ConfigUtil;
 import net.volcaronitee.volcclient.util.ConfigUtil.AnnounceWP;
 
+/**
+ * Configuration for the Rift features in VolcClient.
+ */
 public class RiftConfig {
+    /**
+     * Creates a new {@link ConfigCategory} for the Rift features.
+     * 
+     * @param defaults The default configuration values.
+     * @param config The current configuration values.
+     * @return A new {@link ConfigCategory} for the Rift features.
+     */
     public static ConfigCategory create(ConfigUtil defaults, ConfigUtil config) {
         return ConfigCategory.createBuilder().name(Text.literal("Rift"))
 

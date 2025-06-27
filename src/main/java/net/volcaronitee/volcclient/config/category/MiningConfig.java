@@ -11,7 +11,17 @@ import net.minecraft.util.Identifier;
 import net.volcaronitee.volcclient.VolcClient;
 import net.volcaronitee.volcclient.util.ConfigUtil;
 
+/**
+ * Configuration for the Mining features in VolcClient.
+ */
 public class MiningConfig {
+    /**
+     * Creates a new {@link ConfigCategory} for the Mining features.
+     * 
+     * @param defaults The default configuration values.
+     * @param config The current configuration values.
+     * @return A new {@link ConfigCategory} for the Mining features.
+     */
     public static ConfigCategory create(ConfigUtil defaults, ConfigUtil config) {
         return ConfigCategory.createBuilder().name(Text.literal("Mining"))
 
