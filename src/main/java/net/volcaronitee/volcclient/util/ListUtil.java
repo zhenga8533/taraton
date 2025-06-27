@@ -7,7 +7,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import dev.isxander.yacl3.api.ConfigCategory;
@@ -267,5 +269,69 @@ public class ListUtil {
                                         .valueController("Enabled",
                                                 TickBoxControllerBuilder::create)))
                 .initial(new KeyValuePair<>("", new KeyValuePair<>("", true))).build()).build();
+    }
+
+    /**
+     * Parses a list of strings from a JsonObject under a specified key.
+     * 
+     * @param rootObject The root JsonObject containing the list.
+     * @param listKey The key under which the list is stored in the root object.
+     * @return A list of strings representing the elements found in the specified list.
+     */
+    public static List<String> parseList(JsonObject rootObject, String listKey) {
+        List<String> result = new ArrayList<>();
+
+        if (rootObject != null && listKey != null && !listKey.isEmpty()) {
+            if (rootObject.has(listKey) && rootObject.get(listKey).isJsonArray()) {
+                for (JsonElement element : rootObject.getAsJsonArray(listKey)) {
+                    if (element.isJsonPrimitive() && element.getAsJsonPrimitive().isString()) {
+                        result.add(element.getAsString());
+                    }
+                }
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Parses key-value pairs from a JsonObject under a specified key.
+     * 
+     * @param rootObject The root JsonObject containing the key-value pairs.
+     * @param mapKey The key under which the key-value pairs are stored in the root object.
+     * @return A list of KeyValuePair objects representing the key-value pairs found in the
+     *         specified map.
+     */
+    public static List<KeyValuePair<String, KeyValuePair<String, Boolean>>> parseKeyValuePairs(
+            JsonObject rootObject, String mapKey) {
+        List<KeyValuePair<String, KeyValuePair<String, Boolean>>> result = new ArrayList<>();
+
+        if (rootObject != null && mapKey != null && !mapKey.isEmpty()) {
+            if (rootObject.has(mapKey) && rootObject.get(mapKey).isJsonObject()) {
+                JsonObject targetMapObject = rootObject.getAsJsonObject(mapKey);
+
+                // Iterate through the entries of the JsonObject
+                for (Map.Entry<String, JsonElement> entry : targetMapObject.entrySet()) {
+                    String key = entry.getKey();
+                    JsonElement valueElement = entry.getValue();
+
+                    // Check if the value is a JsonObject with "value" and "enabled" fields
+                    if (valueElement.isJsonObject()) {
+                        JsonObject valueObject = valueElement.getAsJsonObject();
+                        String value =
+                                valueObject.has("value") ? valueObject.get("value").getAsString()
+                                        : "";
+                        boolean enabled = valueObject.has("enabled")
+                                && valueObject.get("enabled").getAsBoolean();
+
+                        result.add(new KeyValuePair<>(key, new KeyValuePair<>(value, enabled)));
+                    } else if (valueElement.isJsonPrimitive()
+                            && valueElement.getAsJsonPrimitive().isString()) {
+                        result.add(new KeyValuePair<>(key,
+                                new KeyValuePair<>(valueElement.getAsString(), true)));
+                    }
+                }
+            }
+        }
+        return result;
     }
 }

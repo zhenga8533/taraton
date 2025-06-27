@@ -17,7 +17,7 @@ public class CustomEmote {
 
     private static final JsonObject EMOTE_JSON = JsonUtil.loadTemplate("lists/emotes.json");
     private static final List<KeyValuePair<String, KeyValuePair<String, Boolean>>> DEFAULT_MAP =
-            JsonUtil.parseKeyValuePairs(EMOTE_JSON, "emotes");
+            ListUtil.parseKeyValuePairs(EMOTE_JSON, "emotes");
     public static final ListUtil EMOTE_MAP = new ListUtil("Emote Map",
             Text.literal("A list of custom emote mappings to use in chat."), "emote_map.json", null,
             DEFAULT_MAP);

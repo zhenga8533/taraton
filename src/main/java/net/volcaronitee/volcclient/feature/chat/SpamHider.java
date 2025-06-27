@@ -17,7 +17,7 @@ public class SpamHider {
     private static final SpamHider INSTANCE = new SpamHider();
 
     private static final JsonObject SPAM_JSON = JsonUtil.loadTemplate("lists/spam.json");
-    private static final List<String> DEFAULT_LIST = JsonUtil.parseList(SPAM_JSON, "spam");
+    private static final List<String> DEFAULT_LIST = ListUtil.parseList(SPAM_JSON, "spam");
     public static final ListUtil SPAM_LIST = new ListUtil("Spam List",
             Text.literal("A list of spam messages to hide in chat.\n\nUse ")
                     .append(TextUtil.createLink("regex101.com", "https://regex101.com"))

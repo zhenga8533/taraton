@@ -27,7 +27,7 @@ public class ChatCommands {
 
     // List of prefixes for chat commands
     private static final JsonObject PREFIX_JSON = JsonUtil.loadTemplate("lists/prefix.json");
-    private static final List<String> DEFAULT_LIST = JsonUtil.parseList(PREFIX_JSON, "prefix");
+    private static final List<String> DEFAULT_LIST = ListUtil.parseList(PREFIX_JSON, "prefix");
     public static final ListUtil PREFIX_MAP = new ListUtil("Prefix List",
             Text.literal("A list of prefixes to detect for chat commands."), "prefix_list.json",
             DEFAULT_LIST, null);
