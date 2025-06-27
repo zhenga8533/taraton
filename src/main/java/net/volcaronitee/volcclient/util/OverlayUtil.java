@@ -237,9 +237,9 @@ public class OverlayUtil {
      * Represents the content of a line in an overlay, containing a list of item stacks and text.
      */
     public static class LineContent {
-        private final List<ItemStack> items;
-        private final String startText;
-        private String text;
+        private List<ItemStack> items = new ArrayList<>();
+        private String startText = "";
+        private String text = "";
         private Supplier<Boolean> shouldRender = () -> true;
 
         /**
@@ -250,10 +250,29 @@ public class OverlayUtil {
          * @param shouldRender A supplier that determines if the line should be rendered.
          */
         public LineContent(String startText, String text, Supplier<Boolean> shouldRender) {
-            this.items = new ArrayList<>();
             this.startText = startText;
             this.text = text;
             this.shouldRender = shouldRender;
+        }
+
+        /**
+         * Creates a new LineContent instance with the specified text and a default
+         * 
+         * @param text The text to display in the line.
+         * @param shouldRender A supplier that determines if the line should be rendered.
+         */
+        public LineContent(String text, Supplier<Boolean> shouldRender) {
+            this.text = text;
+            this.shouldRender = shouldRender;
+        }
+
+        /**
+         * Creates a new LineContent instance with the specified text.
+         * 
+         * @param text The text to display in the line.
+         */
+        public LineContent(String text) {
+            this.text = text;
         }
 
         /**
