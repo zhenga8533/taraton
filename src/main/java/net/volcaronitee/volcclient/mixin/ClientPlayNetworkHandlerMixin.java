@@ -37,4 +37,12 @@ public class ClientPlayNetworkHandlerMixin {
             WorldTimeUpdateS2CPacket packet, CallbackInfo ci) {
         ServerStatus.getInstance().recordServerTick();
     }
+
+    /**
+     * TODO: Test these
+     * 
+     * - onTickStep(TickStepS2CPacket packet)
+     * 
+     * - onPlayerListHeader(PlayerListHeaderS2CPacket packet)
+     */
 }
