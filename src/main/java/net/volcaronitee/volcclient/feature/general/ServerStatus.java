@@ -17,6 +17,8 @@ import net.volcaronitee.volcclient.util.ToggleUtil;
  * Feature that tracks server status such as ping, FPS, TPS, and player angles.
  */
 public class ServerStatus {
+    private static final ServerStatus INSTANCE = new ServerStatus();
+
     private static final List<LineContent> LINES = List.of(
             new LineContent("§8[§6XYZ§8]§r ", "§7-195, 88, 58",
                     () -> ToggleUtil.getHandler().general.xyz),
@@ -37,45 +39,55 @@ public class ServerStatus {
             () -> ConfigUtil.getHandler().general.serverStatus, LINES);
 
     // Fields to store server status information
-    private static int x = 0;
-    private static int y = 0;
-    private static int z = 0;
-    private static double yaw = 0.0;
-    private static double pitch = 0.0;
-    private static String direction = "Unknown";
-    private static int ping = 0;
-    private static int fps = 0;
-    private static double tps = 20.0;
-    private static int leftCps = 0;
-    private static int rightCps = 0;
-    private static double day = 0.0;
+    private int x = 0;
+    private int y = 0;
+    private int z = 0;
+    private double yaw = 0.0;
+    private double pitch = 0.0;
+    private String direction = "Unknown";
+    private int ping = 0;
+    private int fps = 0;
+    private double tps = 20.0;
+    private int leftCps = 0;
+    private int rightCps = 0;
+    private double day = 0.0;
 
     // Ping measurement fields
-    private static long lastPingTime = 0;
-    private static boolean awaitingPing = false;
-    private static int pingTickCounter = 0;
+    private long lastPingTime = 0;
+    private boolean awaitingPing = false;
+    private int pingTickCounter = 0;
 
     // TPS measurement fields
-    private static long lastTickTime = -1;
-    private static final int TICK_SAMPLE_SIZE = 20;
-    private static final double[] tickIntervals = new double[TICK_SAMPLE_SIZE];
-    private static int tickIndex = 0;
+    private long lastTickTime = -1;
+    private final int TICK_SAMPLE_SIZE = 20;
+    private final double[] tickIntervals = new double[TICK_SAMPLE_SIZE];
+    private int tickIndex = 0;
 
+    /**
+     * Private constructor to prevent instantiation.
+     */
     private ServerStatus() {}
+
+    /**
+     * Gets the singleton instance of the ServerStatus feature.
+     * 
+     * @return The singleton instance of ServerStatus.
+     */
+    public static ServerStatus getInstance() {
+        return INSTANCE;
+    }
 
     /**
      * Registers the server status feature to update every client tick.
      */
     public static void register() {
-        ClientTickEvents.END_CLIENT_TICK.register(ServerStatus::updateStatus);
+        ClientTickEvents.END_CLIENT_TICK.register(INSTANCE::updateStatus);
     }
 
     /**
-     * Updates the server status information.
-     * 
-     * @param client The Minecraft client instance.
+     * Updates the server status information. * @param client The Minecraft client instance.
      */
-    private static void updateStatus(MinecraftClient client) {
+    private void updateStatus(MinecraftClient client) {
         if (client.world == null || client.player == null) {
             return;
         }
@@ -116,7 +128,7 @@ public class ServerStatus {
     /**
      * Called when a ping response is received from the server.
      */
-    public static void onPingResponse() {
+    public void onPingResponse() {
         if (awaitingPing && lastPingTime != 0) {
             ping = (int) (System.currentTimeMillis() - lastPingTime);
             awaitingPing = false;
@@ -127,10 +139,10 @@ public class ServerStatus {
     /**
      * Records a server tick to calculate TPS. Actually fires every second for now...
      */
-    public static void recordServerTick() {
+    public void recordServerTick() {
         long now = System.currentTimeMillis();
 
-        if (lastTickTime != -1) {
+        if (INSTANCE.lastTickTime != -1) {
             double interval = now - lastTickTime;
             tickIntervals[tickIndex % TICK_SAMPLE_SIZE] = interval;
             tickIndex++;
@@ -152,7 +164,7 @@ public class ServerStatus {
     /**
      * Updates the overlay with the current server status information.
      */
-    private static void updateOverlay() {
+    private void updateOverlay() {
         if (!ConfigUtil.getHandler().general.serverStatus)
             return;
 
@@ -196,12 +208,12 @@ public class ServerStatus {
     }
 
     /**
-     * Handles mouse click events to update CPS.
+     * Handles mouse click events to update CPS. * @param button The mouse button that was clicked
+     * (0 for left, 1 for right).
      * 
-     * @param button The mouse button that was clicked (0 for left, 1 for right).
      * @param action The action of the click (1 for press, 0 for release).
      */
-    public static void onClick(int button, int action) {
+    public void onClick(int button, int action) {
         if (action != 1)
             return;
 
@@ -215,20 +227,16 @@ public class ServerStatus {
     }
 
     /**
-     * Gets the current ping of the client.
-     * 
-     * @return The current ping in milliseconds.
+     * Gets the current ping of the client. * @return The current ping in milliseconds.
      */
-    public static int getPing() {
+    public int getPing() {
         return ping;
     }
 
     /**
-     * Gets the current TPS of the server.
-     * 
-     * @return The current TPS of the server.
+     * Gets the current TPS of the server. * @return The current TPS of the server.
      */
-    public static double getTps() {
+    public double getTps() {
         return tps;
     }
 }

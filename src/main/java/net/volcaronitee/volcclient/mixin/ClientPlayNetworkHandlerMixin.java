@@ -13,12 +13,11 @@ import net.volcaronitee.volcclient.feature.general.ServerStatus;
 public class ClientPlayNetworkHandlerMixin {
     @Inject(method = "onStatistics", at = @At("HEAD"))
     private void onStatistics(StatisticsS2CPacket packet, CallbackInfo ci) {
-        ServerStatus.onPingResponse();
+        ServerStatus.getInstance().onPingResponse();
     }
 
     @Inject(method = "onWorldTimeUpdate", at = @At("TAIL"))
     private void volcclient_onWorldTimeUpdate(WorldTimeUpdateS2CPacket packet, CallbackInfo ci) {
-        System.out.println("E");
-        ServerStatus.recordServerTick();
+        ServerStatus.getInstance().recordServerTick();
     }
 }

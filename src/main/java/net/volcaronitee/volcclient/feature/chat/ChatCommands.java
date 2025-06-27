@@ -436,7 +436,7 @@ public class ChatCommands {
                     return;
                 }
 
-                double tps = ServerStatus.getTps();
+                double tps = ServerStatus.getInstance().getTps();
                 scheduleCommand(head + " " + String.format("%.2f TPS", tps));
                 break;
             // Leave party commands
@@ -463,7 +463,7 @@ public class ChatCommands {
                     return;
                 }
 
-                int ping = ServerStatus.getPing();
+                int ping = ServerStatus.getInstance().getPing();
                 scheduleCommand(command + " " + ping + "ms");
                 break;
             // Playtime commands

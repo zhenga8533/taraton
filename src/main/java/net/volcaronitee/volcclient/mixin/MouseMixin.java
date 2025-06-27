@@ -12,6 +12,6 @@ public class MouseMixin {
     @Inject(method = "onMouseButton", at = @At("HEAD"))
     public void volcclient$onMouseButton(long window, int button, int action, int mods,
             CallbackInfo ci) {
-        ServerStatus.onClick(button, action);
+        ServerStatus.getInstance().onClick(button, action);
     }
 }
