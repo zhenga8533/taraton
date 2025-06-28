@@ -1,5 +1,6 @@
 package net.volcaronitee.volcclient.feature.chat;
 
+import java.util.ArrayList;
 import java.util.List;
 import org.lwjgl.glfw.GLFW;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
@@ -13,7 +14,7 @@ import net.volcaronitee.volcclient.util.ConfigUtil;
 import net.volcaronitee.volcclient.util.TextUtil;
 
 /**
- * Handles copying chat messages when the user clicks on them while holding
+ * Handles copying chat messages when the user clicks on them while holding Shift.
  */
 public class CopyChat {
     private static final CopyChat INSTANCE = new CopyChat();
@@ -24,9 +25,9 @@ public class CopyChat {
     private CopyChat() {}
 
     /**
-     * Returns the singleton instance of ChatCopy.
+     * Returns the singleton instance of CopyChat.
      *
-     * @return The singleton instance of ChatCopy.
+     * @return The singleton instance of CopyChat.
      */
     public static CopyChat getInstance() {
         return INSTANCE;
@@ -42,13 +43,12 @@ public class CopyChat {
      */
     public void onMouseClicked(double mouseX, double mouseY, int button,
             CallbackInfoReturnable<Boolean> cir) {
-        // Check if the Shift key is pressed and the left mouse button is clicked
         if (!Screen.hasShiftDown() || button != GLFW.GLFW_MOUSE_BUTTON_LEFT
                 || !ConfigUtil.getHandler().chat.copyChat) {
             return;
         }
 
-        // Get the Minecraft client instance and check if player and in-game HUD are available
+        // Get chat HUD instance
         MinecraftClient client = MinecraftClient.getInstance();
         if (client == null || client.player == null || client.inGameHud == null) {
             return;
@@ -59,37 +59,40 @@ public class CopyChat {
             return;
         }
 
-        // Cast the chat hud instance to ChatHudAccessor to access its methods
+        // Access ChatHud methods via the accessor
         ChatHudAccessor chatHudAccessor = (ChatHudAccessor) chatHudInstance;
         double chatLineX = chatHudAccessor.invokeToChatLineX(mouseX);
         double chatLineY = chatHudAccessor.invokeToChatLineY(mouseY);
         int visibleMessageIndex = chatHudAccessor.invokeGetMessageIndex(chatLineX, chatLineY);
-
         List<ChatHudLine.Visible> visibleLines = chatHudAccessor.getVisibleMessages();
+
         if (visibleMessageIndex == -1 || visibleMessageIndex >= visibleLines.size()) {
             return;
         }
 
-        // Get the clicked visible line and find the corresponding message source
-        ChatHudLine.Visible clickedVisibleLine = visibleLines.get(visibleMessageIndex);
-        List<ChatHudLine> allChatLines = chatHudAccessor.getMessages();
-        ChatHudLine messageSource = null;
-        for (ChatHudLine chatLine : allChatLines) {
-            if (chatLine.creationTick() == clickedVisibleLine.addedTime()) {
-                messageSource = chatLine;
+        // Collect all lines of the clicked message
+        ArrayList<ChatHudLine.Visible> messageParts = new ArrayList<>();
+        messageParts.add(visibleLines.get(visibleMessageIndex));
+        for (int i = visibleMessageIndex + 1; i < visibleLines.size(); i++) {
+            if (visibleLines.get(i).endOfEntry()) {
                 break;
             }
-        }
-        if (messageSource == null) {
-            return;
+            messageParts.add(0, visibleLines.get(i));
         }
 
-        // Copy the message content to the clipboard
-        String messageText = messageSource.content().getString();
-        if (!messageText.isEmpty()) {
-            client.keyboard.setClipboard(messageText);
+        // Concatenate the text from all parts of the message
+        StringBuilder fullMessageText = new StringBuilder();
+        for (ChatHudLine.Visible line : messageParts) {
+            fullMessageText.append(TextUtil.getInstance().orderedTextToString(line.content()));
+        }
+
+        String messageToCopy = fullMessageText.toString();
+
+        // Copy the message content to the clipboard and send a confirmation message
+        if (!messageToCopy.isEmpty()) {
+            client.keyboard.setClipboard(messageToCopy);
             Text sendMessage = TextUtil.MOD_TITLE.copy().append(
-                    Text.literal(" §aCopied chat message to clipboard: §8§o" + messageText));
+                    Text.literal(" §aCopied chat message to clipboard: §8§o" + messageToCopy));
             client.player.sendMessage(sendMessage, false);
             cir.setReturnValue(true);
             cir.cancel();
