@@ -10,6 +10,7 @@ import net.volcaronitee.volcclient.util.FeatureUtil;
 import net.volcaronitee.volcclient.util.OverlayUtil;
 import net.volcaronitee.volcclient.util.ScheduleUtil;
 import net.volcaronitee.volcclient.util.TablistUtil;
+import net.volcaronitee.volcclient.util.TickUtil;
 
 public class VolcClient implements ClientModInitializer {
     public static final String MOD_ID = "volc-client";
@@ -28,6 +29,7 @@ public class VolcClient implements ClientModInitializer {
         FeatureUtil.init();
         ScheduleUtil.init();
         TablistUtil.init();
+        TickUtil.init();
         OverlayUtil.init();
     }
 }

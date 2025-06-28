@@ -108,8 +108,8 @@ public class WidgetDisplay {
          */
         public Widget(String name) {
             this.name = name;
-            this.lines = new ArrayList<>(
-                    List.of(new LineContent("§b§l" + name + ":"), new LineContent("Placeholder")));
+            this.lines = new ArrayList<>(List.of(new LineContent("§e§l" + name + ":"),
+                    new LineContent(" Tall: §c❁100"), new LineContent(" Handsome: §9☣100")));
             this.active = () -> WIDGET_LIST.getHandler().list.stream()
                     .anyMatch(pair -> pair.getKey().equals(name) && pair.getValue());
 
