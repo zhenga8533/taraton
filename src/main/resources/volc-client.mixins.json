@@ -2,7 +2,14 @@
   "required": true,
   "package": "net.volcaronitee.volcclient.mixin",
   "compatibilityLevel": "JAVA_21",
-  "mixins": ["ClientPlayerEntityMixin", "ClientPlayNetworkHandlerMixin", "MouseMixin", "TextRendererMixin"],
+  "client": [
+    "accessor.ChatHudAccessor",
+    "ChatScreenMixin",
+    "ClientPlayerEntityMixin",
+    "ClientPlayNetworkHandlerMixin",
+    "MouseMixin",
+    "TextRendererMixin"
+  ],
   "injectors": {
     "defaultRequire": 1
   },

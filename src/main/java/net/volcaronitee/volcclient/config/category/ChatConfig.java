@@ -26,6 +26,61 @@ public class ChatConfig {
     public static ConfigCategory create(ConfigUtil defaults, ConfigUtil config) {
         return ConfigCategory.createBuilder().name(Text.literal("Chat"))
 
+                // Chat Option Group
+                .group(OptionGroup.createBuilder().name(Text.literal("Correct"))
+
+                        // Copy Chat
+                        .option(Option.<Boolean>createBuilder().name(Text.literal("Copy Chat"))
+                                .description(OptionDescription.createBuilder()
+                                        .webpImage(Identifier.of(VolcClient.MOD_ID,
+                                                "config/chat/copy_chat.webp"))
+                                        .text(Text.literal(
+                                                "Copies chat messages to clipboard when clicked on while holding shift."))
+                                        .build())
+                                .binding(defaults.chat.copyChat, () -> config.chat.copyChat,
+                                        newVal -> config.chat.copyChat = newVal)
+                                .controller(ConfigUtil::createBooleanController).build())
+
+                        // Custom Emotes
+                        .option(Option.<Boolean>createBuilder().name(Text.literal("Custom Emotes"))
+                                .description(OptionDescription.createBuilder()
+                                        .webpImage(Identifier.of(VolcClient.MOD_ID,
+                                                "config/chat/custom_emotes.webp"))
+                                        .text(Text.literal(
+                                                "Allows the use of §6MVP§c++ §femotes in chat. Customize your emotes using §e/vc em§f."))
+                                        .build())
+                                .binding(defaults.chat.customEmotes, () -> config.chat.customEmotes,
+                                        newVal -> config.chat.customEmotes = newVal)
+                                .controller(ConfigUtil::createBooleanController).build())
+
+                        // Spam Hider
+                        .option(Option.<Boolean>createBuilder().name(Text.literal("Spam Hider"))
+                                .description(OptionDescription.createBuilder()
+                                        .webpImage(Identifier.of(VolcClient.MOD_ID,
+                                                "config/chat/spam_hider.webp"))
+                                        .text(Text.literal(
+                                                "Hides spam messages in chat. Customize the spam filter using §e/vc sl§f."))
+                                        .build())
+                                .binding(defaults.chat.spamHider, () -> config.chat.spamHider,
+                                        newVal -> config.chat.spamHider = newVal)
+                                .controller(ConfigUtil::createBooleanController).build())
+
+                        // Text Substitution
+                        .option(Option.<Boolean>createBuilder()
+                                .name(Text.literal("Text Substitution"))
+                                .description(OptionDescription.createBuilder()
+                                        .webpImage(Identifier.of(VolcClient.MOD_ID,
+                                                "config/chat/text_substitution.webp"))
+                                        .text(Text.literal(
+                                                "Substitutes text keys with user defined values anywhere text is rendered. Set text mapping using §e/vc sm§f."))
+                                        .build())
+                                .binding(defaults.chat.textSubstitution,
+                                        () -> config.chat.textSubstitution,
+                                        newVal -> config.chat.textSubstitution = newVal)
+                                .controller(ConfigUtil::createBooleanController).build())
+
+                        .build())
+
                 // Correct Option Group
                 .group(OptionGroup.createBuilder().name(Text.literal("Correct"))
 
@@ -259,6 +314,18 @@ public class ChatConfig {
                 .build();
     }
 
+    // Chat Option Group
+    public boolean copyChat = true;
+
+    @SerialEntry
+    public boolean customEmotes = false;
+
+    @SerialEntry
+    public boolean spamHider = true;
+
+    @SerialEntry
+    public boolean textSubstitution = true;
+
     // Correct Option Group
     @SerialEntry
     public boolean autocompleteCommand = false;
@@ -267,16 +334,7 @@ public class ChatConfig {
     public boolean autocorrectCommand = true;
 
     @SerialEntry
-    public boolean customEmotes = false;
-
-    @SerialEntry
     public boolean playtimeWarning = true;
-
-    @SerialEntry
-    public boolean spamHider = true;
-
-    @SerialEntry
-    public boolean textSubstitution = true;
 
     // Message Option Group
     @SerialEntry
