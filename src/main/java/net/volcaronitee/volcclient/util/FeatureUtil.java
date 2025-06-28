@@ -11,11 +11,13 @@ import net.volcaronitee.volcclient.feature.general.RemoveSelfieMode;
 import net.volcaronitee.volcclient.feature.general.ServerStatus;
 import net.volcaronitee.volcclient.feature.general.SkyBlockLevelUpAlert;
 import net.volcaronitee.volcclient.feature.general.SkyBlockXpAlert;
+import net.volcaronitee.volcclient.feature.general.WidgetDisplay;
 
 public class FeatureUtil {
     public static void init() {
         // General Features
         RemoveSelfieMode.register();
+        WidgetDisplay.register();
 
         // Chat Features
         ChatAlert.register();

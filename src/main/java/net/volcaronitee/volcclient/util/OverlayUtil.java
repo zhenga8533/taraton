@@ -56,8 +56,8 @@ public class OverlayUtil {
     public static Overlay createOverlay(String name, Supplier<Boolean> shouldRender,
             List<LineContent> templateLines) {
         JsonObject overlayJson = JsonUtil.loadJson("overlays", name + ".json");
-        int x = overlayJson.has("x") ? overlayJson.get("x").getAsInt() : 0;
-        int y = overlayJson.has("y") ? overlayJson.get("y").getAsInt() : 0;
+        int x = overlayJson.has("x") ? overlayJson.get("x").getAsInt() : 100;
+        int y = overlayJson.has("y") ? overlayJson.get("y").getAsInt() : 100;
         float scale = overlayJson.has("scale") ? overlayJson.get("scale").getAsFloat() : 1.0f;
 
         Overlay overlay = new Overlay(x, y, scale, shouldRender, templateLines);
@@ -244,6 +244,7 @@ public class OverlayUtil {
         private List<ItemStack> items = new ArrayList<>();
         private String startText = "";
         private String text = "";
+        private Text textComponent = null;
         private Supplier<Boolean> shouldRender = () -> true;
 
         /**
@@ -277,6 +278,15 @@ public class OverlayUtil {
          */
         public LineContent(String text) {
             this.text = text;
+        }
+
+        /**
+         * Creates a new LineContent instance with the specified text component.
+         * 
+         * @param textComponent The text component to display in the line.
+         */
+        public LineContent(Text textComponent) {
+            this.textComponent = textComponent;
         }
 
         /**
@@ -394,8 +404,14 @@ public class OverlayUtil {
                     offsetX += FONT_SIZE * scale;
                 }
 
-                context.drawTextWithShadow(tr, line.startText + line.text, (int) (x + offsetX),
-                        (int) drawY, Colors.WHITE);
+                // Render the start text and main text
+                if (line.textComponent != null) {
+                    context.drawTextWithShadow(tr, line.textComponent, (int) (x + offsetX),
+                            (int) drawY, Colors.WHITE);
+                } else {
+                    context.drawTextWithShadow(tr, line.startText + line.text, (int) (x + offsetX),
+                            (int) drawY, Colors.WHITE);
+                }
             }
 
             // Render alignment lines if this is the current overlay
@@ -431,9 +447,14 @@ public class OverlayUtil {
                 }
 
                 // Calculate the width of the line based on items and text
-                float lineWidth = (line.items.size() * FONT_SIZE + tr.getWidth(line.text)
-                        + tr.getWidth(line.startText)) * scale;
-                maxWidth = Math.max(maxWidth, lineWidth);
+                float lineWidth = line.items.size() * FONT_SIZE;
+                if (line.textComponent != null) {
+                    lineWidth += tr.getWidth(line.textComponent);
+                } else {
+                    lineWidth += tr.getWidth(line.text) + tr.getWidth(line.startText);
+                }
+
+                maxWidth = Math.max(maxWidth, lineWidth * scale);
                 totalHeight += lineHeight;
             }
 
