@@ -8,6 +8,7 @@ import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.text.Text;
+import net.volcaronitee.volcclient.feature.chat.ChatAlert;
 import net.volcaronitee.volcclient.feature.chat.CustomEmote;
 import net.volcaronitee.volcclient.feature.chat.JoinWhitelist;
 import net.volcaronitee.volcclient.feature.chat.SpamHider;
@@ -56,6 +57,8 @@ public class CommandUtil {
                                 .then(WidgetDisplay.WIDGET_LIST.createCommand("wgl"))
 
                                 // Maps commands
+                                .then(ChatAlert.CHAT_ALERT_MAP.createCommand("chatalertmap"))
+                                .then(ChatAlert.CHAT_ALERT_MAP.createCommand("cam"))
                                 .then(CustomEmote.EMOTE_MAP.createCommand("emotemap"))
                                 .then(CustomEmote.EMOTE_MAP.createCommand("em"))
                                 .then(TextSubstitution.SUBSTITUTION_MAP.createCommand("submap"))

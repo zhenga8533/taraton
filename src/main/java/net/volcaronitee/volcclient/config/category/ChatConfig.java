@@ -29,6 +29,18 @@ public class ChatConfig {
                 // Chat Option Group
                 .group(OptionGroup.createBuilder().name(Text.literal("Correct"))
 
+                        // Chat Alert
+                        .option(Option.<Boolean>createBuilder().name(Text.literal("Chat Alert"))
+                                .description(OptionDescription.createBuilder()
+                                        .webpImage(Identifier.of(VolcClient.MOD_ID,
+                                                "config/chat/chat_alert.webp"))
+                                        .text(Text.literal(
+                                                "Alerts you when certain messages are sent in chat. Customize your alerts using §e/vc cam§f."))
+                                        .build())
+                                .binding(defaults.chat.chatAlert, () -> config.chat.chatAlert,
+                                        newVal -> config.chat.chatAlert = newVal)
+                                .controller(ConfigUtil::createBooleanController).build())
+
                         // Copy Chat
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Copy Chat"))
                                 .description(OptionDescription.createBuilder()
@@ -315,6 +327,10 @@ public class ChatConfig {
     }
 
     // Chat Option Group
+    @SerialEntry
+    public boolean chatAlert = true;
+
+    @SerialEntry
     public boolean copyChat = true;
 
     @SerialEntry
