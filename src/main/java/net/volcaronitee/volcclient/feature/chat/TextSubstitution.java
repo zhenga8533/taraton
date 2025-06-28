@@ -39,7 +39,7 @@ public class TextSubstitution {
                     + "§mm - Strikethrough§r\n"
                     + "§nn - Underline§r\n"
                     + "§oo - Italic§r\n"
-                    + "§rr - Reset§r\n\n").append(TextUtil.createLink(
+                    + "§rr - Reset§r\n\n").append(TextUtil.getInstance().createLink(
                         "htmlcolorcodes.com/minecraft-color-codes/", "https://htmlcolorcodes.com/minecraft-color-codes/")),
             "substitution_map.json");
     // @formatter:on

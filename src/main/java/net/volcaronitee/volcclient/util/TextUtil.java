@@ -4,6 +4,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import net.minecraft.text.ClickEvent;
 import net.minecraft.text.MutableText;
+import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 
@@ -11,6 +12,8 @@ import net.minecraft.util.Formatting;
  * Utility class for text formatting and constants.
  */
 public class TextUtil {
+    private static final TextUtil INSTANCE = new TextUtil();
+
     public static final Text MOD_TITLE = Text.literal("[").formatted(Formatting.DARK_GRAY)
             .append(Text.literal("Volc Client").formatted(Formatting.GOLD))
             .append(Text.literal("]")).formatted(Formatting.DARK_GRAY);
@@ -21,13 +24,22 @@ public class TextUtil {
     private TextUtil() {}
 
     /**
+     * Gets the singleton instance of TextUtil.
+     * 
+     * @return The singleton instance of TextUtil.
+     */
+    public static TextUtil getInstance() {
+        return INSTANCE;
+    }
+
+    /**
      * Creates a clickable link text component.
      * 
      * @param text The display text for the link.
      * @param url The URL to link to.
      * @return A Text component that represents a clickable link.
      */
-    public static Text createLink(String text, String url) {
+    public Text createLink(String text, String url) {
         MutableText textComponent = Text.literal(text);
         textComponent.formatted(Formatting.BLUE, Formatting.UNDERLINE);
 
@@ -43,5 +55,20 @@ public class TextUtil {
         }
 
         return textComponent;
+    }
+
+    /**
+     * Converts an OrderedText to a String by iterating through its components.
+     * 
+     * @param orderedText
+     * @return
+     */
+    public String orderedTextToString(OrderedText orderedText) {
+        StringBuilder builder = new StringBuilder();
+        orderedText.accept((index, style, codePoint) -> {
+            builder.append(Character.toChars(codePoint));
+            return true;
+        });
+        return builder.toString();
     }
 }

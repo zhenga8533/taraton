@@ -17,7 +17,8 @@ public class SpamHider {
 
     public static final ListUtil SPAM_LIST = new ListUtil("Spam List",
             Text.literal("A list of spam messages to hide in chat.\n\nUse ")
-                    .append(TextUtil.createLink("regex101.com", "https://regex101.com"))
+                    .append(TextUtil.getInstance().createLink("regex101.com",
+                            "https://regex101.com"))
                     .append(Text.literal(" to test your regex patterns.")),
             "spam_list.json");
 
