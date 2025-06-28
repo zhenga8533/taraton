@@ -12,7 +12,7 @@ import net.volcaronitee.volcclient.util.ConfigUtil;
 import net.volcaronitee.volcclient.util.TextUtil;
 
 /**
- * Handles copying chat messages when the user clicks on them while holding
+ * Handles copying chat messages when the user clicks on them while holding the Shift key.
  */
 public class CopyChat {
     private static final CopyChat INSTANCE = new CopyChat();
