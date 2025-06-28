@@ -1,32 +1,24 @@
 package net.volcaronitee.volcclient.feature.general;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
-import com.google.common.collect.ComparisonChain;
-import com.google.common.collect.Ordering;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.network.PlayerListEntry;
-import net.minecraft.scoreboard.Team;
 import net.minecraft.text.Text;
-import net.minecraft.world.GameMode;
 import net.volcaronitee.volcclient.config.controller.KeyValueController.KeyValuePair;
 import net.volcaronitee.volcclient.util.ListUtil;
 import net.volcaronitee.volcclient.util.OverlayUtil;
 import net.volcaronitee.volcclient.util.OverlayUtil.LineContent;
+import net.volcaronitee.volcclient.util.TablistUtil;
 
 /**
  * Feature to display widgets in the overlay based on player list entries.
  */
 public class WidgetDisplay {
     private static final WidgetDisplay INSTANCE = new WidgetDisplay();
-
-    private static final Ordering<PlayerListEntry> PLAYER_COMPARATOR =
-            Ordering.from(new PlayerComparator());
 
     public static final ListUtil WIDGET_LIST = new ListUtil("Widget List",
             Text.literal("A list of widgets to display in the overlay."), "widget_list.json");
@@ -55,18 +47,9 @@ public class WidgetDisplay {
      * @param client The Minecraft client instance.
      */
     private void updateWidgets(MinecraftClient client) {
-        ClientPlayNetworkHandler networkHandler = client.getNetworkHandler();
-        if (networkHandler == null || networkHandler.getPlayerList() == null) {
-            return;
-        }
-
-        // Sort the player list entries based on the comparator
-        List<PlayerListEntry> tablist = new ArrayList<>(networkHandler.getPlayerList());
-        tablist.sort(PLAYER_COMPARATOR);
-
         // Loop through the player list entries and populate the widgets
         Widget addToWidget = null;
-        for (PlayerListEntry entry : tablist) {
+        for (PlayerListEntry entry : TablistUtil.getInstance().getTablist()) {
             Text displayName = entry.getDisplayName();
             if (displayName == null) {
                 continue;
@@ -131,29 +114,6 @@ public class WidgetDisplay {
                     .anyMatch(pair -> pair.getKey().equals(name) && pair.getValue());
 
             OverlayUtil.createOverlay(name, this.active, lines);
-        }
-    }
-
-    /**
-     * Comparator for PlayerListEntry objects to sort players in the tab list.
-     */
-    private static class PlayerComparator implements Comparator<PlayerListEntry> {
-        @Override
-        public int compare(PlayerListEntry playerOne, PlayerListEntry playerTwo) {
-            // Get player teams
-            Team teamOne = playerOne.getScoreboardTeam();
-            Team teamTwo = playerTwo.getScoreboardTeam();
-
-            // Compare game modes (spectators usually last)
-            boolean playerOneNotSpectator = playerOne.getGameMode() != GameMode.SPECTATOR;
-            boolean playerTwoNotSpectator = playerTwo.getGameMode() != GameMode.SPECTATOR;
-
-            return ComparisonChain.start()
-                    .compareTrueFirst(playerOneNotSpectator, playerTwoNotSpectator)
-                    .compare(teamOne != null ? teamOne.getName() : "",
-                            teamTwo != null ? teamTwo.getName() : "")
-                    .compare(playerOne.getProfile().getName(), playerTwo.getProfile().getName())
-                    .result();
         }
     }
 }
