@@ -4,10 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
+
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.PlayerListEntry;
 import net.minecraft.text.Text;
 import net.volcaronitee.volcclient.config.controller.KeyValueController.KeyValuePair;
+import net.volcaronitee.volcclient.util.ConfigUtil;
 import net.volcaronitee.volcclient.util.ListUtil;
 import net.volcaronitee.volcclient.util.OverlayUtil;
 import net.volcaronitee.volcclient.util.OverlayUtil.LineContent;
@@ -32,7 +34,8 @@ public class WidgetDisplay {
     /**
      * Private constructor to prevent instantiation.
      */
-    private WidgetDisplay() {}
+    private WidgetDisplay() {
+    }
 
     /**
      * Registers the widget display feature to listen for client tick events.
@@ -110,7 +113,7 @@ public class WidgetDisplay {
             this.name = name;
             this.lines = new ArrayList<>(List.of(new LineContent("§e§l" + name + ":"),
                     new LineContent(" Tall: §c❁100"), new LineContent(" Handsome: §9☣100")));
-            this.active = () -> WIDGET_LIST.getHandler().list.stream()
+            this.active = () -> ConfigUtil.getHandler().general.widgetDisplay && WIDGET_LIST.getHandler().list.stream()
                     .anyMatch(pair -> pair.getKey().equals(name) && pair.getValue());
 
             OverlayUtil.createOverlay(name, this.active, lines);
