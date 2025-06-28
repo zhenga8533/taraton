@@ -5,7 +5,6 @@ import java.util.Comparator;
 import java.util.List;
 import com.google.common.collect.ComparisonChain;
 import com.google.common.collect.Ordering;
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.network.PlayerListEntry;
@@ -29,7 +28,7 @@ public class TablistUtil {
     private TablistUtil() {}
 
     public static void init() {
-        ClientTickEvents.END_CLIENT_TICK.register(INSTANCE::updateTablist);
+        TickUtil.register(INSTANCE::updateTablist, 5);
     }
 
     /**

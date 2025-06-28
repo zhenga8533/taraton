@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.PlayerListEntry;
 import net.minecraft.text.Text;
@@ -13,6 +12,7 @@ import net.volcaronitee.volcclient.util.ListUtil;
 import net.volcaronitee.volcclient.util.OverlayUtil;
 import net.volcaronitee.volcclient.util.OverlayUtil.LineContent;
 import net.volcaronitee.volcclient.util.TablistUtil;
+import net.volcaronitee.volcclient.util.TickUtil;
 
 /**
  * Feature to display widgets in the overlay based on player list entries.
@@ -38,7 +38,7 @@ public class WidgetDisplay {
      * Registers the widget display feature to listen for client tick events.
      */
     public static void register() {
-        ClientTickEvents.END_CLIENT_TICK.register(INSTANCE::updateWidgets);
+        TickUtil.register(INSTANCE::updateWidgets, 10);
     }
 
     /**
