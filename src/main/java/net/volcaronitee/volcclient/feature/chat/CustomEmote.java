@@ -1,12 +1,9 @@
 package net.volcaronitee.volcclient.feature.chat;
 
-import java.util.List;
-import com.google.gson.JsonObject;
 import net.fabricmc.fabric.api.client.message.v1.ClientSendMessageEvents;
 import net.minecraft.text.Text;
 import net.volcaronitee.volcclient.config.controller.KeyValueController.KeyValuePair;
 import net.volcaronitee.volcclient.util.ConfigUtil;
-import net.volcaronitee.volcclient.util.JsonUtil;
 import net.volcaronitee.volcclient.util.ListUtil;
 
 /**
@@ -15,12 +12,8 @@ import net.volcaronitee.volcclient.util.ListUtil;
 public class CustomEmote {
     private static final CustomEmote INSTANCE = new CustomEmote();
 
-    private static final JsonObject EMOTE_JSON = JsonUtil.loadTemplate("lists/emotes.json");
-    private static final List<KeyValuePair<String, KeyValuePair<String, Boolean>>> DEFAULT_MAP =
-            ListUtil.parseKeyValuePairs(EMOTE_JSON, "emotes");
     public static final ListUtil EMOTE_MAP = new ListUtil("Emote Map",
-            Text.literal("A list of custom emote mappings to use in chat."), "emote_map.json", null,
-            DEFAULT_MAP);
+            Text.literal("A list of custom emote mappings to use in chat."), "emote_map.json");
 
     static {
         EMOTE_MAP.setIsMap(true);

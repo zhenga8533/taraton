@@ -94,17 +94,17 @@ public class JsonUtil {
      */
     public static JsonObject loadTemplate(String fileName) {
         String templateResourceName = TEMPLATE_PATH + fileName;
+
+        // Check if the template resource exists
         try (InputStream templateStream =
                 JsonUtil.class.getResourceAsStream(templateResourceName)) {
             if (templateStream == null) {
-                throw new IOException(
-                        "Bundled template resource not found: " + templateResourceName);
+                return null;
             }
 
             // Use InputStreamReader to parse JSON from the stream
             return JsonParser.parseReader(new InputStreamReader(templateStream)).getAsJsonObject();
         } catch (IOException e) {
-            e.printStackTrace();
             throw new RuntimeException("Failed to load bundled template: " + fileName, e);
         }
     }

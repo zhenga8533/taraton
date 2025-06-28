@@ -16,8 +16,7 @@ public class WidgetDisplay {
     private static final WidgetDisplay INSTANCE = new WidgetDisplay();
 
     public static final ListUtil WIDGET_LIST = new ListUtil("Widget List",
-            Text.literal("A list of widgets to display in the overlay."), "widget_list.json", null,
-            null);
+            Text.literal("A list of widgets to display in the overlay."), "widget_list.json");
 
     private static final Set<Widget> WIDGETS = new HashSet<>();
 

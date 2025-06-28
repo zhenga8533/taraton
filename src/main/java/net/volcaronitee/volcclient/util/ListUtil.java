@@ -1,16 +1,12 @@
 package net.volcaronitee.volcclient.util;
 
 import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.literal;
-import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import dev.isxander.yacl3.api.ConfigCategory;
 import dev.isxander.yacl3.api.ListOption;
@@ -38,9 +34,19 @@ public class ListUtil {
     private static final Path CONFIG_PATH =
             FabricLoader.getInstance().getConfigDir().resolve(VolcClient.MOD_ID + "/lists");
 
+    static {
+        // Ensure the configuration directory exists
+        try {
+            Files.createDirectories(CONFIG_PATH);
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to create configuration directory: " + CONFIG_PATH,
+                    e);
+        }
+    }
+
     private String title;
     private Text description;
-    private Path configPath;
+    private String fileName;
     private Runnable saveCallback;
 
     private ConfigClassHandler<ListUtil> handler;
@@ -49,45 +55,42 @@ public class ListUtil {
     @SerialEntry
     public List<KeyValuePair<String, Boolean>> list =
             new ArrayList<KeyValuePair<String, Boolean>>();
-    private List<KeyValuePair<String, Boolean>> defaultList =
-            new ArrayList<KeyValuePair<String, Boolean>>();
 
     @SerialEntry
     public List<KeyValuePair<String, KeyValuePair<String, Boolean>>> map =
             new ArrayList<KeyValuePair<String, KeyValuePair<String, Boolean>>>();
-    private List<KeyValuePair<String, KeyValuePair<String, Boolean>>> defaultMap =
-            new ArrayList<KeyValuePair<String, KeyValuePair<String, Boolean>>>();
+
+    /**
+     * Default constructor for ListUtil.
+     */
+    public ListUtil() {}
 
     /**
      * Creates a new ListUtil instance with the specified title and configuration path.
      * 
      * @param title The title for the configuration screen.
      * @param description A brief description of the configuration.
-     * @param configPath The path to the configuration file relative to the config directory.
-     * @param defaultList An optional list of default values to initialize the list.
-     * @param defaultMap An optional list of key-value pairs to initialize the map.
+     * @param fileName The name of the configuration file to be used.
      */
-    public ListUtil(String title, Text description, String configPath,
-            List<KeyValuePair<String, Boolean>> defaultList,
-            List<KeyValuePair<String, KeyValuePair<String, Boolean>>> defaultMap) {
+    public ListUtil(String title, Text description, String fileName) {
         this.title = title;
         this.description = description;
-        this.configPath = CONFIG_PATH.resolve(configPath);
+        this.fileName = fileName;
 
         // Create handler for this ListUtil instance
         this.handler = ConfigClassHandler.createBuilder(ListUtil.class)
                 .serializer(config -> GsonConfigSerializerBuilder.create(config)
-                        .setPath(this.configPath).appendGsonBuilder(gsonBuilder -> gsonBuilder
-                                .setPrettyPrinting().disableHtmlEscaping().serializeNulls())
+                        .setPath(CONFIG_PATH.resolve(fileName))
+                        .appendGsonBuilder(gsonBuilder -> gsonBuilder.setPrettyPrinting()
+                                .disableHtmlEscaping().serializeNulls())
                         .build())
                 .build();
 
-        // Initialize default values
-        this.defaultList = defaultList;
-        this.defaultMap = defaultMap;
-        createDefaults(defaultList, defaultMap);
-
-        this.handler.load();
+        loadDefault();
+        MinecraftClient.getInstance().send(() -> {
+            handler.load();
+            saveCallback.run();
+        });
     }
 
     /**
@@ -109,55 +112,25 @@ public class ListUtil {
     }
 
     /**
-     * Creates default values for the list and map if the configuration file does not exist.
-     * 
-     * @param defaultList The default list of strings to initialize if the config file is missing.
-     * @param defaultMap The default list of key-value pairs to initialize if the config file is
-     *        missing.
+     * Creates default configuration values for the ListUtil instance.
      */
-    public void createDefaults(List<KeyValuePair<String, Boolean>> defaultList,
-            List<KeyValuePair<String, KeyValuePair<String, Boolean>>> defaultMap) {
-        if (!Files.exists(this.configPath)) {
-            // Ensure the parent directory exists
-            try {
-                Files.createDirectories(this.configPath.getParent());
-            } catch (IOException e) {
-                VolcClient.LOGGER.error("Failed to create config directory for " + this.configPath,
-                        e);
+    public void loadDefault() {
+        Path configPath = CONFIG_PATH.resolve(fileName);
+        if (Files.exists(configPath)) {
+            return;
+        }
+
+        // Load the template file from resources
+        try (InputStream templateStream =
+                JsonUtil.class.getResourceAsStream("/json/lists/" + fileName)) {
+            if (templateStream == null) {
+                return;
             }
 
-            // Set default values and save the configuration
-            JsonObject defaultConfig = new JsonObject();
-            if (defaultList != null) {
-                JsonArray listArray = new JsonArray();
-                for (KeyValuePair<String, Boolean> item : defaultList) {
-                    JsonObject itemObject = new JsonObject();
-                    itemObject.addProperty("key", item.getKey());
-                    itemObject.addProperty("value", item.getValue());
-                    listArray.add(itemObject);
-                }
-                defaultConfig.add("list", listArray);
-            }
-            if (defaultMap != null) {
-                JsonArray mapArray = new JsonArray();
-                for (KeyValuePair<String, KeyValuePair<String, Boolean>> pair : defaultMap) {
-                    JsonObject pairObject = new JsonObject();
-                    pairObject.addProperty("key", pair.getKey());
-                    JsonObject valueObject = new JsonObject();
-                    valueObject.addProperty("key", pair.getValue().getKey());
-                    valueObject.addProperty("value", pair.getValue().getValue());
-                    mapArray.add(pairObject);
-                }
-                defaultConfig.add("map", mapArray);
-            }
-
-            // Save the default configuration to the file
-            try (BufferedWriter writer = Files.newBufferedWriter(this.configPath)) {
-                JsonUtil.GSON.toJson(defaultConfig, writer);
-                VolcClient.LOGGER.info("Default config written to: " + this.configPath);
-            } catch (IOException e) {
-                VolcClient.LOGGER.error("Failed to write default config to " + this.configPath, e);
-            }
+            // Copy the template file to the configuration path
+            Files.copy(templateStream, configPath);
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to load template for list config: " + fileName, e);
         }
     }
 
@@ -167,15 +140,13 @@ public class ListUtil {
     public void reset() {
         // Delete the configuration file
         try {
-            Files.deleteIfExists(this.configPath);
-            VolcClient.LOGGER.info("Configuration file reset: " + this.configPath);
+            Files.deleteIfExists(CONFIG_PATH.resolve(fileName));
         } catch (IOException e) {
-            VolcClient.LOGGER.error("Failed to reset configuration file: " + this.configPath, e);
+            throw new RuntimeException("Failed to delete list config file: " + fileName, e);
         }
 
         // Recreate the defaults
-        createDefaults(this.defaultList, this.defaultMap);
-        this.handler.load();
+        loadDefault();
     }
 
     /**
@@ -195,10 +166,8 @@ public class ListUtil {
      */
     public Screen createScreen(Screen parent) {
         return YetAnotherConfigLib.create(handler, (defaults, config, builder) -> {
-            builder.title(Text.literal(this.title))
-                    .category(isMap ? createMapCategory(defaults, config)
-                            : createListCategory(defaults, config))
-                    .save(() -> {
+            builder.title(Text.literal(title)).category(isMap ? createMapCategory(defaults, config)
+                    : createListCategory(defaults, config)).save(() -> {
                         if (saveCallback != null) {
                             saveCallback.run();
                         }
@@ -274,78 +243,5 @@ public class ListUtil {
                                         .valueController("Enabled",
                                                 TickBoxControllerBuilder::create)))
                 .initial(new KeyValuePair<>("", new KeyValuePair<>("", true))).build()).build();
-    }
-
-    /**
-     * Parses a list of strings from a JsonObject under a specified key.
-     * 
-     * @param rootObject The root JsonObject containing the list.
-     * @param listKey The key under which the list is stored in the root object.
-     * @return A list of strings representing the elements found in the specified list.
-     */
-    public static List<KeyValuePair<String, Boolean>> parseList(JsonObject rootObject,
-            String listKey) {
-        List<KeyValuePair<String, Boolean>> result = new ArrayList<>();
-
-        if (rootObject != null && listKey != null && !listKey.isEmpty()) {
-            if (rootObject.has(listKey) && rootObject.get(listKey).isJsonArray()) {
-                for (JsonElement element : rootObject.getAsJsonArray(listKey)) {
-                    if (element.isJsonObject()) {
-                        JsonObject itemObject = element.getAsJsonObject();
-                        String key =
-                                itemObject.has("key") ? itemObject.get("key").getAsString() : "";
-                        boolean value =
-                                itemObject.has("value") && itemObject.get("value").getAsBoolean();
-                        result.add(new KeyValuePair<>(key, value));
-                    } else if (element.isJsonPrimitive()
-                            && element.getAsJsonPrimitive().isString()) {
-                        result.add(new KeyValuePair<>(element.getAsString(), true));
-                    }
-                }
-            }
-        }
-
-        return result;
-    }
-
-    /**
-     * Parses key-value pairs from a JsonObject under a specified key.
-     * 
-     * @param rootObject The root JsonObject containing the key-value pairs.
-     * @param mapKey The key under which the key-value pairs are stored in the root object.
-     * @return A list of KeyValuePair objects representing the key-value pairs found in the
-     *         specified map.
-     */
-    public static List<KeyValuePair<String, KeyValuePair<String, Boolean>>> parseKeyValuePairs(
-            JsonObject rootObject, String mapKey) {
-        List<KeyValuePair<String, KeyValuePair<String, Boolean>>> result = new ArrayList<>();
-
-        if (rootObject != null && mapKey != null && !mapKey.isEmpty()) {
-            if (rootObject.has(mapKey) && rootObject.get(mapKey).isJsonObject()) {
-                JsonObject targetMapObject = rootObject.getAsJsonObject(mapKey);
-
-                // Iterate through the entries of the JsonObject
-                for (Map.Entry<String, JsonElement> entry : targetMapObject.entrySet()) {
-                    String key = entry.getKey();
-                    JsonElement valueElement = entry.getValue();
-
-                    // Check if the value is a JsonObject
-                    if (valueElement.isJsonObject()) {
-                        JsonObject valueObject = valueElement.getAsJsonObject();
-                        String value =
-                                valueObject.has("key") ? valueObject.get("key").getAsString() : "";
-                        boolean enabled =
-                                valueObject.has("value") && valueObject.get("value").getAsBoolean();
-
-                        result.add(new KeyValuePair<>(key, new KeyValuePair<>(value, enabled)));
-                    } else if (valueElement.isJsonPrimitive()
-                            && valueElement.getAsJsonPrimitive().isString()) {
-                        result.add(new KeyValuePair<>(key,
-                                new KeyValuePair<>(valueElement.getAsString(), true)));
-                    }
-                }
-            }
-        }
-        return result;
     }
 }

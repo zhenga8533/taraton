@@ -2,12 +2,10 @@ package net.volcaronitee.volcclient.feature.chat;
 
 import java.util.List;
 import java.util.regex.Pattern;
-import com.google.gson.JsonObject;
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
 import net.minecraft.text.Text;
 import net.volcaronitee.volcclient.config.controller.KeyValueController.KeyValuePair;
 import net.volcaronitee.volcclient.util.ConfigUtil;
-import net.volcaronitee.volcclient.util.JsonUtil;
 import net.volcaronitee.volcclient.util.ListUtil;
 import net.volcaronitee.volcclient.util.TextUtil;
 
@@ -17,20 +15,16 @@ import net.volcaronitee.volcclient.util.TextUtil;
 public class SpamHider {
     private static final SpamHider INSTANCE = new SpamHider();
 
-    private static final JsonObject SPAM_JSON = JsonUtil.loadTemplate("lists/spam.json");
-    private static final List<KeyValuePair<String, Boolean>> DEFAULT_LIST =
-            ListUtil.parseList(SPAM_JSON, "spam");
     public static final ListUtil SPAM_LIST = new ListUtil("Spam List",
             Text.literal("A list of spam messages to hide in chat.\n\nUse ")
                     .append(TextUtil.createLink("regex101.com", "https://regex101.com"))
                     .append(Text.literal(" to test your regex patterns.")),
-            "spam_list.json", DEFAULT_LIST, null);
+            "spam_list.json");
 
     private static List<Pattern> SPAM_PATTERNS = new java.util.ArrayList<>();
 
     static {
         SPAM_LIST.setSaveCallback(INSTANCE::onSave);
-        INSTANCE.onSave();
     }
 
     /**

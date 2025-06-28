@@ -96,6 +96,10 @@ public class OverlayUtil {
         Overlay overlay = OVERLAYS.get(name);
         if (overlay != null) {
             JsonObject templateJson = JsonUtil.loadTemplate("overlays/" + name + ".json");
+            if (templateJson == null) {
+                return;
+            }
+
             int x = templateJson.has("x") ? templateJson.get("x").getAsInt() : 0;
             int y = templateJson.has("y") ? templateJson.get("y").getAsInt() : 0;
             float scale = templateJson.has("scale") ? templateJson.get("scale").getAsFloat() : 1.0f;

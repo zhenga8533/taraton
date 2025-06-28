@@ -1,10 +1,8 @@
 package net.volcaronitee.volcclient.feature.chat;
 
 import java.time.ZonedDateTime;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import com.google.gson.JsonObject;
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
@@ -13,7 +11,6 @@ import net.volcaronitee.volcclient.config.controller.KeyValueController.KeyValue
 import net.volcaronitee.volcclient.feature.general.ServerStatus;
 import net.volcaronitee.volcclient.feature.general.SkyBlockStats;
 import net.volcaronitee.volcclient.util.ConfigUtil;
-import net.volcaronitee.volcclient.util.JsonUtil;
 import net.volcaronitee.volcclient.util.ListUtil;
 import net.volcaronitee.volcclient.util.ParseUtil;
 import net.volcaronitee.volcclient.util.PartyUtil;
@@ -26,13 +23,8 @@ import net.volcaronitee.volcclient.util.ToggleUtil;
 public class ChatCommands {
     private static final ChatCommands INSTANCE = new ChatCommands();
 
-    // List of prefixes for chat commands
-    private static final JsonObject PREFIX_JSON = JsonUtil.loadTemplate("lists/prefix.json");
-    private static final List<KeyValuePair<String, Boolean>> DEFAULT_LIST =
-            ListUtil.parseList(PREFIX_JSON, "prefix");
     public static final ListUtil PREFIX_MAP = new ListUtil("Prefix List",
-            Text.literal("A list of prefixes to detect for chat commands."), "prefix_list.json",
-            DEFAULT_LIST, null);
+            Text.literal("A list of prefixes to detect for chat commands."), "prefix_list.json");
 
     // Patterns for matching chat messages
     private static final Pattern ALL_PATTERN = Pattern.compile(ParseUtil.PLAYER_PATTERN + ": (.+)");
