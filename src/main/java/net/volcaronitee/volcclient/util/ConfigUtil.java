@@ -21,6 +21,7 @@ import net.volcaronitee.volcclient.config.category.DungeonsConfig;
 import net.volcaronitee.volcclient.config.category.EconomyConfig;
 import net.volcaronitee.volcclient.config.category.EventsConfig;
 import net.volcaronitee.volcclient.config.category.FarmingConfig;
+import net.volcaronitee.volcclient.config.category.FishingConfig;
 import net.volcaronitee.volcclient.config.category.ForagingConfig;
 import net.volcaronitee.volcclient.config.category.GeneralConfig;
 import net.volcaronitee.volcclient.config.category.KuudraConfig;
@@ -72,8 +73,9 @@ public class ConfigUtil {
                     .category(ContainerConfig.create(defaults, config))
                     .category(EconomyConfig.create(defaults, config))
                     .category(CombatConfig.create(defaults, config))
-                    .category(MiningConfig.create(defaults, config))
                     .category(FarmingConfig.create(defaults, config))
+                    .category(FishingConfig.create(defaults, config))
+                    .category(MiningConfig.create(defaults, config))
                     .category(ForagingConfig.create(defaults, config))
                     .category(EventsConfig.create(defaults, config))
                     .category(CrimsonIslesConfig.create(defaults, config))
@@ -143,10 +145,13 @@ public class ConfigUtil {
     public CombatConfig combat = new CombatConfig();
 
     @SerialEntry
-    public MiningConfig mining = new MiningConfig();
+    public FarmingConfig farming = new FarmingConfig();
 
     @SerialEntry
-    public FarmingConfig farming = new FarmingConfig();
+    public FishingConfig fishing = new FishingConfig();
+
+    @SerialEntry
+    public MiningConfig mining = new MiningConfig();
 
     @SerialEntry
     public ForagingConfig foraging = new ForagingConfig();

@@ -6,9 +6,9 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.item.Item;
 import net.minecraft.registry.Registries;
-import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Box;
+import net.volcaronitee.volcclient.util.ConfigUtil;
 import net.volcaronitee.volcclient.util.ScheduleUtil;
 import net.volcaronitee.volcclient.util.TickUtil;
 
@@ -43,7 +43,8 @@ public class HookLineAndSinker {
     }
 
     private void onTick(MinecraftClient client) {
-        if (client.player == null || client.world == null || INSTANCE.hooked) {
+        if (!ConfigUtil.getHandler().fishing.hookLineAndSinker || client.player == null
+                || client.world == null || INSTANCE.hooked) {
             return;
         }
 
@@ -74,14 +75,20 @@ public class HookLineAndSinker {
 
             // Interact with the fishing rod
             ScheduleUtil.schedule(() -> {
-                client.interactionManager.interactItem(client.player, Hand.MAIN_HAND);
+                MinecraftClient.getInstance().options.useKey.setPressed(true);
             }, hookDelay);
+            ScheduleUtil.schedule(() -> {
+                MinecraftClient.getInstance().options.useKey.setPressed(false);
+            }, hookDelay + 1);
 
             // Wait and recast the fishing rod
             ScheduleUtil.schedule(() -> {
-                client.interactionManager.interactItem(client.player, Hand.MAIN_HAND);
-                INSTANCE.hooked = false;
+                MinecraftClient.getInstance().options.useKey.setPressed(true);
             }, hookDelay + fishDelay);
+            ScheduleUtil.schedule(() -> {
+                MinecraftClient.getInstance().options.useKey.setPressed(false);
+                INSTANCE.hooked = false;
+            }, hookDelay + fishDelay + 1);
         }
     }
 }
