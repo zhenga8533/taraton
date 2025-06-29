@@ -1,6 +1,7 @@
 package net.volcaronitee.volcclient.feature.chat;
 
 import java.util.List;
+import java.util.Queue;
 import java.util.regex.Pattern;
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
 import net.minecraft.client.MinecraftClient;
@@ -9,6 +10,7 @@ import net.minecraft.util.Pair;
 import net.volcaronitee.volcclient.config.controller.KeyValueController.KeyValuePair;
 import net.volcaronitee.volcclient.util.ConfigUtil;
 import net.volcaronitee.volcclient.util.ListUtil;
+import net.volcaronitee.volcclient.util.ScheduleUtil;
 import net.volcaronitee.volcclient.util.TextUtil;
 
 /**
@@ -17,14 +19,17 @@ import net.volcaronitee.volcclient.util.TextUtil;
 public class ChatAlert {
     private static final ChatAlert INSTANCE = new ChatAlert();
 
-    public static final ListUtil CHAT_ALERT_MAP = new ListUtil("Chat Alert Map",
-            Text.literal("A list of chat messages to alert on.\n\nUse ")
-                    .append(TextUtil.getInstance().createLink("regex101.com",
-                            "https://regex101.com"))
-                    .append(Text.literal(" to test your regex patterns.")),
+    public static final ListUtil CHAT_ALERT_MAP = new ListUtil("Chat Alert Map", Text
+            .literal("A list of chat messages to alert on. Use ")
+            .append(TextUtil.getInstance().createLink("regex101.com", "https://regex101.com"))
+            .append(Text.literal(" to test your regex patterns.\n\n\n§lOptions:§r\n\n"
+                    + " --command {command} §7Executes a command.\n")),
             "chat_alert_map.json");
 
     private static List<Pair<Pattern, String>> CHAT_PATTERNS = new java.util.ArrayList<>();
+
+    private Queue<String> commandQueue = new java.util.LinkedList<>();
+    private int commandDelay = 0;
 
     static {
         CHAT_ALERT_MAP.setIsMap(true);
@@ -57,10 +62,40 @@ public class ChatAlert {
         // Loop through all chat patterns and check if the message matches any of them
         for (Pair<Pattern, String> entry : CHAT_PATTERNS) {
             Pattern pattern = entry.getLeft();
-            String alertMessage = entry.getRight();
+            String[] args = entry.getRight().split("--");
+
+            String alertMessage = "";
+            String command = "";
+
+            for (String arg : args) {
+                if (arg.startsWith("command ")) {
+                    // Extract the command from the argument
+                    command = arg.substring("command ".length()).trim();
+                    if (command.startsWith("/")) {
+                        command = command.substring(1);
+                    }
+                    commandQueue.add(command);
+                } else if (arg == args[0]) {
+                    // The first argument is the alert message
+                    alertMessage = arg.trim();
+                }
+            }
 
             if (pattern.matcher(message.getString()).find()) {
-                MinecraftClient.getInstance().inGameHud.setTitle(Text.literal(alertMessage));
+                // If an alert message is specified, display it to the player
+                if (!alertMessage.isEmpty()) {
+                    MinecraftClient.getInstance().inGameHud.setTitle(Text.literal(alertMessage));
+                }
+
+                // If a command is specified, execute it
+                if (!command.isEmpty()) {
+                    INSTANCE.commandDelay += 2;
+                    ScheduleUtil.schedule(() -> {
+                        MinecraftClient.getInstance().player.networkHandler
+                                .sendChatCommand(commandQueue.poll());
+                        INSTANCE.commandDelay -= 2;
+                    }, INSTANCE.commandDelay);
+                }
                 break;
             }
         }
