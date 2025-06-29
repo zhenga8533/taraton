@@ -8,6 +8,7 @@ import net.volcaronitee.volcclient.feature.chat.PlaytimeWarning;
 import net.volcaronitee.volcclient.feature.chat.SpamHider;
 import net.volcaronitee.volcclient.feature.combat.EntityHighlight;
 import net.volcaronitee.volcclient.feature.container.Searchbar;
+import net.volcaronitee.volcclient.feature.fishing.HookLineAndSinker;
 import net.volcaronitee.volcclient.feature.general.RemoveSelfieMode;
 import net.volcaronitee.volcclient.feature.general.ServerStatus;
 import net.volcaronitee.volcclient.feature.general.SkyBlockLevelUpAlert;
@@ -36,5 +37,8 @@ public class FeatureUtil {
 
         // Combat Features
         EntityHighlight.register();
+
+        // Fishing Features
+        HookLineAndSinker.register();
     }
 }
