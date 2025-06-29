@@ -1,16 +1,16 @@
 {
   "list": [
     {
-      "key": "^(?:This ability is on cooldown for (\\d+)s\\.|No more charges, next one in (\\d+)s!)$",
+      "key": "This ability is on cooldown for (\\d+)s.",
       "value": true
     },
-    { "key": "^There are blocks in the way!$", "value": true },
+    { "key": "There are blocks in the way!", "value": true },
     {
-      "key": "^Your Implosion hit (\\d+(?:,\\d{3})*(?:\\.\\d+)?) enem(?:y|ies) for (\\d+(?:,\\d{3})*(?:\\.\\d+)?) damage.$",
+      "key": "Your Implosion hit (\\d+(?:,\\d{3})*(?:\\.\\d+)?) enem(?:y|ies) for (\\d+(?:,\\d{3})*(?:\\.\\d+)?) damage.",
       "value": true
     },
     {
-      "key": "^Your Molten Wave hit (\\d+(?:,\\d{3})*(?:\\.\\d+)?) enem(?:y|ies) for (\\d+(?:,\\d{3})*(?:\\.\\d+)?) damage.$",
+      "key": "Your Molten Wave hit (\\d+(?:,\\d{3})*(?:\\.\\d+)?) enem(?:y|ies) for (\\d+(?:,\\d{3})*(?:\\.\\d+)?) damage.",
       "value": true
     }
   ],
