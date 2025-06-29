@@ -1,8 +1,10 @@
 package net.volcaronitee.volcclient.util;
 
 import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.literal;
+
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
+
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.client.MinecraftClient;
@@ -13,6 +15,7 @@ import net.volcaronitee.volcclient.feature.chat.CustomEmote;
 import net.volcaronitee.volcclient.feature.chat.JoinWhitelist;
 import net.volcaronitee.volcclient.feature.chat.SpamHider;
 import net.volcaronitee.volcclient.feature.chat.TextSubstitution;
+import net.volcaronitee.volcclient.feature.combat.EntityHighlight;
 import net.volcaronitee.volcclient.feature.general.WidgetDisplay;
 
 /**
@@ -21,7 +24,7 @@ import net.volcaronitee.volcclient.feature.general.WidgetDisplay;
 public class CommandUtil {
     private static final CommandUtil INSTANCE = new CommandUtil();
 
-    private static final String[] ALIASES = {"vc", "volc", "volcclient"};
+    private static final String[] ALIASES = { "vc", "volc", "volcclient" };
 
     /**
      * Initializes the client command registration for Volc Client.
@@ -49,6 +52,8 @@ public class CommandUtil {
                                 .then(literal("debug").executes(INSTANCE::debug))
 
                                 // Lists commands
+                                .then(EntityHighlight.ENTITY_LIST.createCommand("entitylist"))
+                                .then(EntityHighlight.ENTITY_LIST.createCommand("el"))
                                 .then(SpamHider.SPAM_LIST.createCommand("spamlist"))
                                 .then(SpamHider.SPAM_LIST.createCommand("sl"))
                                 .then(JoinWhitelist.WHITE_LIST.createCommand("whitelist"))

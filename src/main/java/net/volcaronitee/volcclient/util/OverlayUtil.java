@@ -4,8 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
+
 import com.google.gson.JsonObject;
 import com.mojang.brigadier.context.CommandContext;
+
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.VanillaHudElements;
@@ -36,7 +38,8 @@ public class OverlayUtil {
     /**
      * Private constructor to prevent instantiation.
      */
-    private OverlayUtil() {}
+    private OverlayUtil() {
+    }
 
     /**
      * Initializes the OverlayUtil by registering the overlay rendering callback.
@@ -47,10 +50,12 @@ public class OverlayUtil {
     }
 
     /**
-     * Creates a new overlay with the specified name, rendering condition, and template lines.
+     * Creates a new overlay with the specified name, rendering condition, and
+     * template lines.
      * 
-     * @param name The name of the overlay.
-     * @param shouldRender A supplier that determines if the overlay should be rendered.
+     * @param name          The name of the overlay.
+     * @param shouldRender  A supplier that determines if the overlay should be
+     *                      rendered.
      * @param templateLines The template lines to be displayed in the overlay.
      */
     public static Overlay createOverlay(String name, Supplier<Boolean> shouldRender,
@@ -69,8 +74,8 @@ public class OverlayUtil {
     /**
      * Updates the mouse position and state for all overlays.
      * 
-     * @param mx The mouse X position.
-     * @param my The mouse Y position.
+     * @param mx     The mouse X position.
+     * @param my     The mouse Y position.
      * @param isDown Whether the mouse button is pressed.
      */
     public static void saveOverlays() {
@@ -150,11 +155,13 @@ public class OverlayUtil {
     }
 
     /**
-     * Screen for managing overlays, allowing users to drag and drop overlays around the screen.
+     * Screen for managing overlays, allowing users to drag and drop overlays around
+     * the screen.
      */
     private static class OverlayScreen extends Screen {
         /**
-         * Creates a new OverlayScreen instance with the title set to the current Volc Client
+         * Creates a new OverlayScreen instance with the title set to the current Volc
+         * Client
          * version.
          */
         public OverlayScreen() {
@@ -177,7 +184,8 @@ public class OverlayUtil {
 
         @Override
         public void renderBackground(DrawContext context, int mouseX, int mouseY,
-                float deltaTicks) {}
+                float deltaTicks) {
+        }
 
         @Override
         public void mouseMoved(double mouseX, double mouseY) {
@@ -238,7 +246,8 @@ public class OverlayUtil {
     };
 
     /**
-     * Represents the content of a line in an overlay, containing a list of item stacks and text.
+     * Represents the content of a line in an overlay, containing a list of item
+     * stacks and text.
      */
     public static class LineContent {
         private List<ItemStack> items = new ArrayList<>();
@@ -250,9 +259,10 @@ public class OverlayUtil {
         /**
          * Creates a new LineContent instance with the specified start text and text.
          * 
-         * @param startText The text to display at the start of the line.
-         * @param text The text to display in the line.
-         * @param shouldRender A supplier that determines if the line should be rendered.
+         * @param startText    The text to display at the start of the line.
+         * @param text         The text to display in the line.
+         * @param shouldRender A supplier that determines if the line should be
+         *                     rendered.
          */
         public LineContent(String startText, String text, Supplier<Boolean> shouldRender) {
             this.startText = startText;
@@ -263,8 +273,9 @@ public class OverlayUtil {
         /**
          * Creates a new LineContent instance with the specified text and a default
          * 
-         * @param text The text to display in the line.
-         * @param shouldRender A supplier that determines if the line should be rendered.
+         * @param text         The text to display in the line.
+         * @param shouldRender A supplier that determines if the line should be
+         *                     rendered.
          */
         public LineContent(String text, Supplier<Boolean> shouldRender) {
             this.text = text;
@@ -300,14 +311,16 @@ public class OverlayUtil {
     }
 
     /**
-     * Represents a special render function that can be used to render custom content
+     * Represents a special render function that can be used to render custom
+     * content
      */
     public interface SpecialRender {
         void render(DrawContext context);
     }
 
     /**
-     * Represents an overlay that can be rendered on the screen, containing lines of content.
+     * Represents an overlay that can be rendered on the screen, containing lines of
+     * content.
      */
     public static class Overlay {
         private int x, y;
@@ -329,11 +342,12 @@ public class OverlayUtil {
         /**
          * Creates a new Overlay instance.
          * 
-         * @param initialX The initial X position of the overlay.
-         * @param initialY The initial Y position of the overlay.
-         * @param scale The scale factor for the overlay.
-         * @param shouldRender A supplier that determines if the overlay should be rendered.
-         * @param lines The template lines to be displayed in the overlay.
+         * @param initialX     The initial X position of the overlay.
+         * @param initialY     The initial Y position of the overlay.
+         * @param scale        The scale factor for the overlay.
+         * @param shouldRender A supplier that determines if the overlay should be
+         *                     rendered.
+         * @param lines        The template lines to be displayed in the overlay.
          */
         public Overlay(int initialX, int initialY, float scale, Supplier<Boolean> shouldRender,
                 List<LineContent> lines) {
@@ -475,7 +489,26 @@ public class OverlayUtil {
         }
 
         /**
-         * Sets the overlay as changed, indicating that it needs to be recalculated or redrawn.
+         * Gets the X position of the overlay.
+         * 
+         * @return The X position of the overlay.
+         */
+        public int getX() {
+            return this.x;
+        }
+
+        /**
+         * Gets the Y position of the overlay.
+         * 
+         * @return The Y position of the overlay.
+         */
+        public int getY() {
+            return this.y;
+        }
+
+        /**
+         * Sets the overlay as changed, indicating that it needs to be recalculated or
+         * redrawn.
          */
         public void setChanged() {
             this.changed = true;

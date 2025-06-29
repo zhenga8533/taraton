@@ -1,12 +1,10 @@
 package net.volcaronitee.volcclient.config.category;
 
-import java.awt.Color;
 import dev.isxander.yacl3.api.ConfigCategory;
 import dev.isxander.yacl3.api.NameableEnum;
 import dev.isxander.yacl3.api.Option;
 import dev.isxander.yacl3.api.OptionDescription;
 import dev.isxander.yacl3.api.OptionGroup;
-import dev.isxander.yacl3.api.controller.ColorControllerBuilder;
 import dev.isxander.yacl3.api.controller.IntegerSliderControllerBuilder;
 import dev.isxander.yacl3.config.v2.api.SerialEntry;
 import net.minecraft.text.Text;
@@ -23,7 +21,7 @@ public class CombatConfig {
      * Creates a new {@link ConfigCategory} for the Combat features.
      * 
      * @param defaults The default configuration values.
-     * @param config The current configuration values.
+     * @param config   The current configuration values.
      * @return A new {@link ConfigCategory} for the Combat features.
      */
     public static ConfigCategory create(ConfigUtil defaults, ConfigUtil config) {
@@ -59,20 +57,18 @@ public class CombatConfig {
                                         newVal -> config.combat.bestiaryMenu = newVal)
                                 .controller(ConfigUtil::createBooleanController).build())
 
-                        // TODO: Hitbox Color
-                        .option(Option.<Color>createBuilder().name(Text.literal("Hitbox Color"))
+                        // Entity Highlight
+                        .option(Option.<Boolean>createBuilder().name(Text.literal("Entity Highlight"))
                                 .description(OptionDescription.createBuilder()
                                         .webpImage(Identifier.of(VolcClient.MOD_ID,
-                                                "config/combat/hitbox_color.webp"))
+                                                "config/combat/entity_highlight.webp"))
                                         .text(Text.literal(
-                                                "Sets the seed seed used for the color of entity hitboxes."))
+                                                "Highlights entities in the world based on the entity list."))
                                         .build())
-                                .binding(defaults.combat.hitboxColor,
-                                        () -> config.combat.hitboxColor,
-                                        newVal -> config.combat.hitboxColor = newVal)
-                                .controller(
-                                        opt -> ColorControllerBuilder.create(opt).allowAlpha(true))
-                                .build())
+                                .binding(defaults.combat.entityHighlight,
+                                        () -> config.combat.entityHighlight,
+                                        newVal -> config.combat.entityHighlight = newVal)
+                                .controller(ConfigUtil::createBooleanController).build())
 
                         // TODO: Kill Tracker
                         .option(Option.<Integer>createBuilder().name(Text.literal("Kill Tracker"))
@@ -268,7 +264,7 @@ public class CombatConfig {
     public boolean bestiaryMenu = true;
 
     @SerialEntry
-    public Color hitboxColor = new Color(255, 255, 255, 255);
+    public boolean entityHighlight = true;
 
     @SerialEntry
     public int killTracker = 0;
