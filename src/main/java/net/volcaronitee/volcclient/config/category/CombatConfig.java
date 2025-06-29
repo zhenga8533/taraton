@@ -21,7 +21,7 @@ public class CombatConfig {
      * Creates a new {@link ConfigCategory} for the Combat features.
      * 
      * @param defaults The default configuration values.
-     * @param config   The current configuration values.
+     * @param config The current configuration values.
      * @return A new {@link ConfigCategory} for the Combat features.
      */
     public static ConfigCategory create(ConfigUtil defaults, ConfigUtil config) {
@@ -57,8 +57,22 @@ public class CombatConfig {
                                         newVal -> config.combat.bestiaryMenu = newVal)
                                 .controller(ConfigUtil::createBooleanController).build())
 
+                        // Entity Counter
+                        .option(Option.<Boolean>createBuilder().name(Text.literal("Entity Counter"))
+                                .description(OptionDescription.createBuilder()
+                                        .webpImage(Identifier.of(VolcClient.MOD_ID,
+                                                "config/combat/entity_counter.webp"))
+                                        .text(Text.literal(
+                                                "Displays the number of entities highlighted in the world based on the entity list."))
+                                        .build())
+                                .binding(defaults.combat.entityCounter,
+                                        () -> config.combat.entityCounter,
+                                        newVal -> config.combat.entityCounter = newVal)
+                                .controller(ConfigUtil::createBooleanController).build())
+
                         // Entity Highlight
-                        .option(Option.<Boolean>createBuilder().name(Text.literal("Entity Highlight"))
+                        .option(Option.<Boolean>createBuilder()
+                                .name(Text.literal("Entity Highlight"))
                                 .description(OptionDescription.createBuilder()
                                         .webpImage(Identifier.of(VolcClient.MOD_ID,
                                                 "config/combat/entity_highlight.webp"))
@@ -262,6 +276,9 @@ public class CombatConfig {
 
     @SerialEntry
     public boolean bestiaryMenu = true;
+
+    @SerialEntry
+    public boolean entityCounter = false;
 
     @SerialEntry
     public boolean entityHighlight = true;

@@ -6,6 +6,7 @@ import net.volcaronitee.volcclient.feature.chat.CustomEmote;
 import net.volcaronitee.volcclient.feature.chat.JoinWhitelist;
 import net.volcaronitee.volcclient.feature.chat.PlaytimeWarning;
 import net.volcaronitee.volcclient.feature.chat.SpamHider;
+import net.volcaronitee.volcclient.feature.combat.EntityHighlight;
 import net.volcaronitee.volcclient.feature.container.Searchbar;
 import net.volcaronitee.volcclient.feature.general.RemoveSelfieMode;
 import net.volcaronitee.volcclient.feature.general.ServerStatus;
@@ -32,5 +33,8 @@ public class FeatureUtil {
 
         // Container Features
         Searchbar.register();
+
+        // Combat Features
+        EntityHighlight.register();
     }
 }

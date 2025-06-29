@@ -5,33 +5,63 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
+import net.minecraft.registry.Registries;
 import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.math.Box;
 import net.volcaronitee.volcclient.util.ConfigUtil;
 import net.volcaronitee.volcclient.util.ListUtil;
+import net.volcaronitee.volcclient.util.OverlayUtil;
+import net.volcaronitee.volcclient.util.OverlayUtil.LineContent;
+import net.volcaronitee.volcclient.util.TextUtil;
+import net.volcaronitee.volcclient.util.TickUtil;
 
+/**
+ * Feature that highlights entities in the game based on a configurable list.
+ */
 public class EntityHighlight {
     private static final EntityHighlight INSTANCE = new EntityHighlight();
 
-    public static final ListUtil ENTITY_LIST = new ListUtil("Entity List",
-            Text.literal("A list of entities to highlight in the game."),
+    private static final List<LineContent> LINES =
+            List.of(new LineContent("§c§lEntity Counter:", "", () -> true),
+                    new LineContent(" §6§lLion: §f", "1", () -> true),
+                    new LineContent(" §7§lTotal: §f", "1", () -> true));
+
+    public static final ListUtil ENTITY_LIST = new ListUtil("Entity List", Text
+            .literal("A list of entities to highlight in the game.\n\nUse ")
+            .append(TextUtil.getInstance().createLink("digminecraft.com",
+                    "https://www.digminecraft.com/lists/entity_list_pc.php"))
+            .append(Text.literal(
+                    " to find vanilla entity names. If an entity ID is not found, it will be used to identify custom armor stand names.")),
             "entity_list.json");
 
-    private static final Set<String> HIGHLIGHT_ENTITIES = new HashSet<>();
-    private static final Map<String, Integer> HIGHLIGHT_COLORS = new HashMap<>();
+    private static final Map<Entity, Integer> HIGHLIGHTED_ENTITIES = new HashMap<>();
+
+    private static final Set<Identifier> HIGHLIGHT_ENTITIES = new HashSet<>();
+    private static final Map<Identifier, Integer> ENTITY_COLORS = new HashMap<>();
+
+    private static final Set<String> HIGHLIGHT_NAMES = new HashSet<>();
+    private static final Map<String, Integer> NAME_COLOR = new HashMap<>();
+    private static final EntityType<?> ARMOR_STAND =
+            Registries.ENTITY_TYPE.get(Identifier.of("minecraft:armor_stand"));
 
     static {
+        OverlayUtil.createOverlay("entity_counter",
+                () -> ConfigUtil.getHandler().combat.entityCounter, LINES);
+
         ENTITY_LIST.setSaveCallback(INSTANCE::onSave);
     }
 
     /**
      * Private constructor to prevent instantiation.
      */
-    private EntityHighlight() {
-    }
+    private EntityHighlight() {}
 
     /**
      * Gets the singleton instance of HighlightEntity.
@@ -43,40 +73,92 @@ public class EntityHighlight {
     }
 
     /**
+     * Registers the entity highlight feature to scan the world for entities.
+     */
+    public static void register() {
+        TickUtil.register(INSTANCE::scanWorld, 4);
+    }
+
+    /**
+     * Scans the world for entities that should be highlighted.
+     * 
+     * @param client The Minecraft client instance.
+     */
+    private void scanWorld(MinecraftClient client) {
+        HIGHLIGHTED_ENTITIES.clear();
+        if (!ConfigUtil.getHandler().combat.entityHighlight || client.world == null) {
+            return;
+        }
+
+        // Loop through all entities in the world
+        client.world.getEntities().forEach(entity -> {
+            // Get the Identifier for the entity's type
+            EntityType<?> entityType = entity.getType();
+            Identifier entityId = Registries.ENTITY_TYPE.getId(entityType);
+            if (entityId == null) {
+                return;
+            }
+
+            // Check if the entity ID is in the highlight list
+            if (HIGHLIGHT_ENTITIES.contains(entityId)) {
+                HIGHLIGHTED_ENTITIES.put(entity, getColor(entity));
+            } else if (entityType == ARMOR_STAND) { // Special case for armor stands
+                String customName = entity.getCustomName() != null
+                        ? entity.getCustomName().getString().toLowerCase()
+                        : "";
+                if (customName.isEmpty()) {
+                    return;
+                }
+
+                // Check if the custom name matches any of the highlight names
+                for (String name : HIGHLIGHT_NAMES) {
+                    if (customName.contains(name)) {
+                        // Add closest entity to the highlight list
+                        Box boundingBox = entity.getBoundingBox().expand(0.5, 1, 0.5);
+                        List<Entity> nearbyEntities = client.world.getOtherEntities(entity,
+                                boundingBox, e -> e.getType() != ARMOR_STAND);
+
+                        if (!nearbyEntities.isEmpty()) {
+                            Entity closestEntity = nearbyEntities.get(0);
+                            int color = NAME_COLOR.get(name);
+                            HIGHLIGHTED_ENTITIES.put(closestEntity, color);
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    /**
      * Checks if the entity should glow based on the highlight list.
      * 
      * @param entity The entity to check.
      * @return True if the entity should glow, false otherwise.
      */
-    public boolean shouldGlow(Entity entity) {
-        if (!ConfigUtil.getHandler().combat.entityHighlight) {
-            return false;
-        }
-
-        return HIGHLIGHT_ENTITIES.contains(entity.getType().getName().getString());
+    public boolean getGlow(Entity entity) {
+        return HIGHLIGHTED_ENTITIES.containsKey(entity);
     }
 
     /**
-     * Gets the color for the entity based on its name.
+     * Gets the color for the entity based on its identifier.
      * 
-     * @param name The name of the entity type.
-     * @return The color as an integer.
+     * @param entity The entity to get the color for.
+     * @return The color as an integer, or white (0xFFFFFF) if not found.
      */
     public int getColor(Entity entity) {
-        String name = entity.getType().getName().getString();
-        return HIGHLIGHT_COLORS.getOrDefault(name, setColor(name));
+        return HIGHLIGHTED_ENTITIES.getOrDefault(entity, 0xFFFFFF);
     }
 
     /**
-     * Gets the color for the entity based on its type name.
+     * Generates a color based on the entity identifier using MD5 hashing.
      * 
-     * @param name The name of the entity type.
+     * @param id The identifier of the entity.
      * @return The color as an integer.
      */
-    private int setColor(String name) {
+    private int setColor(String id) {
         try {
             MessageDigest md = MessageDigest.getInstance("MD5");
-            byte[] messageDigest = md.digest(name.getBytes());
+            byte[] messageDigest = md.digest(id.getBytes());
 
             BigInteger no = new BigInteger(1, messageDigest);
 
@@ -86,6 +168,7 @@ public class EntityHighlight {
                 hashText = "0" + hashText;
             }
 
+            // Take the first 6 characters for an RGB color
             String truncatedHex = hashText.substring(0, 6);
             return Integer.parseInt(truncatedHex, 16);
         } catch (NoSuchAlgorithmException e) {
@@ -94,21 +177,45 @@ public class EntityHighlight {
     }
 
     /**
+     * Sets the color for an entity based on its identifier.
+     * 
+     * @param identifier The identifier of the entity.
+     * @return The color as an integer.
+     */
+    private int setColor(Identifier identifier) {
+        return setColor(identifier.toString());
+    }
+
+    /**
      * Saves the list of entities to highlight based on the current configuration.
      */
     private void onSave() {
         HIGHLIGHT_ENTITIES.clear();
-        HIGHLIGHT_COLORS.clear();
+        ENTITY_COLORS.clear();
+        HIGHLIGHT_NAMES.clear();
+        NAME_COLOR.clear();
 
         ENTITY_LIST.getHandler().list.forEach(pair -> {
-            // Skip if the entity is not enabled
+            String inputKey = pair.getKey().toLowerCase().trim();
+            Identifier identifier = Identifier.tryParse(inputKey);
+
+            // Handle invalid Identifier format
+            if (identifier == null) {
+                return;
+            }
+
             if (!pair.getValue()) {
                 return;
             }
 
-            String key = pair.getKey();
-            HIGHLIGHT_ENTITIES.add(key);
-            HIGHLIGHT_COLORS.put(key, setColor(key));
+            // Check if the identifier exists in the entity registry
+            if (Registries.ENTITY_TYPE.containsId(identifier)) {
+                HIGHLIGHT_ENTITIES.add(identifier);
+                ENTITY_COLORS.put(identifier, setColor(identifier));
+            } else {
+                HIGHLIGHT_NAMES.add(inputKey);
+                NAME_COLOR.put(inputKey, setColor(inputKey));
+            }
         });
     }
 }

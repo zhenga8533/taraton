@@ -4,12 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
-
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.PlayerListEntry;
 import net.minecraft.text.Text;
 import net.volcaronitee.volcclient.config.controller.KeyValueController.KeyValuePair;
-import net.volcaronitee.volcclient.util.ConfigUtil;
 import net.volcaronitee.volcclient.util.ListUtil;
 import net.volcaronitee.volcclient.util.OverlayUtil;
 import net.volcaronitee.volcclient.util.OverlayUtil.LineContent;
@@ -34,8 +32,7 @@ public class WidgetDisplay {
     /**
      * Private constructor to prevent instantiation.
      */
-    private WidgetDisplay() {
-    }
+    private WidgetDisplay() {}
 
     /**
      * Registers the widget display feature to listen for client tick events.
@@ -62,17 +59,17 @@ public class WidgetDisplay {
             if (addToWidget == null) {
                 // Find the first active widget that matches the name
                 for (Widget widget : WIDGETS.values()) {
-                    if (widget.active.get() && name.startsWith(widget.name)) {
+                    if (name.startsWith(widget.name)) {
                         addToWidget = widget;
                         addToWidget.lines.clear();
-                        addToWidget.lines.add(new LineContent(displayName));
+                        addToWidget.lines.add(new LineContent(displayName, () -> true));
                         break;
                     }
                 }
             } else {
                 // If we already have a widget, add widget details to it
                 if (name.length() > 1 && name.charAt(0) == ' ' && name.charAt(1) != ' ') {
-                    addToWidget.lines.add(new LineContent(displayName));
+                    addToWidget.lines.add(new LineContent(displayName, () -> true));
                 } else {
                     addToWidget = null;
                 }
@@ -102,7 +99,7 @@ public class WidgetDisplay {
     private static class Widget {
         private List<LineContent> lines;
         private final String name;
-        private final Supplier<Boolean> active;
+        private static final Supplier<Boolean> active = () -> true;
 
         /**
          * Constructor for Widget.
@@ -111,12 +108,11 @@ public class WidgetDisplay {
          */
         public Widget(String name) {
             this.name = name;
-            this.lines = new ArrayList<>(List.of(new LineContent("§e§l" + name + ":"),
-                    new LineContent(" Tall: §c❁100"), new LineContent(" Handsome: §9☣100")));
-            this.active = () -> ConfigUtil.getHandler().general.widgetDisplay && WIDGET_LIST.getHandler().list.stream()
-                    .anyMatch(pair -> pair.getKey().equals(name) && pair.getValue());
+            this.lines = new ArrayList<>(List.of(new LineContent("§e§l" + name + ":", active),
+                    new LineContent(" Tall: §c❁100", active),
+                    new LineContent(" Handsome: §9☣100", active)));
 
-            OverlayUtil.createOverlay(name, this.active, lines);
+            OverlayUtil.createOverlay(name, active, lines);
         }
     }
 }

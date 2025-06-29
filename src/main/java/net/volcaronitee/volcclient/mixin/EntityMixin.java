@@ -4,7 +4,6 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-
 import net.minecraft.entity.Entity;
 import net.volcaronitee.volcclient.feature.combat.EntityHighlight;
 
@@ -21,7 +20,7 @@ public abstract class EntityMixin {
     @Inject(method = "isGlowing", at = @At("HEAD"), cancellable = true)
     private void volcclient$entityIsGlowing(CallbackInfoReturnable<Boolean> cir) {
         Entity entity = (Entity) (Object) this;
-        if (EntityHighlight.getInstance().shouldGlow(entity)) {
+        if (EntityHighlight.getInstance().getGlow(entity)) {
             cir.setReturnValue(true);
         }
     }
@@ -34,7 +33,7 @@ public abstract class EntityMixin {
     @Inject(method = "getTeamColorValue", at = @At("HEAD"), cancellable = true)
     private void volcclient$entityGetTeamColorValue(CallbackInfoReturnable<Integer> cir) {
         Entity entity = (Entity) (Object) this;
-        if (EntityHighlight.getInstance().shouldGlow(entity)) {
+        if (EntityHighlight.getInstance().getGlow(entity)) {
             cir.setReturnValue(EntityHighlight.getInstance().getColor(entity));
         }
     }
