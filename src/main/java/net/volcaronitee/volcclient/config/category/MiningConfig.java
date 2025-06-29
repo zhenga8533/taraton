@@ -75,22 +75,6 @@ public class MiningConfig {
                 // Jinx Option Group
                 .group(OptionGroup.createBuilder().name(Text.literal("Jinx"))
 
-                        // TODO: Powder Chest Highlight
-                        .option(Option.<Integer>createBuilder()
-                                .name(Text.literal("Powder Chest Highlight"))
-                                .description(OptionDescription.createBuilder()
-                                        .webpImage(Identifier.of(VolcClient.MOD_ID,
-                                                "config/mining/powder_chest_highlight.webp"))
-                                        .text(Text.literal(
-                                                "Highlights nearby powder chests in the Crystal Hollows. Set the block radius to highlight."))
-                                        .build())
-                                .binding(defaults.mining.powderChestHighlight,
-                                        () -> config.mining.powderChestHighlight,
-                                        newVal -> config.mining.powderChestHighlight = newVal)
-                                .controller(opt -> IntegerSliderControllerBuilder.create(opt)
-                                        .range(0, 128).step(4))
-                                .build())
-
                         // TODO: Powder Tracker
                         .option(Option.<Integer>createBuilder().name(Text.literal("Powder Tracker"))
                                 .description(OptionDescription.createBuilder()
@@ -187,9 +171,6 @@ public class MiningConfig {
     public boolean commissionWaypoints = false;
 
     // Jinx Option Group
-    @SerialEntry
-    public int powderChestHighlight = 0;
-
     @SerialEntry
     public int powderTracker = 0;
 

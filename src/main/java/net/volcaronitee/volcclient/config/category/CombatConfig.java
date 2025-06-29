@@ -194,20 +194,6 @@ public class CombatConfig {
                                         newVal -> config.combat.slayerBossAnnounce = newVal)
                                 .controller(ConfigUtil::createEnumController).build())
 
-                        // TODO: Slayer Boss Highlight
-                        .option(Option.<Boolean>createBuilder()
-                                .name(Text.literal("Slayer Boss Highlight"))
-                                .description(OptionDescription.createBuilder()
-                                        .webpImage(Identifier.of(VolcClient.MOD_ID,
-                                                "config/combat/slayer_boss_highlight.webp"))
-                                        .text(Text.literal(
-                                                "Highlights nearby slayer bosses. This includes bosses spawned by other players."))
-                                        .build())
-                                .binding(defaults.combat.slayerBossHighlight,
-                                        () -> config.combat.slayerBossHighlight,
-                                        newVal -> config.combat.slayerBossHighlight = newVal)
-                                .controller(ConfigUtil::createBooleanController).build())
-
                         // TODO: Slayer Miniboss Announce
                         .option(Option.<AnnounceWP>createBuilder()
                                 .name(Text.literal("Slayer Miniboss Announce"))
@@ -221,20 +207,6 @@ public class CombatConfig {
                                         () -> config.combat.slayerMinibossAnnounce,
                                         newVal -> config.combat.slayerMinibossAnnounce = newVal)
                                 .controller(ConfigUtil::createEnumController).build())
-
-                        // TODO: Slayer Miniboss Highlight
-                        .option(Option.<Boolean>createBuilder()
-                                .name(Text.literal("Slayer Miniboss Highlight"))
-                                .description(OptionDescription.createBuilder()
-                                        .webpImage(Identifier.of(VolcClient.MOD_ID,
-                                                "config/combat/slayer_miniboss_highlight.webp"))
-                                        .text(Text.literal(
-                                                "Highlights nearby slayer minibosses. This includes minibosses spawned by other players."))
-                                        .build())
-                                .binding(defaults.combat.slayerMinibossHighlight,
-                                        () -> config.combat.slayerMinibossHighlight,
-                                        newVal -> config.combat.slayerMinibossHighlight = newVal)
-                                .controller(ConfigUtil::createBooleanController).build())
 
                         // TODO: Slayer Spawn Warning
                         .option(Option.<Integer>createBuilder()
@@ -320,13 +292,7 @@ public class CombatConfig {
     public AnnounceWP slayerBossAnnounce = AnnounceWP.OFF;
 
     @SerialEntry
-    public boolean slayerBossHighlight = false;
-
-    @SerialEntry
     public AnnounceWP slayerMinibossAnnounce = AnnounceWP.OFF;
-
-    @SerialEntry
-    public boolean slayerMinibossHighlight = false;
 
     @SerialEntry
     public int slayerSpawnWarning = 0;

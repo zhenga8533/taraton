@@ -43,21 +43,6 @@ public class CrimsonIslesConfig {
                                                 newVal)
                                 .controller(ConfigUtil::createEnumController).build())
 
-                        // TODO: Mythic Lava Creature Highlight
-                        .option(Option.<Boolean>createBuilder()
-                                .name(Text.literal("Mythic Lava Creature Highlight"))
-                                .description(OptionDescription.createBuilder()
-                                        .webpImage(Identifier.of(VolcClient.MOD_ID,
-                                                "config/crimson_isle/mythic_lava_creature_highlight.webp"))
-                                        .text(Text.literal(
-                                                "Highlights nearby mythic lava sea creatures. This includes mythic lava sea creatures spawned by other players."))
-                                        .build())
-                                .binding(defaults.crimsonIsles.mythicLavaCreatureHighlight,
-                                        () -> config.crimsonIsles.mythicLavaCreatureHighlight,
-                                        newVal -> config.crimsonIsles.mythicLavaCreatureHighlight =
-                                                newVal)
-                                .controller(ConfigUtil::createBooleanController).build())
-
                         // TODO: Golden Fish Timer
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Golden Fish Timer"))
@@ -105,20 +90,6 @@ public class CrimsonIslesConfig {
                                         newVal -> config.crimsonIsles.vanquisherAnnounce = newVal)
                                 .controller(ConfigUtil::createEnumController).build())
 
-                        // TODO: Vanquisher Highlight
-                        .option(Option.<Boolean>createBuilder()
-                                .name(Text.literal("Vanquisher Highlight"))
-                                .description(OptionDescription.createBuilder()
-                                        .webpImage(Identifier.of(VolcClient.MOD_ID,
-                                                "config/crimson_isle/vanquisher_highlight.webp"))
-                                        .text(Text.literal(
-                                                "Highlights nearby vanquishers. This includes vanquishers spawned by other players."))
-                                        .build())
-                                .binding(defaults.crimsonIsles.vanquisherHighlight,
-                                        () -> config.crimsonIsles.vanquisherHighlight,
-                                        newVal -> config.crimsonIsles.vanquisherHighlight = newVal)
-                                .controller(ConfigUtil::createBooleanController).build())
-
                         // TODO: Vanquisher Warp
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Vanquisher Warp"))
@@ -154,9 +125,6 @@ public class CrimsonIslesConfig {
     // Vanquisher
     @SerialEntry
     public AnnounceWP vanquisherAnnounce = AnnounceWP.OFF;
-
-    @SerialEntry
-    public boolean vanquisherHighlight = false;
 
     @SerialEntry
     public boolean vanquisherWarp = false;
