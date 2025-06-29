@@ -1,7 +1,6 @@
 package net.volcaronitee.volcclient.feature.general;
 
 import java.util.List;
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.network.packet.c2s.play.ClientStatusC2SPacket;
@@ -11,6 +10,7 @@ import net.volcaronitee.volcclient.util.OverlayUtil;
 import net.volcaronitee.volcclient.util.OverlayUtil.LineContent;
 import net.volcaronitee.volcclient.util.OverlayUtil.Overlay;
 import net.volcaronitee.volcclient.util.ScheduleUtil;
+import net.volcaronitee.volcclient.util.TickUtil;
 import net.volcaronitee.volcclient.util.ToggleUtil;
 
 /**
@@ -81,7 +81,7 @@ public class ServerStatus {
      * Registers the server status feature to update every client tick.
      */
     public static void register() {
-        ClientTickEvents.END_CLIENT_TICK.register(INSTANCE::updateStatus);
+        TickUtil.register(INSTANCE::updateStatus, 1);
     }
 
     /**
