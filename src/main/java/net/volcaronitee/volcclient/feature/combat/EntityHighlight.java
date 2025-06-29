@@ -3,11 +3,13 @@ package net.volcaronitee.volcclient.feature.combat;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -29,9 +31,9 @@ public class EntityHighlight {
     private static final EntityHighlight INSTANCE = new EntityHighlight();
 
     private static final List<LineContent> LINES =
-            List.of(new LineContent("§c§lEntity Counter:", "", () -> true),
-                    new LineContent(" §6§lLion: §f", "1", () -> true),
-                    new LineContent(" §7§lTotal: §f", "1", () -> true));
+            new ArrayList<>(List.of(new LineContent("§e§lEntity Counter:", "", () -> true),
+                    new LineContent(" §fLion: §6", "1", () -> true),
+                    new LineContent(" §7Total: §e", "1", () -> true)));
 
     public static final ListUtil ENTITY_LIST = new ListUtil("Entity List", Text
             .literal("A list of entities to highlight in the game.\n\nUse ")
@@ -76,7 +78,7 @@ public class EntityHighlight {
      * Registers the entity highlight feature to scan the world for entities.
      */
     public static void register() {
-        TickUtil.register(INSTANCE::scanWorld, 4);
+        TickUtil.register(INSTANCE::scanWorld, 10);
     }
 
     /**
@@ -90,6 +92,11 @@ public class EntityHighlight {
             return;
         }
 
+        // Prepare the overlay lines
+        LINES.subList(1, LINES.size() - 1).clear();
+        Map<String, Integer> entityCount = new HashMap<>();
+        AtomicInteger totalCount = new AtomicInteger(0);
+
         // Loop through all entities in the world
         client.world.getEntities().forEach(entity -> {
             // Get the Identifier for the entity's type
@@ -101,7 +108,10 @@ public class EntityHighlight {
 
             // Check if the entity ID is in the highlight list
             if (HIGHLIGHT_ENTITIES.contains(entityId)) {
-                HIGHLIGHTED_ENTITIES.put(entity, getColor(entity));
+                HIGHLIGHTED_ENTITIES.put(entity, ENTITY_COLORS.get(entityId));
+
+                entityCount.merge(entityType.getName().getString(), 1, Integer::sum);
+                totalCount.incrementAndGet();
             } else if (entityType == ARMOR_STAND) { // Special case for armor stands
                 String customName = entity.getCustomName() != null
                         ? entity.getCustomName().getString().toLowerCase()
@@ -120,13 +130,25 @@ public class EntityHighlight {
 
                         if (!nearbyEntities.isEmpty()) {
                             Entity closestEntity = nearbyEntities.get(0);
-                            int color = NAME_COLOR.get(name);
-                            HIGHLIGHTED_ENTITIES.put(closestEntity, color);
+                            HIGHLIGHTED_ENTITIES.put(closestEntity, NAME_COLOR.get(name));
+
+                            entityCount.merge(name, 1, Integer::sum);
+                            totalCount.incrementAndGet();
                         }
                     }
                 }
             }
         });
+
+        // Update the overlay lines with the entity counts
+        for (Map.Entry<String, Integer> entry : entityCount.entrySet()) {
+            String entityName = entry.getKey();
+            int count = entry.getValue();
+
+            LINES.add(LINES.size() - 1, new LineContent(" §f" + entityName + ": §6",
+                    String.valueOf(count), () -> true));
+        }
+        LINES.getLast().setText(String.valueOf(totalCount.get()));
     }
 
     /**
