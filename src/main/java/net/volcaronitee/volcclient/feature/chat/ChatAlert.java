@@ -89,11 +89,11 @@ public class ChatAlert {
 
                 // If a command is specified, execute it
                 if (!command.isEmpty()) {
-                    INSTANCE.commandDelay += 2;
+                    INSTANCE.commandDelay += 4;
                     ScheduleUtil.schedule(() -> {
                         MinecraftClient.getInstance().player.networkHandler
                                 .sendChatCommand(commandQueue.poll());
-                        INSTANCE.commandDelay -= 2;
+                        INSTANCE.commandDelay -= 4;
                     }, INSTANCE.commandDelay);
                 }
                 break;
