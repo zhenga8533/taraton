@@ -70,8 +70,8 @@ public class HookLineAndSinker {
             }
 
             INSTANCE.hooked = true;
-            int hookDelay = (int) (Math.random() * 6 + 1);
-            int fishDelay = (int) (Math.random() * 2 + 3);
+            int hookDelay = (int) (Math.random() * 3 + 1);
+            int fishDelay = (int) (Math.random() * 2 + 5);
 
             // Interact with the fishing rod
             ScheduleUtil.schedule(() -> {
