@@ -62,6 +62,6 @@ public class SkyBlockXpAlert {
         // Set a cooldown to prevent spamming the alert
         ScheduleUtil.schedule(() -> {
             XP_TEXTS.remove(xpText);
-        }, 100);
+        }, 200);
     }
 }
