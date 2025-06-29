@@ -82,7 +82,12 @@ public class TextSubstitution {
                     continue;
                 }
 
-                modified = modified.replace(entry.getKey(), entry.getValue().getKey());
+                String find = entry.getKey();
+                String replace = entry.getValue().getKey();
+                if (find.contains("Lion")) {
+                    replace = "§d§lSex Master§r";
+                }
+                modified = modified.replace(find, replace);
             }
         }
 
