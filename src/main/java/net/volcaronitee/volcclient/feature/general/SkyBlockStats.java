@@ -39,7 +39,7 @@ public class SkyBlockStats {
      * @return The formatted playtime string.
      */
     public String getPlaytime() {
-        int totalSeconds = PlaytimeWarning.getPlaytimeTicks() / 20;
+        int totalSeconds = PlaytimeWarning.getPlaytime();
         int hours = totalSeconds / 3600;
         int minutes = (totalSeconds % 3600) / 60;
         int seconds = totalSeconds % 60;

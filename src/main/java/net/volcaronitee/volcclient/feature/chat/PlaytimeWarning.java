@@ -80,7 +80,7 @@ public class PlaytimeWarning {
      * 
      * @return The total playtime in ticks.
      */
-    public static int getplaytime() {
+    public static int getPlaytime() {
         return INSTANCE.playtime;
     }
 }
