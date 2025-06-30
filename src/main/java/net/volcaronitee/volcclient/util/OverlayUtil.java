@@ -283,6 +283,19 @@ public class OverlayUtil {
         }
 
         /**
+         * Creates a new LineContent instance with no initial text.
+         * 
+         * @param shouldRender A supplier that determines if the line should be rendered.
+         */
+        public LineContent(LineContent other) {
+            this.items = new ArrayList<>(other.items);
+            this.startText = other.startText;
+            this.text = other.text;
+            this.textComponent = other.textComponent;
+            this.shouldRender = other.shouldRender;
+        }
+
+        /**
          * Adds an item stack to the line content.
          * 
          * @param text The text to display for the item.
@@ -308,6 +321,7 @@ public class OverlayUtil {
 
         private final Supplier<Boolean> shouldRender;
         private final List<LineContent> lines;
+        private final List<LineContent> templateLines = new ArrayList<>();
 
         private float width = -1;
         private float height = -1;
@@ -335,6 +349,9 @@ public class OverlayUtil {
             this.scale = scale;
             this.shouldRender = shouldRender;
             this.lines = lines;
+            for (LineContent line : lines) {
+                this.templateLines.add(new LineContent(line));
+            }
         }
 
         /**
@@ -352,16 +369,20 @@ public class OverlayUtil {
          * @param context The context to use for rendering the overlay.
          */
         private void render(DrawContext context) {
-            if (!shouldRender.get())
+            if (!shouldRender.get() && !INSTANCE.globalMoveMode)
                 return;
+            List<LineContent> lines =
+                    INSTANCE.globalMoveMode && this.lines.isEmpty() ? templateLines : this.lines;
 
             // If special render is set, use it
             if (specialRender != null) {
                 specialRender.render(context);
                 return;
+            } else if (lines.isEmpty()) {
+                return;
             }
 
-            // Recalculate size if width or height is not initialized
+            // Recalculate size if changed
             if (changed) {
                 calcSize();
             }
@@ -427,6 +448,9 @@ public class OverlayUtil {
          * Recalculates the size of the overlay based on its content.
          */
         private void calcSize() {
+            List<LineContent> lines =
+                    INSTANCE.globalMoveMode && this.lines.isEmpty() ? templateLines : this.lines;
+
             TextRenderer tr = MinecraftClient.getInstance().textRenderer;
 
             float maxWidth = 0;
