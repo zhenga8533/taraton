@@ -290,19 +290,6 @@ public class GeneralConfig {
                                         newVal -> config.general.serverStatus = newVal)
                                 .controller(ConfigUtil::createBooleanController).build())
 
-                        // TODO: SkyBlock Stats
-                        .option(Option.<Boolean>createBuilder().name(Text.literal("SkyBlock Stats"))
-                                .description(OptionDescription.createBuilder()
-                                        .webpImage(Identifier.of(VolcClient.MOD_ID,
-                                                "config/general/skyblock_stats.webp"))
-                                        .text(Text.literal(
-                                                "Displays SkyBlock stats in the sidebar. Set which stats to display using /vc toggles."))
-                                        .build())
-                                .binding(defaults.general.skyblockStats,
-                                        () -> config.general.skyblockStats,
-                                        newVal -> config.general.skyblockStats = newVal)
-                                .controller(ConfigUtil::createBooleanController).build())
-
                         .build())
 
                 // Timer Option Group
@@ -407,9 +394,6 @@ public class GeneralConfig {
 
     @SerialEntry
     public boolean serverStatus = false;
-
-    @SerialEntry
-    public boolean skyblockStats = true;
 
     // Timer Option Group
     @SerialEntry
