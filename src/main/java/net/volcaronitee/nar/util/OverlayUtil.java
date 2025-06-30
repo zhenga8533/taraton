@@ -368,7 +368,7 @@ public class OverlayUtil {
          * @param context The context to use for rendering the overlay.
          */
         private void render(DrawContext context) {
-            if (!shouldRender.get() && !globalMoveMode)
+            if (!shouldRender.get())
                 return;
             List<LineContent> lines =
                     globalMoveMode && this.lines.isEmpty() ? templateLines : this.lines;
