@@ -9,7 +9,6 @@ import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.text.Text;
 import net.volcaronitee.volcclient.config.controller.KeyValueController.KeyValuePair;
 import net.volcaronitee.volcclient.feature.general.ServerStatus;
-import net.volcaronitee.volcclient.feature.general.SkyBlockStats;
 import net.volcaronitee.volcclient.util.ConfigUtil;
 import net.volcaronitee.volcclient.util.ListUtil;
 import net.volcaronitee.volcclient.util.ParseUtil;
@@ -490,7 +489,7 @@ public class ChatCommands {
                     return;
                 }
 
-                String playtime = SkyBlockStats.getInstance().getPlaytime();
+                String playtime = PlaytimeWarning.getInstance().formatPlaytime();
                 scheduleCommand(head + " " + playtime + " playtime");
                 break;
             // Stats commands

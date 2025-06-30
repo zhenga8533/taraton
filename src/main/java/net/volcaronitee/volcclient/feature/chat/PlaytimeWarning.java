@@ -27,6 +27,15 @@ public class PlaytimeWarning {
     private PlaytimeWarning() {}
 
     /**
+     * Returns the singleton instance of PlaytimeWarning.
+     * 
+     * @return The singleton instance.
+     */
+    public static PlaytimeWarning getInstance() {
+        return INSTANCE;
+    }
+
+    /**
      * Registers the playtime warning feature to listen for client tick and lifecycle events.
      */
     public static void register() {
@@ -80,7 +89,21 @@ public class PlaytimeWarning {
      * 
      * @return The total playtime in ticks.
      */
-    public static int getPlaytime() {
+    public int getPlaytime() {
         return INSTANCE.playtime;
+    }
+
+    /**
+     * Formats the playtime into a string in the format HH:MM:SS.
+     * 
+     * @return Formatted playtime string.
+     */
+    public String formatPlaytime() {
+        int totalSeconds = INSTANCE.playtime;
+        int hours = totalSeconds / 3600;
+        int minutes = (totalSeconds % 3600) / 60;
+        int seconds = totalSeconds % 60;
+
+        return String.format("%02d:%02d:%02d", hours, minutes, seconds);
     }
 }
