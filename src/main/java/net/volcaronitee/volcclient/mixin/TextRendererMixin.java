@@ -1,6 +1,7 @@
 package net.volcaronitee.volcclient.mixin;
 
 import java.util.concurrent.atomic.AtomicReference;
+import org.joml.Matrix4f;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -8,7 +9,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.font.TextRenderer.GlyphDrawable;
+import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.text.CharacterVisitor;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.OrderedText;
@@ -17,7 +18,8 @@ import net.minecraft.text.Text;
 import net.volcaronitee.volcclient.feature.chat.TextSubstitution;
 
 /**
- * Mixin for TextRenderer to modify the OrderedText before rendering.
+ * Mixin for TextRenderer to modify the OrderedText before rendering. Adapted for Minecraft 1.21.5
+ * (based on provided TextRenderer source).
  */
 @Mixin(TextRenderer.class)
 public class TextRendererMixin {
@@ -25,27 +27,35 @@ public class TextRendererMixin {
     private OrderedText volcclient$modifiedOrderedText = null;
 
     /**
-     * Injects into the prepare method of TextRenderer to modify the OrderedText
-     * 
-     * @param orderedText The OrderedText to prepare.
+     * Injects into the 'drawLayer' method that takes an OrderedText to modify the OrderedText
+     * before it's processed.
+     *
+     * @param text The OrderedText being drawn.
      * @param x The x-coordinate for rendering.
      * @param y The y-coordinate for rendering.
      * @param color The color to apply to the text.
      * @param shadow Whether to apply a shadow to the text.
+     * @param matrix The transformation matrix.
+     * @param vertexConsumerProvider The vertex consumer provider.
+     * @param layerType The text layer type.
      * @param backgroundColor The background color for the text.
-     * @param cir The callback info for returning the GlyphDrawable.
+     * @param light The light level.
+     * @param swapZIndex Whether to swap Z index.
+     * @param cir The callback info for returning the float (advance).
      */
-    @Inject(method = "prepare(Lnet/minecraft/text/OrderedText;FFIZI)Lnet/minecraft/client/font/TextRenderer$GlyphDrawable;",
+    @Inject(method = "drawLayer(Lnet/minecraft/text/OrderedText;FFIZLorg/joml/Matrix4f;Lnet/minecraft/client/render/VertexConsumerProvider;Lnet/minecraft/client/font/TextRenderer$TextLayerType;IIZ)F",
             at = @At("HEAD"))
-    private void volcclient$textRendererPrepareInject(OrderedText orderedText, float x, float y,
-            int color, boolean shadow, int backgroundColor,
-            CallbackInfoReturnable<GlyphDrawable> cir) {
+    private void volcclient$drawLayerInject(OrderedText text, float x, float y, int color,
+            boolean shadow, Matrix4f matrix, VertexConsumerProvider vertexConsumerProvider,
+            TextRenderer.TextLayerType layerType, int backgroundColor, int light,
+            boolean swapZIndex, CallbackInfoReturnable<Float> cir) {
+
         MutableText reconstructed = Text.empty();
 
         StringBuilder currentTextBuilder = new StringBuilder();
         AtomicReference<Style> currentStyleRef = new AtomicReference<>();
 
-        orderedText.accept((index, style, codePoint) -> {
+        text.accept((index, style, codePoint) -> {
             if (currentStyleRef.get() == null) {
                 currentStyleRef.set(style);
             } else if (!style.equals(currentStyleRef.get())) {
@@ -74,17 +84,18 @@ public class TextRendererMixin {
     }
 
     /**
-     * Redirects the accept method of OrderedText to use the modified OrderedText
-     * 
-     * @param originalOrderedText The original OrderedText to accept.
+     * Redirects the accept method of OrderedText within the targeted drawLayer method to use the
+     * modified OrderedText.
+     *
+     * @param originalOrderedText The original OrderedText that would have been accepted.
      * @param drawer The CharacterVisitor to accept the text.
      * @return True if the text was accepted, false otherwise.
      */
     @Redirect(
-            method = "prepare(Lnet/minecraft/text/OrderedText;FFIZI)Lnet/minecraft/client/font/TextRenderer$GlyphDrawable;",
+            method = "drawLayer(Lnet/minecraft/text/OrderedText;FFIZLorg/joml/Matrix4f;Lnet/minecraft/client/render/VertexConsumerProvider;Lnet/minecraft/client/font/TextRenderer$TextLayerType;IIZ)F",
             at = @At(value = "INVOKE",
                     target = "Lnet/minecraft/text/OrderedText;accept(Lnet/minecraft/text/CharacterVisitor;)Z"))
-    private boolean volcclient$textRendererPrepareRedirect(OrderedText originalOrderedText,
+    private boolean volcclient$drawLayerRedirect(OrderedText originalOrderedText,
             CharacterVisitor drawer) {
         OrderedText textToAccept =
                 this.volcclient$modifiedOrderedText != null ? this.volcclient$modifiedOrderedText
