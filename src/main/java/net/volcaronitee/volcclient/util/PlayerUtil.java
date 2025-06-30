@@ -10,15 +10,13 @@ import net.hypixel.modapi.packet.impl.clientbound.ClientboundPlayerInfoPacket;
  * Utility class for handling player-related operations in Hypixel.
  */
 public class PlayerUtil {
-    private static final PlayerUtil INSTANCE = new PlayerUtil();
-
-    private MonthlyPackageRank monthlyPackageRank = MonthlyPackageRank.NONE;
-    private PackageRank packageRank = PackageRank.NONE;
-    private PlayerRank playerRank = PlayerRank.NORMAL;
-    private String prefix = "";
+    private static MonthlyPackageRank monthlyPackageRank = MonthlyPackageRank.NONE;
+    private static PackageRank packageRank = PackageRank.NONE;
+    private static PlayerRank playerRank = PlayerRank.NORMAL;
+    private static String prefix = "";
 
     private static final long AFK_THRESHOLD = 5 * 60 * 1000L;
-    private long lastActivityTime = 0L;
+    private static long lastActivityTime = 0L;
 
     /**
      * Private constructor to prevent instantiation.
@@ -28,7 +26,7 @@ public class PlayerUtil {
     /**
      * Registers the packet listener for Hypixel player updates.
      */
-    public static void register() {
+    public static void init() {
         HypixelModAPI.getInstance().createHandler(ClientboundPlayerInfoPacket.class,
                 PlayerUtil::handlePlayerPacket);
     }
@@ -41,17 +39,17 @@ public class PlayerUtil {
      * @param packet The party packet from Hypixel.
      */
     private static void handlePlayerPacket(ClientboundPlayerInfoPacket packet) {
-        INSTANCE.monthlyPackageRank = packet.getMonthlyPackageRank();
-        INSTANCE.packageRank = packet.getPackageRank();
-        INSTANCE.playerRank = packet.getPlayerRank();
-        INSTANCE.prefix = packet.getPrefix().orElse("");
+        monthlyPackageRank = packet.getMonthlyPackageRank();
+        packageRank = packet.getPackageRank();
+        playerRank = packet.getPlayerRank();
+        prefix = packet.getPrefix().orElse("");
     }
 
     /**
      * Updates the last activity time of the player when they move.
      */
     public static void clientPlayerEntity$move() {
-        INSTANCE.lastActivityTime = System.currentTimeMillis();
+        lastActivityTime = System.currentTimeMillis();
     }
 
     /**
@@ -60,7 +58,7 @@ public class PlayerUtil {
      * @return The MonthlyPackageRank of the player.
      */
     public static MonthlyPackageRank getMonthlyPackageRank() {
-        return INSTANCE.monthlyPackageRank;
+        return monthlyPackageRank;
     }
 
     /**
@@ -69,7 +67,7 @@ public class PlayerUtil {
      * @return The PackageRank of the player.
      */
     public static PackageRank getPackageRank() {
-        return INSTANCE.packageRank;
+        return packageRank;
     }
 
     /**
@@ -78,7 +76,7 @@ public class PlayerUtil {
      * @return The PlayerRank of the player.
      */
     public static PlayerRank getPlayerRank() {
-        return INSTANCE.playerRank;
+        return playerRank;
     }
 
     /**
@@ -87,7 +85,7 @@ public class PlayerUtil {
      * @return The prefix of the player, or an empty string if not available.
      */
     public static String getPrefix() {
-        return INSTANCE.prefix;
+        return prefix;
     }
 
     /**
@@ -97,7 +95,7 @@ public class PlayerUtil {
      */
     public static boolean isAfk() {
         long currentTime = System.currentTimeMillis();
-        return currentTime - INSTANCE.lastActivityTime > AFK_THRESHOLD;
+        return currentTime - lastActivityTime > AFK_THRESHOLD;
     }
 
     /**
@@ -109,8 +107,7 @@ public class PlayerUtil {
     public static String debugPlayer() {
         String debugMessage = String.format(
                 "Player Info:\nMonthly Package Rank: %s\nPackage Rank: %s\nPlayer Rank: %s\nPrefix: %s\nAFK: %b",
-                INSTANCE.monthlyPackageRank.name(), INSTANCE.packageRank.name(),
-                INSTANCE.playerRank.name(), INSTANCE.prefix, isAfk());
+                monthlyPackageRank.name(), packageRank.name(), playerRank.name(), prefix, isAfk());
         return debugMessage;
     }
 }

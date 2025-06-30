@@ -9,12 +9,10 @@ import net.hypixel.modapi.packet.impl.clientbound.ClientboundPartyInfoPacket.Par
  * Utility class for tracking the player's party state.
  */
 public class PartyUtil {
-    private static final PartyUtil INSTANCE = new PartyUtil();
-
-    private boolean inParty = false;
-    private String leader = "";
-    private Set<String> moderators = Set.of();
-    private Set<String> members = Set.of();
+    private static boolean inParty = false;
+    private static String leader = "";
+    private static Set<String> moderators = Set.of();
+    private static Set<String> members = Set.of();
 
     /**
      * Private constructor to prevent instantiation.
@@ -24,7 +22,7 @@ public class PartyUtil {
     /**
      * Registers the packet listener for Hypixel party updates.
      */
-    public static void register() {
+    public static void init() {
         HypixelModAPI.getInstance().createHandler(ClientboundPartyInfoPacket.class,
                 PartyUtil::handlePartyPacket);
     }
@@ -36,21 +34,21 @@ public class PartyUtil {
      * @param packet The party packet from Hypixel.
      */
     private static void handlePartyPacket(ClientboundPartyInfoPacket packet) {
-        INSTANCE.inParty = packet.isInParty();
-        if (!INSTANCE.inParty) {
-            INSTANCE.leader = "";
-            INSTANCE.moderators = Set.of();
-            INSTANCE.members = Set.of();
+        inParty = packet.isInParty();
+        if (!inParty) {
+            leader = "";
+            moderators = Set.of();
+            members = Set.of();
             return;
         }
 
-        INSTANCE.leader = MojangUtil.getUsernameFromUUID(packet.getLeader().orElse(null));
+        leader = MojangUtil.getUsernameFromUUID(packet.getLeader().orElse(null));
         packet.getMemberMap().forEach((uuid, member) -> {
             String username = MojangUtil.getUsernameFromUUID(uuid);
             if (member.getRole() == PartyRole.MOD) {
-                INSTANCE.moderators.add(username);
+                moderators.add(username);
             } else {
-                INSTANCE.members.add(username);
+                members.add(username);
             }
         });
     }
@@ -61,7 +59,7 @@ public class PartyUtil {
      * @return True if the player is in a party, false otherwise.
      */
     public static boolean isInParty() {
-        return INSTANCE.inParty;
+        return inParty;
     }
 
     /**
@@ -70,7 +68,7 @@ public class PartyUtil {
      * @return The username of the party leader, or an empty string if not in a party.
      */
     public static String getLeader() {
-        return INSTANCE.leader;
+        return leader;
     }
 
     /**
@@ -79,7 +77,7 @@ public class PartyUtil {
      * @return A set of usernames of party moderators, or an empty set if not in a party.
      */
     public static Set<String> getModerators() {
-        return INSTANCE.moderators;
+        return moderators;
     }
 
     /**
@@ -88,7 +86,7 @@ public class PartyUtil {
      * @return A set of usernames of party members, or an empty set if not in a party.
      */
     public static Set<String> getMembers() {
-        return INSTANCE.members;
+        return members;
     }
 
     /**
@@ -99,8 +97,7 @@ public class PartyUtil {
     public static String debugParty() {
         String debugMessage =
                 String.format("Party Info:\nIn Party: %b\nLeader: %s\nModerators: %s\nMembers: %s",
-                        INSTANCE.inParty, INSTANCE.leader, String.join(", ", INSTANCE.moderators),
-                        String.join(", ", INSTANCE.members));
+                        inParty, leader, String.join(", ", moderators), String.join(", ", members));
         return debugMessage;
     }
 }

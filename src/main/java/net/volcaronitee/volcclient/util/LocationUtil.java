@@ -9,14 +9,12 @@ import net.hypixel.modapi.packet.impl.clientbound.event.ClientboundLocationPacke
  * Utility class for detecting world and location information.
  */
 public class LocationUtil {
-    private static final LocationUtil INSTANCE = new LocationUtil();
-
-    private String serverName = "";
-    private String lobbyName = "";
-    private String map = "";
-    private String mode = "";
-    private ServerType serverType = LobbyType.MAIN;
-    private World world = World.UNKNOWN;
+    private static String serverName = "";
+    private static String lobbyName = "";
+    private static String map = "";
+    private static String mode = "";
+    private static ServerType serverType = LobbyType.MAIN;
+    private static World world = World.UNKNOWN;
 
     /**
      * Enum representing different worlds in Hypixel SkyBlock.
@@ -78,7 +76,7 @@ public class LocationUtil {
      */
     private LocationUtil() {}
 
-    public static void register() {
+    public static void init() {
         HypixelModAPI.getInstance().subscribeToEventPacket(ClientboundLocationPacket.class);
         HypixelModAPI.getInstance().createHandler(ClientboundLocationPacket.class,
                 LocationUtil::handleLocationPacket);
@@ -91,12 +89,12 @@ public class LocationUtil {
      * @param packet The ClientboundLocationPacket containing the location data.
      */
     private static void handleLocationPacket(ClientboundLocationPacket packet) {
-        INSTANCE.serverName = packet.getServerName();
-        INSTANCE.lobbyName = packet.getLobbyName().orElse("");
-        INSTANCE.map = packet.getMap().orElse("");
-        INSTANCE.mode = packet.getMode().orElse("");
-        INSTANCE.serverType = packet.getServerType().orElse(LobbyType.MAIN);
-        INSTANCE.world = World.fromInternalName(INSTANCE.map);
+        serverName = packet.getServerName();
+        lobbyName = packet.getLobbyName().orElse("");
+        map = packet.getMap().orElse("");
+        mode = packet.getMode().orElse("");
+        serverType = packet.getServerType().orElse(LobbyType.MAIN);
+        world = World.fromInternalName(map);
     }
 
     /**
@@ -105,7 +103,7 @@ public class LocationUtil {
      * @return The name of the server.
      */
     public static String getServerName() {
-        return INSTANCE.serverName;
+        return serverName;
     }
 
     /**
@@ -114,7 +112,7 @@ public class LocationUtil {
      * @return The name of the lobby, or an empty string if not available.
      */
     public static String getLobbyName() {
-        return INSTANCE.lobbyName;
+        return lobbyName;
     }
 
     /**
@@ -123,7 +121,7 @@ public class LocationUtil {
      * @return The name of the map, or an empty string if not available.
      */
     public static String getMap() {
-        return INSTANCE.map;
+        return map;
     }
 
     /**
@@ -132,7 +130,7 @@ public class LocationUtil {
      * @return The mode of the game, or an empty string if not available.
      */
     public static String getMode() {
-        return INSTANCE.mode;
+        return mode;
     }
 
     /**
@@ -141,7 +139,7 @@ public class LocationUtil {
      * @return The type of the server, or UNKNOWN if not available.
      */
     public static ServerType getServerType() {
-        return INSTANCE.serverType;
+        return serverType;
     }
 
     /**
@@ -150,7 +148,7 @@ public class LocationUtil {
      * @return The World enum constant representing the current world, or UNKNOWN if not recognized.
      */
     public static World getWorld() {
-        return INSTANCE.world;
+        return world;
     }
 
     /**
@@ -161,8 +159,7 @@ public class LocationUtil {
     public static String debugLocation() {
         String debugMessage = String.format(
                 "Location Info:\nServer: %s\nLobby: %s\nMap: %s\nMode: %s\nType: %s\nWorld: %s",
-                INSTANCE.serverName, INSTANCE.lobbyName, INSTANCE.map, INSTANCE.mode,
-                INSTANCE.serverType.name(), INSTANCE.world.name());
+                serverName, lobbyName, map, mode, serverType.name(), world.name());
         return debugMessage;
     }
 }

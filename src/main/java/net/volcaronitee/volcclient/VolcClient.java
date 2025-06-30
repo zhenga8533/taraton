@@ -7,7 +7,10 @@ import net.fabricmc.loader.api.ModContainer;
 import net.volcaronitee.volcclient.util.CommandUtil;
 import net.volcaronitee.volcclient.util.ConfigUtil;
 import net.volcaronitee.volcclient.util.FeatureUtil;
+import net.volcaronitee.volcclient.util.LocationUtil;
 import net.volcaronitee.volcclient.util.OverlayUtil;
+import net.volcaronitee.volcclient.util.PartyUtil;
+import net.volcaronitee.volcclient.util.PlayerUtil;
 import net.volcaronitee.volcclient.util.ScheduleUtil;
 import net.volcaronitee.volcclient.util.TablistUtil;
 import net.volcaronitee.volcclient.util.TickUtil;
@@ -27,9 +30,12 @@ public class VolcClient implements ClientModInitializer {
         CommandUtil.init();
         ConfigUtil.init();
         FeatureUtil.init();
+        LocationUtil.init();
+        OverlayUtil.init();
+        PartyUtil.init();
+        PlayerUtil.init();
         ScheduleUtil.init();
         TablistUtil.init();
         TickUtil.init();
-        OverlayUtil.init();
     }
 }

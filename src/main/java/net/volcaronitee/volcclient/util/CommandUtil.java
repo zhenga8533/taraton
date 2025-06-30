@@ -1,10 +1,8 @@
 package net.volcaronitee.volcclient.util;
 
 import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.literal;
-
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
-
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.client.MinecraftClient;
@@ -22,9 +20,7 @@ import net.volcaronitee.volcclient.feature.general.WidgetDisplay;
  * Utility class for handling client commands.
  */
 public class CommandUtil {
-    private static final CommandUtil INSTANCE = new CommandUtil();
-
-    private static final String[] ALIASES = { "vc", "volc", "volcclient" };
+    private static final String[] ALIASES = {"vc", "volc", "volcclient"};
 
     /**
      * Initializes the client command registration for Volc Client.
@@ -34,22 +30,22 @@ public class CommandUtil {
                 .register((CommandDispatcher<FabricClientCommandSource> dispatcher,
                         CommandRegistryAccess access) -> {
                     for (String alias : ALIASES) {
-                        dispatcher.register(literal(alias).executes(INSTANCE::settings)
+                        dispatcher.register(literal(alias).executes(CommandUtil::settings)
 
                                 // Help command
-                                .then(literal("help").executes(INSTANCE::help))
+                                .then(literal("help").executes(CommandUtil::help))
 
                                 // Settings command
-                                .then(literal("settings").executes(INSTANCE::settings))
+                                .then(literal("settings").executes(CommandUtil::settings))
 
                                 // Toggles command
-                                .then(literal("toggles").executes(INSTANCE::toggles))
+                                .then(literal("toggles").executes(CommandUtil::toggles))
 
                                 // GUI command
                                 .then(literal("gui").executes(OverlayUtil::moveGui))
 
                                 // Debug command
-                                .then(literal("debug").executes(INSTANCE::debug))
+                                .then(literal("debug").executes(CommandUtil::debug))
 
                                 // Lists commands
                                 .then(EntityHighlight.ENTITY_LIST.createCommand("entitylist"))
@@ -81,7 +77,7 @@ public class CommandUtil {
      * @param context The command context containing the source and arguments.
      * @return 1 if the command was executed successfully, 0 otherwise.
      */
-    private int help(CommandContext<FabricClientCommandSource> context) {
+    private static int help(CommandContext<FabricClientCommandSource> context) {
         FabricClientCommandSource source = context.getSource();
         if (source.getPlayer() == null || source.getWorld() == null) {
             return 0;
@@ -97,7 +93,7 @@ public class CommandUtil {
      * @param context The command context containing the source and arguments.
      * @return 1 if the command was executed successfully, 0 otherwise.
      */
-    private int settings(CommandContext<FabricClientCommandSource> context) {
+    private static int settings(CommandContext<FabricClientCommandSource> context) {
         MinecraftClient client = MinecraftClient.getInstance();
         if (client.player == null || client.world == null) {
             return 0;
@@ -117,7 +113,7 @@ public class CommandUtil {
      * @param context The command context containing the source and arguments.
      * @return 1 if the command was executed successfully, 0 otherwise.
      */
-    private int toggles(CommandContext<FabricClientCommandSource> context) {
+    private static int toggles(CommandContext<FabricClientCommandSource> context) {
         MinecraftClient client = MinecraftClient.getInstance();
         if (client.player == null || client.world == null) {
             return 0;
@@ -137,7 +133,7 @@ public class CommandUtil {
      * @param context The command context containing the source and arguments.
      * @return 1 if the command was executed successfully, 0 otherwise.
      */
-    private int debug(CommandContext<FabricClientCommandSource> context) {
+    private static int debug(CommandContext<FabricClientCommandSource> context) {
         FabricClientCommandSource source = context.getSource();
         if (source.getPlayer() == null || source.getWorld() == null) {
             return 0;
