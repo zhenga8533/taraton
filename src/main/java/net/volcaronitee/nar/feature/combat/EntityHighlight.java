@@ -4,6 +4,8 @@ import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -40,9 +42,9 @@ public class EntityHighlight {
             .append(TextUtil.getInstance().createLink("digminecraft.com",
                     "https://www.digminecraft.com/lists/entity_list_pc.php"))
             .append(Text.literal(
-                    " to find vanilla entity names. If an entity ID is not found, it will be used to identify custom armor stand names.\n\n\n§lOptions:§r\n\n"
-                            + " --beacon §7Highlights entities that are within the beacon range.\n"
-                            + " --color [hex] §7Sets the color for the entity highlight. Use hex colors like #FF0000.\n")),
+                    " to find vanilla entity names. If an entity ID is not found, it will be used to identify custom armor stand names.\n\n\n§lOptions:\n\n"
+                            + " §r--beacon §7Highlights entities that are within the beacon range.\n"
+                            + " §r--color [hex] §7Sets the color for the entity highlight. Use hex colors like #FF0000.\n")),
             "entity_list.json");
 
     private static final Map<Entity, Highlight> HIGHLIGHTED_ENTITIES = new HashMap<>();
@@ -130,17 +132,25 @@ public class EntityHighlight {
                 for (String key : HIGHLIGHT_NAMES) {
                     if (customName.contains(key)) {
                         // Add closest entity to the highlight list
-                        Box boundingBox = entity.getBoundingBox().expand(0.5, 1, 0.5);
+                        Box boundingBox = entity.getBoundingBox().expand(0.5, 16, 0.5);
                         List<Entity> nearbyEntities = client.world.getOtherEntities(entity,
-                                boundingBox, e -> e.getType() != ARMOR_STAND);
+                                boundingBox, e -> e.getType() != ARMOR_STAND && !e.isInvisible()
+                                        && e.getX() == entity.getX() && e.getZ() == entity.getZ());
 
-                        if (!nearbyEntities.isEmpty()) {
-                            Entity closestEntity = nearbyEntities.get(0);
-                            HIGHLIGHTED_ENTITIES.put(closestEntity, NAME_HIGHLIGHT.get(key));
-
-                            entityCount.merge(NAME_HIGHLIGHT.get(key).name, 1, Integer::sum);
-                            totalCount.incrementAndGet();
+                        // If no exact entities found, get all entities in the bounding box
+                        if (nearbyEntities.isEmpty()) {
+                            nearbyEntities = client.world.getOtherEntities(entity, boundingBox,
+                                    e -> e.getType() != ARMOR_STAND && !e.isInvisible());
+                            Collections.sort(nearbyEntities,
+                                    Comparator.comparingDouble(e -> e.distanceTo(entity)));
                         }
+
+                        // If there are no nearby entities, skip
+                        Entity closestEntity = nearbyEntities.get(0);
+                        HIGHLIGHTED_ENTITIES.put(closestEntity, NAME_HIGHLIGHT.get(key));
+
+                        entityCount.merge(NAME_HIGHLIGHT.get(key).name, 1, Integer::sum);
+                        totalCount.incrementAndGet();
                     }
                 }
             }
