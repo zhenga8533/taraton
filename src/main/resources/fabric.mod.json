@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "id": "volc-client",
+  "id": "nar",
   "version": "1.0.0",
-  "name": "Volc Client",
+  "name": "Not A Rat",
   "description": "This is an example description! Tell everyone what your mod is about!",
   "authors": ["Volcaronitee"],
   "contact": {
@@ -10,13 +10,13 @@
     "sources": "https://github.com/FabricMC/fabric-example-mod"
   },
   "license": "MIT",
-  "icon": "assets/volc-client/icon.png",
+  "icon": "assets/nar/icon.png",
   "environment": "*",
   "entrypoints": {
-    "client": ["net.volcaronitee.volcclient.VolcClient"],
-    "modmenu": ["net.volcaronitee.volcclient.config.ModMenuIntegration"]
+    "client": ["net.volcaronitee.nar.NotARat"],
+    "modmenu": ["net.volcaronitee.nar.config.ModMenuIntegration"]
   },
-  "mixins": ["volc-client.mixins.json"],
+  "mixins": ["nar.mixins.json"],
   "depends": {
     "fabricloader": ">=0.16.14",
     "minecraft": "~1.21.5",

@@ -1,9 +1,9 @@
-Volc Client User Agreement & Terms of Service
+NAR User Agreement & Terms of Service
 
-This Agreement ("Agreement") is entered into between Volc Client and the user, collectively referred to as the "Parties," with respect to the use of the Minecraft modification created by The Pirate King.
+This Agreement ("Agreement") is entered into between NAR and the user, collectively referred to as the "Parties," with respect to the use of the Minecraft modification created by The Pirate King.
 
 1. License Grant
-  The Mod Creator hereby grants User a non-exclusive, non-transferable license to use the Volc Client mod ("the Mod") in accordance with the terms and conditions of this Agreement.
+  The Mod Creator hereby grants User a non-exclusive, non-transferable license to use the NAR mod ("the Mod") in accordance with the terms and conditions of this Agreement.
 
 2. Acceptable Use
   User agrees to use the Mod solely for personal, non-commercial purposes and in compliance with the rules and policies set forth by Minecraft and its developer, Mojang AB, as well as any involved servers, including but not limited to Hypixel.
@@ -36,7 +36,7 @@ IN WITNESS WHEREOF, the Parties hereto have executed this Agreement as of the da
 
 Mod Creator:
 
-Volc Client
+NAR
 The Pirate King
 
 User (Enter IGN below):
