@@ -23,7 +23,7 @@ public class ChatAlert {
             .literal("A list of chat messages to alert on. Use ")
             .append(TextUtil.getInstance().createLink("regex101.com", "https://regex101.com"))
             .append(Text.literal(" to test your regex patterns.\n\n\n§lOptions:§r\n\n"
-                    + " --command {command} §7Executes a command.\n")),
+                    + " --command [command] §7Executes a command.\n")),
             "chat_alert_map.json");
 
     private static List<Pair<Pattern, String>> CHAT_PATTERNS = new java.util.ArrayList<>();

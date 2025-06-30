@@ -40,16 +40,19 @@ public class EntityHighlight {
             .append(TextUtil.getInstance().createLink("digminecraft.com",
                     "https://www.digminecraft.com/lists/entity_list_pc.php"))
             .append(Text.literal(
-                    " to find vanilla entity names. If an entity ID is not found, it will be used to identify custom armor stand names.")),
+                    " to find vanilla entity names. If an entity ID is not found, it will be used to identify custom armor stand names.\n\n\n§lOptions:§r\n\n"
+                            + " --beacon §7Highlights entities that are within the beacon range.\n"
+                            + " --color [hex] §7Sets the color for the entity highlight. Use hex colors like #FF0000.\n")),
             "entity_list.json");
 
-    private static final Map<Entity, Integer> HIGHLIGHTED_ENTITIES = new HashMap<>();
+    private static final Map<Entity, Highlight> HIGHLIGHTED_ENTITIES = new HashMap<>();
 
     private static final Set<Identifier> HIGHLIGHT_ENTITIES = new HashSet<>();
-    private static final Map<Identifier, Integer> ENTITY_COLORS = new HashMap<>();
+    private static final Map<Identifier, Highlight> ENTITY_HIGHLIGHT = new HashMap<>();
 
     private static final Set<String> HIGHLIGHT_NAMES = new HashSet<>();
-    private static final Map<String, Integer> NAME_COLOR = new HashMap<>();
+    private static final Map<String, Highlight> NAME_HIGHLIGHT = new HashMap<>();
+
     private static final EntityType<?> ARMOR_STAND =
             Registries.ENTITY_TYPE.get(Identifier.of("minecraft:armor_stand"));
 
@@ -108,9 +111,10 @@ public class EntityHighlight {
 
             // Check if the entity ID is in the highlight list
             if (HIGHLIGHT_ENTITIES.contains(entityId)) {
-                HIGHLIGHTED_ENTITIES.put(entity, ENTITY_COLORS.get(entityId));
+                Highlight highlight = ENTITY_HIGHLIGHT.get(entityId);
+                HIGHLIGHTED_ENTITIES.put(entity, highlight);
 
-                entityCount.merge(entityType.getName().getString(), 1, Integer::sum);
+                entityCount.merge(highlight.name, 1, Integer::sum);
                 totalCount.incrementAndGet();
             } else if (entityType == ARMOR_STAND) { // Special case for armor stands
                 String customName = entity.getCustomName() != null
@@ -121,8 +125,8 @@ public class EntityHighlight {
                 }
 
                 // Check if the custom name matches any of the highlight names
-                for (String name : HIGHLIGHT_NAMES) {
-                    if (customName.contains(name)) {
+                for (String key : HIGHLIGHT_NAMES) {
+                    if (customName.contains(key)) {
                         // Add closest entity to the highlight list
                         Box boundingBox = entity.getBoundingBox().expand(0.5, 1, 0.5);
                         List<Entity> nearbyEntities = client.world.getOtherEntities(entity,
@@ -130,9 +134,9 @@ public class EntityHighlight {
 
                         if (!nearbyEntities.isEmpty()) {
                             Entity closestEntity = nearbyEntities.get(0);
-                            HIGHLIGHTED_ENTITIES.put(closestEntity, NAME_COLOR.get(name));
+                            HIGHLIGHTED_ENTITIES.put(closestEntity, NAME_HIGHLIGHT.get(key));
 
-                            entityCount.merge(name, 1, Integer::sum);
+                            entityCount.merge(NAME_HIGHLIGHT.get(key).name, 1, Integer::sum);
                             totalCount.incrementAndGet();
                         }
                     }
@@ -168,7 +172,10 @@ public class EntityHighlight {
      * @return The color as an integer, or white (0xFFFFFF) if not found.
      */
     public int getColor(Entity entity) {
-        return HIGHLIGHTED_ENTITIES.getOrDefault(entity, 0xFFFFFF);
+        if (HIGHLIGHTED_ENTITIES.containsKey(entity)) {
+            return HIGHLIGHTED_ENTITIES.get(entity).color;
+        }
+        return 0xFFFFFF;
     }
 
     /**
@@ -213,31 +220,78 @@ public class EntityHighlight {
      */
     private void onSave() {
         HIGHLIGHT_ENTITIES.clear();
-        ENTITY_COLORS.clear();
+        ENTITY_HIGHLIGHT.clear();
         HIGHLIGHT_NAMES.clear();
-        NAME_COLOR.clear();
+        NAME_HIGHLIGHT.clear();
 
         ENTITY_LIST.getHandler().list.forEach(pair -> {
-            String inputKey = pair.getKey().toLowerCase().trim();
-            Identifier identifier = Identifier.tryParse(inputKey);
+            if (!pair.getValue()) {
+                return;
+            }
+
+            Identifier identifier = null;
+            String inputKey = "";
+            boolean beacon = false;
+            int color = -1;
+
+            // Parse the input key and options
+            String[] args = pair.getKey().toLowerCase().trim().split(" --");
+            for (String arg : args) {
+                if (arg.equals(args[0])) {
+                    // The first argument is the identifier or name
+                    inputKey = arg.trim();
+                    identifier = Identifier.tryParse(inputKey);
+                } else if (arg.startsWith("beacon ")) {
+                    // This argument indicates a beacon highlight
+                    beacon = true;
+                } else if (arg.startsWith("color ")) {
+                    // This argument sets the color for the highlight
+                    String colorHex = arg.substring("color ".length()).trim();
+                    try {
+                        color = Integer.parseInt(colorHex.replace("#", ""), 16);
+                    } catch (NumberFormatException e) {
+                        color = -1;
+                    }
+                }
+            }
 
             // Handle invalid Identifier format
             if (identifier == null) {
                 return;
             }
 
-            if (!pair.getValue()) {
-                return;
-            }
-
             // Check if the identifier exists in the entity registry
             if (Registries.ENTITY_TYPE.containsId(identifier)) {
                 HIGHLIGHT_ENTITIES.add(identifier);
-                ENTITY_COLORS.put(identifier, setColor(identifier));
+                color = (color != -1) ? color : setColor(identifier);
+                ENTITY_HIGHLIGHT.put(identifier, new Highlight(inputKey, beacon, color));
             } else {
                 HIGHLIGHT_NAMES.add(inputKey);
-                NAME_COLOR.put(inputKey, setColor(inputKey));
+                color = (color != -1) ? color : setColor(inputKey);
+                NAME_HIGHLIGHT.put(inputKey, new Highlight(inputKey, beacon, color));
             }
         });
+    }
+
+    /**
+     * Class representing a highlight for an entity.
+     */
+    private class Highlight {
+        private final String name;
+        private final boolean beacon;
+        private final int color;
+
+        /**
+         * Constructor for Highlight.
+         * 
+         * @param name The name of the entity or identifier.
+         * @param beacon Whether the entity is a beacon highlight.
+         * @param color The color for the entity highlight as an integer.
+         */
+        public Highlight(String name, boolean beacon, int color) {
+            this.name = name;
+            this.beacon = beacon;
+            this.color = color;
+        }
     }
 }
