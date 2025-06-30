@@ -1,6 +1,7 @@
 package net.volcaronitee.volcclient.config.category;
 
 import dev.isxander.yacl3.api.ConfigCategory;
+import dev.isxander.yacl3.api.NameableEnum;
 import dev.isxander.yacl3.api.Option;
 import dev.isxander.yacl3.api.OptionDescription;
 import dev.isxander.yacl3.api.OptionGroup;
@@ -10,7 +11,6 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.volcaronitee.volcclient.VolcClient;
 import net.volcaronitee.volcclient.util.ConfigUtil;
-import net.volcaronitee.volcclient.util.ConfigUtil.AnnounceWP;
 
 /**
  * Configuration for the Rift features in VolcClient.
@@ -79,7 +79,7 @@ public class RiftConfig {
                 .group(OptionGroup.createBuilder().name(Text.literal("Vampire Slayer"))
 
                         // TODO: Announce Mania Phase
-                        .option(Option.<AnnounceWP>createBuilder()
+                        .option(Option.<AnnounceManiaPhase>createBuilder()
                                 .name(Text.literal("Announce Mania Phase"))
                                 .description(OptionDescription.createBuilder()
                                         .webpImage(Identifier.of(VolcClient.MOD_ID,
@@ -137,7 +137,20 @@ public class RiftConfig {
 
     // Vampire Slayer Option Group
     @SerialEntry
-    public AnnounceWP announceManiaPhase = AnnounceWP.OFF;
+    public AnnounceManiaPhase announceManiaPhase = AnnounceManiaPhase.OFF;
+
+    public enum AnnounceManiaPhase implements NameableEnum {
+        OFF, ALL, PARTY;
+
+        @Override
+        public Text getDisplayName() {
+            return switch (this) {
+                case OFF -> Text.literal("Disabled");
+                case ALL -> Text.literal("All Chat");
+                case PARTY -> Text.literal("Party Chat");
+            };
+        }
+    }
 
     @SerialEntry
     public boolean effigyWaypoint = false;

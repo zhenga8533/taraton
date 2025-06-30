@@ -185,7 +185,7 @@ public class GeneralConfig {
                                         .range(0, 120).step(10))
                                 .build())
 
-                        // TODO: Widget Display
+                        // Widget Display
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Widget Display"))
                                 .description(OptionDescription.createBuilder()
                                         .webpImage(Identifier.of(VolcClient.MOD_ID,

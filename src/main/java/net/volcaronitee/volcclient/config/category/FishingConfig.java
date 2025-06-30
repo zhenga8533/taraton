@@ -26,7 +26,7 @@ public class FishingConfig {
 
                         // Hook Line and Sinker
                         .option(Option.<Boolean>createBuilder()
-                                .name(Text.literal("Hook Line and Sinker"))
+                                .name(Text.literal("Hook, Line, and Sinker"))
                                 .description(OptionDescription.createBuilder()
                                         .webpImage(Identifier.of(VolcClient.MOD_ID,
                                                 "config/fishing/hook_line_and_sinker.webp"))

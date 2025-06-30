@@ -11,7 +11,6 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.volcaronitee.volcclient.VolcClient;
 import net.volcaronitee.volcclient.util.ConfigUtil;
-import net.volcaronitee.volcclient.util.ConfigUtil.AnnounceWP;
 
 /**
  * Configuration for the Combat features in VolcClient.
@@ -180,34 +179,6 @@ public class CombatConfig {
                 // Slayer Option Group
                 .group(OptionGroup.createBuilder().name(Text.literal("Slayer"))
 
-                        // TODO: Slayer Boss Announce
-                        .option(Option.<AnnounceWP>createBuilder()
-                                .name(Text.literal("Slayer Boss Announce"))
-                                .description(OptionDescription.createBuilder()
-                                        .webpImage(Identifier.of(VolcClient.MOD_ID,
-                                                "config/combat/slayer_boss_announce.webp"))
-                                        .text(Text.literal(
-                                                "Sends a chat message on slayer boss spawn."))
-                                        .build())
-                                .binding(defaults.combat.slayerBossAnnounce,
-                                        () -> config.combat.slayerBossAnnounce,
-                                        newVal -> config.combat.slayerBossAnnounce = newVal)
-                                .controller(ConfigUtil::createEnumController).build())
-
-                        // TODO: Slayer Miniboss Announce
-                        .option(Option.<AnnounceWP>createBuilder()
-                                .name(Text.literal("Slayer Miniboss Announce"))
-                                .description(OptionDescription.createBuilder()
-                                        .webpImage(Identifier.of(VolcClient.MOD_ID,
-                                                "config/combat/slayer_miniboss_announce.webp"))
-                                        .text(Text.literal(
-                                                "Sends a chat message on slayer miniboss spawn."))
-                                        .build())
-                                .binding(defaults.combat.slayerMinibossAnnounce,
-                                        () -> config.combat.slayerMinibossAnnounce,
-                                        newVal -> config.combat.slayerMinibossAnnounce = newVal)
-                                .controller(ConfigUtil::createEnumController).build())
-
                         // TODO: Slayer Spawn Warning
                         .option(Option.<Integer>createBuilder()
                                 .name(Text.literal("Slayer Spawn Warning"))
@@ -288,12 +259,6 @@ public class CombatConfig {
     public boolean ragnarokDetection = true;
 
     // Slayer Option Group
-    @SerialEntry
-    public AnnounceWP slayerBossAnnounce = AnnounceWP.OFF;
-
-    @SerialEntry
-    public AnnounceWP slayerMinibossAnnounce = AnnounceWP.OFF;
-
     @SerialEntry
     public int slayerSpawnWarning = 0;
 }
