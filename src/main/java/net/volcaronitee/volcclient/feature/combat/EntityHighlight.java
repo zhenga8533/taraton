@@ -56,10 +56,12 @@ public class EntityHighlight {
     private static final EntityType<?> ARMOR_STAND =
             Registries.ENTITY_TYPE.get(Identifier.of("minecraft:armor_stand"));
 
+    private static final Identifier BEACON_BEAM_TEXTURE =
+            Identifier.of("minecraft", "textures/entity/beacon_beam.png");
+
     static {
         OverlayUtil.createOverlay("entity_counter",
                 () -> ConfigUtil.getHandler().combat.entityCounter, LINES);
-
         ENTITY_LIST.setSaveCallback(INSTANCE::onSave);
     }
 
