@@ -16,7 +16,7 @@ import net.volcaronitee.volcclient.VolcClient;
 import net.volcaronitee.volcclient.config.category.ChatConfig;
 import net.volcaronitee.volcclient.config.category.CombatConfig;
 import net.volcaronitee.volcclient.config.category.ContainerConfig;
-import net.volcaronitee.volcclient.config.category.CrimsonIslesConfig;
+import net.volcaronitee.volcclient.config.category.CrimsonIsleConfig;
 import net.volcaronitee.volcclient.config.category.DungeonsConfig;
 import net.volcaronitee.volcclient.config.category.EconomyConfig;
 import net.volcaronitee.volcclient.config.category.EventsConfig;
@@ -78,7 +78,7 @@ public class ConfigUtil {
                     .category(MiningConfig.create(defaults, config))
                     .category(ForagingConfig.create(defaults, config))
                     .category(EventsConfig.create(defaults, config))
-                    .category(CrimsonIslesConfig.create(defaults, config))
+                    .category(CrimsonIsleConfig.create(defaults, config))
                     .category(DungeonsConfig.create(defaults, config))
                     .category(KuudraConfig.create(defaults, config))
                     .category(RiftConfig.create(defaults, config));
@@ -160,7 +160,7 @@ public class ConfigUtil {
     public EventsConfig events = new EventsConfig();
 
     @SerialEntry
-    public CrimsonIslesConfig crimsonIsles = new CrimsonIslesConfig();
+    public CrimsonIsleConfig crimsonIsle = new CrimsonIsleConfig();
 
     @SerialEntry
     public DungeonsConfig dungeons = new DungeonsConfig();

@@ -12,18 +12,18 @@ import net.volcaronitee.volcclient.util.ConfigUtil;
 import net.volcaronitee.volcclient.util.ConfigUtil.AnnounceWP;
 
 /**
- * Configuration for the Crimson Isles features in VolcClient.
+ * Configuration for the Crimson Isle features in VolcClient.
  */
-public class CrimsonIslesConfig {
+public class CrimsonIsleConfig {
     /**
-     * Creates a new {@link ConfigCategory} for the Crimson Isles features.
+     * Creates a new {@link ConfigCategory} for the Crimson Isle features.
      * 
      * @param defaults The default configuration values.
      * @param config The current configuration values.
-     * @return A new {@link ConfigCategory} for the Crimson Isles features.
+     * @return A new {@link ConfigCategory} for the Crimson Isle features.
      */
     public static ConfigCategory create(ConfigUtil defaults, ConfigUtil config) {
-        return ConfigCategory.createBuilder().name(Text.literal("Crimson Isles"))
+        return ConfigCategory.createBuilder().name(Text.literal("Crimson Isle"))
 
                 // Fishing Option Group
                 .group(OptionGroup.createBuilder().name(Text.literal("Fishing"))
@@ -37,9 +37,9 @@ public class CrimsonIslesConfig {
                                         .text(Text.literal(
                                                 "Sends a chat message on mythic lava sea creature spawn."))
                                         .build())
-                                .binding(defaults.crimsonIsles.mythicLavaCreatureAnnounce,
-                                        () -> config.crimsonIsles.mythicLavaCreatureAnnounce,
-                                        newVal -> config.crimsonIsles.mythicLavaCreatureAnnounce =
+                                .binding(defaults.crimsonIsle.mythicLavaCreatureAnnounce,
+                                        () -> config.crimsonIsle.mythicLavaCreatureAnnounce,
+                                        newVal -> config.crimsonIsle.mythicLavaCreatureAnnounce =
                                                 newVal)
                                 .controller(ConfigUtil::createEnumController).build())
 
@@ -52,9 +52,9 @@ public class CrimsonIslesConfig {
                                         .text(Text.literal(
                                                 "Displays a timer for the golden trophy fish on the screen."))
                                         .build())
-                                .binding(defaults.crimsonIsles.goldenFishTimer,
-                                        () -> config.crimsonIsles.goldenFishTimer,
-                                        newVal -> config.crimsonIsles.goldenFishTimer = newVal)
+                                .binding(defaults.crimsonIsle.goldenFishTimer,
+                                        () -> config.crimsonIsle.goldenFishTimer,
+                                        newVal -> config.crimsonIsle.goldenFishTimer = newVal)
                                 .controller(ConfigUtil::createBooleanController).build())
 
                         // TODO: Trophy Fisher Display
@@ -66,9 +66,9 @@ public class CrimsonIslesConfig {
                                         .text(Text.literal(
                                                 "Displays the session trophy fishing progress on the screen."))
                                         .build())
-                                .binding(defaults.crimsonIsles.trophyFisherDisplay,
-                                        () -> config.crimsonIsles.trophyFisherDisplay,
-                                        newVal -> config.crimsonIsles.trophyFisherDisplay = newVal)
+                                .binding(defaults.crimsonIsle.trophyFisherDisplay,
+                                        () -> config.crimsonIsle.trophyFisherDisplay,
+                                        newVal -> config.crimsonIsle.trophyFisherDisplay = newVal)
                                 .controller(ConfigUtil::createBooleanController).build())
 
                         .build())
@@ -85,9 +85,9 @@ public class CrimsonIslesConfig {
                                         .text(Text.literal(
                                                 "Sends a chat message on vanquisher spawn."))
                                         .build())
-                                .binding(defaults.crimsonIsles.vanquisherAnnounce,
-                                        () -> config.crimsonIsles.vanquisherAnnounce,
-                                        newVal -> config.crimsonIsles.vanquisherAnnounce = newVal)
+                                .binding(defaults.crimsonIsle.vanquisherAnnounce,
+                                        () -> config.crimsonIsle.vanquisherAnnounce,
+                                        newVal -> config.crimsonIsle.vanquisherAnnounce = newVal)
                                 .controller(ConfigUtil::createEnumController).build())
 
                         // TODO: Vanquisher Warp
@@ -99,9 +99,9 @@ public class CrimsonIslesConfig {
                                         .text(Text.literal(
                                                 "Warps vanquisher swap party to your lobby when you spawn a vanquisher. Set the players in your party using /vc vanq."))
                                         .build())
-                                .binding(defaults.crimsonIsles.vanquisherWarp,
-                                        () -> config.crimsonIsles.vanquisherWarp,
-                                        newVal -> config.crimsonIsles.vanquisherWarp = newVal)
+                                .binding(defaults.crimsonIsle.vanquisherWarp,
+                                        () -> config.crimsonIsle.vanquisherWarp,
+                                        newVal -> config.crimsonIsle.vanquisherWarp = newVal)
                                 .controller(ConfigUtil::createBooleanController).build())
 
                         .build())
