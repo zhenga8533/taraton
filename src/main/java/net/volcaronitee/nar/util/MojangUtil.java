@@ -14,21 +14,34 @@ import com.google.gson.JsonParser;
  */
 public class MojangUtil {
     /**
+     * Parses a UUID into a string without dashes.
+     * 
+     * @param uuid UUID to parse
+     * @return String representation of the UUID without dashes, or an empty string if null
+     */
+    public static String parseUUID(UUID uuid) {
+        if (uuid == null) {
+            return "";
+        }
+
+        String uuidString = uuid.toString();
+        return uuidString.replace("-", "");
+    }
+
+    /**
      * Fetches a username from Mojang's session server using a UUID.
      *
      * @param uuid UUID of the player (with or without dashes)
      * @return The player's username, or null if not found
      */
-    public static String getUsernameFromUUID(UUID uuid) {
+    public static String getUsernameFromUUID(String uuid) {
         try {
-            if (uuid == null) {
+            if (uuid.isEmpty()) {
                 return "";
             }
 
-            String cleanUUID = uuid.toString().replace("-", "");
-            URL url = new URI(
-                    "https://sessionserver.mojang.com/session/minecraft/profile/" + cleanUUID)
-                            .toURL();
+            URL url = new URI("https://sessionserver.mojang.com/session/minecraft/profile/" + uuid)
+                    .toURL();
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("GET");
             connection.setConnectTimeout(3000);
