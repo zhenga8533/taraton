@@ -248,12 +248,12 @@ public class EntityHighlight {
             int color = -1;
 
             // Parse the input key and options
-            String[] args = pair.getKey().toLowerCase().trim().split(" --");
+            String[] args = pair.getKey().trim().split(" --");
             for (String arg : args) {
                 if (arg.equals(args[0])) {
                     // The first argument is the identifier or name
                     inputKey = arg.trim();
-                    identifier = Identifier.tryParse(inputKey);
+                    identifier = Identifier.tryParse(inputKey.toLowerCase());
                 } else if (arg.startsWith("beacon ")) {
                     // This argument indicates a beacon highlight
                     beacon = true;
