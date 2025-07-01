@@ -35,10 +35,11 @@ public class PartyUtil {
      */
     private static void handlePartyPacket(ClientboundPartyInfoPacket packet) {
         inParty = packet.isInParty();
+        System.out.println(packet);
         if (!inParty) {
             leader = "";
-            moderators = Set.of();
-            members = Set.of();
+            moderators.clear();
+            members.clear();
             return;
         }
 
