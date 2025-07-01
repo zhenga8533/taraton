@@ -149,7 +149,6 @@ public class ChatCommands {
         // Process the command
         ClientPlayerEntity player = MinecraftClient.getInstance().player;
         String[] args = chatMessage.split(" ");
-        System.out.println(args);
         String head = CommandType.getCommandHead(commandType, username);
 
         if (commandType == CommandType.PARTY) {
