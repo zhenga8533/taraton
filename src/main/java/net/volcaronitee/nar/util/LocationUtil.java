@@ -1,5 +1,7 @@
 package net.volcaronitee.nar.util;
 
+import java.util.ArrayList;
+import java.util.List;
 import net.hypixel.data.type.LobbyType;
 import net.hypixel.data.type.ServerType;
 import net.hypixel.modapi.HypixelModAPI;
@@ -15,6 +17,8 @@ public class LocationUtil {
     private static String mode = "";
     private static ServerType serverType = LobbyType.MAIN;
     private static World world = World.UNKNOWN;
+
+    private static final List<Runnable> CALLBACKS = new ArrayList<>();
 
     /**
      * Enum representing different worlds in Hypixel SkyBlock.
@@ -87,6 +91,15 @@ public class LocationUtil {
     }
 
     /**
+     * Registers a callback to be executed when the location information is updated.
+     * 
+     * @param callback The Runnable callback to register.
+     */
+    public static void registerCallback(Runnable callback) {
+        CALLBACKS.add(callback);
+    }
+
+    /**
      * Handles the ClientboundLocationPacket to update the location information. This method
      * extracts the server name, lobby name, map, mode, server type, and version from the packet.
      * 
@@ -99,6 +112,11 @@ public class LocationUtil {
         mode = packet.getMode().orElse("");
         serverType = packet.getServerType().orElse(LobbyType.MAIN);
         world = World.fromInternalName(map);
+
+        // Execute all registered callbacks
+        for (Runnable callback : CALLBACKS) {
+            callback.run();
+        }
     }
 
     /**

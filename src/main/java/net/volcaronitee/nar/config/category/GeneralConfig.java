@@ -264,7 +264,7 @@ public class GeneralConfig {
                                         newVal -> config.general.hideAllParticles = newVal)
                                 .controller(ConfigUtil::createBooleanController).build())
 
-                        // TODO: Server Rejoin Alert
+                        // Server Rejoin Alert
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Server Rejoin Alert"))
                                 .description(OptionDescription.createBuilder()
