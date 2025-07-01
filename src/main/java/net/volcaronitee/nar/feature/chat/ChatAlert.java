@@ -74,7 +74,6 @@ public class ChatAlert {
                     if (command.startsWith("/")) {
                         command = command.substring(1);
                     }
-                    commandQueue.add(command);
                 } else if (arg == args[0]) {
                     // The first argument is the alert message
                     alertMessage = arg.trim();
@@ -90,9 +89,10 @@ public class ChatAlert {
                 // If a command is specified, execute it
                 if (!command.isEmpty()) {
                     INSTANCE.commandDelay += 4;
+                    commandQueue.add(command);
                     ScheduleUtil.schedule(() -> {
                         MinecraftClient.getInstance().player.networkHandler
-                                .sendChatCommand(commandQueue.poll());
+                                .sendChatCommand(INSTANCE.commandQueue.poll());
                         INSTANCE.commandDelay -= 4;
                     }, INSTANCE.commandDelay);
                 }
