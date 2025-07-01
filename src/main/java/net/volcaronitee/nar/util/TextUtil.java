@@ -48,7 +48,6 @@ public class TextUtil {
             textComponent
                     .setStyle(textComponent.getStyle().withClickEvent(new ClickEvent.OpenUrl(uri)));
         } catch (URISyntaxException e) {
-            System.err.println("Invalid URL syntax for link: " + url + " Error: " + e.getMessage());
             textComponent.append(Text.literal(" (Invalid Link!)").formatted(Formatting.RED));
         }
 
