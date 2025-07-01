@@ -42,7 +42,7 @@ public class ChatCommands {
             "Cannot predict now", "Concentrate and ask again", "Don't count on it",
             "My reply is no", "My sources say no", "Outlook not so good", "Very doubtful"};
 
-    private int delay = 0;
+    private boolean cooldown = false;
 
     /**
      * Enum representing the type of chat command.
@@ -96,10 +96,8 @@ public class ChatCommands {
             return;
         }
 
-        String text = ParseUtil.removeFormatting(message.getString());
-
         // Check if the text matches any of the defined patterns
-        text = ParseUtil.removeFormatting(text);
+        String text = ParseUtil.removeFormatting(message.getString());
         Matcher allMatcher = ALL_PATTERN.matcher(text);
         Matcher guildMatcher = GUILD_PATTERN.matcher(text);
         Matcher partyMatcher = PARTY_PATTERN.matcher(text);
@@ -153,7 +151,9 @@ public class ChatCommands {
         String[] args = text.split(" ");
         String head = CommandType.getCommandHead(commandType, username);
 
-        handleLeaderCommand(player, username, args);
+        if (commandType == CommandType.PARTY) {
+            handleLeaderCommand(player, username, args);
+        }
         handlePartyCommand(player, username, head, args);
         handleStatusCommand(player, username, head, args);
     }
@@ -164,12 +164,17 @@ public class ChatCommands {
      * @param command The command to be executed.
      */
     private void scheduleCommand(String command) {
-        INSTANCE.delay += 4;
+        // Prevent command spamming
+        if (INSTANCE.cooldown) {
+            return;
+        }
+
+        // Send the command to the player network handler
+        INSTANCE.cooldown = true;
         ScheduleUtil.schedule(() -> {
             MinecraftClient.getInstance().player.networkHandler.sendChatCommand(command);
-            INSTANCE.delay -= 10;
-        }, INSTANCE.delay);
-        INSTANCE.delay += 6;
+            INSTANCE.cooldown = false;
+        }, 4);
     }
 
     /**
@@ -197,7 +202,7 @@ public class ChatCommands {
         String partyLeader = PartyUtil.getLeader();
         String clientUsername = MinecraftClient.getInstance().getSession().getUsername();
         if (!ConfigUtil.getHandler().chat.leaderCommands
-                || (ToggleUtil.getHandler().chat.leaderLock && partyLeader != clientUsername)
+                || (ToggleUtil.getHandler().chat.leaderLock && partyLeader == clientUsername)
                 || !PartyUtil.isInParty() || PartyUtil.getLeader() != clientUsername) {
             return;
         }
