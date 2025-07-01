@@ -113,9 +113,8 @@ public class ChatAlert {
                 continue;
             }
 
-            CHAT_PATTERNS
-                    .add(new Pair<>(Pattern.compile(pattern.getKey(), Pattern.CASE_INSENSITIVE),
-                            pattern.getValue().getKey()));
+            CHAT_PATTERNS.add(
+                    new Pair<>(Pattern.compile(pattern.getKey()), pattern.getValue().getKey()));
         }
     }
 }
