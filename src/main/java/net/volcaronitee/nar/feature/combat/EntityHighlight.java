@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
-
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -33,8 +32,8 @@ import net.volcaronitee.nar.util.TickUtil;
 public class EntityHighlight {
     private static final EntityHighlight INSTANCE = new EntityHighlight();
 
-    private static final List<LineContent> LINES = new ArrayList<>(
-            List.of(new LineContent("§e§lEntity Counter:", "", () -> true),
+    private static final List<LineContent> LINES =
+            new ArrayList<>(List.of(new LineContent("§e§lEntity Counter:", "", () -> true),
                     new LineContent(" §fLion: §6", "1", () -> true),
                     new LineContent(" §7Total: §e", "1", () -> true)));
 
@@ -56,9 +55,11 @@ public class EntityHighlight {
     private static final Set<String> HIGHLIGHT_NAMES = new HashSet<>();
     private static final Map<String, Highlight> NAME_HIGHLIGHT = new HashMap<>();
 
-    private static final EntityType<?> ARMOR_STAND = Registries.ENTITY_TYPE.get(Identifier.of("minecraft:armor_stand"));
+    private static final EntityType<?> ARMOR_STAND =
+            Registries.ENTITY_TYPE.get(Identifier.of("minecraft:armor_stand"));
 
-    private static final Identifier BEACON_BEAM_TEXTURE = Identifier.of("minecraft", "textures/entity/beacon_beam.png");
+    private static final Identifier BEACON_BEAM_TEXTURE =
+            Identifier.of("minecraft", "textures/entity/beacon_beam.png");
 
     static {
         OverlayUtil.createOverlay("entity_counter",
@@ -69,8 +70,7 @@ public class EntityHighlight {
     /**
      * Private constructor to prevent instantiation.
      */
-    private EntityHighlight() {
-    }
+    private EntityHighlight() {}
 
     /**
      * Gets the singleton instance of HighlightEntity.
@@ -134,22 +134,19 @@ public class EntityHighlight {
                         // Add closest entity to the highlight list
                         Box boundingBox = entity.getBoundingBox().expand(0.2, 2, 0.2);
                         List<Entity> nearbyEntities = client.world.getOtherEntities(entity,
-                                boundingBox, e -> e.getType() != ARMOR_STAND && !e.isInvisible()
-                                        && e.getX() == entity.getX() && e.getZ() == entity.getZ());
-
-                        // If no exact entities found, get all entities in the bounding box
+                                boundingBox, e -> e.getType() != ARMOR_STAND && !e.isInvisible());
                         if (nearbyEntities.isEmpty()) {
-                            nearbyEntities = client.world.getOtherEntities(entity, boundingBox,
-                                    e -> e.getType() != ARMOR_STAND && !e.isInvisible());
-                            if (nearbyEntities.isEmpty()) {
-                                return;
-                            }
-
-                            Collections.sort(nearbyEntities,
-                                    Comparator.comparingDouble(e -> e.distanceTo(entity)));
+                            return;
                         }
 
-                        // If there are no nearby entities, skip
+                        // Sort entities by distance to the armor stand
+                        Collections.sort(nearbyEntities, Comparator.comparingDouble((Entity e) -> {
+                            double dx = e.getX() - entity.getX();
+                            double dz = e.getZ() - entity.getZ();
+                            return Math.sqrt(dx * dx + dz * dz);
+                        }).thenComparingDouble(Entity::getY));
+
+                        // Highlight the closest entity
                         Entity closestEntity = nearbyEntities.get(0);
                         HIGHLIGHTED_ENTITIES.put(closestEntity, NAME_HIGHLIGHT.get(key));
 
@@ -300,9 +297,9 @@ public class EntityHighlight {
         /**
          * Constructor for Highlight.
          * 
-         * @param name   The name of the entity or identifier.
+         * @param name The name of the entity or identifier.
          * @param beacon Whether the entity is a beacon highlight.
-         * @param color  The color for the entity highlight as an integer.
+         * @param color The color for the entity highlight as an integer.
          */
         public Highlight(String name, boolean beacon, int color) {
             this.name = name;
