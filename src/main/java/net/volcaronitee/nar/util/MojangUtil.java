@@ -1,6 +1,7 @@
 package net.volcaronitee.nar.util;
 
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 import com.google.gson.JsonObject;
 
 /**
@@ -28,17 +29,49 @@ public class MojangUtil {
      * @param uuid UUID of the player (with or without dashes)
      * @return The player's username, or null if not found
      */
-    public static String getUsernameFromUUID(String uuid) {
-        try {
-            if (uuid.isEmpty()) {
-                return "";
+    public static CompletableFuture<String> getUsernameFromUUID(String uuid) {
+        if (uuid == null || uuid.isEmpty()) {
+            // Return an already completed future with an empty string if input is invalid
+            return CompletableFuture.completedFuture("");
+        }
+
+        String cleanUuid = uuid.replace("-", "");
+
+        String url = "https://sessionserver.mojang.com/session/minecraft/profile/" + cleanUuid;
+
+        // Use RequestUtil.get to send the async GET request
+        return RequestUtil.get(url).thenApply(responseBody -> {
+            if (responseBody == null || responseBody.isEmpty()) {
+                return null;
             }
 
-            JsonObject profile = RequestUtil
-                    .get("https://sessionserver.mojang.com/session/minecraft/profile/" + uuid);
-            return profile != null ? profile.get("name").getAsString() : "";
+            // Parse the username from the JSON response
+            String username = parseUsername(responseBody);
+            if (username != null && !username.isEmpty()) {
+                return username;
+            } else {
+                return null;
+            }
+        }).exceptionally(e -> {
+            return null;
+        });
+    }
+
+    /**
+     * Parses the JSON response from Mojang's session server to extract the username.
+     *
+     * @param jsonResponse The JSON string received from Mojang's session server.
+     * @return The extracted username, or null if parsing fails or the 'name' field is not found.
+     */
+    private static String parseUsername(String jsonResponse) {
+        try {
+            JsonObject profile = JsonUtil.GSON.fromJson(jsonResponse, JsonObject.class);
+            if (profile != null && profile.has("name") && profile.get("name").isJsonPrimitive()) {
+                return profile.get("name").getAsString();
+            }
         } catch (Exception e) {
-            return "";
         }
+
+        return null;
     }
 }

@@ -1,17 +1,18 @@
 package net.volcaronitee.nar.util;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
 import java.net.URI;
-import java.net.URL;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * Utility class for making HTTP requests and handling JSON responses.
  */
 public class RequestUtil {
+    private static final HttpClient HTTP_CLIENT = HttpClient.newBuilder()
+            .version(HttpClient.Version.HTTP_2).followRedirects(HttpClient.Redirect.NORMAL).build();
+
     /**
      * Performs a GET request to the specified URL and returns the response as a JsonObject.
      * 
@@ -19,29 +20,15 @@ public class RequestUtil {
      * @return JsonObject containing the response data, or null if the request fails or the response
      *         is not 200 OK.
      */
-    public static JsonObject get(String url) {
+    public static CompletableFuture<String> get(String url) {
         try {
-            URL uri = new URI(url).toURL();
-            HttpURLConnection connection = (HttpURLConnection) uri.openConnection();
-            connection.setRequestMethod("GET");
-            connection.setConnectTimeout(3000);
-            connection.setReadTimeout(3000);
+            HttpRequest request = HttpRequest.newBuilder().GET().uri(URI.create(url))
+                    .header("Accept", "application/json").build();
 
-            int responseCode = connection.getResponseCode();
-            if (responseCode != 200) {
-                return null;
-            }
-
-            try (BufferedReader in =
-                    new BufferedReader(new InputStreamReader(connection.getInputStream()))) {
-                StringBuilder json = new StringBuilder();
-                String line;
-                while ((line = in.readLine()) != null) {
-                    json.append(line);
-                }
-
-                return JsonParser.parseString(json.toString()).getAsJsonObject();
-            }
+            return HTTP_CLIENT.sendAsync(request, HttpResponse.BodyHandlers.ofString())
+                    .thenApply(HttpResponse::body).exceptionally(e -> {
+                        return null;
+                    });
         } catch (Exception e) {
             return null;
         }

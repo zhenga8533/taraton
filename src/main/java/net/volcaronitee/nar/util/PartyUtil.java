@@ -1,12 +1,24 @@
 package net.volcaronitee.nar.util;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentHashMap;
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.hypixel.modapi.HypixelModAPI;
+import net.hypixel.modapi.packet.HypixelPacket;
 import net.hypixel.modapi.packet.impl.clientbound.ClientboundPartyInfoPacket;
 import net.hypixel.modapi.packet.impl.clientbound.ClientboundPartyInfoPacket.PartyRole;
+import net.hypixel.modapi.packet.impl.serverbound.ServerboundPartyInfoPacket;
+import net.hypixel.modapi.serializer.PacketSerializer;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.network.ClientPlayNetworkHandler;
+import net.minecraft.network.PacketByteBuf;
 
 /**
  * Utility class for tracking the player's party state.
@@ -14,8 +26,8 @@ import net.hypixel.modapi.packet.impl.clientbound.ClientboundPartyInfoPacket.Par
 public class PartyUtil {
     private static boolean inParty = false;
     private static String leader = "";
-    private static final Set<String> MODERATORS = Set.of();
-    private static final Set<String> MEMBERS = Set.of();
+    private static final Set<String> MODERATORS = new HashSet<>();
+    private static final Set<String> MEMBERS = new HashSet<>();
 
     private static final Map<String, String> UUID_CACHE = new HashMap<>();
 
@@ -30,6 +42,24 @@ public class PartyUtil {
     public static void init() {
         HypixelModAPI.getInstance().createHandler(ClientboundPartyInfoPacket.class,
                 PartyUtil::handlePartyPacket);
+        TickUtil.register(PartyUtil::sendPacket, 100);
+    }
+
+    /**
+     * Sends a packet to the Hypixel server to request party information. This method is
+     * 
+     * @param client The Minecraft client instance used to send the packet.
+     */
+    public static void sendPacket(MinecraftClient client) {
+        ClientPlayNetworkHandler networkHandler = client.getNetworkHandler();
+        if (networkHandler == null) {
+            return;
+        }
+
+        HypixelPacket packet = new ServerboundPartyInfoPacket();
+        PacketByteBuf buf = PacketByteBufs.create();
+        packet.write(new PacketSerializer(buf));
+        HypixelModAPI.getInstance().sendPacket(packet);
     }
 
     /**
@@ -38,18 +68,23 @@ public class PartyUtil {
      * @param uuid The UUID of the player whose username is to be retrieved.
      * @return The username of the player, or an empty string if the UUID is null or not found.
      */
-    private static String getUsernameFromUUID(UUID uuid) {
+    public static CompletableFuture<String> getUsernameFromUUID(UUID uuid) {
         if (uuid == null) {
-            return "";
+            return CompletableFuture.completedFuture(null);
         }
 
         String uuidString = MojangUtil.parseUUID(uuid);
+
+        // Check cache first
         if (UUID_CACHE.containsKey(uuidString)) {
-            return UUID_CACHE.get(uuidString);
+            return CompletableFuture.completedFuture(UUID_CACHE.get(uuidString));
         } else {
-            String username = MojangUtil.getUsernameFromUUID(uuidString);
-            UUID_CACHE.put(uuidString, username);
-            return username;
+            return MojangUtil.getUsernameFromUUID(uuidString).thenApply(username -> {
+                if (username != null && !username.isEmpty()) {
+                    UUID_CACHE.put(uuidString, username);
+                }
+                return username;
+            });
         }
     }
 
@@ -61,24 +96,72 @@ public class PartyUtil {
      */
     private static void handlePartyPacket(ClientboundPartyInfoPacket packet) {
         inParty = packet.isInParty();
-        System.out.println(packet);
         if (!inParty) {
-            leader = "";
-            MODERATORS.clear();
-            MEMBERS.clear();
+            // Clear party info immediately if not in a party
+            MinecraftClient.getInstance().execute(() -> {
+                leader = "";
+                MODERATORS.clear();
+                MEMBERS.clear();
+            });
             return;
         }
 
-        leader = getUsernameFromUUID(packet.getLeader().orElse(null));
+        // A temporary map to store UUID -> username as they resolve asynchronously
+        Map<UUID, String> resolvedUsernames = new ConcurrentHashMap<>();
+        List<CompletableFuture<Void>> usernameFetchFutures = new ArrayList<>();
 
-        packet.getMemberMap().forEach((uuid, member) -> {
-            String username = getUsernameFromUUID(uuid);
-            if (member.getRole() == PartyRole.MOD) {
-                MODERATORS.add(username);
-            } else if (member.getRole() == PartyRole.MEMBER) {
-                MEMBERS.add(username);
-            }
+        // Handle leader username asynchronously
+        packet.getLeader().ifPresent(leaderUuid -> {
+            CompletableFuture<Void> leaderFuture =
+                    getUsernameFromUUID(leaderUuid).thenAccept(resolvedLeaderUsername -> {
+                        if (resolvedLeaderUsername != null) {
+                            resolvedUsernames.put(leaderUuid, resolvedLeaderUsername);
+                        }
+                    }).exceptionally(e -> {
+                        return null;
+                    });
+            usernameFetchFutures.add(leaderFuture);
         });
+
+        // Handle all members' and moderators' usernames asynchronously
+        packet.getMemberMap().forEach((uuid, member) -> {
+            CompletableFuture<Void> memberFuture =
+                    getUsernameFromUUID(uuid).thenAccept(resolvedMemberUsername -> {
+                        if (resolvedMemberUsername != null) {
+                            resolvedUsernames.put(uuid, resolvedMemberUsername);
+                        }
+                    }).exceptionally(e -> {
+                        return null;
+                    });
+            usernameFetchFutures.add(memberFuture);
+        });
+
+        // Use CompletableFuture.allOf to wait for all username lookups to complete
+        CompletableFuture.allOf(usernameFetchFutures.toArray(new CompletableFuture[0]))
+                .thenRun(() -> {
+                    packet.getLeader().ifPresent(leaderUuid -> {
+                        leader = resolvedUsernames.getOrDefault(leaderUuid, "[Unknown Leader]");
+                    });
+
+                    List<String> newModerators = new ArrayList<>();
+                    List<String> newMembers = new ArrayList<>();
+
+                    // Populate the new lists using the resolved usernames
+                    packet.getMemberMap().forEach((uuid, member) -> {
+                        String username = resolvedUsernames.getOrDefault(uuid, "[Unknown Player]");
+                        if (member.getRole() == PartyRole.MOD) {
+                            newModerators.add(username);
+                        } else if (member.getRole() == PartyRole.MEMBER) {
+                            newMembers.add(username);
+                        }
+                    });
+
+                    // Clear and add all to ensure thread safety and atomicity of updates
+                    MODERATORS.clear();
+                    MODERATORS.addAll(newModerators);
+                    MEMBERS.clear();
+                    MEMBERS.addAll(newMembers);
+                });
     }
 
     /**
