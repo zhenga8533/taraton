@@ -29,6 +29,7 @@ public class LocationUtil {
         DUNGEON_HUB("dungeon_hub"),
         THE_FARMING_ISLANDS("farming_1"),
         THE_PARK("foraging_1"),
+        GALATEA("galatea"),
         SPIDERS_DEN("combat_1"),
         BLAZING_FORTRESS("combat_2"),
         THE_END("combat_3"),
@@ -67,7 +68,7 @@ public class LocationUtil {
                     return world;
                 }
             }
-            return null;
+            return UNKNOWN;
         }
     }
 
@@ -76,6 +77,9 @@ public class LocationUtil {
      */
     private LocationUtil() {}
 
+    /**
+     * Initializes the LocationUtil by subscribing to the ClientboundLocationPacket
+     */
     public static void init() {
         HypixelModAPI.getInstance().subscribeToEventPacket(ClientboundLocationPacket.class);
         HypixelModAPI.getInstance().createHandler(ClientboundLocationPacket.class,

@@ -11,22 +11,26 @@ base {
 }
 
 repositories {
-	mavenCentral()
-
 	maven {
-		name = "Xander Maven"
-		url = "https://maven.isxander.dev/releases"
+		name "Xander Maven"
+		url "https://maven.isxander.dev/releases"
 	}
 
 	maven {
-    name = "Terraformers"
-    url = "https://maven.terraformersmc.com/"
-  }
+		name "Terraformers"
+		url "https://maven.terraformersmc.com/"
+	}
 
-  maven {
-    name = "Hypixel"
-    url = "https://repo.hypixel.net/repository/Hypixel/"
-  }
+	maven {
+		name = "Modrinth"
+		url = "https://api.modrinth.com/maven"
+	}
+
+	maven {
+		url "https://repo.hypixel.net/repository/Hypixel/"
+	}
+
+  	mavenLocal()
 }
 
 fabricApi {
@@ -45,12 +49,13 @@ dependencies {
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
 	// Custom
-	modImplementation "dev.isxander:yet-another-config-lib:${project.yacl_version}"
-	modImplementation "com.terraformersmc:modmenu:${project.modmenu_version}"
-  modImplementation "net.hypixel:mod-api:${project.hypixelmodapi_version}"
+	modImplementation "dev.isxander:yet-another-config-lib:${project.yacl}"
+	modImplementation "com.terraformersmc:modmenu:${project.mod_menu}"
+	modImplementation "net.hypixel:mod-api:${project.hypixel_mod_api}"
+  modImplementation "maven.modrinth:hypixel-mod-api:${project.hypixel_fabric_mod_api}"
 
-  // Testing
-  modImplementation "com.ptsmods:devlogin:3.5"
+	// Testing
+	modImplementation "com.ptsmods:devlogin:3.5"
 }
 
 processResources {
