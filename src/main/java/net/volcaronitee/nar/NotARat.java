@@ -14,6 +14,7 @@ import net.volcaronitee.nar.util.PlayerUtil;
 import net.volcaronitee.nar.util.ScheduleUtil;
 import net.volcaronitee.nar.util.TablistUtil;
 import net.volcaronitee.nar.util.TickUtil;
+import net.volcaronitee.nar.util.ToggleUtil;
 
 public class NotARat implements ClientModInitializer {
     public static final String MOD_ID = "nar";
@@ -36,6 +37,7 @@ public class NotARat implements ClientModInitializer {
         PlayerUtil.init();
         ScheduleUtil.init();
         TablistUtil.init();
+        ToggleUtil.init();
         TickUtil.init();
     }
 }
