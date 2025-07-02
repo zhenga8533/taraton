@@ -8,7 +8,7 @@ import dev.isxander.yacl3.config.v2.api.SerialEntry;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.volcaronitee.nar.NotARat;
-import net.volcaronitee.nar.util.ConfigUtil;
+import net.volcaronitee.nar.config.NarConfig;
 
 /**
  * Configuration for the Foraging features in NotARat.
@@ -21,7 +21,7 @@ public class ForagingConfig {
      * @param config The current configuration values.
      * @return A new {@link ConfigCategory} for the Foraging features.
      */
-    public static ConfigCategory create(ConfigUtil defaults, ConfigUtil config) {
+    public static ConfigCategory create(NarConfig defaults, NarConfig config) {
         return ConfigCategory.createBuilder().name(Text.literal("Foraging"))
 
                 // Option Group
@@ -35,7 +35,7 @@ public class ForagingConfig {
                                         .text(Text.literal("")).build())
                                 .binding(defaults.foraging.temp, () -> config.foraging.temp,
                                         newVal -> config.foraging.temp = newVal)
-                                .controller(ConfigUtil::createBooleanController).build())
+                                .controller(NarConfig::createBooleanController).build())
 
                         .build())
 

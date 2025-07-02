@@ -10,7 +10,7 @@ import dev.isxander.yacl3.config.v2.api.SerialEntry;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.volcaronitee.nar.NotARat;
-import net.volcaronitee.nar.util.ConfigUtil;
+import net.volcaronitee.nar.config.NarConfig;
 
 /**
  * Configuration for the Chat features in NotARat.
@@ -23,7 +23,7 @@ public class ChatConfig {
      * @param config The current configuration values.
      * @return A new {@link ConfigCategory} for the Chat features.
      */
-    public static ConfigCategory create(ConfigUtil defaults, ConfigUtil config) {
+    public static ConfigCategory create(NarConfig defaults, NarConfig config) {
         return ConfigCategory.createBuilder().name(Text.literal("Chat"))
 
                 // Chat Option Group
@@ -39,7 +39,7 @@ public class ChatConfig {
                                         .build())
                                 .binding(defaults.chat.chatAlert, () -> config.chat.chatAlert,
                                         newVal -> config.chat.chatAlert = newVal)
-                                .controller(ConfigUtil::createBooleanController).build())
+                                .controller(NarConfig::createBooleanController).build())
 
                         // Copy Chat
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Copy Chat"))
@@ -51,7 +51,7 @@ public class ChatConfig {
                                         .build())
                                 .binding(defaults.chat.copyChat, () -> config.chat.copyChat,
                                         newVal -> config.chat.copyChat = newVal)
-                                .controller(ConfigUtil::createBooleanController).build())
+                                .controller(NarConfig::createBooleanController).build())
 
                         // Custom Emotes
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Custom Emotes"))
@@ -63,7 +63,7 @@ public class ChatConfig {
                                         .build())
                                 .binding(defaults.chat.customEmotes, () -> config.chat.customEmotes,
                                         newVal -> config.chat.customEmotes = newVal)
-                                .controller(ConfigUtil::createBooleanController).build())
+                                .controller(NarConfig::createBooleanController).build())
 
                         // Spam Hider
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Spam Hider"))
@@ -75,7 +75,7 @@ public class ChatConfig {
                                         .build())
                                 .binding(defaults.chat.spamHider, () -> config.chat.spamHider,
                                         newVal -> config.chat.spamHider = newVal)
-                                .controller(ConfigUtil::createBooleanController).build())
+                                .controller(NarConfig::createBooleanController).build())
 
                         // Text Substitution
                         .option(Option.<Boolean>createBuilder()
@@ -89,7 +89,7 @@ public class ChatConfig {
                                 .binding(defaults.chat.textSubstitution,
                                         () -> config.chat.textSubstitution,
                                         newVal -> config.chat.textSubstitution = newVal)
-                                .controller(ConfigUtil::createBooleanController).build())
+                                .controller(NarConfig::createBooleanController).build())
 
                         .build())
 
@@ -108,7 +108,7 @@ public class ChatConfig {
                                 .binding(defaults.chat.autocompleteCommand,
                                         () -> config.chat.autocompleteCommand,
                                         newVal -> config.chat.autocompleteCommand = newVal)
-                                .controller(ConfigUtil::createBooleanController).build())
+                                .controller(NarConfig::createBooleanController).build())
 
                         // TODO: Autocorrect Command
                         .option(Option.<Boolean>createBuilder()
@@ -122,7 +122,7 @@ public class ChatConfig {
                                 .binding(defaults.chat.autocorrectCommand,
                                         () -> config.chat.autocorrectCommand,
                                         newVal -> config.chat.autocorrectCommand = newVal)
-                                .controller(ConfigUtil::createBooleanController).build())
+                                .controller(NarConfig::createBooleanController).build())
 
                         // Playtime Warning
                         .option(Option.<Boolean>createBuilder()
@@ -136,7 +136,7 @@ public class ChatConfig {
                                 .binding(defaults.chat.playtimeWarning,
                                         () -> config.chat.playtimeWarning,
                                         newVal -> config.chat.playtimeWarning = newVal)
-                                .controller(ConfigUtil::createBooleanController).build())
+                                .controller(NarConfig::createBooleanController).build())
 
                         .build())
 
@@ -155,7 +155,7 @@ public class ChatConfig {
                                 .binding(defaults.chat.leaderCommands,
                                         () -> config.chat.leaderCommands,
                                         newVal -> config.chat.leaderCommands = newVal)
-                                .controller(ConfigUtil::createBooleanController).build())
+                                .controller(NarConfig::createBooleanController).build())
 
                         // Party Commands
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Party Commands"))
@@ -168,7 +168,7 @@ public class ChatConfig {
                                 .binding(defaults.chat.partyCommands,
                                         () -> config.chat.partyCommands,
                                         newVal -> config.chat.partyCommands = newVal)
-                                .controller(ConfigUtil::createBooleanController).build())
+                                .controller(NarConfig::createBooleanController).build())
 
                         // Status Commands
                         .option(Option.<Boolean>createBuilder()
@@ -182,7 +182,7 @@ public class ChatConfig {
                                 .binding(defaults.chat.statusCommands,
                                         () -> config.chat.statusCommands,
                                         newVal -> config.chat.statusCommands = newVal)
-                                .controller(ConfigUtil::createBooleanController).build())
+                                .controller(NarConfig::createBooleanController).build())
 
                         // TODO: Guild Join Message
                         .option(Option.<String>createBuilder()
@@ -224,7 +224,7 @@ public class ChatConfig {
                                 .binding(defaults.chat.partyLeaderOnly,
                                         () -> config.chat.partyLeaderOnly,
                                         newVal -> config.chat.partyLeaderOnly = newVal)
-                                .controller(ConfigUtil::createBooleanController).build())
+                                .controller(NarConfig::createBooleanController).build())
 
                         .build())
 
@@ -243,7 +243,7 @@ public class ChatConfig {
                                 .binding(defaults.chat.antiGhostParty,
                                         () -> config.chat.antiGhostParty,
                                         newVal -> config.chat.antiGhostParty = newVal)
-                                .controller(ConfigUtil::createBooleanController).build())
+                                .controller(NarConfig::createBooleanController).build())
 
                         // TODO: Join Reparty
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Join Reparty"))
@@ -255,7 +255,7 @@ public class ChatConfig {
                                         .build())
                                 .binding(defaults.chat.joinReparty, () -> config.chat.joinReparty,
                                         newVal -> config.chat.joinReparty = newVal)
-                                .controller(ConfigUtil::createBooleanController).build())
+                                .controller(NarConfig::createBooleanController).build())
 
                         // Join Whitelist
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Join Whitelist"))
@@ -268,7 +268,7 @@ public class ChatConfig {
                                 .binding(defaults.chat.joinWhitelist,
                                         () -> config.chat.joinWhitelist,
                                         newVal -> config.chat.joinWhitelist = newVal)
-                                .controller(ConfigUtil::createBooleanController).build())
+                                .controller(NarConfig::createBooleanController).build())
 
                         // TODO: Auto Transfer
                         .option(Option.<ChatConfig.AutoTransfer>createBuilder()
@@ -281,7 +281,7 @@ public class ChatConfig {
                                         .build())
                                 .binding(defaults.chat.autoTransfer, () -> config.chat.autoTransfer,
                                         newVal -> config.chat.autoTransfer = newVal)
-                                .controller(ConfigUtil::createEnumController).build())
+                                .controller(NarConfig::createEnumController).build())
 
                         .build())
 

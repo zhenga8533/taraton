@@ -11,7 +11,7 @@ import dev.isxander.yacl3.config.v2.api.SerialEntry;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.volcaronitee.nar.NotARat;
-import net.volcaronitee.nar.util.ConfigUtil;
+import net.volcaronitee.nar.config.NarConfig;
 
 /**
  * Configuration for the general features in NotARat.
@@ -24,7 +24,7 @@ public class GeneralConfig {
      * @param config The current configuration values.
      * @return A new {@link ConfigCategory} for the general features.
      */
-    public static ConfigCategory create(ConfigUtil defaults, ConfigUtil config) {
+    public static ConfigCategory create(NarConfig defaults, NarConfig config) {
         return ConfigCategory.createBuilder().name(Text.literal("General"))
 
                 // Essential Option Group
@@ -39,7 +39,7 @@ public class GeneralConfig {
                                 .binding(defaults.general.modEnabled,
                                         () -> config.general.modEnabled,
                                         newVal -> config.general.modEnabled = newVal)
-                                .controller(ConfigUtil::createBooleanController).build())
+                                .controller(NarConfig::createBooleanController).build())
 
                         // TODO: SkyBlock Only
                         .option(Option.<Boolean>createBuilder().name(Text.literal("SkyBlock Only"))
@@ -51,7 +51,7 @@ public class GeneralConfig {
                                 .binding(defaults.general.skyblockOnly,
                                         () -> config.general.skyblockOnly,
                                         newVal -> config.general.skyblockOnly = newVal)
-                                .controller(ConfigUtil::createBooleanController).build())
+                                .controller(NarConfig::createBooleanController).build())
 
                         // TODO: Performance Mode
                         .option(Option.<Boolean>createBuilder()
@@ -65,7 +65,7 @@ public class GeneralConfig {
                                 .binding(defaults.general.performanceMode,
                                         () -> config.general.performanceMode,
                                         newVal -> config.general.performanceMode = newVal)
-                                .controller(ConfigUtil::createBooleanController).build())
+                                .controller(NarConfig::createBooleanController).build())
 
                         // TODO: Socket Connection
                         .option(Option.<Boolean>createBuilder()
@@ -79,7 +79,7 @@ public class GeneralConfig {
                                 .binding(defaults.general.socketConnection,
                                         () -> config.general.socketConnection,
                                         newVal -> config.general.socketConnection = newVal)
-                                .controller(ConfigUtil::createBooleanController).build())
+                                .controller(NarConfig::createBooleanController).build())
 
                         // Discord Link
                         .option(ButtonOption.createBuilder().name(Text.literal("Discord Link"))
@@ -110,7 +110,7 @@ public class GeneralConfig {
                                 .binding(defaults.general.imageBypass,
                                         () -> config.general.imageBypass,
                                         newVal -> config.general.imageBypass = newVal)
-                                .controller(ConfigUtil::createBooleanController).build())
+                                .controller(NarConfig::createBooleanController).build())
 
                         // Remove Selfie Mode
                         .option(Option.<Boolean>createBuilder()
@@ -124,7 +124,7 @@ public class GeneralConfig {
                                 .binding(defaults.general.removeSelfieMode,
                                         () -> config.general.removeSelfieMode,
                                         newVal -> config.general.removeSelfieMode = newVal)
-                                .controller(ConfigUtil::createBooleanController).build())
+                                .controller(NarConfig::createBooleanController).build())
 
                         // TODO: Skill Tracker
                         .option(Option.<Integer>createBuilder().name(Text.literal("Skill Tracker"))
@@ -153,7 +153,7 @@ public class GeneralConfig {
                                 .binding(defaults.general.skyblockLevelUpAlert,
                                         () -> config.general.skyblockLevelUpAlert,
                                         newVal -> config.general.skyblockLevelUpAlert = newVal)
-                                .controller(ConfigUtil::createBooleanController).build())
+                                .controller(NarConfig::createBooleanController).build())
 
                         // SkyBlock XP Alert
                         .option(Option.<Boolean>createBuilder()
@@ -167,7 +167,7 @@ public class GeneralConfig {
                                 .binding(defaults.general.skyblockXpAlert,
                                         () -> config.general.skyblockXpAlert,
                                         newVal -> config.general.skyblockXpAlert = newVal)
-                                .controller(ConfigUtil::createBooleanController).build())
+                                .controller(NarConfig::createBooleanController).build())
 
                         // TODO: Waypoint Timeout
                         .option(Option.<Integer>createBuilder()
@@ -196,7 +196,7 @@ public class GeneralConfig {
                                 .binding(defaults.general.widgetDisplay,
                                         () -> config.general.widgetDisplay,
                                         newVal -> config.general.widgetDisplay = newVal)
-                                .controller(ConfigUtil::createBooleanController).build())
+                                .controller(NarConfig::createBooleanController).build())
 
                         .build())
 
@@ -262,7 +262,7 @@ public class GeneralConfig {
                                 .binding(defaults.general.hideAllParticles,
                                         () -> config.general.hideAllParticles,
                                         newVal -> config.general.hideAllParticles = newVal)
-                                .controller(ConfigUtil::createBooleanController).build())
+                                .controller(NarConfig::createBooleanController).build())
 
                         // Server Rejoin Alert
                         .option(Option.<Boolean>createBuilder()
@@ -276,7 +276,7 @@ public class GeneralConfig {
                                 .binding(defaults.general.serverRejoinAlert,
                                         () -> config.general.serverRejoinAlert,
                                         newVal -> config.general.serverRejoinAlert = newVal)
-                                .controller(ConfigUtil::createBooleanController).build())
+                                .controller(NarConfig::createBooleanController).build())
 
                         // TODO: Server Status
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Server Status"))
@@ -288,7 +288,7 @@ public class GeneralConfig {
                                 .binding(defaults.general.serverStatus,
                                         () -> config.general.serverStatus,
                                         newVal -> config.general.serverStatus = newVal)
-                                .controller(ConfigUtil::createBooleanController).build())
+                                .controller(NarConfig::createBooleanController).build())
 
                         .build())
 
@@ -307,7 +307,7 @@ public class GeneralConfig {
                                 .binding(defaults.general.itemCooldownAlert,
                                         () -> config.general.itemCooldownAlert,
                                         newVal -> config.general.itemCooldownAlert = newVal)
-                                .controller(ConfigUtil::createBooleanController).build())
+                                .controller(NarConfig::createBooleanController).build())
 
                         // TODO: Reminder Text
                         .option(Option.<String>createBuilder().name(Text.literal("Reminder Text"))

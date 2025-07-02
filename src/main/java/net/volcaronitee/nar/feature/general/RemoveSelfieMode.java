@@ -3,7 +3,7 @@ package net.volcaronitee.nar.feature.general;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.GameOptions;
 import net.minecraft.client.option.Perspective;
-import net.volcaronitee.nar.util.ConfigUtil;
+import net.volcaronitee.nar.config.NarConfig;
 import net.volcaronitee.nar.util.TickUtil;
 
 /**
@@ -31,7 +31,7 @@ public class RemoveSelfieMode {
      */
     private void onTick(MinecraftClient client) {
         GameOptions options = client.options;
-        if (!ConfigUtil.getHandler().general.removeSelfieMode || options == null)
+        if (!NarConfig.getHandler().general.removeSelfieMode || options == null)
             return;
 
         if (options.togglePerspectiveKey.isPressed()) {

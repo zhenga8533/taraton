@@ -7,8 +7,8 @@ import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.Text;
 import net.minecraft.util.Pair;
+import net.volcaronitee.nar.config.NarConfig;
 import net.volcaronitee.nar.config.controller.KeyValueController.KeyValuePair;
-import net.volcaronitee.nar.util.ConfigUtil;
 import net.volcaronitee.nar.util.ListUtil;
 import net.volcaronitee.nar.util.ScheduleUtil;
 import net.volcaronitee.nar.util.TextUtil;
@@ -55,7 +55,7 @@ public class ChatAlert {
      * @param overlay Whether the message is an overlay message.
      */
     private void handleChatAlert(Text message, boolean overlay) {
-        if (!ConfigUtil.getHandler().chat.chatAlert) {
+        if (!NarConfig.getHandler().chat.chatAlert) {
             return;
         }
 

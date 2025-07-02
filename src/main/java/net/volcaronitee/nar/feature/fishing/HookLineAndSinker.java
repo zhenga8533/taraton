@@ -14,7 +14,7 @@ import net.minecraft.text.TextColor;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Box;
-import net.volcaronitee.nar.util.ConfigUtil;
+import net.volcaronitee.nar.config.NarConfig;
 import net.volcaronitee.nar.util.OverlayUtil;
 import net.volcaronitee.nar.util.OverlayUtil.LineContent;
 import net.volcaronitee.nar.util.ScheduleUtil;
@@ -30,7 +30,7 @@ public class HookLineAndSinker {
 
     static {
         OverlayUtil.createOverlay("hook_line_and_sinker",
-                () -> ConfigUtil.getHandler().fishing.hookLineAndSinker, LINES);
+                () -> NarConfig.getHandler().fishing.hookLineAndSinker, LINES);
         LINES.clear();
     }
 
@@ -77,7 +77,7 @@ public class HookLineAndSinker {
         }
 
         // Check if the feature is enabled and the player is in a valid state
-        if (!ConfigUtil.getHandler().fishing.hookLineAndSinker || client.player == null
+        if (!NarConfig.getHandler().fishing.hookLineAndSinker || client.player == null
                 || client.world == null || INSTANCE.hooked) {
             return;
         }

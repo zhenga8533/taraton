@@ -8,6 +8,8 @@ import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.text.Text;
+import net.volcaronitee.nar.config.NarConfig;
+import net.volcaronitee.nar.config.NarToggle;
 import net.volcaronitee.nar.feature.chat.ChatAlert;
 import net.volcaronitee.nar.feature.chat.CustomEmote;
 import net.volcaronitee.nar.feature.chat.JoinWhitelist;
@@ -101,7 +103,7 @@ public class CommandUtil {
 
         // Defer the screen opening to the main client thread
         client.send(() -> {
-            client.setScreen(ConfigUtil.createScreen(client.currentScreen));
+            client.setScreen(NarConfig.createScreen(client.currentScreen));
         });
 
         return 1;
@@ -121,7 +123,7 @@ public class CommandUtil {
 
         // Defer the screen opening to the main client thread
         client.send(() -> {
-            client.setScreen(ToggleUtil.createScreen(client.currentScreen));
+            client.setScreen(NarToggle.createScreen(client.currentScreen));
         });
 
         return 1;

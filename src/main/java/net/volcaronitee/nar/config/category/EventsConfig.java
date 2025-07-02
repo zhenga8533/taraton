@@ -9,7 +9,7 @@ import dev.isxander.yacl3.config.v2.api.SerialEntry;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.volcaronitee.nar.NotARat;
-import net.volcaronitee.nar.util.ConfigUtil;
+import net.volcaronitee.nar.config.NarConfig;
 
 /**
  * Configuration for the Events features in NotARat.
@@ -22,7 +22,7 @@ public class EventsConfig {
      * @param config The current configuration values.
      * @return A new {@link ConfigCategory} for the Events features.
      */
-    public static ConfigCategory create(ConfigUtil defaults, ConfigUtil config) {
+    public static ConfigCategory create(NarConfig defaults, NarConfig config) {
         return ConfigCategory.createBuilder().name(Text.literal("Events"))
 
                 // Hoppity Option Group
@@ -40,7 +40,7 @@ public class EventsConfig {
                                 .binding(defaults.events.chocolateFactoryDisplay,
                                         () -> config.events.chocolateFactoryDisplay,
                                         newVal -> config.events.chocolateFactoryDisplay = newVal)
-                                .controller(ConfigUtil::createBooleanController).build())
+                                .controller(NarConfig::createBooleanController).build())
 
                         // TODO: Egg Timers
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Egg Timers"))
@@ -52,7 +52,7 @@ public class EventsConfig {
                                         .build())
                                 .binding(defaults.events.eggTimers, () -> config.events.eggTimers,
                                         newVal -> config.events.eggTimers = newVal)
-                                .controller(ConfigUtil::createBooleanController).build())
+                                .controller(NarConfig::createBooleanController).build())
 
                         // TODO: Egg Waypoints
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Egg Waypoints"))
@@ -65,7 +65,7 @@ public class EventsConfig {
                                 .binding(defaults.events.eggWaypoints,
                                         () -> config.events.eggWaypoints,
                                         newVal -> config.events.eggWaypoints = newVal)
-                                .controller(ConfigUtil::createBooleanController).build())
+                                .controller(NarConfig::createBooleanController).build())
 
                         // TODO: Rabbit Worker Highlight
                         .option(Option.<RabbitWorkerHighlight>createBuilder()
@@ -79,7 +79,7 @@ public class EventsConfig {
                                 .binding(defaults.events.rabbitWorkerHighlight,
                                         () -> config.events.rabbitWorkerHighlight,
                                         newVal -> config.events.rabbitWorkerHighlight = newVal)
-                                .controller(ConfigUtil::createEnumController).build())
+                                .controller(NarConfig::createEnumController).build())
 
                         // TODO: Stray Rabbit Alert
                         .option(Option.<StrayRabbitAlert>createBuilder()
@@ -93,7 +93,7 @@ public class EventsConfig {
                                 .binding(defaults.events.strayRabbitAlert,
                                         () -> config.events.strayRabbitAlert,
                                         newVal -> config.events.strayRabbitAlert = newVal)
-                                .controller(ConfigUtil::createEnumController).build())
+                                .controller(NarConfig::createEnumController).build())
 
                         .build())
 
@@ -112,7 +112,7 @@ public class EventsConfig {
                                 .binding(defaults.events.bingoCardDisplay,
                                         () -> config.events.bingoCardDisplay,
                                         newVal -> config.events.bingoCardDisplay = newVal)
-                                .controller(ConfigUtil::createEnumController).build())
+                                .controller(NarConfig::createEnumController).build())
 
                         // TODO: Calendar Time
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Calendar Time"))
@@ -125,7 +125,7 @@ public class EventsConfig {
                                 .binding(defaults.events.calendarTime,
                                         () -> config.events.calendarTime,
                                         newVal -> config.events.calendarTime = newVal)
-                                .controller(ConfigUtil::createBooleanController).build())
+                                .controller(NarConfig::createBooleanController).build())
 
                         .build())
 

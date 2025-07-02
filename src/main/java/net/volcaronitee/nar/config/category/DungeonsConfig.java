@@ -8,7 +8,7 @@ import dev.isxander.yacl3.config.v2.api.SerialEntry;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.volcaronitee.nar.NotARat;
-import net.volcaronitee.nar.util.ConfigUtil;
+import net.volcaronitee.nar.config.NarConfig;
 
 /**
  * Configuration for the Dungeons features in NotARat.
@@ -21,7 +21,7 @@ public class DungeonsConfig {
      * @param config The current configuration values.
      * @return A new {@link ConfigCategory} for the Dungeons features.
      */
-    public static ConfigCategory create(ConfigUtil defaults, ConfigUtil config) {
+    public static ConfigCategory create(NarConfig defaults, NarConfig config) {
         return ConfigCategory.createBuilder().name(Text.literal("Dungeons"))
 
                 // Chests Option Group
@@ -39,7 +39,7 @@ public class DungeonsConfig {
                                 .binding(defaults.dungeons.croseusHighlight,
                                         () -> config.dungeons.croseusHighlight,
                                         newVal -> config.dungeons.croseusHighlight = newVal)
-                                .controller(ConfigUtil::createBooleanController).build())
+                                .controller(NarConfig::createBooleanController).build())
 
                         // TODO: Dungeon Profit
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Dungeon Profit"))
@@ -52,7 +52,7 @@ public class DungeonsConfig {
                                 .binding(defaults.dungeons.dungeonProfit,
                                         () -> config.dungeons.dungeonProfit,
                                         newVal -> config.dungeons.dungeonProfit = newVal)
-                                .controller(ConfigUtil::createBooleanController).build())
+                                .controller(NarConfig::createBooleanController).build())
 
                         .build())
 

@@ -10,7 +10,7 @@ import dev.isxander.yacl3.config.v2.api.SerialEntry;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.volcaronitee.nar.NotARat;
-import net.volcaronitee.nar.util.ConfigUtil;
+import net.volcaronitee.nar.config.NarConfig;
 
 /**
  * Configuration for the Farming features in NotARat.
@@ -23,7 +23,7 @@ public class FarmingConfig {
      * @param config The current configuration values.
      * @return A new {@link ConfigCategory} for the Farming features.
      */
-    public static ConfigCategory create(ConfigUtil defaults, ConfigUtil config) {
+    public static ConfigCategory create(NarConfig defaults, NarConfig config) {
         return ConfigCategory.createBuilder().name(Text.literal("Farming"))
 
                 // Garden Option Group
@@ -41,7 +41,7 @@ public class FarmingConfig {
                                 .binding(defaults.farming.composterDisplay,
                                         () -> config.farming.composterDisplay,
                                         newVal -> config.farming.composterDisplay = newVal)
-                                .controller(ConfigUtil::createEnumController).build())
+                                .controller(NarConfig::createEnumController).build())
 
                         // TODO: Plot Bounding Box
                         .option(Option.<Boolean>createBuilder()
@@ -55,7 +55,7 @@ public class FarmingConfig {
                                 .binding(defaults.farming.plotBoundingBox,
                                         () -> config.farming.plotBoundingBox,
                                         newVal -> config.farming.plotBoundingBox = newVal)
-                                .controller(ConfigUtil::createBooleanController).build())
+                                .controller(NarConfig::createBooleanController).build())
 
                         // TODO: Visitor Display
                         .option(Option.<Boolean>createBuilder()
@@ -69,7 +69,7 @@ public class FarmingConfig {
                                 .binding(defaults.farming.visitorDisplay,
                                         () -> config.farming.visitorDisplay,
                                         newVal -> config.farming.visitorDisplay = newVal)
-                                .controller(ConfigUtil::createBooleanController).build())
+                                .controller(NarConfig::createBooleanController).build())
 
                         .build())
 
@@ -87,7 +87,7 @@ public class FarmingConfig {
                                 .binding(defaults.farming.deskHighlight,
                                         () -> config.farming.deskHighlight,
                                         newVal -> config.farming.deskHighlight = newVal)
-                                .controller(ConfigUtil::createBooleanController).build())
+                                .controller(NarConfig::createBooleanController).build())
 
                         // TODO: Infestation Warning
                         .option(Option.<Integer>createBuilder()
@@ -115,7 +115,7 @@ public class FarmingConfig {
                                         .build())
                                 .binding(defaults.farming.pestAlert, () -> config.farming.pestAlert,
                                         newVal -> config.farming.pestAlert = newVal)
-                                .controller(ConfigUtil::createBooleanController).build())
+                                .controller(NarConfig::createBooleanController).build())
 
                         // TODO: Spray Display
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Spray Display"))
@@ -128,7 +128,7 @@ public class FarmingConfig {
                                 .binding(defaults.farming.sprayDisplay,
                                         () -> config.farming.sprayDisplay,
                                         newVal -> config.farming.sprayDisplay = newVal)
-                                .controller(ConfigUtil::createBooleanController).build())
+                                .controller(NarConfig::createBooleanController).build())
 
                         .build())
 

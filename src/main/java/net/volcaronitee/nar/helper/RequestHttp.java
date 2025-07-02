@@ -1,4 +1,4 @@
-package net.volcaronitee.nar.util;
+package net.volcaronitee.nar.helper;
 
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -9,7 +9,7 @@ import java.util.concurrent.CompletableFuture;
 /**
  * Utility class for making HTTP requests and handling JSON responses.
  */
-public class RequestUtil {
+public class RequestHttp {
     private static final HttpClient HTTP_CLIENT = HttpClient.newBuilder()
             .version(HttpClient.Version.HTTP_2).followRedirects(HttpClient.Redirect.NORMAL).build();
 

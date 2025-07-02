@@ -19,9 +19,9 @@ import net.minecraft.registry.Registries;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Box;
+import net.volcaronitee.nar.config.NarConfig;
 import net.volcaronitee.nar.helper.RelationalValue;
 import net.volcaronitee.nar.helper.RelationalValue.Operator;
-import net.volcaronitee.nar.util.ConfigUtil;
 import net.volcaronitee.nar.util.ListUtil;
 import net.volcaronitee.nar.util.LocationUtil;
 import net.volcaronitee.nar.util.LocationUtil.World;
@@ -77,7 +77,7 @@ public class EntityHighlight {
 
     static {
         OverlayUtil.createOverlay("entity_counter",
-                () -> ConfigUtil.getHandler().combat.entityCounter, LINES);
+                () -> NarConfig.getHandler().combat.entityCounter, LINES);
         ENTITY_LIST.setSaveCallback(INSTANCE::onSave);
     }
 
@@ -109,7 +109,7 @@ public class EntityHighlight {
      */
     private void scanWorld(MinecraftClient client) {
         HIGHLIGHTED_ENTITIES.clear();
-        if (!ConfigUtil.getHandler().combat.entityHighlight || client.world == null) {
+        if (!NarConfig.getHandler().combat.entityHighlight || client.world == null) {
             return;
         }
 

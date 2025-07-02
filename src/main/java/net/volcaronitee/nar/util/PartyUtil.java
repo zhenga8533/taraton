@@ -19,6 +19,7 @@ import net.hypixel.modapi.serializer.PacketSerializer;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ServerInfo;
 import net.minecraft.network.PacketByteBuf;
+import net.volcaronitee.nar.helper.MojangApi;
 
 /**
  * Utility class for tracking the player's party state.
@@ -75,13 +76,13 @@ public class PartyUtil {
             return CompletableFuture.completedFuture(null);
         }
 
-        String uuidString = MojangUtil.parseUUID(uuid);
+        String uuidString = MojangApi.parseUUID(uuid);
 
         // Check cache first
         if (UUID_CACHE.containsKey(uuidString)) {
             return CompletableFuture.completedFuture(UUID_CACHE.get(uuidString));
         } else {
-            return MojangUtil.getUsernameFromUUID(uuidString).thenApply(username -> {
+            return MojangApi.getUsernameFromUUID(uuidString).thenApply(username -> {
                 if (username != null && !username.isEmpty()) {
                     UUID_CACHE.put(uuidString, username);
                 }

@@ -10,7 +10,7 @@ import dev.isxander.yacl3.config.v2.api.SerialEntry;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.volcaronitee.nar.NotARat;
-import net.volcaronitee.nar.util.ConfigUtil;
+import net.volcaronitee.nar.config.NarConfig;
 
 /**
  * Configuration for the Combat features in NotARat.
@@ -23,7 +23,7 @@ public class CombatConfig {
      * @param config The current configuration values.
      * @return A new {@link ConfigCategory} for the Combat features.
      */
-    public static ConfigCategory create(ConfigUtil defaults, ConfigUtil config) {
+    public static ConfigCategory create(NarConfig defaults, NarConfig config) {
         return ConfigCategory.createBuilder().name(Text.literal("Combat"))
 
                 // Bestiary Option Group
@@ -41,7 +41,7 @@ public class CombatConfig {
                                 .binding(defaults.combat.bestiaryCounter,
                                         () -> config.combat.bestiaryCounter,
                                         newVal -> config.combat.bestiaryCounter = newVal)
-                                .controller(ConfigUtil::createEnumController).build())
+                                .controller(NarConfig::createEnumController).build())
 
                         // TODO: Bestiary Menu
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Bestiary Menu"))
@@ -54,7 +54,7 @@ public class CombatConfig {
                                 .binding(defaults.combat.bestiaryMenu,
                                         () -> config.combat.bestiaryMenu,
                                         newVal -> config.combat.bestiaryMenu = newVal)
-                                .controller(ConfigUtil::createBooleanController).build())
+                                .controller(NarConfig::createBooleanController).build())
 
                         // Entity Counter
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Entity Counter"))
@@ -67,7 +67,7 @@ public class CombatConfig {
                                 .binding(defaults.combat.entityCounter,
                                         () -> config.combat.entityCounter,
                                         newVal -> config.combat.entityCounter = newVal)
-                                .controller(ConfigUtil::createBooleanController).build())
+                                .controller(NarConfig::createBooleanController).build())
 
                         // Entity Highlight
                         .option(Option.<Boolean>createBuilder()
@@ -81,7 +81,7 @@ public class CombatConfig {
                                 .binding(defaults.combat.entityHighlight,
                                         () -> config.combat.entityHighlight,
                                         newVal -> config.combat.entityHighlight = newVal)
-                                .controller(ConfigUtil::createBooleanController).build())
+                                .controller(NarConfig::createBooleanController).build())
 
                         // TODO: Kill Tracker
                         .option(Option.<Integer>createBuilder().name(Text.literal("Kill Tracker"))
@@ -114,7 +114,7 @@ public class CombatConfig {
                                 .binding(defaults.combat.comboDisplay,
                                         () -> config.combat.comboDisplay,
                                         newVal -> config.combat.comboDisplay = newVal)
-                                .controller(ConfigUtil::createBooleanController).build())
+                                .controller(NarConfig::createBooleanController).build())
 
                         // TODO: Damage Tracer
                         .option(Option.<DamageTracer>createBuilder()
@@ -128,7 +128,7 @@ public class CombatConfig {
                                 .binding(defaults.combat.damageTracer,
                                         () -> config.combat.damageTracer,
                                         newVal -> config.combat.damageTracer = newVal)
-                                .controller(ConfigUtil::createEnumController).build())
+                                .controller(NarConfig::createEnumController).build())
 
                         // TODO: Low Health Warning
                         .option(Option.<Integer>createBuilder()
@@ -158,7 +158,7 @@ public class CombatConfig {
                                 .binding(defaults.combat.manaDrainRange,
                                         () -> config.combat.manaDrainRange,
                                         newVal -> config.combat.manaDrainRange = newVal)
-                                .controller(ConfigUtil::createBooleanController).build())
+                                .controller(NarConfig::createBooleanController).build())
 
                         // TODO: Ragnarok Detection
                         .option(Option.<Boolean>createBuilder()
@@ -172,7 +172,7 @@ public class CombatConfig {
                                 .binding(defaults.combat.ragnarokDetection,
                                         () -> config.combat.ragnarokDetection,
                                         newVal -> config.combat.ragnarokDetection = newVal)
-                                .controller(ConfigUtil::createBooleanController).build())
+                                .controller(NarConfig::createBooleanController).build())
 
                         .build())
 

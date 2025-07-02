@@ -7,7 +7,7 @@ import dev.isxander.yacl3.api.OptionGroup;
 import dev.isxander.yacl3.api.controller.TickBoxControllerBuilder;
 import dev.isxander.yacl3.config.v2.api.SerialEntry;
 import net.minecraft.text.Text;
-import net.volcaronitee.nar.util.ToggleUtil;
+import net.volcaronitee.nar.config.NarToggle;
 
 /**
  * Configuration for general toggles in NotARat.
@@ -20,7 +20,7 @@ public class GeneralToggle {
      * @param config The current configuration values.
      * @return A new {@link ConfigCategory} for the general toggles.
      */
-    public static ConfigCategory create(ToggleUtil defaults, ToggleUtil config) {
+    public static ConfigCategory create(NarToggle defaults, NarToggle config) {
         return ConfigCategory.createBuilder().name(Text.literal("Chat"))
 
                 // Chat Option Group

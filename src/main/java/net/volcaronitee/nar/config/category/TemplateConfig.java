@@ -17,7 +17,7 @@ import dev.isxander.yacl3.config.v2.api.SerialEntry;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.volcaronitee.nar.NotARat;
-import net.volcaronitee.nar.util.ConfigUtil;
+import net.volcaronitee.nar.config.NarConfig;
 
 /**
  * Configuration for the Template features in NotARat.
@@ -30,7 +30,7 @@ public class TemplateConfig {
      * @param config The current configuration values.
      * @return A new {@link ConfigCategory} for the Template features.
      */
-    public static ConfigCategory create(ConfigUtil defaults, ConfigUtil config) {
+    public static ConfigCategory create(NarConfig defaults, NarConfig config) {
         return ConfigCategory.createBuilder().name(Text.literal("Category"))
 
                 // Option Group
@@ -44,7 +44,7 @@ public class TemplateConfig {
                                         .text(Text.literal("Description")).build())
                                 .binding(defaults.template.bool, () -> config.template.bool,
                                         newVal -> config.template.bool = newVal)
-                                .controller(ConfigUtil::createBooleanController).build())
+                                .controller(NarConfig::createBooleanController).build())
 
                         // TODO: Boolean With Values
                         .option(Option.<Boolean>createBuilder()
@@ -55,7 +55,7 @@ public class TemplateConfig {
                                         .text(Text.literal("Description")).build())
                                 .binding(defaults.template.bool, () -> config.template.bool,
                                         newVal -> config.template.bool = newVal)
-                                .controller(opt -> ConfigUtil.createBooleanController(opt,
+                                .controller(opt -> NarConfig.createBooleanController(opt,
                                         "trueString", "falseString"))
                                 .build())
 
@@ -100,7 +100,7 @@ public class TemplateConfig {
                                         .text(Text.literal("Description")).build())
                                 .binding(defaults.template.imu, () -> config.template.imu,
                                         newVal -> config.template.imu = newVal)
-                                .controller(ConfigUtil::createEnumController).build())
+                                .controller(NarConfig::createEnumController).build())
 
                         // TODO: Color
                         .option(Option.<Color>createBuilder().name(Text.literal("Color"))

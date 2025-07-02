@@ -4,7 +4,7 @@ import java.util.List;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.text.Text;
-import net.volcaronitee.nar.util.ConfigUtil;
+import net.volcaronitee.nar.config.NarConfig;
 import net.volcaronitee.nar.util.OverlayUtil;
 import net.volcaronitee.nar.util.OverlayUtil.Overlay;
 
@@ -13,7 +13,7 @@ import net.volcaronitee.nar.util.OverlayUtil.Overlay;
  */
 public class Searchbar {
     private static final Overlay OVERLAY = OverlayUtil.createOverlay("searchbar",
-            () -> ConfigUtil.getHandler().container.searchbar, List.of());
+            () -> NarConfig.getHandler().container.searchbar, List.of());
 
     private static TextFieldWidget searchbar;
 

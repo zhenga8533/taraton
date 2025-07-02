@@ -8,7 +8,7 @@ import dev.isxander.yacl3.config.v2.api.SerialEntry;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.volcaronitee.nar.NotARat;
-import net.volcaronitee.nar.util.ConfigUtil;
+import net.volcaronitee.nar.config.NarConfig;
 
 public class FishingConfig {
     /**
@@ -18,7 +18,7 @@ public class FishingConfig {
      * @param config The current configuration values.
      * @return A new {@link ConfigCategory} for the Foraging features.
      */
-    public static ConfigCategory create(ConfigUtil defaults, ConfigUtil config) {
+    public static ConfigCategory create(NarConfig defaults, NarConfig config) {
         return ConfigCategory.createBuilder().name(Text.literal("Fishing"))
 
                 // Fishing Option Group
@@ -34,7 +34,7 @@ public class FishingConfig {
                                 .binding(defaults.fishing.hookLineAndSinker,
                                         () -> config.fishing.hookLineAndSinker,
                                         newVal -> config.fishing.hookLineAndSinker = newVal)
-                                .controller(ConfigUtil::createBooleanController).build())
+                                .controller(NarConfig::createBooleanController).build())
 
                         .build())
 

@@ -8,7 +8,7 @@ import dev.isxander.yacl3.config.v2.api.SerialEntry;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.volcaronitee.nar.NotARat;
-import net.volcaronitee.nar.util.ConfigUtil;
+import net.volcaronitee.nar.config.NarConfig;
 
 /**
  * Configuration for the Container features in NotARat.
@@ -21,7 +21,7 @@ public class ContainerConfig {
      * @param config The current configuration values.
      * @return A new {@link ConfigCategory} for the Container features.
      */
-    public static ConfigCategory create(ConfigUtil defaults, ConfigUtil config) {
+    public static ConfigCategory create(NarConfig defaults, NarConfig config) {
         return ConfigCategory.createBuilder().name(Text.literal("Container"))
 
                 // Container Option Group
@@ -39,7 +39,7 @@ public class ContainerConfig {
                                 .binding(defaults.container.containerPreview,
                                         () -> config.container.containerPreview,
                                         newVal -> config.container.containerPreview = newVal)
-                                .controller(ConfigUtil::createBooleanController).build())
+                                .controller(NarConfig::createBooleanController).build())
 
                         // TODO: Searchbar
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Searchbar"))
@@ -52,7 +52,7 @@ public class ContainerConfig {
                                 .binding(defaults.container.searchbar,
                                         () -> config.container.searchbar,
                                         newVal -> config.container.searchbar = newVal)
-                                .controller(ConfigUtil::createBooleanController).build())
+                                .controller(NarConfig::createBooleanController).build())
 
                         .build())
 
@@ -71,7 +71,7 @@ public class ContainerConfig {
                                 .binding(defaults.container.containerButtons,
                                         () -> config.container.containerButtons,
                                         newVal -> config.container.containerButtons = newVal)
-                                .controller(ConfigUtil::createBooleanController).build())
+                                .controller(NarConfig::createBooleanController).build())
 
                         // TODO: Slot Binding
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Slot Binding"))
@@ -84,7 +84,7 @@ public class ContainerConfig {
                                 .binding(defaults.container.slotBinding,
                                         () -> config.container.slotBinding,
                                         newVal -> config.container.slotBinding = newVal)
-                                .controller(ConfigUtil::createBooleanController).build())
+                                .controller(NarConfig::createBooleanController).build())
 
                         // TODO: Wardrobe Swap
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Wardrobe Swap"))
@@ -97,7 +97,7 @@ public class ContainerConfig {
                                 .binding(defaults.container.wardrobeSwap,
                                         () -> config.container.wardrobeSwap,
                                         newVal -> config.container.wardrobeSwap = newVal)
-                                .controller(ConfigUtil::createBooleanController).build())
+                                .controller(NarConfig::createBooleanController).build())
 
                         .build())
 
@@ -116,7 +116,7 @@ public class ContainerConfig {
                                 .binding(defaults.container.attributeAbbreviation,
                                         () -> config.container.attributeAbbreviation,
                                         newVal -> config.container.attributeAbbreviation = newVal)
-                                .controller(ConfigUtil::createBooleanController).build())
+                                .controller(NarConfig::createBooleanController).build())
 
                         // TODO: Armor Display
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Armor Display"))
@@ -129,7 +129,7 @@ public class ContainerConfig {
                                 .binding(defaults.container.armorDisplay,
                                         () -> config.container.armorDisplay,
                                         newVal -> config.container.armorDisplay = newVal)
-                                .controller(ConfigUtil::createBooleanController).build())
+                                .controller(NarConfig::createBooleanController).build())
 
                         // TODO: Equipment Display
                         .option(Option.<Boolean>createBuilder()
@@ -143,7 +143,7 @@ public class ContainerConfig {
                                 .binding(defaults.container.equipmentDisplay,
                                         () -> config.container.equipmentDisplay,
                                         newVal -> config.container.equipmentDisplay = newVal)
-                                .controller(ConfigUtil::createBooleanController).build())
+                                .controller(NarConfig::createBooleanController).build())
 
                         // TODO: Max Supercraft
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Max Supercraft"))
@@ -156,7 +156,7 @@ public class ContainerConfig {
                                 .binding(defaults.container.maxSupercraft,
                                         () -> config.container.maxSupercraft,
                                         newVal -> config.container.maxSupercraft = newVal)
-                                .controller(ConfigUtil::createBooleanController).build())
+                                .controller(NarConfig::createBooleanController).build())
 
                         .build())
 

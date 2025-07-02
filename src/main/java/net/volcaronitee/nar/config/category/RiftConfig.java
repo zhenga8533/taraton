@@ -10,7 +10,7 @@ import dev.isxander.yacl3.config.v2.api.SerialEntry;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.volcaronitee.nar.NotARat;
-import net.volcaronitee.nar.util.ConfigUtil;
+import net.volcaronitee.nar.config.NarConfig;
 
 /**
  * Configuration for the Rift features in NotARat.
@@ -23,7 +23,7 @@ public class RiftConfig {
      * @param config The current configuration values.
      * @return A new {@link ConfigCategory} for the Rift features.
      */
-    public static ConfigCategory create(ConfigUtil defaults, ConfigUtil config) {
+    public static ConfigCategory create(NarConfig defaults, NarConfig config) {
         return ConfigCategory.createBuilder().name(Text.literal("Rift"))
 
                 // Rift Option Group
@@ -39,7 +39,7 @@ public class RiftConfig {
                                         .build())
                                 .binding(defaults.rift.ddrHelper, () -> config.rift.ddrHelper,
                                         newVal -> config.rift.ddrHelper = newVal)
-                                .controller(ConfigUtil::createBooleanController).build())
+                                .controller(NarConfig::createBooleanController).build())
 
                         // TODO: Enigma Soul Waypoints
                         .option(Option.<Integer>createBuilder()
@@ -90,7 +90,7 @@ public class RiftConfig {
                                 .binding(defaults.rift.announceManiaPhase,
                                         () -> config.rift.announceManiaPhase,
                                         newVal -> config.rift.announceManiaPhase = newVal)
-                                .controller(ConfigUtil::createEnumController).build())
+                                .controller(NarConfig::createEnumController).build())
 
                         // TODO: Effigy Waypoint
                         .option(Option.<Boolean>createBuilder()
@@ -104,7 +104,7 @@ public class RiftConfig {
                                 .binding(defaults.rift.effigyWaypoint,
                                         () -> config.rift.effigyWaypoint,
                                         newVal -> config.rift.effigyWaypoint = newVal)
-                                .controller(ConfigUtil::createBooleanController).build())
+                                .controller(NarConfig::createBooleanController).build())
 
                         // TODO: Vampire Attack Display
                         .option(Option.<Boolean>createBuilder()
@@ -118,7 +118,7 @@ public class RiftConfig {
                                 .binding(defaults.rift.vampireAttackDisplay,
                                         () -> config.rift.vampireAttackDisplay,
                                         newVal -> config.rift.vampireAttackDisplay = newVal)
-                                .controller(ConfigUtil::createBooleanController).build())
+                                .controller(NarConfig::createBooleanController).build())
 
                         .build())
 

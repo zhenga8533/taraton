@@ -4,8 +4,8 @@ import java.util.List;
 import java.util.regex.Pattern;
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
 import net.minecraft.text.Text;
+import net.volcaronitee.nar.config.NarConfig;
 import net.volcaronitee.nar.config.controller.KeyValueController.KeyValuePair;
-import net.volcaronitee.nar.util.ConfigUtil;
 import net.volcaronitee.nar.util.ListUtil;
 import net.volcaronitee.nar.util.TextUtil;
 
@@ -52,7 +52,7 @@ public class SpamHider {
      * @return True if the message is not spam, false if it is spam.
      */
     private boolean allowMessage(Text message, boolean overlay) {
-        if (!ConfigUtil.getHandler().chat.spamHider || overlay) {
+        if (!NarConfig.getHandler().chat.spamHider || overlay) {
             return true;
         }
 

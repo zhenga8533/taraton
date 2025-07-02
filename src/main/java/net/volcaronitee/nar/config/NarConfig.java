@@ -1,4 +1,4 @@
-package net.volcaronitee.nar.util;
+package net.volcaronitee.nar.config;
 
 import java.nio.file.Path;
 import dev.isxander.yacl3.api.Option;
@@ -31,11 +31,11 @@ import net.volcaronitee.nar.config.category.TemplateConfig;
 /**
  * Utility class for handling configuration settings.
  */
-public class ConfigUtil {
+public class NarConfig {
     private static final Path CONFIG_PATH =
             FabricLoader.getInstance().getConfigDir().resolve(NotARat.MOD_ID + "/config.json");
-    private static final ConfigClassHandler<ConfigUtil> HANDLER =
-            ConfigClassHandler.createBuilder(ConfigUtil.class)
+    private static final ConfigClassHandler<NarConfig> HANDLER =
+            ConfigClassHandler.createBuilder(NarConfig.class)
                     .serializer(config -> GsonConfigSerializerBuilder.create(config)
                             .setPath(CONFIG_PATH).appendGsonBuilder(gsonBuilder -> gsonBuilder
                                     .setPrettyPrinting().disableHtmlEscaping().serializeNulls())
@@ -54,7 +54,7 @@ public class ConfigUtil {
      * 
      * @return The ConfigClassHandler for NAR.
      */
-    public static ConfigUtil getHandler() {
+    public static NarConfig getHandler() {
         return HANDLER.instance();
     }
 

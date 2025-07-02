@@ -8,7 +8,7 @@ import dev.isxander.yacl3.config.v2.api.SerialEntry;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.volcaronitee.nar.NotARat;
-import net.volcaronitee.nar.util.ConfigUtil;
+import net.volcaronitee.nar.config.NarConfig;
 
 /**
  * Configuration for the Kuudra features in NotARat.
@@ -21,7 +21,7 @@ public class KuudraConfig {
      * @param config The current configuration values.
      * @return A new {@link ConfigCategory} for the Kuudra features.
      */
-    public static ConfigCategory create(ConfigUtil defaults, ConfigUtil config) {
+    public static ConfigCategory create(NarConfig defaults, NarConfig config) {
         return ConfigCategory.createBuilder().name(Text.literal("Kuudra"))
 
                 // Kuudra Profit Option Group
@@ -38,7 +38,7 @@ public class KuudraConfig {
                                 .binding(defaults.kuudra.kuudraProfit,
                                         () -> config.kuudra.kuudraProfit,
                                         newVal -> config.kuudra.kuudraProfit = newVal)
-                                .controller(ConfigUtil::createBooleanController).build())
+                                .controller(NarConfig::createBooleanController).build())
 
                         // TODO: Kuudra Profit Tracker
                         .option(Option.<Boolean>createBuilder()
@@ -51,7 +51,7 @@ public class KuudraConfig {
                                 .binding(defaults.kuudra.kuudraProfitTracker,
                                         () -> config.kuudra.kuudraProfitTracker,
                                         newVal -> config.kuudra.kuudraProfitTracker = newVal)
-                                .controller(ConfigUtil::createBooleanController).build())
+                                .controller(NarConfig::createBooleanController).build())
 
                         // TODO: Tabasco Included
                         .option(Option.<Boolean>createBuilder()
@@ -65,7 +65,7 @@ public class KuudraConfig {
                                 .binding(defaults.kuudra.tabascoIncluded,
                                         () -> config.kuudra.tabascoIncluded,
                                         newVal -> config.kuudra.tabascoIncluded = newVal)
-                                .controller(ConfigUtil::createBooleanController).build())
+                                .controller(NarConfig::createBooleanController).build())
 
                         .build())
 
@@ -83,7 +83,7 @@ public class KuudraConfig {
                                 .binding(defaults.kuudra.kuudraAlerts,
                                         () -> config.kuudra.kuudraAlerts,
                                         newVal -> config.kuudra.kuudraAlerts = newVal)
-                                .controller(ConfigUtil::createBooleanController).build())
+                                .controller(NarConfig::createBooleanController).build())
 
                         // TODO: Kuudra Crate Waypoints
                         .option(Option.<Boolean>createBuilder()
@@ -97,7 +97,7 @@ public class KuudraConfig {
                                 .binding(defaults.kuudra.kuudraCrateWaypoints,
                                         () -> config.kuudra.kuudraCrateWaypoints,
                                         newVal -> config.kuudra.kuudraCrateWaypoints = newVal)
-                                .controller(ConfigUtil::createBooleanController).build())
+                                .controller(NarConfig::createBooleanController).build())
 
                         // TODO: Kuudra Fresh Tracking
                         .option(Option.<Boolean>createBuilder()
@@ -111,7 +111,7 @@ public class KuudraConfig {
                                 .binding(defaults.kuudra.kuudraFreshTracking,
                                         () -> config.kuudra.kuudraFreshTracking,
                                         newVal -> config.kuudra.kuudraFreshTracking = newVal)
-                                .controller(ConfigUtil::createBooleanController).build())
+                                .controller(NarConfig::createBooleanController).build())
 
                         // TODO: Kuudra HP Display
                         .option(Option.<Boolean>createBuilder()
@@ -124,7 +124,7 @@ public class KuudraConfig {
                                 .binding(defaults.kuudra.kuudraHpDisplay,
                                         () -> config.kuudra.kuudraHpDisplay,
                                         newVal -> config.kuudra.kuudraHpDisplay = newVal)
-                                .controller(ConfigUtil::createBooleanController).build())
+                                .controller(NarConfig::createBooleanController).build())
 
                         // TODO: Kuudra Spawn Alert
                         .option(Option.<Boolean>createBuilder()
@@ -138,7 +138,7 @@ public class KuudraConfig {
                                 .binding(defaults.kuudra.kuudraSpawnAlert,
                                         () -> config.kuudra.kuudraSpawnAlert,
                                         newVal -> config.kuudra.kuudraSpawnAlert = newVal)
-                                .controller(ConfigUtil::createBooleanController).build())
+                                .controller(NarConfig::createBooleanController).build())
 
                         // TODO: Kuudra Splits Timer
                         .option(Option.<Boolean>createBuilder()
@@ -152,7 +152,7 @@ public class KuudraConfig {
                                 .binding(defaults.kuudra.kuudraSplitsTimer,
                                         () -> config.kuudra.kuudraSplitsTimer,
                                         newVal -> config.kuudra.kuudraSplitsTimer = newVal)
-                                .controller(ConfigUtil::createBooleanController).build())
+                                .controller(NarConfig::createBooleanController).build())
 
                         // TODO: Kuudra Supply Piles
                         .option(Option.<Boolean>createBuilder()
@@ -166,7 +166,7 @@ public class KuudraConfig {
                                 .binding(defaults.kuudra.kuudraSupplyPiles,
                                         () -> config.kuudra.kuudraSupplyPiles,
                                         newVal -> config.kuudra.kuudraSupplyPiles = newVal)
-                                .controller(ConfigUtil::createBooleanController).build())
+                                .controller(NarConfig::createBooleanController).build())
 
                         .build())
 

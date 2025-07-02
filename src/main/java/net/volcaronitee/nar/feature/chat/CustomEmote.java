@@ -2,8 +2,8 @@ package net.volcaronitee.nar.feature.chat;
 
 import net.fabricmc.fabric.api.client.message.v1.ClientSendMessageEvents;
 import net.minecraft.text.Text;
+import net.volcaronitee.nar.config.NarConfig;
 import net.volcaronitee.nar.config.controller.KeyValueController.KeyValuePair;
-import net.volcaronitee.nar.util.ConfigUtil;
 import net.volcaronitee.nar.util.ListUtil;
 
 /**
@@ -38,7 +38,7 @@ public class CustomEmote {
      * @return The modified chat message with custom emotes replaced.
      */
     private String handleCustomEmote(String message) {
-        if (!ConfigUtil.getHandler().chat.customEmotes) {
+        if (!NarConfig.getHandler().chat.customEmotes) {
             return message;
         }
 

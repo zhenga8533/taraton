@@ -8,7 +8,7 @@ import dev.isxander.yacl3.config.v2.api.SerialEntry;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.volcaronitee.nar.NotARat;
-import net.volcaronitee.nar.util.ConfigUtil;
+import net.volcaronitee.nar.config.NarConfig;
 
 /**
  * Configuration for the Crimson Isle features in NotARat.
@@ -21,7 +21,7 @@ public class CrimsonIsleConfig {
      * @param config The current configuration values.
      * @return A new {@link ConfigCategory} for the Crimson Isle features.
      */
-    public static ConfigCategory create(ConfigUtil defaults, ConfigUtil config) {
+    public static ConfigCategory create(NarConfig defaults, NarConfig config) {
         return ConfigCategory.createBuilder().name(Text.literal("Crimson Isle"))
 
                 // Fishing Option Group
@@ -39,7 +39,7 @@ public class CrimsonIsleConfig {
                                 .binding(defaults.crimsonIsle.goldenFishTimer,
                                         () -> config.crimsonIsle.goldenFishTimer,
                                         newVal -> config.crimsonIsle.goldenFishTimer = newVal)
-                                .controller(ConfigUtil::createBooleanController).build())
+                                .controller(NarConfig::createBooleanController).build())
 
                         // TODO: Trophy Fisher Display
                         .option(Option.<Boolean>createBuilder()
@@ -53,7 +53,7 @@ public class CrimsonIsleConfig {
                                 .binding(defaults.crimsonIsle.trophyFishDisplay,
                                         () -> config.crimsonIsle.trophyFishDisplay,
                                         newVal -> config.crimsonIsle.trophyFishDisplay = newVal)
-                                .controller(ConfigUtil::createBooleanController).build())
+                                .controller(NarConfig::createBooleanController).build())
 
                         .build())
 
@@ -72,7 +72,7 @@ public class CrimsonIsleConfig {
                                 .binding(defaults.crimsonIsle.vanquisherWarp,
                                         () -> config.crimsonIsle.vanquisherWarp,
                                         newVal -> config.crimsonIsle.vanquisherWarp = newVal)
-                                .controller(ConfigUtil::createBooleanController).build())
+                                .controller(NarConfig::createBooleanController).build())
 
                         .build())
 

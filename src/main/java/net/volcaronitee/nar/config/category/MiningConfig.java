@@ -9,7 +9,7 @@ import dev.isxander.yacl3.config.v2.api.SerialEntry;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.volcaronitee.nar.NotARat;
-import net.volcaronitee.nar.util.ConfigUtil;
+import net.volcaronitee.nar.config.NarConfig;
 
 /**
  * Configuration for the Mining features in NotARat.
@@ -22,7 +22,7 @@ public class MiningConfig {
      * @param config The current configuration values.
      * @return A new {@link ConfigCategory} for the Mining features.
      */
-    public static ConfigCategory create(ConfigUtil defaults, ConfigUtil config) {
+    public static ConfigCategory create(NarConfig defaults, NarConfig config) {
         return ConfigCategory.createBuilder().name(Text.literal("Mining"))
 
                 // Commission Option Group
@@ -40,7 +40,7 @@ public class MiningConfig {
                                 .binding(defaults.mining.commissionCompletion,
                                         () -> config.mining.commissionCompletion,
                                         newVal -> config.mining.commissionCompletion = newVal)
-                                .controller(ConfigUtil::createBooleanController).build())
+                                .controller(NarConfig::createBooleanController).build())
 
                         // TODO: Commission Display
                         .option(Option.<Boolean>createBuilder()
@@ -54,7 +54,7 @@ public class MiningConfig {
                                 .binding(defaults.mining.commissionDisplay,
                                         () -> config.mining.commissionDisplay,
                                         newVal -> config.mining.commissionDisplay = newVal)
-                                .controller(ConfigUtil::createBooleanController).build())
+                                .controller(NarConfig::createBooleanController).build())
 
                         // TODO: Commission Waypoints
                         .option(Option.<Boolean>createBuilder()
@@ -68,7 +68,7 @@ public class MiningConfig {
                                 .binding(defaults.mining.commissionWaypoints,
                                         () -> config.mining.commissionWaypoints,
                                         newVal -> config.mining.commissionWaypoints = newVal)
-                                .controller(ConfigUtil::createBooleanController).build())
+                                .controller(NarConfig::createBooleanController).build())
 
                         .build())
 
@@ -107,7 +107,7 @@ public class MiningConfig {
                                 .binding(defaults.mining.pickaxeAbilityDisplay,
                                         () -> config.mining.pickaxeAbilityDisplay,
                                         newVal -> config.mining.pickaxeAbilityDisplay = newVal)
-                                .controller(ConfigUtil::createBooleanController).build())
+                                .controller(NarConfig::createBooleanController).build())
 
                         // TODO: Wishing Compass Locator
                         .option(Option.<Boolean>createBuilder()
@@ -121,7 +121,7 @@ public class MiningConfig {
                                 .binding(defaults.mining.wishingCompassLocator,
                                         () -> config.mining.wishingCompassLocator,
                                         newVal -> config.mining.wishingCompassLocator = newVal)
-                                .controller(ConfigUtil::createBooleanController).build())
+                                .controller(NarConfig::createBooleanController).build())
 
                         .build())
 
@@ -140,7 +140,7 @@ public class MiningConfig {
                                 .binding(defaults.mining.corpseWaypoints,
                                         () -> config.mining.corpseWaypoints,
                                         newVal -> config.mining.corpseWaypoints = newVal)
-                                .controller(ConfigUtil::createBooleanController).build())
+                                .controller(NarConfig::createBooleanController).build())
 
                         // TODO: Fossil Solver
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Fossil Solver"))
@@ -153,7 +153,7 @@ public class MiningConfig {
                                 .binding(defaults.mining.fossilSolver,
                                         () -> config.mining.fossilSolver,
                                         newVal -> config.mining.fossilSolver = newVal)
-                                .controller(ConfigUtil::createBooleanController).build())
+                                .controller(NarConfig::createBooleanController).build())
 
                         .build())
 

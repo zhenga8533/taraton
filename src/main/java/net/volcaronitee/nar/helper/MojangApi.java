@@ -1,13 +1,14 @@
-package net.volcaronitee.nar.util;
+package net.volcaronitee.nar.helper;
 
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import com.google.gson.JsonObject;
+import net.volcaronitee.nar.util.JsonUtil;
 
 /**
  * Utility class for fetching player information from Mojang's session server.
  */
-public class MojangUtil {
+public class MojangApi {
     /**
      * Parses a UUID into a string without dashes.
      * 
@@ -40,7 +41,7 @@ public class MojangUtil {
         String url = "https://sessionserver.mojang.com/session/minecraft/profile/" + cleanUuid;
 
         // Use RequestUtil.get to send the async GET request
-        return RequestUtil.get(url).thenApply(responseBody -> {
+        return RequestHttp.get(url).thenApply(responseBody -> {
             if (responseBody == null || responseBody.isEmpty()) {
                 return null;
             }

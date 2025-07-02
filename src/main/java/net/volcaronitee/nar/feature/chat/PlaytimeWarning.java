@@ -5,7 +5,7 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
-import net.volcaronitee.nar.util.ConfigUtil;
+import net.volcaronitee.nar.config.NarConfig;
 import net.volcaronitee.nar.util.JsonUtil;
 import net.volcaronitee.nar.util.TextUtil;
 import net.volcaronitee.nar.util.TickUtil;
@@ -58,7 +58,7 @@ public class PlaytimeWarning {
      */
     private void onTick(MinecraftClient client) {
         if (client.world == null || client.player == null
-                || !ConfigUtil.getHandler().chat.playtimeWarning) {
+                || !NarConfig.getHandler().chat.playtimeWarning) {
             return;
         }
 

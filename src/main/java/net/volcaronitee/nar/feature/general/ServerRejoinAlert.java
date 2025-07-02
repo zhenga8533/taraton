@@ -4,7 +4,7 @@ import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 import net.minecraft.client.MinecraftClient;
-import net.volcaronitee.nar.util.ConfigUtil;
+import net.volcaronitee.nar.config.NarConfig;
 import net.volcaronitee.nar.util.LocationUtil;
 import net.volcaronitee.nar.util.TextUtil;
 
@@ -33,7 +33,7 @@ public class ServerRejoinAlert {
      * Handles the location update event. This method checks if the server rejoin alert
      */
     private void onLocationUpdate() {
-        if (!ConfigUtil.getHandler().general.serverRejoinAlert) {
+        if (!NarConfig.getHandler().general.serverRejoinAlert) {
             return;
         }
 

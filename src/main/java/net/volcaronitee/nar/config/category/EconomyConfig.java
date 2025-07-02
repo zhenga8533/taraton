@@ -11,7 +11,7 @@ import dev.isxander.yacl3.config.v2.api.SerialEntry;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.volcaronitee.nar.NotARat;
-import net.volcaronitee.nar.util.ConfigUtil;
+import net.volcaronitee.nar.config.NarConfig;
 
 /**
  * Configuration for the Economy features in NotARat.
@@ -24,7 +24,7 @@ public class EconomyConfig {
      * @param config The current configuration values.
      * @return A new {@link ConfigCategory} for the Economy features.
      */
-    public static ConfigCategory create(ConfigUtil defaults, ConfigUtil config) {
+    public static ConfigCategory create(NarConfig defaults, NarConfig config) {
         return ConfigCategory.createBuilder().name(Text.literal("Economy"))
 
                 // Economy Option Group
@@ -57,7 +57,7 @@ public class EconomyConfig {
                                 .binding(defaults.economy.noBitsWarning,
                                         () -> config.economy.noBitsWarning,
                                         newVal -> config.economy.noBitsWarning = newVal)
-                                .controller(ConfigUtil::createBooleanController).build())
+                                .controller(NarConfig::createBooleanController).build())
 
                         .build())
 
@@ -91,7 +91,7 @@ public class EconomyConfig {
                                         .build())
                                 .binding(defaults.economy.itemPrice, () -> config.economy.itemPrice,
                                         newVal -> config.economy.itemPrice = newVal)
-                                .controller(ConfigUtil::createEnumController).build())
+                                .controller(NarConfig::createEnumController).build())
 
                         // TODO: Single Attribute
                         .option(Option.<Boolean>createBuilder()
@@ -105,7 +105,7 @@ public class EconomyConfig {
                                 .binding(defaults.economy.singleAttribute,
                                         () -> config.economy.singleAttribute,
                                         newVal -> config.economy.singleAttribute = newVal)
-                                .controller(ConfigUtil::createBooleanController).build())
+                                .controller(NarConfig::createBooleanController).build())
 
                         // TODO: Price Type
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Price Type"))
@@ -117,7 +117,7 @@ public class EconomyConfig {
                                         .build())
                                 .binding(defaults.economy.priceType, () -> config.economy.priceType,
                                         newVal -> config.economy.priceType = newVal)
-                                .controller(opt -> ConfigUtil.createBooleanController(opt, "Order",
+                                .controller(opt -> NarConfig.createBooleanController(opt, "Order",
                                         "Insta"))
                                 .build())
 

@@ -5,13 +5,13 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.network.packet.c2s.play.ClientStatusC2SPacket;
 import net.minecraft.network.packet.c2s.play.ClientStatusC2SPacket.Mode;
-import net.volcaronitee.nar.util.ConfigUtil;
+import net.volcaronitee.nar.config.NarConfig;
+import net.volcaronitee.nar.config.NarToggle;
 import net.volcaronitee.nar.util.OverlayUtil;
 import net.volcaronitee.nar.util.OverlayUtil.LineContent;
 import net.volcaronitee.nar.util.OverlayUtil.Overlay;
 import net.volcaronitee.nar.util.ScheduleUtil;
 import net.volcaronitee.nar.util.TickUtil;
-import net.volcaronitee.nar.util.ToggleUtil;
 
 /**
  * Feature that tracks server status such as ping, FPS, TPS, and player angles.
@@ -21,22 +21,22 @@ public class ServerStatus {
 
     private static final List<LineContent> LINES = List.of(
             new LineContent("§8[§6XYZ§8]§r ", "§7-195, 88, 58",
-                    () -> ToggleUtil.getHandler().general.xyz),
+                    () -> NarToggle.getHandler().general.xyz),
             new LineContent("§8[§6Y/P§8]§r ", "§7-89.15 / 30.89",
-                    () -> ToggleUtil.getHandler().general.yawPitch),
+                    () -> NarToggle.getHandler().general.yawPitch),
             new LineContent("§8[§6ANG§8]§r ", "§7East",
-                    () -> ToggleUtil.getHandler().general.direction),
+                    () -> NarToggle.getHandler().general.direction),
             new LineContent("§8[§6PNG§8]§r ", "§a58 §7ms",
-                    () -> ToggleUtil.getHandler().general.ping),
+                    () -> NarToggle.getHandler().general.ping),
             new LineContent("§8[§6FPS§8]§r ", "§a60 §7fps",
-                    () -> ToggleUtil.getHandler().general.fps),
+                    () -> NarToggle.getHandler().general.fps),
             new LineContent("§8[§6TPS§8]§r ", "§a19.8 §7tps",
-                    () -> ToggleUtil.getHandler().general.tps),
+                    () -> NarToggle.getHandler().general.tps),
             new LineContent("§8[§6CPS§8]§r ", "§a0 §7: §a0",
-                    () -> ToggleUtil.getHandler().general.cps),
-            new LineContent("§8[§6DAY§8]§r ", "§a0.75", () -> ToggleUtil.getHandler().general.day));
+                    () -> NarToggle.getHandler().general.cps),
+            new LineContent("§8[§6DAY§8]§r ", "§a0.75", () -> NarToggle.getHandler().general.day));
     private static final Overlay OVERLAY = OverlayUtil.createOverlay("server_status",
-            () -> ConfigUtil.getHandler().general.serverStatus, LINES);
+            () -> NarConfig.getHandler().general.serverStatus, LINES);
 
     // Fields to store server status information
     private int x = 0;
@@ -165,7 +165,7 @@ public class ServerStatus {
      * Updates the overlay with the current server status information.
      */
     private void updateOverlay() {
-        if (!ConfigUtil.getHandler().general.serverStatus)
+        if (!NarConfig.getHandler().general.serverStatus)
             return;
 
         // Update the overlay lines with the current values

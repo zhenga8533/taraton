@@ -7,7 +7,7 @@ import java.util.regex.Pattern;
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.Text;
-import net.volcaronitee.nar.util.ConfigUtil;
+import net.volcaronitee.nar.config.NarConfig;
 import net.volcaronitee.nar.util.ScheduleUtil;
 import net.volcaronitee.nar.util.TextUtil;
 
@@ -36,7 +36,7 @@ public class SkyBlockXpAlert {
      * @param overlay Whether the message is an overlay message.
      */
     private void parseMessage(Text message, boolean overlay) {
-        if (!ConfigUtil.getHandler().general.skyblockXpAlert || !overlay) {
+        if (!NarConfig.getHandler().general.skyblockXpAlert || !overlay) {
             return;
         }
 

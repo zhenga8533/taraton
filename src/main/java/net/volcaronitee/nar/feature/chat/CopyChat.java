@@ -9,8 +9,8 @@ import net.minecraft.client.gui.hud.ChatHud;
 import net.minecraft.client.gui.hud.ChatHudLine;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.Text;
+import net.volcaronitee.nar.config.NarConfig;
 import net.volcaronitee.nar.mixin.accessor.ChatHudAccessor;
-import net.volcaronitee.nar.util.ConfigUtil;
 import net.volcaronitee.nar.util.TextUtil;
 
 /**
@@ -44,7 +44,7 @@ public class CopyChat {
     public void onMouseClicked(double mouseX, double mouseY, int button,
             CallbackInfoReturnable<Boolean> cir) {
         if (!Screen.hasShiftDown() || button != GLFW.GLFW_MOUSE_BUTTON_LEFT
-                || !ConfigUtil.getHandler().chat.copyChat) {
+                || !NarConfig.getHandler().chat.copyChat) {
             return;
         }
 

@@ -7,14 +7,14 @@ import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.text.Text;
+import net.volcaronitee.nar.config.NarConfig;
+import net.volcaronitee.nar.config.NarToggle;
 import net.volcaronitee.nar.config.controller.KeyValueController.KeyValuePair;
 import net.volcaronitee.nar.feature.general.ServerStatus;
-import net.volcaronitee.nar.util.ConfigUtil;
 import net.volcaronitee.nar.util.ListUtil;
 import net.volcaronitee.nar.util.ParseUtil;
 import net.volcaronitee.nar.util.PartyUtil;
 import net.volcaronitee.nar.util.ScheduleUtil;
-import net.volcaronitee.nar.util.ToggleUtil;
 
 /**
  * Feature for handling chat commands in the game.
@@ -107,19 +107,19 @@ public class ChatCommands {
         String chatMessage;
         CommandType commandType;
 
-        if (ToggleUtil.getHandler().chat.allChat && allMatcher.matches()) {
+        if (NarToggle.getHandler().chat.allChat && allMatcher.matches()) {
             username = allMatcher.group(1);
             chatMessage = allMatcher.group(2);
             commandType = CommandType.ALL;
-        } else if (ToggleUtil.getHandler().chat.guildChat && guildMatcher.matches()) {
+        } else if (NarToggle.getHandler().chat.guildChat && guildMatcher.matches()) {
             username = guildMatcher.group(1);
             chatMessage = guildMatcher.group(2);
             commandType = CommandType.GUILD;
-        } else if (ToggleUtil.getHandler().chat.partyChat && partyMatcher.matches()) {
+        } else if (NarToggle.getHandler().chat.partyChat && partyMatcher.matches()) {
             username = partyMatcher.group(1);
             chatMessage = partyMatcher.group(2);
             commandType = CommandType.PARTY;
-        } else if (ToggleUtil.getHandler().chat.privateChat && privateMatcher.matches()) {
+        } else if (NarToggle.getHandler().chat.privateChat && privateMatcher.matches()) {
             username = privateMatcher.group(1);
             chatMessage = privateMatcher.group(2);
             commandType = CommandType.PRIVATE;
@@ -195,8 +195,8 @@ public class ChatCommands {
     private void handleLeaderCommand(ClientPlayerEntity player, String username, String[] args) {
         String partyLeader = PartyUtil.getLeader();
         String clientUsername = MinecraftClient.getInstance().getSession().getUsername();
-        if (!ConfigUtil.getHandler().chat.leaderCommands
-                || (ToggleUtil.getHandler().chat.leaderLock && partyLeader == clientUsername)
+        if (!NarConfig.getHandler().chat.leaderCommands
+                || (NarToggle.getHandler().chat.leaderLock && partyLeader == clientUsername)
                 || !PartyUtil.isInParty() || !PartyUtil.getLeader().equals(clientUsername)) {
             return;
         }
@@ -208,7 +208,7 @@ public class ChatCommands {
             // All invite commands
             case "allinvite":
             case "allinv":
-                if (!ToggleUtil.getHandler().chat.allInvite) {
+                if (!NarToggle.getHandler().chat.allInvite) {
                     return;
                 }
 
@@ -216,7 +216,7 @@ public class ChatCommands {
                 break;
             // Party mute commands
             case "mute":
-                if (!ToggleUtil.getHandler().chat.mute) {
+                if (!NarToggle.getHandler().chat.mute) {
                     return;
                 }
 
@@ -225,7 +225,7 @@ public class ChatCommands {
             // Stream open commands
             case "streamopen":
             case "stream":
-                if (!ToggleUtil.getHandler().chat.stream) {
+                if (!NarToggle.getHandler().chat.stream) {
                     return;
                 }
 
@@ -234,7 +234,7 @@ public class ChatCommands {
                 break;
             // Party warp commands
             case "warp":
-                if (!ToggleUtil.getHandler().chat.warp) {
+                if (!NarToggle.getHandler().chat.warp) {
                     return;
                 }
 
@@ -243,7 +243,7 @@ public class ChatCommands {
             // Join instance commands
             case "instance":
             case "join":
-                if (!ToggleUtil.getHandler().chat.instance) {
+                if (!NarToggle.getHandler().chat.instance) {
                     return;
                 }
                 // TODO
@@ -251,7 +251,7 @@ public class ChatCommands {
             // Party invite commands
             case "invite":
             case "inv":
-                if (!ToggleUtil.getHandler().chat.invite || arg1.isEmpty()) {
+                if (!NarToggle.getHandler().chat.invite || arg1.isEmpty()) {
                     return;
                 }
 
@@ -259,7 +259,7 @@ public class ChatCommands {
                 break;
             // Party kick commands
             case "kick":
-                if (!ToggleUtil.getHandler().chat.kick) {
+                if (!NarToggle.getHandler().chat.kick) {
                     return;
                 }
 
@@ -270,7 +270,7 @@ public class ChatCommands {
             case "transfer":
             case "ptme":
             case "pm":
-                if (!ToggleUtil.getHandler().chat.transfer) {
+                if (!NarToggle.getHandler().chat.transfer) {
                     return;
                 }
 
@@ -279,7 +279,7 @@ public class ChatCommands {
                 break;
             // Party promote commands
             case "promote":
-                if (!ToggleUtil.getHandler().chat.promote) {
+                if (!NarToggle.getHandler().chat.promote) {
                     return;
                 }
 
@@ -288,7 +288,7 @@ public class ChatCommands {
                 break;
             // Party demote commands
             case "demote":
-                if (!ToggleUtil.getHandler().chat.demote) {
+                if (!NarToggle.getHandler().chat.demote) {
                     return;
                 }
 
@@ -299,26 +299,24 @@ public class ChatCommands {
             case "help":
             case "leaderhelp":
             case "lhelp":
-                if (!ToggleUtil.getHandler().chat.leaderHelp) {
+                if (!NarToggle.getHandler().chat.leaderHelp) {
                     return;
                 }
 
                 // Build the help message with available leader commands
                 StringBuilder helpMessage = new StringBuilder("Leader Commands: ");
-                appendCommand(helpMessage, "allinv", ToggleUtil.getHandler().chat.allInvite);
-                appendCommand(helpMessage, "mute", ToggleUtil.getHandler().chat.mute);
-                appendCommand(helpMessage, "stream [max]", ToggleUtil.getHandler().chat.stream);
-                appendCommand(helpMessage, "warp", ToggleUtil.getHandler().chat.warp);
-                appendCommand(helpMessage, "instance [name]",
-                        ToggleUtil.getHandler().chat.instance);
-                appendCommand(helpMessage, "invite <player>", ToggleUtil.getHandler().chat.invite);
-                appendCommand(helpMessage, "kick [player]", ToggleUtil.getHandler().chat.kick);
+                appendCommand(helpMessage, "allinv", NarToggle.getHandler().chat.allInvite);
+                appendCommand(helpMessage, "mute", NarToggle.getHandler().chat.mute);
+                appendCommand(helpMessage, "stream [max]", NarToggle.getHandler().chat.stream);
+                appendCommand(helpMessage, "warp", NarToggle.getHandler().chat.warp);
+                appendCommand(helpMessage, "instance [name]", NarToggle.getHandler().chat.instance);
+                appendCommand(helpMessage, "invite <player>", NarToggle.getHandler().chat.invite);
+                appendCommand(helpMessage, "kick [player]", NarToggle.getHandler().chat.kick);
                 appendCommand(helpMessage, "transfer [player]",
-                        ToggleUtil.getHandler().chat.transfer);
-                appendCommand(helpMessage, "promote [player]",
-                        ToggleUtil.getHandler().chat.promote);
-                appendCommand(helpMessage, "demote [player]", ToggleUtil.getHandler().chat.demote);
-                appendCommand(helpMessage, "lhelp", ToggleUtil.getHandler().chat.leaderHelp);
+                        NarToggle.getHandler().chat.transfer);
+                appendCommand(helpMessage, "promote [player]", NarToggle.getHandler().chat.promote);
+                appendCommand(helpMessage, "demote [player]", NarToggle.getHandler().chat.demote);
+                appendCommand(helpMessage, "lhelp", NarToggle.getHandler().chat.leaderHelp);
                 helpMessage.setLength(helpMessage.length() - 2);
                 scheduleCommand("pc " + helpMessage);
                 break;
@@ -335,7 +333,7 @@ public class ChatCommands {
      */
     private void handlePartyCommand(ClientPlayerEntity player, String username, String head,
             String[] args) {
-        if (!ConfigUtil.getHandler().chat.partyCommands) {
+        if (!NarConfig.getHandler().chat.partyCommands) {
             return;
         }
 
@@ -345,7 +343,7 @@ public class ChatCommands {
         switch (command) {
             // 8ball commands
             case "8ball":
-                if (!ToggleUtil.getHandler().chat.eightBall) {
+                if (!NarToggle.getHandler().chat.eightBall) {
                     return;
                 }
 
@@ -357,7 +355,7 @@ public class ChatCommands {
             case "flip":
             case "coinflip":
             case "cf":
-                if (!ToggleUtil.getHandler().chat.coinFlip) {
+                if (!NarToggle.getHandler().chat.coinFlip) {
                     return;
                 }
 
@@ -368,7 +366,7 @@ public class ChatCommands {
             // Dice roll commands
             case "dice":
             case "roll":
-                if (!ToggleUtil.getHandler().chat.diceRoll) {
+                if (!NarToggle.getHandler().chat.diceRoll) {
                     return;
                 }
 
@@ -380,7 +378,7 @@ public class ChatCommands {
             case "waifu":
             case "women":
             case "w":
-                if (!ToggleUtil.getHandler().chat.waifu) {
+                if (!NarToggle.getHandler().chat.waifu) {
                     return;
                 }
                 // TODO
@@ -389,17 +387,17 @@ public class ChatCommands {
             case "help":
             case "partyhelp":
             case "phelp":
-                if (!ToggleUtil.getHandler().chat.partyHelp) {
+                if (!NarToggle.getHandler().chat.partyHelp) {
                     return;
                 }
 
                 // Build the help message with available party commands
                 StringBuilder helpMessage = new StringBuilder("Party Commands: ");
-                appendCommand(helpMessage, "8ball", ToggleUtil.getHandler().chat.eightBall);
-                appendCommand(helpMessage, "cf", ToggleUtil.getHandler().chat.coinFlip);
-                appendCommand(helpMessage, "dice [sides]", ToggleUtil.getHandler().chat.diceRoll);
-                appendCommand(helpMessage, "waifu", ToggleUtil.getHandler().chat.waifu);
-                appendCommand(helpMessage, "phelp", ToggleUtil.getHandler().chat.partyHelp);
+                appendCommand(helpMessage, "8ball", NarToggle.getHandler().chat.eightBall);
+                appendCommand(helpMessage, "cf", NarToggle.getHandler().chat.coinFlip);
+                appendCommand(helpMessage, "dice [sides]", NarToggle.getHandler().chat.diceRoll);
+                appendCommand(helpMessage, "waifu", NarToggle.getHandler().chat.waifu);
+                appendCommand(helpMessage, "phelp", NarToggle.getHandler().chat.partyHelp);
                 scheduleCommand(head + " " + helpMessage);
                 break;
 
@@ -420,7 +418,7 @@ public class ChatCommands {
      */
     private void handleStatusCommand(ClientPlayerEntity player, String username, String head,
             String[] args) {
-        if (!ConfigUtil.getHandler().chat.statusCommands) {
+        if (!NarConfig.getHandler().chat.statusCommands) {
             return;
         }
 
@@ -431,7 +429,7 @@ public class ChatCommands {
             case "coords":
             case "waypoint":
             case "xyz":
-                if (!ToggleUtil.getHandler().chat.coords) {
+                if (!NarToggle.getHandler().chat.coords) {
                     return;
                 }
 
@@ -443,7 +441,7 @@ public class ChatCommands {
                 break;
             // FPS commands
             case "fps":
-                if (!ToggleUtil.getHandler().chat.fps) {
+                if (!NarToggle.getHandler().chat.fps) {
                     return;
                 }
 
@@ -452,7 +450,7 @@ public class ChatCommands {
                 break;
             // TPS commands
             case "tps":
-                if (!ToggleUtil.getHandler().chat.tps) {
+                if (!NarToggle.getHandler().chat.tps) {
                     return;
                 }
 
@@ -461,7 +459,7 @@ public class ChatCommands {
                 break;
             // Leave party commands
             case "leave":
-                if (!ToggleUtil.getHandler().chat.leave) {
+                if (!NarToggle.getHandler().chat.leave) {
                     return;
                 }
 
@@ -471,7 +469,7 @@ public class ChatCommands {
             case "limbo":
             case "lobby":
             case "l":
-                if (!ToggleUtil.getHandler().chat.limbo) {
+                if (!NarToggle.getHandler().chat.limbo) {
                     return;
                 }
 
@@ -479,7 +477,7 @@ public class ChatCommands {
                 break;
             // Ping commands
             case "ping":
-                if (!ToggleUtil.getHandler().chat.ping) {
+                if (!NarToggle.getHandler().chat.ping) {
                     return;
                 }
 
@@ -489,7 +487,7 @@ public class ChatCommands {
             // Playtime commands
             case "playtime":
             case "pt":
-                if (!ToggleUtil.getHandler().chat.playtime) {
+                if (!NarToggle.getHandler().chat.playtime) {
                     return;
                 }
 
@@ -499,14 +497,14 @@ public class ChatCommands {
             // Stats commands
             case "stats":
             case "stat":
-                if (!ToggleUtil.getHandler().chat.stats) {
+                if (!NarToggle.getHandler().chat.stats) {
                     return;
                 }
                 // TODO
                 break;
             // Time commands
             case "time":
-                if (!ToggleUtil.getHandler().chat.time) {
+                if (!NarToggle.getHandler().chat.time) {
                     return;
                 }
 
@@ -517,22 +515,22 @@ public class ChatCommands {
             case "help":
             case "statushelp":
             case "shelp":
-                if (!ToggleUtil.getHandler().chat.statusHelp) {
+                if (!NarToggle.getHandler().chat.statusHelp) {
                     return;
                 }
 
                 // Build the help message with available status commands
                 StringBuilder helpMessage = new StringBuilder("Status Commands: ");
-                appendCommand(helpMessage, "coords", ToggleUtil.getHandler().chat.coords);
-                appendCommand(helpMessage, "fps", ToggleUtil.getHandler().chat.fps);
-                appendCommand(helpMessage, "tps", ToggleUtil.getHandler().chat.tps);
-                appendCommand(helpMessage, "leave", ToggleUtil.getHandler().chat.leave);
-                appendCommand(helpMessage, "limbo", ToggleUtil.getHandler().chat.limbo);
-                appendCommand(helpMessage, "ping", ToggleUtil.getHandler().chat.ping);
-                appendCommand(helpMessage, "playtime", ToggleUtil.getHandler().chat.playtime);
-                appendCommand(helpMessage, "stats", ToggleUtil.getHandler().chat.stats);
-                appendCommand(helpMessage, "time", ToggleUtil.getHandler().chat.time);
-                appendCommand(helpMessage, "shelp", ToggleUtil.getHandler().chat.statusHelp);
+                appendCommand(helpMessage, "coords", NarToggle.getHandler().chat.coords);
+                appendCommand(helpMessage, "fps", NarToggle.getHandler().chat.fps);
+                appendCommand(helpMessage, "tps", NarToggle.getHandler().chat.tps);
+                appendCommand(helpMessage, "leave", NarToggle.getHandler().chat.leave);
+                appendCommand(helpMessage, "limbo", NarToggle.getHandler().chat.limbo);
+                appendCommand(helpMessage, "ping", NarToggle.getHandler().chat.ping);
+                appendCommand(helpMessage, "playtime", NarToggle.getHandler().chat.playtime);
+                appendCommand(helpMessage, "stats", NarToggle.getHandler().chat.stats);
+                appendCommand(helpMessage, "time", NarToggle.getHandler().chat.time);
+                appendCommand(helpMessage, "shelp", NarToggle.getHandler().chat.statusHelp);
                 helpMessage.setLength(helpMessage.length() - 2);
                 scheduleCommand(head + " " + helpMessage);
                 break;

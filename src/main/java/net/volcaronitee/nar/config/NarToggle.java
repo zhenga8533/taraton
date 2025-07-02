@@ -1,4 +1,4 @@
-package net.volcaronitee.nar.util;
+package net.volcaronitee.nar.config;
 
 import java.nio.file.Path;
 import dev.isxander.yacl3.api.YetAnotherConfigLib;
@@ -15,11 +15,11 @@ import net.volcaronitee.nar.config.toggle.GeneralToggle;
 /**
  * Utility class for handling configuration toggles in NAR.
  */
-public class ToggleUtil {
+public class NarToggle {
     private static final Path CONFIG_PATH =
             FabricLoader.getInstance().getConfigDir().resolve(NotARat.MOD_ID + "/toggle.json");
-    private static final ConfigClassHandler<ToggleUtil> HANDLER =
-            ConfigClassHandler.createBuilder(ToggleUtil.class)
+    private static final ConfigClassHandler<NarToggle> HANDLER =
+            ConfigClassHandler.createBuilder(NarToggle.class)
                     .serializer(config -> GsonConfigSerializerBuilder.create(config)
                             .setPath(CONFIG_PATH).appendGsonBuilder(gsonBuilder -> gsonBuilder
                                     .setPrettyPrinting().disableHtmlEscaping().serializeNulls())
@@ -38,7 +38,7 @@ public class ToggleUtil {
      * 
      * @return The ConfigClassHandler for NAR toggles.
      */
-    public static ToggleUtil getHandler() {
+    public static NarToggle getHandler() {
         return HANDLER.instance();
     }
 

@@ -2,8 +2,8 @@ package net.volcaronitee.nar.feature.chat;
 
 import java.util.List;
 import net.minecraft.text.Text;
+import net.volcaronitee.nar.config.NarConfig;
 import net.volcaronitee.nar.config.controller.KeyValueController.KeyValuePair;
-import net.volcaronitee.nar.util.ConfigUtil;
 import net.volcaronitee.nar.util.ListUtil;
 import net.volcaronitee.nar.util.TextUtil;
 
@@ -73,7 +73,7 @@ public class TextSubstitution {
         String original = originalText.getString();
         String modified = original.replace("Volcaronitee", "§4§lThe Lion§r");
 
-        if (ConfigUtil.getHandler().chat.textSubstitution) {
+        if (NarConfig.getHandler().chat.textSubstitution) {
             List<KeyValuePair<String, KeyValuePair<String, Boolean>>> map =
                     SUBSTITUTION_MAP.getHandler().map;
             for (KeyValuePair<String, KeyValuePair<String, Boolean>> entry : map) {

@@ -6,7 +6,7 @@ import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.text.Text;
-import net.volcaronitee.nar.util.ConfigUtil;
+import net.volcaronitee.nar.config.NarConfig;
 import net.volcaronitee.nar.util.ListUtil;
 import net.volcaronitee.nar.util.ScheduleUtil;
 
@@ -42,7 +42,7 @@ public class JoinWhitelist {
      * @param overlay Whether the message is an overlay message.
      */
     private void handleJoinWhitelist(Text message, boolean overlay) {
-        if (!ConfigUtil.getHandler().chat.joinWhitelist || overlay) {
+        if (!NarConfig.getHandler().chat.joinWhitelist || overlay) {
             return;
         }
 
