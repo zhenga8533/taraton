@@ -1,4 +1,4 @@
-package net.volcaronitee.nar.helper;
+package net.volcaronitee.nar.util.helper;
 
 /**
  * Utility class for parsing and cleaning text by removing formatting characters.

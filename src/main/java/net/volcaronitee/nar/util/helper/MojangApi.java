@@ -1,4 +1,4 @@
-package net.volcaronitee.nar.helper;
+package net.volcaronitee.nar.util.helper;
 
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;

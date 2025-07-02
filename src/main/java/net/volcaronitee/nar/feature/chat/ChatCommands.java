@@ -12,9 +12,9 @@ import net.volcaronitee.nar.config.NarList;
 import net.volcaronitee.nar.config.NarToggle;
 import net.volcaronitee.nar.config.controller.KeyValueController.KeyValuePair;
 import net.volcaronitee.nar.feature.general.ServerStatus;
-import net.volcaronitee.nar.helper.Parser;
 import net.volcaronitee.nar.util.PartyUtil;
 import net.volcaronitee.nar.util.ScheduleUtil;
+import net.volcaronitee.nar.util.helper.Parser;
 
 /**
  * Feature for handling chat commands in the game.

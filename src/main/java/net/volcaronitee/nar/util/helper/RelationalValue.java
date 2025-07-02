@@ -1,4 +1,4 @@
-package net.volcaronitee.nar.helper;
+package net.volcaronitee.nar.util.helper;
 
 public class RelationalValue {
     private final Operator operator;

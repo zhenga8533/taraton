@@ -19,7 +19,7 @@ import net.hypixel.modapi.serializer.PacketSerializer;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ServerInfo;
 import net.minecraft.network.PacketByteBuf;
-import net.volcaronitee.nar.helper.MojangApi;
+import net.volcaronitee.nar.util.helper.MojangApi;
 
 /**
  * Utility class for tracking the player's party state.

@@ -7,8 +7,8 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.Text;
 import net.volcaronitee.nar.NotARat;
 import net.volcaronitee.nar.config.NarConfig;
-import net.volcaronitee.nar.helper.Parser;
 import net.volcaronitee.nar.util.ScheduleUtil;
+import net.volcaronitee.nar.util.helper.Parser;
 
 /**
  * Feature that alerts the player when they level up in SkyBlock.

@@ -10,8 +10,8 @@ import net.minecraft.util.Pair;
 import net.volcaronitee.nar.config.NarConfig;
 import net.volcaronitee.nar.config.NarList;
 import net.volcaronitee.nar.config.controller.KeyValueController.KeyValuePair;
-import net.volcaronitee.nar.helper.Formatter;
 import net.volcaronitee.nar.util.ScheduleUtil;
+import net.volcaronitee.nar.util.helper.Formatter;
 
 /**
  * Feature that alerts the player when certain chat messages are sent.

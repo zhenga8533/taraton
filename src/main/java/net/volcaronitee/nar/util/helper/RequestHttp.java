@@ -1,4 +1,4 @@
-package net.volcaronitee.nar.helper;
+package net.volcaronitee.nar.util.helper;
 
 import java.net.URI;
 import java.net.http.HttpClient;
