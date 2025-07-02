@@ -7,7 +7,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.text.Text;
 import net.volcaronitee.nar.config.NarConfig;
-import net.volcaronitee.nar.util.ListUtil;
+import net.volcaronitee.nar.config.NarList;
 import net.volcaronitee.nar.util.ScheduleUtil;
 
 /**
@@ -16,7 +16,7 @@ import net.volcaronitee.nar.util.ScheduleUtil;
 public class JoinWhitelist {
     private static final JoinWhitelist INSTANCE = new JoinWhitelist();
 
-    public static final ListUtil WHITE_LIST = new ListUtil("White List",
+    public static final NarList WHITE_LIST = new NarList("White List",
             Text.literal("A list of players to automatically accept party invites from."),
             "white_list.json");
 

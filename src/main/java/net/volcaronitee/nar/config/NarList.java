@@ -1,4 +1,4 @@
-package net.volcaronitee.nar.util;
+package net.volcaronitee.nar.config;
 
 import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.literal;
 import java.io.IOException;
@@ -26,11 +26,13 @@ import net.minecraft.util.Formatting;
 import net.volcaronitee.nar.NotARat;
 import net.volcaronitee.nar.config.controller.KeyValueController;
 import net.volcaronitee.nar.config.controller.KeyValueController.KeyValuePair;
+import net.volcaronitee.nar.util.JsonUtil;
+import net.volcaronitee.nar.util.TextUtil;
 
 /**
  * Utility class for handling configuration settings in a list format.
  */
-public class ListUtil {
+public class NarList {
     private static final Path CONFIG_PATH =
             FabricLoader.getInstance().getConfigDir().resolve(NotARat.MOD_ID + "/lists");
 
@@ -49,7 +51,7 @@ public class ListUtil {
     private String fileName;
     private Runnable saveCallback;
 
-    private ConfigClassHandler<ListUtil> handler;
+    private ConfigClassHandler<NarList> handler;
     private Boolean isMap = false;
 
     @SerialEntry
@@ -63,7 +65,7 @@ public class ListUtil {
     /**
      * Default constructor for ListUtil.
      */
-    public ListUtil() {}
+    public NarList() {}
 
     /**
      * Creates a new ListUtil instance with the specified title and configuration path.
@@ -72,13 +74,13 @@ public class ListUtil {
      * @param description A brief description of the configuration.
      * @param fileName The name of the configuration file to be used.
      */
-    public ListUtil(String title, Text description, String fileName) {
+    public NarList(String title, Text description, String fileName) {
         this.title = title;
         this.description = description;
         this.fileName = fileName;
 
         // Create handler for this ListUtil instance
-        this.handler = ConfigClassHandler.createBuilder(ListUtil.class)
+        this.handler = ConfigClassHandler.createBuilder(NarList.class)
                 .serializer(config -> GsonConfigSerializerBuilder.create(config)
                         .setPath(CONFIG_PATH.resolve(fileName))
                         .appendGsonBuilder(gsonBuilder -> gsonBuilder.setPrettyPrinting()
@@ -98,7 +100,7 @@ public class ListUtil {
      * 
      * @return The ConfigClassHandler for this ListUtil instance.
      */
-    public ListUtil getHandler() {
+    public NarList getHandler() {
         return handler.instance();
     }
 
@@ -210,7 +212,7 @@ public class ListUtil {
      * @param config The current configuration values.
      * @return A ConfigCategory instance representing the configuration category.
      */
-    public ConfigCategory createListCategory(ListUtil defaults, ListUtil config) {
+    public ConfigCategory createListCategory(NarList defaults, NarList config) {
         return ConfigCategory.createBuilder().name(Text.literal(title))
                 .option(ListOption.<KeyValuePair<String, Boolean>>createBuilder()
                         .name(Text.literal(title))
@@ -230,7 +232,7 @@ public class ListUtil {
      * @param config The current configuration values for the map.
      * @return A ConfigCategory instance representing the map configuration category.
      */
-    public ConfigCategory createMapCategory(ListUtil defaults, ListUtil config) {
+    public ConfigCategory createMapCategory(NarList defaults, NarList config) {
         return ConfigCategory.createBuilder().name(Text.literal(title)).option(ListOption
                 .<KeyValuePair<String, KeyValuePair<String, Boolean>>>createBuilder()
                 .name(Text.literal(title))

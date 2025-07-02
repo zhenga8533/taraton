@@ -5,8 +5,8 @@ import java.util.regex.Pattern;
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
 import net.minecraft.text.Text;
 import net.volcaronitee.nar.config.NarConfig;
+import net.volcaronitee.nar.config.NarList;
 import net.volcaronitee.nar.config.controller.KeyValueController.KeyValuePair;
-import net.volcaronitee.nar.util.ListUtil;
 import net.volcaronitee.nar.util.TextUtil;
 
 /**
@@ -15,7 +15,7 @@ import net.volcaronitee.nar.util.TextUtil;
 public class SpamHider {
     private static final SpamHider INSTANCE = new SpamHider();
 
-    public static final ListUtil SPAM_LIST = new ListUtil("Spam List",
+    public static final NarList SPAM_LIST = new NarList("Spam List",
             Text.literal("A list of spam messages to hide in chat.\n\nUse ")
                     .append(TextUtil.getInstance().createLink("regex101.com",
                             "https://regex101.com"))

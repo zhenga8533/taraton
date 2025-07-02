@@ -7,8 +7,8 @@ import java.util.function.Supplier;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.PlayerListEntry;
 import net.minecraft.text.Text;
+import net.volcaronitee.nar.config.NarList;
 import net.volcaronitee.nar.config.controller.KeyValueController.KeyValuePair;
-import net.volcaronitee.nar.util.ListUtil;
 import net.volcaronitee.nar.util.OverlayUtil;
 import net.volcaronitee.nar.util.OverlayUtil.LineContent;
 import net.volcaronitee.nar.util.TablistUtil;
@@ -20,7 +20,7 @@ import net.volcaronitee.nar.util.TickUtil;
 public class WidgetDisplay {
     private static final WidgetDisplay INSTANCE = new WidgetDisplay();
 
-    public static final ListUtil WIDGET_LIST = new ListUtil("Widget List",
+    public static final NarList WIDGET_LIST = new NarList("Widget List",
             Text.literal("A list of widgets to display in the overlay."), "widget_list.json");
 
     private static final Map<String, Widget> WIDGETS = new java.util.HashMap<>();

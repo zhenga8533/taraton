@@ -8,8 +8,8 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.Text;
 import net.minecraft.util.Pair;
 import net.volcaronitee.nar.config.NarConfig;
+import net.volcaronitee.nar.config.NarList;
 import net.volcaronitee.nar.config.controller.KeyValueController.KeyValuePair;
-import net.volcaronitee.nar.util.ListUtil;
 import net.volcaronitee.nar.util.ScheduleUtil;
 import net.volcaronitee.nar.util.TextUtil;
 
@@ -19,7 +19,7 @@ import net.volcaronitee.nar.util.TextUtil;
 public class ChatAlert {
     private static final ChatAlert INSTANCE = new ChatAlert();
 
-    public static final ListUtil CHAT_ALERT_MAP = new ListUtil("Chat Alert Map", Text
+    public static final NarList CHAT_ALERT_MAP = new NarList("Chat Alert Map", Text
             .literal("A list of chat messages to alert on. Use ")
             .append(TextUtil.getInstance().createLink("regex101.com", "https://regex101.com"))
             .append(Text.literal(" to test your regex patterns.\n\n\n§lOptions:§r\n\n"

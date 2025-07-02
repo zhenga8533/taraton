@@ -8,10 +8,10 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.text.Text;
 import net.volcaronitee.nar.config.NarConfig;
+import net.volcaronitee.nar.config.NarList;
 import net.volcaronitee.nar.config.NarToggle;
 import net.volcaronitee.nar.config.controller.KeyValueController.KeyValuePair;
 import net.volcaronitee.nar.feature.general.ServerStatus;
-import net.volcaronitee.nar.util.ListUtil;
 import net.volcaronitee.nar.util.ParseUtil;
 import net.volcaronitee.nar.util.PartyUtil;
 import net.volcaronitee.nar.util.ScheduleUtil;
@@ -22,7 +22,7 @@ import net.volcaronitee.nar.util.ScheduleUtil;
 public class ChatCommands {
     private static final ChatCommands INSTANCE = new ChatCommands();
 
-    public static final ListUtil PREFIX_MAP = new ListUtil("Prefix List",
+    public static final NarList PREFIX_MAP = new NarList("Prefix List",
             Text.literal("A list of prefixes to detect for chat commands."), "prefix_list.json");
 
     // Patterns for matching chat messages

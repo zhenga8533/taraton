@@ -3,8 +3,8 @@ package net.volcaronitee.nar.feature.chat;
 import net.fabricmc.fabric.api.client.message.v1.ClientSendMessageEvents;
 import net.minecraft.text.Text;
 import net.volcaronitee.nar.config.NarConfig;
+import net.volcaronitee.nar.config.NarList;
 import net.volcaronitee.nar.config.controller.KeyValueController.KeyValuePair;
-import net.volcaronitee.nar.util.ListUtil;
 
 /**
  * Handles custom emote mappings for chat messages.
@@ -12,7 +12,7 @@ import net.volcaronitee.nar.util.ListUtil;
 public class CustomEmote {
     private static final CustomEmote INSTANCE = new CustomEmote();
 
-    public static final ListUtil EMOTE_MAP = new ListUtil("Emote Map",
+    public static final NarList EMOTE_MAP = new NarList("Emote Map",
             Text.literal("A list of custom emote mappings to use in chat."), "emote_map.json");
 
     static {

@@ -20,9 +20,9 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Box;
 import net.volcaronitee.nar.config.NarConfig;
+import net.volcaronitee.nar.config.NarList;
 import net.volcaronitee.nar.helper.RelationalValue;
 import net.volcaronitee.nar.helper.RelationalValue.Operator;
-import net.volcaronitee.nar.util.ListUtil;
 import net.volcaronitee.nar.util.LocationUtil;
 import net.volcaronitee.nar.util.LocationUtil.World;
 import net.volcaronitee.nar.util.OverlayUtil;
@@ -41,7 +41,7 @@ public class EntityHighlight {
                     new LineContent(" §fLion: §6", "1", () -> true),
                     new LineContent(" §7Total: §e", "1", () -> true)));
 
-    public static final ListUtil ENTITY_LIST = new ListUtil("Entity List", Text
+    public static final NarList ENTITY_LIST = new NarList("Entity List", Text
             .literal("A list of entities to highlight in the game.\n\nUse ")
             .append(TextUtil.getInstance().createLink("digminecraft.com",
                     "https://www.digminecraft.com/lists/entity_list_pc.php"))

@@ -3,8 +3,8 @@ package net.volcaronitee.nar.feature.chat;
 import java.util.List;
 import net.minecraft.text.Text;
 import net.volcaronitee.nar.config.NarConfig;
+import net.volcaronitee.nar.config.NarList;
 import net.volcaronitee.nar.config.controller.KeyValueController.KeyValuePair;
-import net.volcaronitee.nar.util.ListUtil;
 import net.volcaronitee.nar.util.TextUtil;
 
 /**
@@ -13,7 +13,7 @@ import net.volcaronitee.nar.util.TextUtil;
 public class TextSubstitution {
     private static final TextSubstitution INSTANCE = new TextSubstitution();
 
-    public static final ListUtil SUBSTITUTION_MAP = new ListUtil("Substitution Map",
+    public static final NarList SUBSTITUTION_MAP = new NarList("Substitution Map",
     // @formatter:off
             Text.literal(
             "A list of text substitutions to apply in chat messages.\n"
