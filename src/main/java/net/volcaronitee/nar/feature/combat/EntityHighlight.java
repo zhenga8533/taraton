@@ -12,13 +12,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
+import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.registry.Registries;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Box;
+import net.minecraft.util.math.Vec3d;
 import net.volcaronitee.nar.NotARat;
 import net.volcaronitee.nar.config.NarConfig;
 import net.volcaronitee.nar.config.NarList;
@@ -30,6 +34,7 @@ import net.volcaronitee.nar.util.TickUtil;
 import net.volcaronitee.nar.util.helper.Formatter;
 import net.volcaronitee.nar.util.helper.RelationalValue;
 import net.volcaronitee.nar.util.helper.RelationalValue.Operator;
+import net.volcaronitee.nar.util.render.BeaconBeam;
 
 /**
  * Feature that highlights entities in the game based on a configurable list.
@@ -47,7 +52,7 @@ public class EntityHighlight {
             .append(Formatter.createLink("digminecraft.com",
                     "https://www.digminecraft.com/lists/entity_list_pc.php"))
             .append(Text.literal(
-                    " to find vanilla entity names. If an entity ID is not found, it will be used to identify custom armor stand names. Remember, you can use 'F3 + I' to copy entity data to clipboard.\n\n\n"
+                    " to find vanilla entity names. You can also use 'F3 + I' to copy entity data to clipboard. If an entity ID is not found, it will be used to identify custom armor stand names.\n\n\n"
                             + "§lOptions:\n\n"
                             + " §f--beacon §7Highlights entities that are within the beacon range.\n"
                             + " §f--color <hex> §7Sets the color for the entity highlight. Use hex colors like #FF0000.\n"
@@ -73,12 +78,43 @@ public class EntityHighlight {
     private static final EntityType<?> ARMOR_STAND =
             Registries.ENTITY_TYPE.get(Identifier.of("minecraft:armor_stand"));
 
-    private static final Identifier BEACON_BEAM_TEXTURE =
-            Identifier.of("minecraft", "textures/entity/beacon_beam.png");
-
     static {
         OverlayUtil.createOverlay("entity_counter",
                 () -> NarConfig.getHandler().combat.entityCounter, LINES);
+
+        WorldRenderEvents.END.register((context) -> {
+            MinecraftClient client = MinecraftClient.getInstance();
+
+            // Perform checks to ensure we are in a valid state for rendering
+            if (client.world == null || client.player == null || client.isPaused()) {
+                return;
+            }
+
+            // Get the current rendering context components
+            MatrixStack matrices = context.matrixStack();
+            VertexConsumerProvider vertexConsumers = context.consumers();
+            float partialTicks = context.tickCounter().getTickProgress(true);
+
+            // Get the camera's position. All world rendering should be offset by this.
+            Vec3d cameraPos = client.gameRenderer.getCamera().getPos();
+
+            // Iterate through all entities currently marked for highlighting
+            HIGHLIGHTED_ENTITIES.forEach((entity, highlight) -> {
+                if (highlight.beacon) {
+                    double renderX = entity.getX() - cameraPos.x;
+                    double renderY = entity.getY() - cameraPos.y;
+                    double renderZ = entity.getZ() - cameraPos.z;
+
+                    BeaconBeam.render(matrices, vertexConsumers, renderX, renderY, renderZ,
+                            partialTicks, highlight.color, 256.0F);
+                }
+            });
+
+            if (vertexConsumers instanceof VertexConsumerProvider.Immediate) {
+                ((VertexConsumerProvider.Immediate) vertexConsumers).draw();
+            }
+        });
+
         ENTITY_LIST.setSaveCallback(INSTANCE::onSave);
     }
 
