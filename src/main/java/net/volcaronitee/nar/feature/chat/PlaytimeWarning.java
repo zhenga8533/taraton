@@ -66,7 +66,7 @@ public class PlaytimeWarning {
 
         if (INSTANCE.playtime % PLAYTIME_THRESHOLD == 0) { // Every 8 hour
             int hours = INSTANCE.playtime / 3600;
-            client.inGameHud.getChatHud().addMessage(TextUtil.MOD_TITLE.copy()
+            client.inGameHud.getChatHud().addMessage(TextUtil.getTitle()
                     .append(Text.literal(" You have played for " + hours
                             + " hours. Excessive game playing may cause problems in your normal daily life.")
                             .formatted(Formatting.RED)));

@@ -197,7 +197,7 @@ public class ListUtil {
             return 1;
         }).then(literal("reset").executes(context -> {
             reset();
-            context.getSource().sendFeedback(TextUtil.MOD_TITLE.copy()
+            context.getSource().sendFeedback(TextUtil.getTitle()
                     .append(Text.literal(" List reset successfully.").formatted(Formatting.GREEN)));
             return 1;
         }));

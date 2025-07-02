@@ -52,8 +52,8 @@ public class ServerRejoinAlert {
                     .trim();
 
             MinecraftClient.getInstance().inGameHud.getChatHud()
-                    .addMessage(TextUtil.MOD_TITLE.copy().append(" §cRejoined §7"
-                            + INSTANCE.currentServer + " §cafter §7" + formattedDuration + "§r."));
+                    .addMessage(TextUtil.getTitle().append(" §cRejoined §7" + INSTANCE.currentServer
+                            + " §cafter §7" + formattedDuration + "§r."));
         }
     }
 }

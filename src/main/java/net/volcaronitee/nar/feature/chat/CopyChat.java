@@ -91,7 +91,7 @@ public class CopyChat {
         // Copy the message content to the clipboard and send a confirmation message
         if (!messageToCopy.isEmpty()) {
             client.keyboard.setClipboard(messageToCopy);
-            Text sendMessage = TextUtil.MOD_TITLE.copy().append(
+            Text sendMessage = TextUtil.getTitle().append(
                     Text.literal(" §aCopied chat message to clipboard: §8§o" + messageToCopy));
             client.player.sendMessage(sendMessage, false);
             cir.setReturnValue(true);

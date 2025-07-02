@@ -31,6 +31,15 @@ public class TextUtil {
     }
 
     /**
+     * Returns the mod title text component.
+     * 
+     * @return A Text component representing the mod title.
+     */
+    public static MutableText getTitle() {
+        return MOD_TITLE.copy();
+    }
+
+    /**
      * Creates a clickable link text component.
      * 
      * @param text The display text for the link.

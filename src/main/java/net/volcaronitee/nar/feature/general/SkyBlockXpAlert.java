@@ -56,7 +56,7 @@ public class SkyBlockXpAlert {
 
         MinecraftClient client = MinecraftClient.getInstance();
         client.inGameHud.getChatHud()
-                .addMessage(TextUtil.MOD_TITLE.copy().append(Text.literal(" " + xpText)));
+                .addMessage(TextUtil.getTitle().append(Text.literal(" " + xpText)));
         client.inGameHud.setTitle(Text.literal(xpText));
 
         // Set a cooldown to prevent spamming the alert
