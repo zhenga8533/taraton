@@ -402,6 +402,11 @@ public class ChatCommands {
                 appendCommand(helpMessage, "phelp", ToggleUtil.getHandler().chat.partyHelp);
                 scheduleCommand(head + " " + helpMessage);
                 break;
+
+            // Hidden commands
+            case "avengers":
+                scheduleCommand("p Somxone Kwuromi valyn Serten");
+                break;
         }
     }
 
