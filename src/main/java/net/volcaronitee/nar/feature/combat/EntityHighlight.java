@@ -42,9 +42,19 @@ public class EntityHighlight {
             .append(TextUtil.getInstance().createLink("digminecraft.com",
                     "https://www.digminecraft.com/lists/entity_list_pc.php"))
             .append(Text.literal(
-                    " to find vanilla entity names. If an entity ID is not found, it will be used to identify custom armor stand names.\n\n\n§lOptions:\n\n"
-                            + " §r--beacon §7Highlights entities that are within the beacon range.\n"
-                            + " §r--color [hex] §7Sets the color for the entity highlight. Use hex colors like #FF0000.\n")),
+                    " to find vanilla entity names. If an entity ID is not found, it will be used to identify custom armor stand names.\n\n\n"
+                            + "§lOptions:\n\n"
+                            + " §f--beacon §7Highlights entities that are within the beacon range.\n"
+                            + " §f--color <hex> §7Sets the color for the entity highlight. Use hex colors like #FF0000.\n"
+                            + " §f--height <num> §7Sets the height of the entity highlight.\n"
+                            + " §f--width <num> §7Sets the width of the entity highlight.\n"
+                            + " §f--range <num> §7Sets the maximum horizontal range of the entity highlight.\n"
+                            + " §f--depth <num> §7Sets the maximum vertical depth of the entity highlight.\n"
+                            + " §f--identifier <name> §7Sets entity identifier for custom armor stands.\n"
+                            + " §f--island <names> §7Sets the island locations.\n\n"
+                            + "§8You can use relational operators like <, >, <=, >=, =, != for numeric values.\n\n\n"
+                            + "§lExample:\n\n"
+                            + "Lion --beacn --color #FF0000 --height >2 --width <=1 --depth 16 --offset 32 --identifier Player --island GARDEN,SPIDERS_DEN")),
             "entity_list.json");
 
     private static final Map<Entity, Highlight> HIGHLIGHTED_ENTITIES = new HashMap<>();
