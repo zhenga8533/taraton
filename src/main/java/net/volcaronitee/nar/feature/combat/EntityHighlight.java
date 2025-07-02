@@ -19,8 +19,12 @@ import net.minecraft.registry.Registries;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Box;
+import net.volcaronitee.nar.helper.RelationalValue;
+import net.volcaronitee.nar.helper.RelationalValue.Operator;
 import net.volcaronitee.nar.util.ConfigUtil;
 import net.volcaronitee.nar.util.ListUtil;
+import net.volcaronitee.nar.util.LocationUtil;
+import net.volcaronitee.nar.util.LocationUtil.World;
 import net.volcaronitee.nar.util.OverlayUtil;
 import net.volcaronitee.nar.util.OverlayUtil.LineContent;
 import net.volcaronitee.nar.util.TextUtil;
@@ -42,7 +46,7 @@ public class EntityHighlight {
             .append(TextUtil.getInstance().createLink("digminecraft.com",
                     "https://www.digminecraft.com/lists/entity_list_pc.php"))
             .append(Text.literal(
-                    " to find vanilla entity names. If an entity ID is not found, it will be used to identify custom armor stand names.\n\n\n"
+                    " to find vanilla entity names. If an entity ID is not found, it will be used to identify custom armor stand names. Remember, you can use 'F3 + I' to copy entity data to clipboard.\n\n\n"
                             + "§lOptions:\n\n"
                             + " §f--beacon §7Highlights entities that are within the beacon range.\n"
                             + " §f--color <hex> §7Sets the color for the entity highlight. Use hex colors like #FF0000.\n"
@@ -51,10 +55,10 @@ public class EntityHighlight {
                             + " §f--range <num> §7Sets the maximum horizontal range of the entity highlight.\n"
                             + " §f--depth <num> §7Sets the maximum vertical depth of the entity highlight.\n"
                             + " §f--identifier <name> §7Sets entity identifier for custom armor stands.\n"
-                            + " §f--island <names> §7Sets the island locations.\n\n"
+                            + " §f--locations <names> §7Sets the islands locations.\n\n"
                             + "§8You can use relational operators like <, >, <=, >=, =, != for numeric values.\n\n\n"
                             + "§lExample:\n\n"
-                            + "Lion --beacn --color #FF0000 --height >2 --width <=1 --depth 16 --offset 32 --identifier Player --island GARDEN,SPIDERS_DEN")),
+                            + "Lion --beacon --color #FF0000 --height >2 --width <=1 --depth 16 --offset 32 --identifier Player --locations GARDEN,SPIDERS_DEN")),
             "entity_list.json");
 
     private static final Map<Entity, Highlight> HIGHLIGHTED_ENTITIES = new HashMap<>();
@@ -126,8 +130,11 @@ public class EntityHighlight {
             // Check if the entity ID is in the highlight list
             if (HIGHLIGHT_ENTITIES.contains(entityId)) {
                 Highlight highlight = ENTITY_HIGHLIGHT.get(entityId);
-                HIGHLIGHTED_ENTITIES.put(entity, highlight);
+                if (!shouldHighlight(client, entity, highlight)) {
+                    return;
+                }
 
+                HIGHLIGHTED_ENTITIES.put(entity, highlight);
                 entityCount.merge(highlight.name, 1, Integer::sum);
                 totalCount.incrementAndGet();
             } else if (entityType == ARMOR_STAND) { // Special case for armor stands
@@ -142,9 +149,11 @@ public class EntityHighlight {
                 for (String key : HIGHLIGHT_NAMES) {
                     if (customName.contains(key)) {
                         // Add closest entity to the highlight list
+                        Highlight highlight = NAME_HIGHLIGHT.get(key);
                         Box boundingBox = entity.getBoundingBox().expand(0.2, 2, 0.2);
                         List<Entity> nearbyEntities = client.world.getOtherEntities(entity,
-                                boundingBox, e -> e.getType() != ARMOR_STAND && !e.isInvisible());
+                                boundingBox, e -> e.getType() != ARMOR_STAND && !e.isInvisible()
+                                        && shouldHighlight(client, e, highlight));
                         if (nearbyEntities.isEmpty()) {
                             return;
                         }
@@ -158,9 +167,9 @@ public class EntityHighlight {
 
                         // Highlight the closest entity
                         Entity closestEntity = nearbyEntities.get(0);
-                        HIGHLIGHTED_ENTITIES.put(closestEntity, NAME_HIGHLIGHT.get(key));
+                        HIGHLIGHTED_ENTITIES.put(closestEntity, highlight);
 
-                        entityCount.merge(NAME_HIGHLIGHT.get(key).name, 1, Integer::sum);
+                        entityCount.merge(highlight.name, 1, Integer::sum);
                         totalCount.incrementAndGet();
                     }
                 }
@@ -176,6 +185,52 @@ public class EntityHighlight {
                     String.valueOf(count), () -> true));
         }
         LINES.getLast().setText(String.valueOf(totalCount.get()));
+    }
+
+    /**
+     * Checks if the entity should be highlighted based on the highlight criteria.
+     * 
+     * @param client The Minecraft client instance.
+     * @param entity The entity to check.
+     * @param highlight The highlight criteria to check against.
+     * @return True if the entity should be highlighted, false otherwise.
+     */
+    private boolean shouldHighlight(MinecraftClient client, Entity entity, Highlight highlight) {
+        // Range check
+        if (highlight.range != null
+                && !highlight.range.evaluate((float) entity.distanceTo(client.player))) {
+            return false;
+        }
+
+        // Height check
+        if (highlight.height != null && !highlight.height.evaluate(entity.getHeight())) {
+            return false;
+        }
+
+        // Width check
+        if (highlight.width != null && !highlight.width.evaluate(entity.getWidth())) {
+            return false;
+        }
+
+        // Depth check (vertical distance)
+        if (highlight.depth != null && !highlight.depth
+                .evaluate((float) Math.abs(entity.getY() - client.player.getY()))) {
+            return false;
+        }
+
+        // Location check
+        if (!highlight.locations.isEmpty()
+                && !highlight.locations.contains(LocationUtil.getWorld())) {
+            return false;
+        }
+
+        // Identifier check (for custom armor stands)
+        if (highlight.identifier != null
+                && !Registries.ENTITY_TYPE.getId(entity.getType()).equals(highlight.identifier)) {
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -239,6 +294,42 @@ public class EntityHighlight {
     }
 
     /**
+     * Parses a string to create a RelationalValue object. Expects formats like "10", ">5", "<=20",
+     * "=7", "!=15".
+     *
+     * @param valueString The string to parse.
+     * @return A RelationalValue object, or null if parsing fails.
+     */
+    private RelationalValue parseRelationalValue(String valueString) {
+        if (valueString == null || valueString.isEmpty()) {
+            return null;
+        }
+
+        // Attempt to parse with an operator
+        for (Operator op : Operator.values()) {
+            if (valueString.startsWith(op.getSymbol())) {
+                String numStr = valueString.substring(op.getSymbol().length()).trim();
+                try {
+                    float value = Float.parseFloat(numStr);
+                    return new RelationalValue(op, value);
+                } catch (NumberFormatException e) {
+                    // Log error or ignore, return null
+                    return null;
+                }
+            }
+        }
+
+        // If no operator found, assume equality
+        try {
+            float value = Float.parseFloat(valueString.trim());
+            return new RelationalValue(Operator.EQUAL, value);
+        } catch (NumberFormatException e) {
+            // Log error or ignore, return null
+            return null;
+        }
+    }
+
+    /**
      * Saves the list of entities to highlight based on the current configuration.
      */
     private void onSave() {
@@ -252,46 +343,92 @@ public class EntityHighlight {
                 return;
             }
 
-            Identifier identifier = null;
+            Identifier entity = null;
             String inputKey = "";
             boolean beacon = false;
             int color = -1;
+            RelationalValue height = null;
+            RelationalValue width = null;
+            RelationalValue range = null;
+            RelationalValue depth = null;
+            Identifier identifier = null;
+            List<World> locations = new ArrayList<>();
 
             // Parse the input key and options
             String[] args = pair.getKey().trim().split(" --");
             for (String arg : args) {
                 if (arg.equals(args[0])) {
-                    // The first argument is the identifier or name
+                    // The first argument is the entity identifier or name
                     inputKey = arg.trim();
-                    identifier = Identifier.tryParse(inputKey.toLowerCase());
+                    entity = Identifier.tryParse(inputKey.toLowerCase());
+                    continue;
                 } else if (arg.startsWith("beacon ")) {
                     // This argument indicates a beacon highlight
                     beacon = true;
-                } else if (arg.startsWith("color ")) {
+                    continue;
+                }
+
+                String[] argArgs = arg.trim().split(" ");
+                if (argArgs.length < 2) {
+                    continue;
+                }
+
+                String parameter = argArgs[1];
+                if (arg.startsWith("color ")) {
                     // This argument sets the color for the highlight
-                    String colorHex = arg.substring("color ".length()).trim();
                     try {
-                        color = Integer.parseInt(colorHex.replace("#", ""), 16);
+                        color = Integer.parseInt(parameter.replace("#", ""), 16);
                     } catch (NumberFormatException e) {
                         color = -1;
+                    }
+                } else if (arg.startsWith("height")) {
+                    // This argument sets the height for the highlight
+                    height = parseRelationalValue(parameter);
+                } else if (arg.startsWith("width")) {
+                    // This argument sets the width for the highlight
+                    width = parseRelationalValue(parameter);
+                } else if (arg.startsWith("range")) {
+                    // This argument sets the range for the highlight
+                    range = parseRelationalValue(parameter);
+                } else if (arg.startsWith("depth")) {
+                    // This argument sets the depth for the highlight
+                    depth = parseRelationalValue(parameter);
+                } else if (arg.startsWith("identifier ")) {
+                    // This argument sets the identifier for custom armor stands
+                    identifier = Identifier.tryParse(parameter.toLowerCase());
+                } else if (arg.startsWith("locations ")) {
+                    // This argument sets the locations for the highlight
+                    String[] locs = parameter.split(",");
+                    for (String loc : locs) {
+                        // Check if in World enum
+                        try {
+                            World world = World.valueOf(loc.trim());
+                            locations.add(world);
+                        } catch (IllegalArgumentException e) {
+                            MinecraftClient.getInstance().inGameHud.getChatHud().addMessage(
+                                    TextUtil.getTitle().append(Text.literal(" §cInvalid location: "
+                                            + loc.trim() + " §7(EntityHighlight.java)")));
+                        }
                     }
                 }
             }
 
             // Handle invalid Identifier format
-            if (identifier == null) {
+            if (entity == null) {
                 return;
             }
 
             // Check if the identifier exists in the entity registry
-            if (Registries.ENTITY_TYPE.containsId(identifier)) {
-                HIGHLIGHT_ENTITIES.add(identifier);
-                color = (color != -1) ? color : setColor(identifier);
-                ENTITY_HIGHLIGHT.put(identifier, new Highlight(inputKey, beacon, color));
+            Highlight highlight = new Highlight(inputKey, beacon, color, height, width, range,
+                    depth, identifier, locations);
+            if (Registries.ENTITY_TYPE.containsId(entity)) {
+                HIGHLIGHT_ENTITIES.add(entity);
+                color = (color != -1) ? color : setColor(entity);
+                ENTITY_HIGHLIGHT.put(entity, highlight);
             } else {
                 HIGHLIGHT_NAMES.add(inputKey);
                 color = (color != -1) ? color : setColor(inputKey);
-                NAME_HIGHLIGHT.put(inputKey, new Highlight(inputKey, beacon, color));
+                NAME_HIGHLIGHT.put(inputKey, highlight);
             }
         });
     }
@@ -303,6 +440,12 @@ public class EntityHighlight {
         private final String name;
         private final boolean beacon;
         private final int color;
+        private final RelationalValue height;
+        private final RelationalValue width;
+        private final RelationalValue range;
+        private final RelationalValue depth;
+        private final Identifier identifier;
+        private final List<World> locations;
 
         /**
          * Constructor for Highlight.
@@ -310,11 +453,25 @@ public class EntityHighlight {
          * @param name The name of the entity or identifier.
          * @param beacon Whether the entity is a beacon highlight.
          * @param color The color for the entity highlight as an integer.
+         * @param height The height of the entity highlight.
+         * @param width The width of the entity highlight.
+         * @param range The horizontal range of the entity highlight.
+         * @param depth The vertical depth of the entity highlight.
+         * @param identifier The identifier for custom armor stands.
+         * @param locations The locations for the entity highlight.
          */
-        public Highlight(String name, boolean beacon, int color) {
+        public Highlight(String name, boolean beacon, int color, RelationalValue height,
+                RelationalValue width, RelationalValue range, RelationalValue depth,
+                Identifier identifier, List<World> locations) {
             this.name = name;
             this.beacon = beacon;
             this.color = color;
+            this.height = height;
+            this.width = width;
+            this.range = range;
+            this.depth = depth;
+            this.identifier = identifier;
+            this.locations = locations;
         }
     }
 }
