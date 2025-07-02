@@ -20,6 +20,7 @@ public class FeatureUtil {
         // General Features
         RemoveSelfieMode.register();
         ServerRejoinAlert.register();
+        ServerStatus.register();
         WidgetDisplay.register();
 
         // Chat Features
@@ -28,7 +29,6 @@ public class FeatureUtil {
         CustomEmote.register();
         JoinWhitelist.register();
         PlaytimeWarning.register();
-        ServerStatus.register();
         SpamHider.register();
         SkyBlockLevelUpAlert.register();
         SkyBlockXpAlert.register();
