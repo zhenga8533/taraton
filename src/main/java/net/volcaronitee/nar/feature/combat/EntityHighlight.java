@@ -135,6 +135,7 @@ public class EntityHighlight {
                     return;
                 }
 
+                entity.setInvisible(false);
                 HIGHLIGHTED_ENTITIES.put(entity, highlight);
                 entityCount.merge(highlight.name, 1, Integer::sum);
                 totalCount.incrementAndGet();
@@ -358,46 +359,47 @@ public class EntityHighlight {
             // Parse the input key and options
             String[] args = pair.getKey().trim().split(" --");
             for (String arg : args) {
+                String[] argArgs = arg.trim().split(" ");
+                String parameter = argArgs[1];
+
                 if (arg.equals(args[0])) {
                     // The first argument is the entity identifier or name
                     inputKey = arg.trim();
                     entity = Identifier.tryParse(inputKey.toLowerCase());
                     continue;
-                } else if (arg.startsWith("beacon ")) {
+                } else if (parameter.equals("beacon")) {
                     // This argument indicates a beacon highlight
                     beacon = true;
                     continue;
                 }
 
-                String[] argArgs = arg.trim().split(" ");
                 if (argArgs.length < 2) {
                     continue;
                 }
 
-                String parameter = argArgs[1];
-                if (arg.startsWith("color ")) {
+                if (parameter.equals("color")) {
                     // This argument sets the color for the highlight
                     try {
                         color = Integer.parseInt(parameter.replace("#", ""), 16);
                     } catch (NumberFormatException e) {
                         color = -1;
                     }
-                } else if (arg.startsWith("height")) {
+                } else if (parameter.equals("height")) {
                     // This argument sets the height for the highlight
                     height = parseRelationalValue(parameter);
-                } else if (arg.startsWith("width")) {
+                } else if (parameter.equals("width")) {
                     // This argument sets the width for the highlight
                     width = parseRelationalValue(parameter);
-                } else if (arg.startsWith("range")) {
+                } else if (parameter.equals("range")) {
                     // This argument sets the range for the highlight
                     range = parseRelationalValue(parameter);
-                } else if (arg.startsWith("depth")) {
+                } else if (parameter.equals("depth")) {
                     // This argument sets the depth for the highlight
                     depth = parseRelationalValue(parameter);
-                } else if (arg.startsWith("identifier ")) {
+                } else if (parameter.equals("identifier")) {
                     // This argument sets the identifier for custom armor stands
                     identifier = Identifier.tryParse(parameter.toLowerCase());
-                } else if (arg.startsWith("locations ")) {
+                } else if (parameter.equals("locations")) {
                     // This argument sets the locations for the highlight
                     String[] locs = parameter.split(",");
                     for (String loc : locs) {
