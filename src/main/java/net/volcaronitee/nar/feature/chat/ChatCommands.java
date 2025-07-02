@@ -42,7 +42,7 @@ public class ChatCommands {
             "Cannot predict now", "Concentrate and ask again", "Don't count on it",
             "My reply is no", "My sources say no", "Outlook not so good", "Very doubtful"};
 
-    private boolean cooldown = false;
+    private int delay = 0;
 
     /**
      * Enum representing the type of chat command.
@@ -164,17 +164,12 @@ public class ChatCommands {
      * @param command The command to be executed.
      */
     private void scheduleCommand(String command) {
-        // Prevent command spamming
-        if (INSTANCE.cooldown) {
-            return;
-        }
-
         // Send the command to the player network handler
-        INSTANCE.cooldown = true;
+        INSTANCE.delay += 4;
         ScheduleUtil.schedule(() -> {
             MinecraftClient.getInstance().player.networkHandler.sendChatCommand(command);
-            INSTANCE.cooldown = false;
-        }, 4);
+            INSTANCE.delay -= 4;
+        }, INSTANCE.delay);
     }
 
     /**
@@ -198,12 +193,11 @@ public class ChatCommands {
      * @param args The arguments of the command.
      */
     private void handleLeaderCommand(ClientPlayerEntity player, String username, String[] args) {
-        // Verify if the player is the party leader and if leader commands are enabled
         String partyLeader = PartyUtil.getLeader();
         String clientUsername = MinecraftClient.getInstance().getSession().getUsername();
         if (!ConfigUtil.getHandler().chat.leaderCommands
                 || (ToggleUtil.getHandler().chat.leaderLock && partyLeader == clientUsername)
-                || !PartyUtil.isInParty() || PartyUtil.getLeader() != clientUsername) {
+                || !PartyUtil.isInParty() || !PartyUtil.getLeader().equals(clientUsername)) {
             return;
         }
 
