@@ -3,7 +3,7 @@ package net.volcaronitee.nar.helper;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import com.google.gson.JsonObject;
-import net.volcaronitee.nar.util.JsonUtil;
+import net.volcaronitee.nar.config.NarJson;
 
 /**
  * Utility class for fetching player information from Mojang's session server.
@@ -66,7 +66,7 @@ public class MojangApi {
      */
     private static String parseUsername(String jsonResponse) {
         try {
-            JsonObject profile = JsonUtil.GSON.fromJson(jsonResponse, JsonObject.class);
+            JsonObject profile = NarJson.GSON.fromJson(jsonResponse, JsonObject.class);
             if (profile != null && profile.has("name") && profile.get("name").isJsonPrimitive()) {
                 return profile.get("name").getAsString();
             }

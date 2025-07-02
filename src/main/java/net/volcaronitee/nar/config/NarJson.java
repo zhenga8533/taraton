@@ -1,4 +1,4 @@
-package net.volcaronitee.nar.util;
+package net.volcaronitee.nar.config;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -16,7 +16,7 @@ import net.volcaronitee.nar.NotARat;
 /**
  * Utility class for handling JSON file operations.
  */
-public class JsonUtil {
+public class NarJson {
     private static final Path CONFIG_DIR =
             FabricLoader.getInstance().getConfigDir().resolve(NotARat.MOD_ID);
     private static final String TEMPLATE_PATH = "/json/";
@@ -56,7 +56,7 @@ public class JsonUtil {
             if (!Files.exists(filePath)) {
                 String templateResourceName = TEMPLATE_PATH + fileDir + "/" + fileName;
                 try (InputStream templateStream =
-                        JsonUtil.class.getResourceAsStream(templateResourceName)) {
+                        NarJson.class.getResourceAsStream(templateResourceName)) {
                     if (templateStream != null) {
                         Files.copy(templateStream, filePath);
                     } else {
@@ -96,8 +96,7 @@ public class JsonUtil {
         String templateResourceName = TEMPLATE_PATH + fileName;
 
         // Check if the template resource exists
-        try (InputStream templateStream =
-                JsonUtil.class.getResourceAsStream(templateResourceName)) {
+        try (InputStream templateStream = NarJson.class.getResourceAsStream(templateResourceName)) {
             if (templateStream == null) {
                 return null;
             }

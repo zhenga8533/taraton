@@ -9,9 +9,10 @@ import net.minecraft.client.gui.hud.ChatHud;
 import net.minecraft.client.gui.hud.ChatHudLine;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.Text;
+import net.volcaronitee.nar.NotARat;
 import net.volcaronitee.nar.config.NarConfig;
+import net.volcaronitee.nar.helper.Formatter;
 import net.volcaronitee.nar.mixin.accessor.ChatHudAccessor;
-import net.volcaronitee.nar.util.TextUtil;
 
 /**
  * Handles copying chat messages when the user clicks on them while holding Shift.
@@ -83,7 +84,7 @@ public class CopyChat {
         // Concatenate the text from all parts of the message
         StringBuilder fullMessageText = new StringBuilder();
         for (ChatHudLine.Visible line : messageParts) {
-            fullMessageText.append(TextUtil.getInstance().orderedTextToString(line.content()));
+            fullMessageText.append(Formatter.orderedTextToString(line.content()));
         }
 
         String messageToCopy = fullMessageText.toString();
@@ -91,7 +92,7 @@ public class CopyChat {
         // Copy the message content to the clipboard and send a confirmation message
         if (!messageToCopy.isEmpty()) {
             client.keyboard.setClipboard(messageToCopy);
-            Text sendMessage = TextUtil.getTitle().append(
+            Text sendMessage = NotARat.MOD_TITLE.copy().append(
                     Text.literal(" §aCopied chat message to clipboard: §8§o" + messageToCopy));
             client.player.sendMessage(sendMessage, false);
             cir.setReturnValue(true);

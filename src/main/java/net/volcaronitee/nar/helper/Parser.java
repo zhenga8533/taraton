@@ -1,9 +1,9 @@
-package net.volcaronitee.nar.util;
+package net.volcaronitee.nar.helper;
 
 /**
  * Utility class for parsing and cleaning text by removing formatting characters.
  */
-public class ParseUtil {
+public class Parser {
     public static final String PLAYER_PATTERN =
             "(?:\\[\\d+\\] )?(?:\\[[^\\]]*\\+?\\] )?(\\w+)(?: \\[[^\\]]+\\])?";
 

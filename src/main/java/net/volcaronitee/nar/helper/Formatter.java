@@ -1,4 +1,4 @@
-package net.volcaronitee.nar.util;
+package net.volcaronitee.nar.helper;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -11,33 +11,11 @@ import net.minecraft.util.Formatting;
 /**
  * Utility class for text formatting and constants.
  */
-public class TextUtil {
-    private static final TextUtil INSTANCE = new TextUtil();
-
-    public static final Text MOD_TITLE = Text.literal("§l§8[§6Not§fa§6Rat§8]§r");
-
+public class Formatter {
     /**
      * Private constructor to prevent instantiation.
      */
-    private TextUtil() {}
-
-    /**
-     * Gets the singleton instance of TextUtil.
-     * 
-     * @return The singleton instance of TextUtil.
-     */
-    public static TextUtil getInstance() {
-        return INSTANCE;
-    }
-
-    /**
-     * Returns the mod title text component.
-     * 
-     * @return A Text component representing the mod title.
-     */
-    public static MutableText getTitle() {
-        return MOD_TITLE.copy();
-    }
+    private Formatter() {}
 
     /**
      * Creates a clickable link text component.
@@ -46,7 +24,7 @@ public class TextUtil {
      * @param url The URL to link to.
      * @return A Text component that represents a clickable link.
      */
-    public Text createLink(String text, String url) {
+    public static Text createLink(String text, String url) {
         MutableText textComponent = Text.literal(text);
         textComponent.formatted(Formatting.BLUE, Formatting.UNDERLINE);
 
@@ -69,7 +47,7 @@ public class TextUtil {
      * @param orderedText
      * @return
      */
-    public String orderedTextToString(OrderedText orderedText) {
+    public static String orderedTextToString(OrderedText orderedText) {
         StringBuilder builder = new StringBuilder();
         orderedText.accept((index, style, codePoint) -> {
             builder.append(Character.toChars(codePoint));

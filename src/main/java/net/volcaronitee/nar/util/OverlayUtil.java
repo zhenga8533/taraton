@@ -19,6 +19,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Colors;
 import net.minecraft.util.Identifier;
 import net.volcaronitee.nar.NotARat;
+import net.volcaronitee.nar.config.NarJson;
 
 /**
  * Utility class for handling overlays.
@@ -55,7 +56,7 @@ public class OverlayUtil {
      */
     public static Overlay createOverlay(String name, Supplier<Boolean> shouldRender,
             List<LineContent> templateLines) {
-        JsonObject overlayJson = JsonUtil.loadJson("overlays", name + ".json");
+        JsonObject overlayJson = NarJson.loadJson("overlays", name + ".json");
         int x = overlayJson.has("x") ? overlayJson.get("x").getAsInt() : 100;
         int y = overlayJson.has("y") ? overlayJson.get("y").getAsInt() : 100;
         float scale = overlayJson.has("scale") ? overlayJson.get("scale").getAsFloat() : 1.0f;
@@ -83,7 +84,7 @@ public class OverlayUtil {
             overlayJson.addProperty("y", overlay.y);
             overlayJson.addProperty("scale", overlay.scale);
 
-            JsonUtil.saveJson("overlays", name + ".json", overlayJson);
+            NarJson.saveJson("overlays", name + ".json", overlayJson);
         }
     }
 
@@ -95,7 +96,7 @@ public class OverlayUtil {
     public static void resetOverlay(String name) {
         Overlay overlay = OVERLAYS.get(name);
         if (overlay != null) {
-            JsonObject templateJson = JsonUtil.loadTemplate("overlays/" + name + ".json");
+            JsonObject templateJson = NarJson.loadTemplate("overlays/" + name + ".json");
             if (templateJson == null) {
                 return;
             }

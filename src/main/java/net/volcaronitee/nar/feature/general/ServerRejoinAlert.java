@@ -4,9 +4,9 @@ import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 import net.minecraft.client.MinecraftClient;
+import net.volcaronitee.nar.NotARat;
 import net.volcaronitee.nar.config.NarConfig;
 import net.volcaronitee.nar.util.LocationUtil;
-import net.volcaronitee.nar.util.TextUtil;
 
 /**
  * ServerRejoinAlert is a feature that alerts the user when they rejoin a server
@@ -52,8 +52,8 @@ public class ServerRejoinAlert {
                     .trim();
 
             MinecraftClient.getInstance().inGameHud.getChatHud()
-                    .addMessage(TextUtil.getTitle().append(" §cRejoined §7" + INSTANCE.currentServer
-                            + " §cafter §7" + formattedDuration + "§r."));
+                    .addMessage(NotARat.MOD_TITLE.copy().append(" §cRejoined §7"
+                            + INSTANCE.currentServer + " §cafter §7" + formattedDuration + "§r."));
         }
     }
 }

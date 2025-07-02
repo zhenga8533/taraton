@@ -19,15 +19,16 @@ import net.minecraft.registry.Registries;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Box;
+import net.volcaronitee.nar.NotARat;
 import net.volcaronitee.nar.config.NarConfig;
 import net.volcaronitee.nar.config.NarList;
+import net.volcaronitee.nar.helper.Formatter;
 import net.volcaronitee.nar.helper.RelationalValue;
 import net.volcaronitee.nar.helper.RelationalValue.Operator;
 import net.volcaronitee.nar.util.LocationUtil;
 import net.volcaronitee.nar.util.LocationUtil.World;
 import net.volcaronitee.nar.util.OverlayUtil;
 import net.volcaronitee.nar.util.OverlayUtil.LineContent;
-import net.volcaronitee.nar.util.TextUtil;
 import net.volcaronitee.nar.util.TickUtil;
 
 /**
@@ -43,7 +44,7 @@ public class EntityHighlight {
 
     public static final NarList ENTITY_LIST = new NarList("Entity List", Text
             .literal("A list of entities to highlight in the game.\n\nUse ")
-            .append(TextUtil.getInstance().createLink("digminecraft.com",
+            .append(Formatter.createLink("digminecraft.com",
                     "https://www.digminecraft.com/lists/entity_list_pc.php"))
             .append(Text.literal(
                     " to find vanilla entity names. If an entity ID is not found, it will be used to identify custom armor stand names. Remember, you can use 'F3 + I' to copy entity data to clipboard.\n\n\n"
@@ -405,9 +406,10 @@ public class EntityHighlight {
                             World world = World.valueOf(loc.trim());
                             locations.add(world);
                         } catch (IllegalArgumentException e) {
-                            MinecraftClient.getInstance().inGameHud.getChatHud().addMessage(
-                                    TextUtil.getTitle().append(Text.literal(" §cInvalid location: "
-                                            + loc.trim() + " §7(EntityHighlight.java)")));
+                            MinecraftClient.getInstance().inGameHud.getChatHud()
+                                    .addMessage(NotARat.MOD_TITLE.copy()
+                                            .append(Text.literal(" §cInvalid location: "
+                                                    + loc.trim() + " §7(EntityHighlight.java)")));
                         }
                     }
                 }

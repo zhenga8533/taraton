@@ -7,9 +7,9 @@ import java.util.regex.Pattern;
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.Text;
+import net.volcaronitee.nar.NotARat;
 import net.volcaronitee.nar.config.NarConfig;
 import net.volcaronitee.nar.util.ScheduleUtil;
-import net.volcaronitee.nar.util.TextUtil;
 
 /**
  * Feature that alerts the player when they gain SkyBlock XP.
@@ -56,7 +56,7 @@ public class SkyBlockXpAlert {
 
         MinecraftClient client = MinecraftClient.getInstance();
         client.inGameHud.getChatHud()
-                .addMessage(TextUtil.getTitle().append(Text.literal(" " + xpText)));
+                .addMessage(NotARat.MOD_TITLE.copy().append(Text.literal(" " + xpText)));
         client.inGameHud.setTitle(Text.literal(xpText));
 
         // Set a cooldown to prevent spamming the alert

@@ -4,6 +4,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.loader.api.ModContainer;
+import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 import net.volcaronitee.nar.config.NarConfig;
 import net.volcaronitee.nar.config.NarToggle;
 import net.volcaronitee.nar.util.CommandUtil;
@@ -18,6 +20,9 @@ import net.volcaronitee.nar.util.TickUtil;
 
 public class NotARat implements ClientModInitializer {
     public static final String MOD_ID = "nar";
+    public static final Text MOD_TITLE = Text.literal("[").formatted(Formatting.DARK_GRAY)
+            .append(Text.literal("NotARat").formatted(Formatting.GOLD, Formatting.BOLD))
+            .append(Text.literal("]").formatted(Formatting.DARK_GRAY));
     public static final ModContainer MOD_CONTAINER =
             net.fabricmc.loader.api.FabricLoader.getInstance().getModContainer(MOD_ID)
                     .orElseThrow(() -> new IllegalStateException("Mod container not found"));

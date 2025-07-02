@@ -5,10 +5,10 @@ import java.util.regex.Pattern;
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.Text;
+import net.volcaronitee.nar.NotARat;
 import net.volcaronitee.nar.config.NarConfig;
-import net.volcaronitee.nar.util.ParseUtil;
+import net.volcaronitee.nar.helper.Parser;
 import net.volcaronitee.nar.util.ScheduleUtil;
-import net.volcaronitee.nar.util.TextUtil;
 
 /**
  * Feature that alerts the player when they level up in SkyBlock.
@@ -44,7 +44,7 @@ public class SkyBlockLevelUpAlert {
         }
 
         // Check if the message contains SkyBlock level up
-        String text = ParseUtil.removeFormatting(message.getString()).strip();
+        String text = Parser.removeFormatting(message.getString()).strip();
         Matcher matcher = LEVEL_UP_PATTERN.matcher(text);
         if (!matcher.find()) {
             return;
@@ -57,7 +57,7 @@ public class SkyBlockLevelUpAlert {
 
         ScheduleUtil.schedule(() -> {
             MinecraftClient client = MinecraftClient.getInstance();
-            client.inGameHud.getChatHud().addMessage(TextUtil.getTitle()
+            client.inGameHud.getChatHud().addMessage(NotARat.MOD_TITLE.copy()
                     .append(Text.literal(" §3§lSKYBLOCK LEVEL UP§r " + INSTANCE.levelUpText)));
             client.inGameHud.setTitle(Text.literal(INSTANCE.levelUpText));
         }, 2);

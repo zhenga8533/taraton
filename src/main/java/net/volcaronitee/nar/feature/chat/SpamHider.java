@@ -7,7 +7,7 @@ import net.minecraft.text.Text;
 import net.volcaronitee.nar.config.NarConfig;
 import net.volcaronitee.nar.config.NarList;
 import net.volcaronitee.nar.config.controller.KeyValueController.KeyValuePair;
-import net.volcaronitee.nar.util.TextUtil;
+import net.volcaronitee.nar.helper.Formatter;
 
 /**
  * Feature to filter out spam messages in chat.
@@ -17,8 +17,7 @@ public class SpamHider {
 
     public static final NarList SPAM_LIST = new NarList("Spam List",
             Text.literal("A list of spam messages to hide in chat.\n\nUse ")
-                    .append(TextUtil.getInstance().createLink("regex101.com",
-                            "https://regex101.com"))
+                    .append(Formatter.createLink("regex101.com", "https://regex101.com"))
                     .append(Text.literal(" to test your regex patterns.")),
             "spam_list.json");
 

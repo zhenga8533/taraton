@@ -26,8 +26,6 @@ import net.minecraft.util.Formatting;
 import net.volcaronitee.nar.NotARat;
 import net.volcaronitee.nar.config.controller.KeyValueController;
 import net.volcaronitee.nar.config.controller.KeyValueController.KeyValuePair;
-import net.volcaronitee.nar.util.JsonUtil;
-import net.volcaronitee.nar.util.TextUtil;
 
 /**
  * Utility class for handling configuration settings in a list format.
@@ -124,7 +122,7 @@ public class NarList {
 
         // Load the template file from resources
         try (InputStream templateStream =
-                JsonUtil.class.getResourceAsStream("/json/lists/" + fileName)) {
+                NarJson.class.getResourceAsStream("/json/lists/" + fileName)) {
             if (templateStream == null) {
                 return;
             }
@@ -199,7 +197,7 @@ public class NarList {
             return 1;
         }).then(literal("reset").executes(context -> {
             reset();
-            context.getSource().sendFeedback(TextUtil.getTitle()
+            context.getSource().sendFeedback(NotARat.MOD_TITLE.copy()
                     .append(Text.literal(" List reset successfully.").formatted(Formatting.GREEN)));
             return 1;
         }));

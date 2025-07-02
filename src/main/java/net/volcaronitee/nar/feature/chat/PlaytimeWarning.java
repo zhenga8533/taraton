@@ -5,9 +5,9 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
+import net.volcaronitee.nar.NotARat;
 import net.volcaronitee.nar.config.NarConfig;
-import net.volcaronitee.nar.util.JsonUtil;
-import net.volcaronitee.nar.util.TextUtil;
+import net.volcaronitee.nar.config.NarJson;
 import net.volcaronitee.nar.util.TickUtil;
 
 /**
@@ -40,7 +40,7 @@ public class PlaytimeWarning {
      */
     public static void register() {
         // Load the playtime data from the JSON file
-        JsonObject playtimeData = JsonUtil.loadJson(JsonUtil.DATA_DIR, FILENAME);
+        JsonObject playtimeData = NarJson.loadJson(NarJson.DATA_DIR, FILENAME);
         if (!playtimeData.has("playtime")) {
             playtimeData.addProperty("playtime", 0);
         }
@@ -66,7 +66,7 @@ public class PlaytimeWarning {
 
         if (INSTANCE.playtime % PLAYTIME_THRESHOLD == 0) { // Every 8 hour
             int hours = INSTANCE.playtime / 3600;
-            client.inGameHud.getChatHud().addMessage(TextUtil.getTitle()
+            client.inGameHud.getChatHud().addMessage(NotARat.MOD_TITLE.copy()
                     .append(Text.literal(" You have played for " + hours
                             + " hours. Excessive game playing may cause problems in your normal daily life.")
                             .formatted(Formatting.RED)));
@@ -81,7 +81,7 @@ public class PlaytimeWarning {
     private void onClientClose(MinecraftClient client) {
         JsonObject playtimeData = new JsonObject();
         playtimeData.addProperty("playtime", INSTANCE.playtime);
-        JsonUtil.saveJson(JsonUtil.DATA_DIR, FILENAME, playtimeData);
+        NarJson.saveJson(NarJson.DATA_DIR, FILENAME, playtimeData);
     }
 
     /**
