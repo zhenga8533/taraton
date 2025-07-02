@@ -15,12 +15,10 @@ import net.minecraft.world.GameMode;
  * Utility class for managing the tab list of players in Minecraft.
  */
 public class TablistUtil {
-    private static final TablistUtil INSTANCE = new TablistUtil();
-
     private static final Ordering<PlayerListEntry> PLAYER_COMPARATOR =
             Ordering.from(new PlayerComparator());
 
-    private List<PlayerListEntry> tablist = new ArrayList<>();
+    private static List<PlayerListEntry> tablist = new ArrayList<>();
 
     /**
      * Private constructor to prevent instantiation.
@@ -28,16 +26,7 @@ public class TablistUtil {
     private TablistUtil() {}
 
     public static void init() {
-        TickUtil.register(INSTANCE::updateTablist, 5);
-    }
-
-    /**
-     * Gets the singleton instance of TablistUtil.
-     *
-     * @return The instance of TablistUtil.
-     */
-    public static TablistUtil getInstance() {
-        return INSTANCE;
+        TickUtil.register(TablistUtil::updateTablist, 5);
     }
 
     /**
@@ -45,7 +34,7 @@ public class TablistUtil {
      *
      * @return A list of PlayerListEntry objects representing the players in the tab list.
      */
-    public List<PlayerListEntry> getTablist() {
+    public static List<PlayerListEntry> getTablist() {
         return tablist;
     }
 
@@ -54,7 +43,7 @@ public class TablistUtil {
      * 
      * @param client The Minecraft client instance.
      */
-    private void updateTablist(MinecraftClient client) {
+    private static void updateTablist(MinecraftClient client) {
         ClientPlayNetworkHandler networkHandler = client.getNetworkHandler();
         if (networkHandler == null || networkHandler.getPlayerList() == null) {
             return;
