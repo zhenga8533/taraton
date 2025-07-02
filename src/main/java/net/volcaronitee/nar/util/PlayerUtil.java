@@ -1,10 +1,19 @@
 package net.volcaronitee.nar.util;
 
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.hypixel.data.rank.MonthlyPackageRank;
 import net.hypixel.data.rank.PackageRank;
 import net.hypixel.data.rank.PlayerRank;
 import net.hypixel.modapi.HypixelModAPI;
+import net.hypixel.modapi.packet.HypixelPacket;
 import net.hypixel.modapi.packet.impl.clientbound.ClientboundPlayerInfoPacket;
+import net.hypixel.modapi.packet.impl.serverbound.ServerboundPlayerInfoPacket;
+import net.hypixel.modapi.serializer.PacketSerializer;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.network.ClientPlayNetworkHandler;
+import net.minecraft.network.PacketByteBuf;
 
 /**
  * Utility class for handling player-related operations in Hypixel.
@@ -29,6 +38,35 @@ public class PlayerUtil {
     public static void init() {
         HypixelModAPI.getInstance().createHandler(ClientboundPlayerInfoPacket.class,
                 PlayerUtil::handlePlayerPacket);
+
+        ClientPlayConnectionEvents.JOIN.register(PlayerUtil::sendPlayerPacket);
+    }
+
+    /**
+     * Sends a packet to the Hypixel server to request player information. This method is
+     * 
+     * @param handler The ClientPlayNetworkHandler used to send the packet.
+     * @param sender The PacketSender used to send the packet.
+     * @param client The Minecraft client instance used to send the packet.
+     */
+    private static void sendPlayerPacket(ClientPlayNetworkHandler handler, PacketSender sender,
+            MinecraftClient client) {
+        // Check if the client and current server entry are valid
+        if (handler == null || sender == null || client == null
+                || client.getCurrentServerEntry() == null) {
+            return;
+        }
+
+        // Ensure the server is Hypixel before sending the packet
+        String serverAddress = client.getCurrentServerEntry().address;
+        if (!serverAddress.toLowerCase().contains("hypixel.net")) {
+            return;
+        }
+
+        HypixelPacket packet = new ServerboundPlayerInfoPacket();
+        PacketByteBuf buf = PacketByteBufs.create();
+        packet.write(new PacketSerializer(buf));
+        HypixelModAPI.getInstance().sendPacket(packet);
     }
 
     /**

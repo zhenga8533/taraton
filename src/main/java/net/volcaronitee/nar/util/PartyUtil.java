@@ -17,7 +17,7 @@ import net.hypixel.modapi.packet.impl.clientbound.ClientboundPartyInfoPacket.Par
 import net.hypixel.modapi.packet.impl.serverbound.ServerboundPartyInfoPacket;
 import net.hypixel.modapi.serializer.PacketSerializer;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientPlayNetworkHandler;
+import net.minecraft.client.network.ServerInfo;
 import net.minecraft.network.PacketByteBuf;
 
 /**
@@ -42,7 +42,7 @@ public class PartyUtil {
     public static void init() {
         HypixelModAPI.getInstance().createHandler(ClientboundPartyInfoPacket.class,
                 PartyUtil::handlePartyPacket);
-        TickUtil.register(PartyUtil::sendPacket, 100);
+        TickUtil.register(PartyUtil::sendPartyPacket, 100);
     }
 
     /**
@@ -50,12 +50,14 @@ public class PartyUtil {
      * 
      * @param client The Minecraft client instance used to send the packet.
      */
-    public static void sendPacket(MinecraftClient client) {
-        ClientPlayNetworkHandler networkHandler = client.getNetworkHandler();
-        if (networkHandler == null) {
+    private static void sendPartyPacket(MinecraftClient client) {
+        // Check if the client is null or not connected to a server
+        ServerInfo serverEntry = client.getCurrentServerEntry();
+        if (serverEntry == null || !serverEntry.address.toLowerCase().contains("hypixel.net")) {
             return;
         }
 
+        // Create and send the party info packet
         HypixelPacket packet = new ServerboundPartyInfoPacket();
         PacketByteBuf buf = PacketByteBufs.create();
         packet.write(new PacketSerializer(buf));
