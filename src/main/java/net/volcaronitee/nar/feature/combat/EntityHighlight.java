@@ -102,7 +102,7 @@ public class EntityHighlight {
      * Registers the entity highlight feature to scan the world for entities.
      */
     public static void register() {
-        TickUtil.register(INSTANCE::scanWorld, 10);
+        TickUtil.register(INSTANCE::scanWorld, 1);
         TickUtil.register(INSTANCE::renderTitles, 5);
         WorldRenderEvents.AFTER_TRANSLUCENT.register(INSTANCE::renderBeaconBeams);
     }
