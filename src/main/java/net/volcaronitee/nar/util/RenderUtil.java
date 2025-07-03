@@ -3,11 +3,8 @@ package net.volcaronitee.nar.util;
 import org.joml.FrustumIntersection;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.VertexConsumer;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.VertexRendering;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.entity.Entity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ColorHelper;
 import net.minecraft.util.math.Vec3d;
@@ -39,18 +36,26 @@ public class RenderUtil {
         return plane == FrustumIntersection.INSIDE || plane == FrustumIntersection.INTERSECT;
     }
 
-    public static void renderBeaconBeam(WorldRenderContext context, BlockPos pos,
+    /**
+     * Renders a beacon beam at the specified coordinates with the given color components.
+     * 
+     * @param context The rendering context containing the necessary matrices and world information.
+     * @param x The X coordinate of the beacon beam's position.
+     * @param y The Y coordinate of the beacon beam's position.
+     * @param z The Z coordinate of the beacon beam's position.
+     * @param colorComponents An array of three float values representing the RGB color components
+     */
+    public static void renderBeaconBeam(WorldRenderContext context, double x, double y, double z,
             float[] colorComponents) {
-        renderFilled(context, pos, colorComponents, 1, true);
         MinecraftClient client = MinecraftClient.getInstance();
         MatrixStack matrices = context.matrixStack();
         Vec3d camera = context.camera().getPos();
 
         matrices.push();
-        matrices.translate(pos.getX() - camera.getX(), pos.getY() - camera.getY(),
-                pos.getZ() - camera.getZ());
+        matrices.translate(x - camera.getX(), y - camera.getY(), z - camera.getZ());
+        matrices.translate(-0.5, 0, -0.5);
 
-        float length = (float) camera.subtract(pos.toCenterPos()).horizontalLength();
+        float length = (float) camera.subtract(new Vec3d(x, y, z)).horizontalLength();
         float scale = client.player != null && client.player.isUsingSpyglass() ? 1.0f
                 : Math.max(1.0f, length / 96.0f);
 
@@ -62,36 +67,35 @@ public class RenderUtil {
         matrices.pop();
     }
 
-    public static void renderFilled(WorldRenderContext context, BlockPos pos,
-            float[] colorComponents, float alpha, boolean throughWalls) {
-        renderFilled(context, pos.getX(), pos.getY(), pos.getZ(), pos.getX() + 1, pos.getY() + 1,
-                pos.getZ() + 1, colorComponents, alpha, throughWalls);
+    /**
+     * Renders a beacon beam at the specified block position with the given color components.
+     * 
+     * @param context The rendering context containing the necessary matrices and world information.
+     * @param pos The block position of the beacon beam.
+     * @param colorComponents An array of three float values representing the RGB color components.
+     */
+    public static void renderBeaconBeam(WorldRenderContext context, BlockPos pos,
+            float[] colorComponents) {
+        renderBeaconBeam(context, pos.getX(), pos.getY(), pos.getZ(), colorComponents);
     }
 
-    public static void renderFilled(WorldRenderContext context, double minX, double minY,
-            double minZ, double maxX, double maxY, double maxZ, float[] colorComponents,
-            float alpha, boolean throughWalls) {
-        if (isVisible(minX, minY, minZ, maxX, maxY, maxZ)) {
-            renderFilledInternal(context, minX, minY, minZ, maxX, maxY, maxZ, colorComponents,
-                    alpha, throughWalls);
-        }
-    }
+    /**
+     * Renders a beacon beam at the specified entity's position with the given color components.
+     * 
+     * @param context The rendering context containing the necessary matrices and world information.
+     * @param entity The entity at whose position the beacon beam will be rendered.
+     * @param colorComponents An array of three float values representing the RGB color components.
+     * @param tickProgress The progress of the current tick for interpolation.
+     */
+    public static void renderBeaconBeam(WorldRenderContext context, Entity entity,
+            float[] colorComponents, float tickProgress) {
+        double interpolatedX =
+                entity.lastRenderX + (entity.getX() - entity.lastRenderX) * tickProgress;
+        double interpolatedY =
+                entity.lastRenderY + (entity.getY() - entity.lastRenderY) * tickProgress;
+        double interpolatedZ =
+                entity.lastRenderZ + (entity.getZ() - entity.lastRenderZ) * tickProgress;
 
-    private static void renderFilledInternal(WorldRenderContext context, double minX, double minY,
-            double minZ, double maxX, double maxY, double maxZ, float[] colorComponents,
-            float alpha, boolean throughWalls) {
-        MatrixStack matrices = context.matrixStack();
-        Vec3d camera = context.camera().getPos();
-
-        matrices.push();
-        matrices.translate(-camera.x, -camera.y, -camera.z);
-
-        VertexConsumerProvider consumers = context.consumers();
-        VertexConsumer buffer = consumers.getBuffer(RenderLayer.getDebugQuads());
-
-        VertexRendering.drawFilledBox(matrices, buffer, minX, minY, minZ, maxX, maxY, maxZ,
-                colorComponents[0], colorComponents[1], colorComponents[2], alpha);
-
-        matrices.pop();
+        renderBeaconBeam(context, interpolatedX, interpolatedY, interpolatedZ, colorComponents);
     }
 }
