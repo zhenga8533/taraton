@@ -11,7 +11,9 @@
     "ClientPlayerEntityMixin",
     "ClientPlayNetworkHandlerMixin",
     "EntityMixin",
+    "MinecraftClientMixin",
     "MouseMixin",
+    "ParticleManagerMixin",
     "TextRendererMixin"
   ],
   "injectors": {

@@ -112,6 +112,19 @@ public class GeneralConfig {
                                         newVal -> config.general.imageBypass = newVal)
                                 .controller(NarConfig::createBooleanController).build())
 
+                        // No Mouse Reset
+                        .option(Option.<Boolean>createBuilder().name(Text.literal("No Mouse Reset"))
+                                .description(OptionDescription.createBuilder()
+                                        .webpImage(Identifier.of(NotARat.MOD_ID,
+                                                "config/general/no_mouse_reset.webp"))
+                                        .text(Text.literal(
+                                                "Prevents the mouse from being reset when navigating menus."))
+                                        .build())
+                                .binding(defaults.general.noMouseReset,
+                                        () -> config.general.noMouseReset,
+                                        newVal -> config.general.noMouseReset = newVal)
+                                .controller(NarConfig::createBooleanController).build())
+
                         // Remove Selfie Mode
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Remove Selfie Mode"))
@@ -357,6 +370,9 @@ public class GeneralConfig {
     // General Option Group
     @SerialEntry
     public boolean imageBypass = false;
+
+    @SerialEntry
+    public boolean noMouseReset = true;
 
     @SerialEntry
     public boolean removeSelfieMode = false;
