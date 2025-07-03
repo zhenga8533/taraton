@@ -17,7 +17,7 @@ public class JoinWhitelist {
     private static final JoinWhitelist INSTANCE = new JoinWhitelist();
 
     public static final NarList WHITE_LIST = new NarList("White List",
-            Text.literal("A list of players to automatically accept party invites from."),
+            Text.literal("A list of players to allow the use of various features."),
             "white_list.json");
 
     private static final Pattern PARTY_INVITE_PATTERN = Pattern.compile(
@@ -57,7 +57,7 @@ public class JoinWhitelist {
         ClientPlayerEntity player = MinecraftClient.getInstance().player;
         String username = matcher.group(1);
         if (WHITE_LIST.getHandler().list.stream()
-                .anyMatch(pair -> pair.getKey().equals(username))) {
+                .anyMatch(pair -> pair.getKey().equals(username) && pair.getValue())) {
             // Accept the party invite after 4 ticks
             ScheduleUtil.schedule(() -> {
                 player.networkHandler.sendChatCommand("party accept " + username);
