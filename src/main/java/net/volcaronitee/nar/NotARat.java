@@ -7,6 +7,7 @@ import net.fabricmc.loader.api.ModContainer;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.volcaronitee.nar.config.NarConfig;
+import net.volcaronitee.nar.config.NarData;
 import net.volcaronitee.nar.config.NarToggle;
 import net.volcaronitee.nar.util.CommandUtil;
 import net.volcaronitee.nar.util.FeatureUtil;
@@ -36,10 +37,9 @@ public class NotARat implements ClientModInitializer {
     public void onInitializeClient() {
         Contract.init();
 
-        CommandUtil.init();
-        FeatureUtil.init();
         LocationUtil.init();
         NarConfig.init();
+        NarData.init();
         NarToggle.init();
         OverlayUtil.init();
         PartyUtil.init();
@@ -47,5 +47,8 @@ public class NotARat implements ClientModInitializer {
         ScheduleUtil.init();
         TablistUtil.init();
         TickUtil.init();
+
+        FeatureUtil.init();
+        CommandUtil.init();
     }
 }
