@@ -1,6 +1,7 @@
 package net.volcaronitee.nar.util;
 
 import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.literal;
+import com.google.gson.JsonPrimitive;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
@@ -8,7 +9,10 @@ import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
+import net.volcaronitee.nar.NotARat;
 import net.volcaronitee.nar.config.NarConfig;
+import net.volcaronitee.nar.config.NarData;
 import net.volcaronitee.nar.config.NarToggle;
 import net.volcaronitee.nar.feature.chat.ChatAlert;
 import net.volcaronitee.nar.feature.chat.ChatCommands;
@@ -53,6 +57,9 @@ public class CommandUtil {
 
                                 // Contract command
                                 .then(literal("contract").executes(CommandUtil::contract))
+                                .then(literal("bindingvow").executes(CommandUtil::contract))
+                                .then(literal("domainexpansion")
+                                        .executes(CommandUtil::domainExpansion))
 
                                 // Lists commands
                                 .then(ChatCommands.BLACK_LIST.createCommand("blacklist"))
@@ -150,5 +157,26 @@ public class CommandUtil {
         } else {
             return 0;
         }
+    }
+
+    private static int domainExpansion(CommandContext<FabricClientCommandSource> context) {
+        if (!Contract.isSigned()) {
+            context.getSource().sendFeedback(Text.literal(
+                    "Binding Vows are essentially contracts that an individual can make with one's self or another person. The act of abiding by the rules and restrictions agreed upon in these contracts can result in a greater power or the achievement of a goal, but breaking a binding vow has uncanny repercussions.")
+                    .formatted(Formatting.RED));
+            return 0;
+        }
+
+        // Flip the domain expansion state
+        boolean bool = NarData.getData().get("domain_expansion").getAsBoolean();
+        if (bool) {
+            context.getSource().sendFeedback(NotARat.MOD_TITLE.copy()
+                    .append(Text.literal(" 領域展開伏魔御廚子").formatted(Formatting.RED)));
+        } else {
+            context.getSource().sendFeedback(NotARat.MOD_TITLE.copy()
+                    .append(Text.literal(" 領域展開無量空処").formatted(Formatting.GREEN)));
+        }
+        NarData.getData().add("domain_expansion", new JsonPrimitive(!bool));
+        return 1;
     }
 }
