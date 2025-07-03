@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
+import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
@@ -19,7 +20,6 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.registry.Registries;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.volcaronitee.nar.NotARat;
 import net.volcaronitee.nar.config.NarConfig;
@@ -79,23 +79,6 @@ public class EntityHighlight {
     static {
         OverlayUtil.createOverlay("entity_counter",
                 () -> NarConfig.getHandler().combat.entityCounter, LINES);
-
-        WorldRenderEvents.AFTER_TRANSLUCENT.register((context) -> {
-            for (Map.Entry<Entity, Highlight> entry : HIGHLIGHTED_ENTITIES.entrySet()) {
-                Entity entity = entry.getKey();
-                Highlight highlight = entry.getValue();
-                if (!highlight.beacon) {
-                    continue;
-                }
-
-                BlockPos pos = entity.getBlockPos();
-                RenderUtil.renderBeaconBeam(context, pos,
-                        new float[] {(highlight.color >> 16 & 0xFF) / 255f,
-                                (highlight.color >> 8 & 0xFF) / 255f,
-                                (highlight.color & 0xFF) / 255f});
-            }
-        });
-
         ENTITY_LIST.setSaveCallback(INSTANCE::onSave);
     }
 
@@ -118,6 +101,7 @@ public class EntityHighlight {
      */
     public static void register() {
         TickUtil.register(INSTANCE::scanWorld, 10);
+        WorldRenderEvents.AFTER_TRANSLUCENT.register(INSTANCE::renderBeaconBeams);
     }
 
     /**
@@ -208,6 +192,24 @@ public class EntityHighlight {
                     String.valueOf(count), () -> true));
         }
         LINES.getLast().setText(String.valueOf(totalCount.get()));
+    }
+
+    /**
+     * Renders the beacon beams for highlighted entities.
+     * 
+     * @param context The rendering context.
+     */
+    private void renderBeaconBeams(WorldRenderContext context) {
+        for (Map.Entry<Entity, Highlight> entry : HIGHLIGHTED_ENTITIES.entrySet()) {
+            Entity entity = entry.getKey();
+            Highlight highlight = entry.getValue();
+            if (!highlight.beacon) {
+                continue;
+            }
+
+            float tickProgress = context.tickCounter().getTickProgress(true);
+            RenderUtil.renderBeaconBeam(context, entity, highlight.colorComponents, tickProgress);
+        }
     }
 
     /**
@@ -466,6 +468,7 @@ public class EntityHighlight {
         private final String name;
         private final boolean beacon;
         private final int color;
+        private final float[] colorComponents;
         private final RelationalValue height;
         private final RelationalValue width;
         private final RelationalValue range;
@@ -492,6 +495,8 @@ public class EntityHighlight {
             this.name = name;
             this.beacon = beacon;
             this.color = color;
+            this.colorComponents = new float[] {(color >> 16 & 0xFF) / 255f,
+                    (color >> 8 & 0xFF) / 255f, (color & 0xFF) / 255f};
             this.height = height;
             this.width = width;
             this.range = range;
