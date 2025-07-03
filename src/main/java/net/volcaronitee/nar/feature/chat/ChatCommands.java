@@ -204,6 +204,12 @@ public class ChatCommands {
      * @param args The arguments of the command.
      */
     private void handleLeaderCommand(ClientPlayerEntity player, String username, String[] args) {
+        // Check if username is whitelisted
+        if (NarToggle.getHandler().chat.whitelistLock && !JoinWhitelist.WHITE_LIST.getHandler().list
+                .stream().anyMatch(pair -> pair.getKey().equals(username) && pair.getValue())) {
+            return;
+        }
+
         String partyLeader = PartyUtil.getLeader();
         String clientUsername = MinecraftClient.getInstance().getSession().getUsername();
         if (!NarConfig.getHandler().chat.leaderCommands
