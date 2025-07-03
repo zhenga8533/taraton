@@ -53,6 +53,7 @@ public class EntityHighlight {
                     " to find vanilla entity names. You can also use 'F3 + I' to copy entity data to clipboard. If an entity ID is not found, it will be used to identify custom armor stand names.\n\n\n"
                             + "§f§lOptions:§r\n\n"
                             + " §f--beacon §7Highlights entities that are within the beacon range.\n"
+                            + " §f--title <text> §7Sets a custom title for the entity highlight.\n"
                             + " §f--color <hex> §7Sets the color for the entity highlight. Use hex colors like #FF0000.\n"
                             + " §f--height <num> §7Sets the height of the entity highlight.\n"
                             + " §f--width <num> §7Sets the width of the entity highlight.\n"
@@ -62,7 +63,7 @@ public class EntityHighlight {
                             + " §f--locations <names> §7Sets the islands locations.\n\n"
                             + "§8You can use relational operators like <, >, <=, >=, =, != for numeric values.\n\n\n"
                             + "§f§lExample:§r\n\n"
-                            + "Lion --beacon --color #FF0000 --height >2 --width <=1 --depth 16 --offset 32 --identifier Player --locations GARDEN,SPIDERS_DEN")),
+                            + "Lion --beacon --title WO LAI LE --color #FF0000 --height >2 --width <=1 --depth 16 --offset 32 --identifier Player --locations GARDEN,SPIDERS_DEN")),
             "entity_list.json");
 
     private static final Map<Entity, Highlight> HIGHLIGHTED_ENTITIES = new HashMap<>();
@@ -101,6 +102,7 @@ public class EntityHighlight {
      */
     public static void register() {
         TickUtil.register(INSTANCE::scanWorld, 10);
+        TickUtil.register(INSTANCE::renderTitles, 5);
         WorldRenderEvents.AFTER_TRANSLUCENT.register(INSTANCE::renderBeaconBeams);
     }
 
@@ -209,6 +211,33 @@ public class EntityHighlight {
 
             float tickProgress = context.tickCounter().getTickProgress(true);
             RenderUtil.renderBeaconBeam(context, entity, highlight.colorComponents, tickProgress);
+        }
+    }
+
+    /**
+     * Renders titles for highlighted entities if they have a custom title set.
+     * 
+     * @param client The Minecraft client instance.
+     */
+    private void renderTitles(MinecraftClient client) {
+        boolean hasTitle = false;
+
+        // Loop through highlighted entities to check for titles
+        for (Map.Entry<Entity, Highlight> entry : HIGHLIGHTED_ENTITIES.entrySet()) {
+            Highlight highlight = entry.getValue();
+
+            if (highlight.title == null || highlight.title.isEmpty()) {
+                continue;
+            }
+
+            client.inGameHud.setTitleTicks(0, 10, 10);
+            client.inGameHud.setTitle(Text.literal(highlight.title));
+            hasTitle = true;
+            break;
+        }
+
+        if (!hasTitle) {
+            client.inGameHud.setDefaultTitleFade();
         }
     }
 
@@ -371,6 +400,7 @@ public class EntityHighlight {
             Identifier entity = null;
             String inputKey = "";
             boolean beacon = false;
+            String title = "";
             int color = -1;
             RelationalValue height = null;
             RelationalValue width = null;
@@ -394,12 +424,13 @@ public class EntityHighlight {
                     continue;
                 }
 
-                String[] argArgs = arg.trim().split(" ");
-                if (argArgs.length < 2) {
+                // Left split 1
+                String[] split = arg.trim().split(" ", 2);
+                if (split.length < 2) {
                     continue;
                 }
-                String arg1 = argArgs[0].trim().toLowerCase();
-                String arg2 = argArgs[1].trim();
+                String arg1 = split[0].trim().toLowerCase();
+                String arg2 = split[1].trim();
 
                 if (arg1.equals("color")) {
                     // This argument sets the color for the highlight
@@ -408,6 +439,9 @@ public class EntityHighlight {
                     } catch (NumberFormatException e) {
                         color = -1;
                     }
+                } else if (arg1.equals("title")) {
+                    // This argument sets a custom title for the highlight
+                    title = arg2;
                 } else if (arg1.equals("height")) {
                     // This argument sets the height for the highlight
                     height = parseRelationalValue(arg2);
@@ -450,13 +484,13 @@ public class EntityHighlight {
             if (Registries.ENTITY_TYPE.containsId(entity)) {
                 HIGHLIGHT_ENTITIES.add(entity);
                 color = (color != -1) ? color : setColor(entity);
-                ENTITY_HIGHLIGHT.put(entity, new Highlight(inputKey, beacon, color, height, width,
-                        range, depth, identifier, locations));
+                ENTITY_HIGHLIGHT.put(entity, new Highlight(inputKey, beacon, title, color, height,
+                        width, range, depth, identifier, locations));
             } else {
                 HIGHLIGHT_NAMES.add(inputKey);
                 color = (color != -1) ? color : setColor(inputKey);
-                NAME_HIGHLIGHT.put(inputKey, new Highlight(inputKey, beacon, color, height, width,
-                        range, depth, identifier, locations));
+                NAME_HIGHLIGHT.put(inputKey, new Highlight(inputKey, beacon, title, color, height,
+                        width, range, depth, identifier, locations));
             }
         });
     }
@@ -467,6 +501,7 @@ public class EntityHighlight {
     private class Highlight {
         private final String name;
         private final boolean beacon;
+        private final String title;
         private final int color;
         private final float[] colorComponents;
         private final RelationalValue height;
@@ -481,6 +516,7 @@ public class EntityHighlight {
          * 
          * @param name The name of the entity or identifier.
          * @param beacon Whether the entity is a beacon highlight.
+         * @param title The custom title for the entity highlight.
          * @param color The color for the entity highlight as an integer.
          * @param height The height of the entity highlight.
          * @param width The width of the entity highlight.
@@ -489,11 +525,12 @@ public class EntityHighlight {
          * @param identifier The identifier for custom armor stands.
          * @param locations The locations for the entity highlight.
          */
-        public Highlight(String name, boolean beacon, int color, RelationalValue height,
-                RelationalValue width, RelationalValue range, RelationalValue depth,
-                Identifier identifier, List<World> locations) {
+        public Highlight(String name, boolean beacon, String title, int color,
+                RelationalValue height, RelationalValue width, RelationalValue range,
+                RelationalValue depth, Identifier identifier, List<World> locations) {
             this.name = name;
             this.beacon = beacon;
+            this.title = title;
             this.color = color;
             this.colorComponents = new float[] {(color >> 16 & 0xFF) / 255f,
                     (color >> 8 & 0xFF) / 255f, (color & 0xFF) / 255f};
