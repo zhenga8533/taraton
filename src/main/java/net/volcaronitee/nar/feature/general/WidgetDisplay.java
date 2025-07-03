@@ -49,7 +49,7 @@ public class WidgetDisplay {
     private void updateWidgets(MinecraftClient client) {
         // Loop through the player list entries and populate the widgets
         Widget addToWidget = null;
-        for (PlayerListEntry entry : TablistUtil.getInstance().getTablist()) {
+        for (PlayerListEntry entry : TablistUtil.getTablist()) {
             Text displayName = entry.getDisplayName();
             if (displayName == null) {
                 continue;

@@ -3,7 +3,10 @@
   "package": "net.volcaronitee.nar.mixin",
   "compatibilityLevel": "JAVA_21",
   "client": [
+    "accessor.BeaconBlockEntityRendererInvoker",
     "accessor.ChatHudAccessor",
+    "accessor.FrustumInvoker",
+    "accessor.WorldRendererAccessor",
     "ChatScreenMixin",
     "ClientPlayerEntityMixin",
     "ClientPlayNetworkHandlerMixin",

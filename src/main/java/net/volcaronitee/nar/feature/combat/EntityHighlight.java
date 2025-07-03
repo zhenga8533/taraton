@@ -14,15 +14,13 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.registry.Registries;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
-import net.minecraft.util.math.Vec3d;
 import net.volcaronitee.nar.NotARat;
 import net.volcaronitee.nar.config.NarConfig;
 import net.volcaronitee.nar.config.NarList;
@@ -30,11 +28,11 @@ import net.volcaronitee.nar.util.LocationUtil;
 import net.volcaronitee.nar.util.LocationUtil.World;
 import net.volcaronitee.nar.util.OverlayUtil;
 import net.volcaronitee.nar.util.OverlayUtil.LineContent;
+import net.volcaronitee.nar.util.RenderUtil;
 import net.volcaronitee.nar.util.TickUtil;
 import net.volcaronitee.nar.util.helper.Formatter;
 import net.volcaronitee.nar.util.helper.RelationalValue;
 import net.volcaronitee.nar.util.helper.RelationalValue.Operator;
-import net.volcaronitee.nar.util.render.BeaconBeam;
 
 /**
  * Feature that highlights entities in the game based on a configurable list.
@@ -53,7 +51,7 @@ public class EntityHighlight {
                     "https://www.digminecraft.com/lists/entity_list_pc.php"))
             .append(Text.literal(
                     " to find vanilla entity names. You can also use 'F3 + I' to copy entity data to clipboard. If an entity ID is not found, it will be used to identify custom armor stand names.\n\n\n"
-                            + "§lOptions:\n\n"
+                            + "§f§lOptions:§r\n\n"
                             + " §f--beacon §7Highlights entities that are within the beacon range.\n"
                             + " §f--color <hex> §7Sets the color for the entity highlight. Use hex colors like #FF0000.\n"
                             + " §f--height <num> §7Sets the height of the entity highlight.\n"
@@ -63,7 +61,7 @@ public class EntityHighlight {
                             + " §f--identifier <name> §7Sets entity identifier for custom armor stands.\n"
                             + " §f--locations <names> §7Sets the islands locations.\n\n"
                             + "§8You can use relational operators like <, >, <=, >=, =, != for numeric values.\n\n\n"
-                            + "§lExample:\n\n"
+                            + "§f§lExample:§r\n\n"
                             + "Lion --beacon --color #FF0000 --height >2 --width <=1 --depth 16 --offset 32 --identifier Player --locations GARDEN,SPIDERS_DEN")),
             "entity_list.json");
 
@@ -82,36 +80,19 @@ public class EntityHighlight {
         OverlayUtil.createOverlay("entity_counter",
                 () -> NarConfig.getHandler().combat.entityCounter, LINES);
 
-        WorldRenderEvents.END.register((context) -> {
-            MinecraftClient client = MinecraftClient.getInstance();
-
-            // Perform checks to ensure we are in a valid state for rendering
-            if (client.world == null || client.player == null || client.isPaused()) {
-                return;
-            }
-
-            // Get the current rendering context components
-            MatrixStack matrices = context.matrixStack();
-            VertexConsumerProvider vertexConsumers = context.consumers();
-            float partialTicks = context.tickCounter().getTickProgress(true);
-
-            // Get the camera's position. All world rendering should be offset by this.
-            Vec3d cameraPos = client.gameRenderer.getCamera().getPos();
-
-            // Iterate through all entities currently marked for highlighting
-            HIGHLIGHTED_ENTITIES.forEach((entity, highlight) -> {
-                if (highlight.beacon) {
-                    double renderX = entity.getX() - cameraPos.x;
-                    double renderY = entity.getY() - cameraPos.y;
-                    double renderZ = entity.getZ() - cameraPos.z;
-
-                    BeaconBeam.render(matrices, vertexConsumers, renderX, renderY, renderZ,
-                            partialTicks, highlight.color, 256.0F);
+        WorldRenderEvents.AFTER_TRANSLUCENT.register((context) -> {
+            for (Map.Entry<Entity, Highlight> entry : HIGHLIGHTED_ENTITIES.entrySet()) {
+                Entity entity = entry.getKey();
+                Highlight highlight = entry.getValue();
+                if (!highlight.beacon) {
+                    continue;
                 }
-            });
 
-            if (vertexConsumers instanceof VertexConsumerProvider.Immediate) {
-                ((VertexConsumerProvider.Immediate) vertexConsumers).draw();
+                BlockPos pos = entity.getBlockPos();
+                RenderUtil.renderBeaconBeam(context, pos,
+                        new float[] {(highlight.color >> 16 & 0xFF) / 255f,
+                                (highlight.color >> 8 & 0xFF) / 255f,
+                                (highlight.color & 0xFF) / 255f});
             }
         });
 
@@ -157,6 +138,10 @@ public class EntityHighlight {
 
         // Loop through all entities in the world
         client.world.getEntities().forEach(entity -> {
+            if (entity == client.player) {
+                return;
+            }
+
             // Get the Identifier for the entity's type
             EntityType<?> entityType = entity.getType();
             Identifier entityId = Registries.ENTITY_TYPE.getId(entityType);
@@ -395,49 +380,50 @@ public class EntityHighlight {
             // Parse the input key and options
             String[] args = pair.getKey().trim().split(" --");
             for (String arg : args) {
-                String[] argArgs = arg.trim().split(" ");
-                String parameter = argArgs[1];
 
                 if (arg.equals(args[0])) {
                     // The first argument is the entity identifier or name
                     inputKey = arg.trim();
                     entity = Identifier.tryParse(inputKey.toLowerCase());
                     continue;
-                } else if (parameter.equals("beacon")) {
+                } else if (arg.equals("beacon")) {
                     // This argument indicates a beacon highlight
                     beacon = true;
                     continue;
                 }
 
+                String[] argArgs = arg.trim().split(" ");
                 if (argArgs.length < 2) {
                     continue;
                 }
+                String arg1 = argArgs[0].trim().toLowerCase();
+                String arg2 = argArgs[1].trim();
 
-                if (parameter.equals("color")) {
+                if (arg1.equals("color")) {
                     // This argument sets the color for the highlight
                     try {
-                        color = Integer.parseInt(parameter.replace("#", ""), 16);
+                        color = Integer.parseInt(arg2.replace("#", ""), 16);
                     } catch (NumberFormatException e) {
                         color = -1;
                     }
-                } else if (parameter.equals("height")) {
+                } else if (arg1.equals("height")) {
                     // This argument sets the height for the highlight
-                    height = parseRelationalValue(parameter);
-                } else if (parameter.equals("width")) {
+                    height = parseRelationalValue(arg2);
+                } else if (arg1.equals("width")) {
                     // This argument sets the width for the highlight
-                    width = parseRelationalValue(parameter);
-                } else if (parameter.equals("range")) {
+                    width = parseRelationalValue(arg2);
+                } else if (arg1.equals("range")) {
                     // This argument sets the range for the highlight
-                    range = parseRelationalValue(parameter);
-                } else if (parameter.equals("depth")) {
+                    range = parseRelationalValue(arg2);
+                } else if (arg1.equals("depth")) {
                     // This argument sets the depth for the highlight
-                    depth = parseRelationalValue(parameter);
-                } else if (parameter.equals("identifier")) {
+                    depth = parseRelationalValue(arg2);
+                } else if (arg1.equals("identifier")) {
                     // This argument sets the identifier for custom armor stands
-                    identifier = Identifier.tryParse(parameter.toLowerCase());
-                } else if (parameter.equals("locations")) {
+                    identifier = Identifier.tryParse(arg2.toLowerCase());
+                } else if (arg1.equals("locations")) {
                     // This argument sets the locations for the highlight
-                    String[] locs = parameter.split(",");
+                    String[] locs = arg2.split(",");
                     for (String loc : locs) {
                         // Check if in World enum
                         try {
@@ -459,16 +445,16 @@ public class EntityHighlight {
             }
 
             // Check if the identifier exists in the entity registry
-            Highlight highlight = new Highlight(inputKey, beacon, color, height, width, range,
-                    depth, identifier, locations);
             if (Registries.ENTITY_TYPE.containsId(entity)) {
                 HIGHLIGHT_ENTITIES.add(entity);
                 color = (color != -1) ? color : setColor(entity);
-                ENTITY_HIGHLIGHT.put(entity, highlight);
+                ENTITY_HIGHLIGHT.put(entity, new Highlight(inputKey, beacon, color, height, width,
+                        range, depth, identifier, locations));
             } else {
                 HIGHLIGHT_NAMES.add(inputKey);
                 color = (color != -1) ? color : setColor(inputKey);
-                NAME_HIGHLIGHT.put(inputKey, highlight);
+                NAME_HIGHLIGHT.put(inputKey, new Highlight(inputKey, beacon, color, height, width,
+                        range, depth, identifier, locations));
             }
         });
     }
