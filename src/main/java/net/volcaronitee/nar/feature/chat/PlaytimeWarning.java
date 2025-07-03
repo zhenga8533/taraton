@@ -1,13 +1,11 @@
 package net.volcaronitee.nar.feature.chat;
 
-import com.google.gson.JsonObject;
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.volcaronitee.nar.NotARat;
 import net.volcaronitee.nar.config.NarConfig;
-import net.volcaronitee.nar.config.NarJson;
+import net.volcaronitee.nar.config.NarData;
 import net.volcaronitee.nar.util.TickUtil;
 
 /**
@@ -16,7 +14,6 @@ import net.volcaronitee.nar.util.TickUtil;
 public class PlaytimeWarning {
     private static final PlaytimeWarning INSTANCE = new PlaytimeWarning();
 
-    private static final String FILENAME = "daily_playtime.json";
     private static final int PLAYTIME_THRESHOLD = 3600 * 8; // 8 hours
 
     private int playtime = 0;
@@ -39,16 +36,8 @@ public class PlaytimeWarning {
      * Registers the playtime warning feature to listen for client tick and lifecycle events.
      */
     public static void register() {
-        // Load the playtime data from the JSON file
-        JsonObject playtimeData = NarJson.loadJson(NarJson.DATA_DIR, FILENAME);
-        if (!playtimeData.has("playtime")) {
-            playtimeData.addProperty("playtime", 0);
-        }
-        INSTANCE.playtime = playtimeData.get("playtime").getAsInt();
-
-        // Register events
+        INSTANCE.playtime = NarData.getData().get("playtime").getAsInt();
         TickUtil.register(INSTANCE::onTick, 20);
-        ClientLifecycleEvents.CLIENT_STOPPING.register(INSTANCE::onClientClose);
     }
 
     /**
@@ -71,17 +60,6 @@ public class PlaytimeWarning {
                             + " hours. Excessive game playing may cause problems in your normal daily life.")
                             .formatted(Formatting.RED)));
         }
-    }
-
-    /**
-     * Handles the world unload event to save playtime data.
-     * 
-     * @param event The event triggered when the client is stopping.
-     */
-    private void onClientClose(MinecraftClient client) {
-        JsonObject playtimeData = new JsonObject();
-        playtimeData.addProperty("playtime", INSTANCE.playtime);
-        NarJson.saveJson(NarJson.DATA_DIR, FILENAME, playtimeData);
     }
 
     /**

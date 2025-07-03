@@ -23,17 +23,6 @@ public class NarJson {
 
     public static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
-    public static final String DATA_DIR = "data";
-
-    static {
-        // Ensure directories exist
-        try {
-            Files.createDirectories(CONFIG_DIR.resolve(DATA_DIR));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
     /**
      * Loads a JSON file, creating it if it doesn't exist.
      * 
@@ -72,16 +61,6 @@ public class NarJson {
             e.printStackTrace();
             return new JsonObject();
         }
-    }
-
-    /**
-     * Loads a JSON file from the root JSON directory, creating it if it doesn't exist.
-     * 
-     * @param fileName The name of the JSON file to load.
-     * @return The loaded JsonObject, or an empty JsonObject if the file doesn't exist.
-     */
-    public static JsonObject loadJson(String fileName) {
-        return loadJson("", fileName);
     }
 
     /**
