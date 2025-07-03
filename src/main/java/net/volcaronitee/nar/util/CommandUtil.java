@@ -18,6 +18,7 @@ import net.volcaronitee.nar.feature.chat.SpamHider;
 import net.volcaronitee.nar.feature.chat.TextSubstitution;
 import net.volcaronitee.nar.feature.combat.EntityHighlight;
 import net.volcaronitee.nar.feature.general.WidgetDisplay;
+import net.volcaronitee.nar.util.helper.Contract;
 
 /**
  * Utility class for handling client commands.
@@ -49,6 +50,9 @@ public class CommandUtil {
 
                                 // Debug command
                                 .then(literal("debug").executes(CommandUtil::debug))
+
+                                // Contract command
+                                .then(literal("contract").executes(CommandUtil::contract))
 
                                 // Lists commands
                                 .then(ChatCommands.BLACK_LIST.createCommand("blacklist"))
@@ -85,12 +89,7 @@ public class CommandUtil {
      * @return 1 if the command was executed successfully, 0 otherwise.
      */
     private static int help(CommandContext<FabricClientCommandSource> context) {
-        FabricClientCommandSource source = context.getSource();
-        if (source.getPlayer() == null || source.getWorld() == null) {
-            return 0;
-        }
-
-        source.sendFeedback(Text.literal("NAR WIP"));
+        context.getSource().sendFeedback(Text.literal("NAR WIP"));
         return 1;
     }
 
@@ -101,12 +100,8 @@ public class CommandUtil {
      * @return 1 if the command was executed successfully, 0 otherwise.
      */
     private static int settings(CommandContext<FabricClientCommandSource> context) {
-        MinecraftClient client = MinecraftClient.getInstance();
-        if (client.player == null || client.world == null) {
-            return 0;
-        }
-
         // Defer the screen opening to the main client thread
+        MinecraftClient client = MinecraftClient.getInstance();
         client.send(() -> {
             client.setScreen(NarConfig.createScreen(client.currentScreen));
         });
@@ -121,12 +116,8 @@ public class CommandUtil {
      * @return 1 if the command was executed successfully, 0 otherwise.
      */
     private static int toggles(CommandContext<FabricClientCommandSource> context) {
-        MinecraftClient client = MinecraftClient.getInstance();
-        if (client.player == null || client.world == null) {
-            return 0;
-        }
-
         // Defer the screen opening to the main client thread
+        MinecraftClient client = MinecraftClient.getInstance();
         client.send(() -> {
             client.setScreen(NarToggle.createScreen(client.currentScreen));
         });
@@ -141,14 +132,23 @@ public class CommandUtil {
      * @return 1 if the command was executed successfully, 0 otherwise.
      */
     private static int debug(CommandContext<FabricClientCommandSource> context) {
-        FabricClientCommandSource source = context.getSource();
-        if (source.getPlayer() == null || source.getWorld() == null) {
-            return 0;
-        }
-
         String debugMessage = String.format("NAR Debug:\n%s\n\n%s\n\n%s", PlayerUtil.debugPlayer(),
                 LocationUtil.debugLocation(), PartyUtil.debugParty());
-        source.sendFeedback(Text.literal(debugMessage.strip()));
+        context.getSource().sendFeedback(Text.literal(debugMessage.strip()));
         return 1;
+    }
+
+    /**
+     * Handles the NAR contract command, which is a work in progress.
+     * 
+     * @param context The command context containing the source and arguments.
+     * @return 1 if the command was executed successfully, 0 otherwise.
+     */
+    private static int contract(CommandContext<FabricClientCommandSource> context) {
+        if (Contract.openContract()) {
+            return 1;
+        } else {
+            return 0;
+        }
     }
 }
