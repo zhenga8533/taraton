@@ -53,7 +53,7 @@ public class ChatCommands {
      * Enum representing the type of chat command.
      */
     private enum CommandType {
-        ALL, GUILD, PARTY, PRIVATE;
+        ALL, GUILD, PARTY, PRIVATE, COMMAND;
 
         /**
          * Returns the command head based on the command type and username.
@@ -72,6 +72,8 @@ public class ChatCommands {
                     return "pc";
                 case PRIVATE:
                     return "msg " + username;
+                case COMMAND:
+                    return "nar echo";
                 default:
                     return "";
             }
@@ -82,6 +84,15 @@ public class ChatCommands {
      * Private constructor to prevent instantiation.
      */
     private ChatCommands() {}
+
+    /**
+     * Returns the singleton instance of ChatCommands.
+     * 
+     * @return The singleton instance of ChatCommands.
+     */
+    public static ChatCommands getInstance() {
+        return INSTANCE;
+    }
 
     /**
      * Registers the chat command feature to listen for game messages.
@@ -197,17 +208,34 @@ public class ChatCommands {
     }
 
     /**
+     * Handles a command from the player.
+     * 
+     * @param player The player who sent the command.
+     * @param command The command sent by the player.
+     * @return True if the command was handled, false otherwise.
+     */
+    public boolean handleCommand(ClientPlayerEntity player, String command) {
+        String username = player.getGameProfile().getName();
+        String head = CommandType.getCommandHead(CommandType.COMMAND, username);
+        String[] args = command.split(" ");
+
+        return handleLeaderCommand(player, username, args)
+                || handlePartyCommand(player, username, head, args)
+                || handleStatusCommand(player, username, head, args);
+    }
+
+    /**
      * Handles the leader command logic when a message is received.
      * 
      * @param player The player who sent the command.
      * @param username The username of the player who sent the command.
      * @param args The arguments of the command.
      */
-    private void handleLeaderCommand(ClientPlayerEntity player, String username, String[] args) {
+    private boolean handleLeaderCommand(ClientPlayerEntity player, String username, String[] args) {
         // Check if username is whitelisted
         if (NarToggle.getHandler().chat.whitelistLock && !JoinWhitelist.WHITE_LIST.getHandler().list
                 .stream().anyMatch(pair -> pair.getKey().equals(username) && pair.getValue())) {
-            return;
+            return false;
         }
 
         String partyLeader = PartyUtil.getLeader();
@@ -215,7 +243,7 @@ public class ChatCommands {
         if (!NarConfig.getHandler().chat.leaderCommands
                 || (NarToggle.getHandler().chat.leaderLock && partyLeader == clientUsername)
                 || !PartyUtil.isInParty() || !PartyUtil.getLeader().equals(clientUsername)) {
-            return;
+            return false;
         }
 
         String command = args.length > 0 ? args[0].toLowerCase() : "";
@@ -226,98 +254,98 @@ public class ChatCommands {
             case "allinvite":
             case "allinv":
                 if (!NarToggle.getHandler().chat.allInvite) {
-                    return;
+                    return false;
                 }
 
                 scheduleCommand("p settings allinvite");
-                break;
+                return true;
             // Party mute commands
             case "mute":
                 if (!NarToggle.getHandler().chat.mute) {
-                    return;
+                    return false;
                 }
 
                 scheduleCommand("p mute");
-                break;
+                return true;
             // Stream open commands
             case "streamopen":
             case "stream":
                 if (!NarToggle.getHandler().chat.stream) {
-                    return;
+                    return false;
                 }
 
                 String size = Parser.isNumeric(arg1) ? arg1 : "10";
                 scheduleCommand("stream open " + size);
-                break;
+                return true;
             // Party warp commands
             case "warp":
                 if (!NarToggle.getHandler().chat.warp) {
-                    return;
+                    return false;
                 }
 
                 scheduleCommand("p warp");
-                break;
+                return true;
             // Join instance commands
             case "instance":
             case "join":
                 if (!NarToggle.getHandler().chat.instance) {
-                    return;
+                    return false;
                 }
                 // TODO
-                break;
+                return true;
             // Party invite commands
             case "invite":
             case "inv":
                 if (!NarToggle.getHandler().chat.invite || arg1.isEmpty()) {
-                    return;
+                    return false;
                 }
 
                 scheduleCommand("p " + arg1);
-                break;
+                return true;
             // Party kick commands
             case "kick":
                 if (!NarToggle.getHandler().chat.kick) {
-                    return;
+                    return false;
                 }
 
                 String kick = arg1.isEmpty() ? username : arg1;
                 scheduleCommand("p kick " + kick);
-                break;
+                return true;
             // Party transfer commands
             case "transfer":
             case "ptme":
             case "pm":
                 if (!NarToggle.getHandler().chat.transfer) {
-                    return;
+                    return false;
                 }
 
                 String transfer = arg1.isEmpty() ? username : arg1;
                 scheduleCommand("p transfer " + transfer);
-                break;
+                return true;
             // Party promote commands
             case "promote":
                 if (!NarToggle.getHandler().chat.promote) {
-                    return;
+                    return false;
                 }
 
                 String promote = arg1.isEmpty() ? username : arg1;
                 scheduleCommand("p promote " + promote);
-                break;
+                return true;
             // Party demote commands
             case "demote":
                 if (!NarToggle.getHandler().chat.demote) {
-                    return;
+                    return false;
                 }
 
                 String demote = arg1.isEmpty() ? username : arg1;
                 scheduleCommand("p demote " + demote);
-                break;
+                return true;
             // Leader help commands
             case "help":
             case "leaderhelp":
             case "lhelp":
                 if (!NarToggle.getHandler().chat.leaderHelp) {
-                    return;
+                    return false;
                 }
 
                 // Build the help message with available leader commands
@@ -336,7 +364,10 @@ public class ChatCommands {
                 appendCommand(helpMessage, "lhelp", NarToggle.getHandler().chat.leaderHelp);
                 helpMessage.setLength(helpMessage.length() - 2);
                 scheduleCommand("pc " + helpMessage);
-                break;
+                return true;
+            // Default case for unrecognized commands
+            default:
+                return false;
         }
     }
 
@@ -348,10 +379,10 @@ public class ChatCommands {
      * @param head The command head for the party commands.
      * @param args The arguments of the command.
      */
-    private void handlePartyCommand(ClientPlayerEntity player, String username, String head,
+    private boolean handlePartyCommand(ClientPlayerEntity player, String username, String head,
             String[] args) {
         if (!NarConfig.getHandler().chat.partyCommands) {
-            return;
+            return false;
         }
 
         String command = args.length > 0 ? args[0].toLowerCase() : "";
@@ -361,51 +392,51 @@ public class ChatCommands {
             // 8ball commands
             case "8ball":
                 if (!NarToggle.getHandler().chat.eightBall) {
-                    return;
+                    return false;
                 }
 
                 String response = EIGHT_BALL[(int) (Math.random() * EIGHT_BALL.length)];
                 scheduleCommand(head + " @" + username + ", " + response);
-                break;
+                return true;
             // Coin flip commands
             case "coin":
             case "flip":
             case "coinflip":
             case "cf":
                 if (!NarToggle.getHandler().chat.coinFlip) {
-                    return;
+                    return false;
                 }
 
                 boolean heads = Math.random() < 0.5;
                 String result = heads ? "Heads!" : "Tails!";
                 scheduleCommand(head + " " + username + " flipped a " + result);
-                break;
+                return true;
             // Dice roll commands
             case "dice":
             case "roll":
                 if (!NarToggle.getHandler().chat.diceRoll) {
-                    return;
+                    return false;
                 }
 
                 int sides = Parser.isNumeric(arg1) ? Integer.parseInt(arg1) : 6;
                 int roll = (int) (Math.random() * sides) + 1;
                 scheduleCommand(head + " " + username + " rolled a " + roll + "!");
-                break;
+                return true;
             // Waifu commands
             case "waifu":
             case "women":
             case "w":
                 if (!NarToggle.getHandler().chat.waifu) {
-                    return;
+                    return false;
                 }
                 // TODO
-                break;
+                return true;
             // Party help commands
             case "help":
             case "partyhelp":
             case "phelp":
                 if (!NarToggle.getHandler().chat.partyHelp) {
-                    return;
+                    return false;
                 }
 
                 // Build the help message with available party commands
@@ -416,12 +447,16 @@ public class ChatCommands {
                 appendCommand(helpMessage, "waifu", NarToggle.getHandler().chat.waifu);
                 appendCommand(helpMessage, "phelp", NarToggle.getHandler().chat.partyHelp);
                 scheduleCommand(head + " " + helpMessage);
-                break;
+                return true;
 
             // Hidden commands
             case "avengers":
                 scheduleCommand("p Somxone Kwuromi valyn Serten");
-                break;
+                return true;
+
+            // Default case for unrecognized commands
+            default:
+                return false;
         }
     }
 
@@ -432,11 +467,13 @@ public class ChatCommands {
      * @param username The username of the player who sent the command.
      * @param head The command head for the status commands.
      * @param args The arguments of the command.
+     * 
+     * @return True if the command was handled, false otherwise.
      */
-    private void handleStatusCommand(ClientPlayerEntity player, String username, String head,
+    private boolean handleStatusCommand(ClientPlayerEntity player, String username, String head,
             String[] args) {
         if (!NarConfig.getHandler().chat.statusCommands) {
-            return;
+            return false;
         }
 
         String command = args[0];
@@ -447,7 +484,7 @@ public class ChatCommands {
             case "waypoint":
             case "xyz":
                 if (!NarToggle.getHandler().chat.coords) {
-                    return;
+                    return false;
                 }
 
                 long x = Math.round(player.getX());
@@ -455,87 +492,87 @@ public class ChatCommands {
                 long z = Math.round(player.getZ());
                 String coords = String.format("x: %d, y: %d, z: %d", x, y, z);
                 scheduleCommand(head + " " + coords);
-                break;
+                return true;
             // FPS commands
             case "fps":
                 if (!NarToggle.getHandler().chat.fps) {
-                    return;
+                    return false;
                 }
 
                 int fps = MinecraftClient.getInstance().getCurrentFps();
                 scheduleCommand(head + " " + fps + " FPS");
-                break;
+                return true;
             // TPS commands
             case "tps":
                 if (!NarToggle.getHandler().chat.tps) {
-                    return;
+                    return false;
                 }
 
                 double tps = ServerStatus.getInstance().getTps();
                 scheduleCommand(head + " " + String.format("%.2f TPS", tps));
-                break;
+                return true;
             // Leave party commands
             case "leave":
                 if (!NarToggle.getHandler().chat.leave) {
-                    return;
+                    return false;
                 }
 
                 scheduleCommand("p leave");
-                break;
+                return true;
             // Limbo or lobby commands
             case "limbo":
             case "lobby":
             case "l":
                 if (!NarToggle.getHandler().chat.limbo) {
-                    return;
+                    return false;
                 }
 
                 scheduleCommand("l");
-                break;
+                return true;
             // Ping commands
             case "ping":
                 if (!NarToggle.getHandler().chat.ping) {
-                    return;
+                    return false;
                 }
 
                 int ping = ServerStatus.getInstance().getPing();
                 scheduleCommand(command + " " + ping + "ms");
-                break;
+                return true;
             // Playtime commands
             case "playtime":
             case "pt":
                 if (!NarToggle.getHandler().chat.playtime) {
-                    return;
+                    return false;
                 }
 
                 String playtime = PlaytimeWarning.getInstance().formatPlaytime();
                 scheduleCommand(head + " " + playtime + " playtime");
-                break;
+                return true;
             // Stats commands
             case "stats":
             case "stat":
                 if (!NarToggle.getHandler().chat.stats) {
-                    return;
+                    return false;
                 }
                 // TODO
-                break;
+                return true;
             // Time commands
             case "time":
                 if (!NarToggle.getHandler().chat.time) {
-                    return;
+                    return false;
                 }
 
                 ZonedDateTime now = ZonedDateTime.now();
                 DateTimeFormatter formatter =
                         DateTimeFormatter.ofLocalizedDateTime(FormatStyle.LONG);
                 scheduleCommand(head + " " + now.format(formatter));
-                break;
+                return true;
             // Status help commands
             case "help":
             case "statushelp":
             case "shelp":
                 if (!NarToggle.getHandler().chat.statusHelp) {
-                    return;
+                    return false;
                 }
 
                 // Build the help message with available status commands
@@ -552,7 +589,10 @@ public class ChatCommands {
                 appendCommand(helpMessage, "shelp", NarToggle.getHandler().chat.statusHelp);
                 helpMessage.setLength(helpMessage.length() - 2);
                 scheduleCommand(head + " " + helpMessage);
-                break;
+                return true;
+            // Default case for unrecognized commands
+            default:
+                return false;
         }
     }
 }

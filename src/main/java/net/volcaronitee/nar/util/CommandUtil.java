@@ -1,12 +1,15 @@
 package net.volcaronitee.nar.util;
 
+import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.argument;
 import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.literal;
 import com.google.gson.JsonPrimitive;
 import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
@@ -52,6 +55,13 @@ public class CommandUtil {
                                 // GUI command
                                 .then(literal("gui").executes(OverlayUtil::moveGui))
 
+                                // Proxy command
+                                .then(literal("echo").executes(CommandUtil::echo)
+                                        .then(argument("message", StringArgumentType.greedyString())
+                                                .executes(context -> CommandUtil.echoProxy(context,
+                                                        StringArgumentType.getString(context,
+                                                                "message")))))
+
                                 // Debug command
                                 .then(literal("debug").executes(CommandUtil::debug))
 
@@ -82,6 +92,10 @@ public class CommandUtil {
                                 .then(CustomEmote.EMOTE_MAP.createCommand("em"))
                                 .then(TextSubstitution.SUBSTITUTION_MAP.createCommand("submap"))
                                 .then(TextSubstitution.SUBSTITUTION_MAP.createCommand("sm"))
+
+                                // Chat commands
+                                .then(argument("default", StringArgumentType.greedyString())
+                                        .executes(CommandUtil::defaultCommand))
 
                         // Command End
                         );
@@ -133,6 +147,31 @@ public class CommandUtil {
     }
 
     /**
+     * Echoes a message back to the player. This is a placeholder command that can be used for
+     * testing.
+     * 
+     * @param context The command context containing the source and arguments.
+     * @return 1 if the command was executed successfully, 0 otherwise.
+     */
+    private static int echo(CommandContext<FabricClientCommandSource> context) {
+        return 1;
+    }
+
+    /**
+     * Echoes a message back to the player. This method is used when the player provides a
+     * 
+     * @param context The command context containing the source and arguments.
+     * @param message The message to echo back to the player.
+     * @return 1 if the command was executed successfully, 0 otherwise.
+     */
+    private static int echoProxy(CommandContext<FabricClientCommandSource> context,
+            String message) {
+        context.getSource()
+                .sendFeedback(NotARat.MOD_TITLE.copy().append(Text.literal(" " + message)));
+        return 1;
+    }
+
+    /**
      * Displays debug information for the NAR.
      * 
      * @param context The command context containing the source and arguments.
@@ -159,6 +198,12 @@ public class CommandUtil {
         }
     }
 
+    /**
+     * Handles the domain expansion command, which toggles the state of the domain.
+     * 
+     * @param context The command context containing the source and arguments.
+     * @return 1 if the command was executed successfully, 0 otherwise.
+     */
     private static int domainExpansion(CommandContext<FabricClientCommandSource> context) {
         if (!Contract.isSigned()) {
             context.getSource().sendFeedback(Text.literal(
@@ -177,6 +222,26 @@ public class CommandUtil {
                     .append(Text.literal(" 領域展開無量空処").formatted(Formatting.GREEN)));
         }
         NarData.getData().add("domain_expansion", new JsonPrimitive(!bool));
+
         return 1;
+    }
+
+    /**
+     * Handles the default command for NAR, which is a catch-all for commands not explicitly
+     * defined.
+     * 
+     * @param context The command context containing the source and arguments.
+     * @return 1 if the command was executed successfully, 0 otherwise.
+     */
+    private static int defaultCommand(CommandContext<FabricClientCommandSource> context) {
+        ClientPlayerEntity clientPlayer = context.getSource().getPlayer();
+        if (ChatCommands.getInstance().handleCommand(clientPlayer,
+                StringArgumentType.getString(context, "default"))) {
+            return 1;
+        } else {
+            context.getSource().sendFeedback(NotARat.MOD_TITLE.copy()
+                    .append(Text.literal(" Command not found!").formatted(Formatting.RED)));
+            return 0;
+        }
     }
 }
