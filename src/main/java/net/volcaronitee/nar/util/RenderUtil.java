@@ -6,6 +6,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Box;
 import net.minecraft.util.math.ColorHelper;
 import net.minecraft.util.math.Vec3d;
 import net.volcaronitee.nar.mixin.accessor.BeaconBlockEntityRendererInvoker;
@@ -34,6 +35,16 @@ public class RenderUtil {
                         maxX, maxY, maxZ);
 
         return plane == FrustumIntersection.INSIDE || plane == FrustumIntersection.INTERSECT;
+    }
+
+    /**
+     * Checks if the given bounding box is visible in the current frustum.
+     * 
+     * @param box The bounding box to check for visibility.
+     * @return True if the bounding box is visible, false otherwise.
+     */
+    public static boolean isVisible(Box box) {
+        return isVisible(box.minX, box.minY, box.minZ, box.maxX, box.maxY, box.maxZ);
     }
 
     /**
