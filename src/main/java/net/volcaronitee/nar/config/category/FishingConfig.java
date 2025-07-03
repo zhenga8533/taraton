@@ -36,6 +36,19 @@ public class FishingConfig {
                                         newVal -> config.fishing.hookLineAndSinker = newVal)
                                 .controller(NarConfig::createBooleanController).build())
 
+                        // TODO: Hotspot Locator
+                        .option(Option.<Boolean>createBuilder()
+                                .name(Text.literal("Hotspot Locator"))
+                                .description(OptionDescription.createBuilder()
+                                        .webpImage(Identifier.of(NotARat.MOD_ID,
+                                                "config/fishing/hotspot_locator.webp"))
+                                        .text(Text.literal("Finds nearby fishing hotspots."))
+                                        .build())
+                                .binding(defaults.fishing.hotspotLocator,
+                                        () -> config.fishing.hotspotLocator,
+                                        newVal -> config.fishing.hotspotLocator = newVal)
+                                .controller(NarConfig::createBooleanController).build())
+
                         .build())
 
                 .build();
@@ -44,4 +57,7 @@ public class FishingConfig {
     // Fishing Option Group
     @SerialEntry
     public boolean hookLineAndSinker = false;
+
+    @SerialEntry
+    public boolean hotspotLocator = false;
 }
