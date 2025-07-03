@@ -11,6 +11,7 @@ import net.minecraft.text.Text;
 import net.volcaronitee.nar.config.NarConfig;
 import net.volcaronitee.nar.config.NarToggle;
 import net.volcaronitee.nar.feature.chat.ChatAlert;
+import net.volcaronitee.nar.feature.chat.ChatCommands;
 import net.volcaronitee.nar.feature.chat.CustomEmote;
 import net.volcaronitee.nar.feature.chat.JoinWhitelist;
 import net.volcaronitee.nar.feature.chat.SpamHider;
@@ -52,6 +53,8 @@ public class CommandUtil {
                                 // Lists commands
                                 .then(EntityHighlight.ENTITY_LIST.createCommand("entitylist"))
                                 .then(EntityHighlight.ENTITY_LIST.createCommand("el"))
+                                .then(ChatCommands.PREFIX_LIST.createCommand("prefixlist"))
+                                .then(ChatCommands.PREFIX_LIST.createCommand("pl"))
                                 .then(SpamHider.SPAM_LIST.createCommand("spamlist"))
                                 .then(SpamHider.SPAM_LIST.createCommand("sl"))
                                 .then(JoinWhitelist.WHITE_LIST.createCommand("whitelist"))

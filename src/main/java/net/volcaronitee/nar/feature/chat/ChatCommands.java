@@ -22,7 +22,7 @@ import net.volcaronitee.nar.util.helper.Parser;
 public class ChatCommands {
     private static final ChatCommands INSTANCE = new ChatCommands();
 
-    public static final NarList PREFIX_MAP = new NarList("Prefix List",
+    public static final NarList PREFIX_LIST = new NarList("Prefix List",
             Text.literal("A list of prefixes to detect for chat commands."), "prefix_list.json");
 
     // Patterns for matching chat messages
@@ -129,7 +129,7 @@ public class ChatCommands {
 
         // Check if the text starts with any of the defined prefixes
         boolean isCommand = false;
-        for (KeyValuePair<String, Boolean> prefixPair : PREFIX_MAP.getHandler().list) {
+        for (KeyValuePair<String, Boolean> prefixPair : PREFIX_LIST.getHandler().list) {
             // Skip prefixes that are disabled
             if (!prefixPair.getValue()) {
                 continue;
