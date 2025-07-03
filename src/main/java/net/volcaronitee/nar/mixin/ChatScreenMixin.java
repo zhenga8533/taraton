@@ -9,12 +9,28 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.Text;
 import net.volcaronitee.nar.feature.chat.CopyChat;
 
+/**
+ * Mixin for the ChatScreen to handle mouse clicks for copying chat messages.
+ */
 @Mixin(ChatScreen.class)
 public abstract class ChatScreenMixin extends Screen {
+    /**
+     * Constructor for ChatScreenMixin.
+     * 
+     * @param title The title of the chat screen.
+     */
     protected ChatScreenMixin(Text title) {
         super(title);
     }
 
+    /**
+     * Injects into the mouseClicked method of ChatScreen to handle chat message copying.
+     * 
+     * @param mouseX The X coordinate of the mouse click.
+     * @param mouseY The Y coordinate of the mouse click.
+     * @param button The mouse button that was clicked.
+     * @param cir The callback info to control the method's return value.
+     */
     @Inject(method = "mouseClicked", at = @At("HEAD"), cancellable = true)
     private void onMouseClicked(double mouseX, double mouseY, int button,
             CallbackInfoReturnable<Boolean> cir) {
