@@ -83,6 +83,16 @@ public class ChatToggle {
                                         newVal -> config.chat.leaderLock = newVal)
                                 .controller(TickBoxControllerBuilder::create).build())
 
+                        // Blacklist Lock
+                        .option(Option.<Boolean>createBuilder().name(Text.literal("Blacklist Lock"))
+                                .description(OptionDescription.createBuilder().text(Text.literal(
+                                        "Enables a blacklist lock for chat commands. This will prevent commands from blacklisted players."))
+                                        .build())
+                                .binding(defaults.chat.blacklistLock,
+                                        () -> config.chat.blacklistLock,
+                                        newVal -> config.chat.blacklistLock = newVal)
+                                .controller(TickBoxControllerBuilder::create).build())
+
                         // Whitelist Lock
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Whitelist Lock"))
                                 .description(OptionDescription.createBuilder().text(Text.literal(
@@ -412,7 +422,10 @@ public class ChatToggle {
 
     // Locks Option Group
     @SerialEntry
-    public boolean leaderLock = true;
+    public boolean leaderLock = false;
+
+    @SerialEntry
+    public boolean blacklistLock = true;
 
     @SerialEntry
     public boolean whitelistLock = false;

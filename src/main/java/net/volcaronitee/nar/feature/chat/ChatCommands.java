@@ -1,6 +1,8 @@
 package net.volcaronitee.nar.feature.chat;
 
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
@@ -22,6 +24,9 @@ import net.volcaronitee.nar.util.helper.Parser;
 public class ChatCommands {
     private static final ChatCommands INSTANCE = new ChatCommands();
 
+    public static final NarList BLACK_LIST = new NarList("Black List",
+            Text.literal("A list of players to block from sending chat commands."),
+            "black_list.json");
     public static final NarList PREFIX_LIST = new NarList("Prefix List",
             Text.literal("A list of prefixes to detect for chat commands."), "prefix_list.json");
 
@@ -127,6 +132,12 @@ public class ChatCommands {
             return;
         }
 
+        // Check if username is blacklisted
+        if (NarToggle.getHandler().chat.blacklistLock && BLACK_LIST.getHandler().list.stream()
+                .anyMatch(pair -> pair.getKey().equals(username) && pair.getValue())) {
+            return;
+        }
+
         // Check if the text starts with any of the defined prefixes
         boolean isCommand = false;
         for (KeyValuePair<String, Boolean> prefixPair : PREFIX_LIST.getHandler().list) {
@@ -165,10 +176,10 @@ public class ChatCommands {
      */
     private void scheduleCommand(String command) {
         // Send the command to the player network handler
-        INSTANCE.delay += 4;
+        INSTANCE.delay += 6;
         ScheduleUtil.schedule(() -> {
             MinecraftClient.getInstance().player.networkHandler.sendChatCommand(command);
-            INSTANCE.delay -= 4;
+            INSTANCE.delay -= 6;
         }, INSTANCE.delay);
     }
 
@@ -509,7 +520,9 @@ public class ChatCommands {
                 }
 
                 ZonedDateTime now = ZonedDateTime.now();
-                scheduleCommand(head + " " + now);
+                DateTimeFormatter formatter =
+                        DateTimeFormatter.ofLocalizedDateTime(FormatStyle.LONG);
+                scheduleCommand(head + " " + now.format(formatter));
                 break;
             // Status help commands
             case "help":

@@ -51,6 +51,8 @@ public class CommandUtil {
                                 .then(literal("debug").executes(CommandUtil::debug))
 
                                 // Lists commands
+                                .then(ChatCommands.BLACK_LIST.createCommand("blacklist"))
+                                .then(ChatCommands.BLACK_LIST.createCommand("bl"))
                                 .then(EntityHighlight.ENTITY_LIST.createCommand("entitylist"))
                                 .then(EntityHighlight.ENTITY_LIST.createCommand("el"))
                                 .then(ChatCommands.PREFIX_LIST.createCommand("prefixlist"))
