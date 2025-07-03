@@ -9,12 +9,13 @@ import net.minecraft.client.gui.hud.ChatHud;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.volcaronitee.nar.NotARat;
+import net.volcaronitee.nar.config.NarJson;
 
 /**
  * Utility class for handling the contract file.
  */
 public class Contract {
-    private final static Path CONTRACT_PATH = Path.of("assets/nar/contract.txt");
+    private final static String CONTRACT_PATH = "/assets/nar/contract.txt";
     private final static Path CONTRACT_FILE =
             FabricLoader.getInstance().getConfigDir().resolve(NotARat.MOD_ID + "/contract.txt");
 
@@ -83,7 +84,7 @@ public class Contract {
 
         // Copy the contract template to the config directory
         try {
-            Files.copy(CONTRACT_PATH, CONTRACT_FILE);
+            Files.copy(Path.of(NarJson.class.getResource(CONTRACT_PATH).toURI()), CONTRACT_FILE);
         } catch (Exception e) {
             e.printStackTrace();
         }
