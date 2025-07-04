@@ -3,48 +3,131 @@ package net.volcaronitee.nar.util;
 import org.joml.FrustumIntersection;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.render.Frustum;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
+import net.minecraft.util.hit.BlockHitResult;
+import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.ColorHelper;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.RaycastContext;
 import net.volcaronitee.nar.mixin.accessor.BeaconBlockEntityRendererInvoker;
 import net.volcaronitee.nar.mixin.accessor.FrustumInvoker;
 import net.volcaronitee.nar.mixin.accessor.WorldRendererAccessor;
 
 /**
- * Utility class for rendering operations, particularly for beacon beams and visibility checks.
+ * Utility class for rendering-related operations.
  */
 public class RenderUtil {
     /**
-     * The alpha value for the beacon beam rendering.
+     * Checks if the given axis-aligned bounding box (AABB) is within the current view frustum.
      * 
-     * @param minX The minimum X coordinate of the bounding box.
-     * @param minY The minimum Y coordinate of the bounding box.
-     * @param minZ The minimum Z coordinate of the bounding box.
-     * @param maxX The maximum X coordinate of the bounding box.
-     * @param maxY The maximum Y coordinate of the bounding box.
-     * @param maxZ The maximum Z coordinate of the bounding box.
-     * @return True if the bounding box is visible in the current frustum, false otherwise.
+     * @param minX The minimum X coordinate of the AABB.
+     * @param minY The minimum Y coordinate of the AABB.
+     * @param minZ The minimum Z coordinate of the AABB.
+     * @param maxX The maximum X coordinate of the AABB.
+     * @param maxY The maximum Y coordinate of the AABB.
+     * @param maxZ The maximum Z coordinate of the AABB.
+     * @return True if the AABB is inside or intersects with the frustum, false otherwise.
      */
-    public static boolean isVisible(double minX, double minY, double minZ, double maxX, double maxY,
-            double maxZ) {
-        int plane = ((FrustumInvoker) ((WorldRendererAccessor) MinecraftClient
-                .getInstance().worldRenderer).getFrustum()).invokeIntersectAab(minX, minY, minZ,
-                        maxX, maxY, maxZ);
+    public static boolean isInFrustum(double minX, double minY, double minZ, double maxX,
+            double maxY, double maxZ) {
+        MinecraftClient client = MinecraftClient.getInstance();
+        if (client.worldRenderer == null) {
+            return false;
+        }
 
+        // Get the frustum from the world renderer
+        Frustum frustum = ((WorldRendererAccessor) client.worldRenderer).getFrustum();
+        if (frustum == null) {
+            return false;
+        }
+
+        // Check if the frustum is inside or intersects with the AABB
+        int plane =
+                ((FrustumInvoker) frustum).invokeIntersectAab(minX, minY, minZ, maxX, maxY, maxZ);
         return plane == FrustumIntersection.INSIDE || plane == FrustumIntersection.INTERSECT;
     }
 
     /**
-     * Checks if the given bounding box is visible in the current frustum.
+     * Checks if the given axis-aligned bounding box (AABB) is within the current view frustum.
      * 
-     * @param box The bounding box to check for visibility.
-     * @return True if the bounding box is visible, false otherwise.
+     * @param box The axis-aligned bounding box to check.
+     * @return True if the AABB is inside or intersects with the frustum, false otherwise.
      */
-    public static boolean isVisible(Box box) {
-        return isVisible(box.minX, box.minY, box.minZ, box.maxX, box.maxY, box.maxZ);
+    public static boolean isInFrustum(Box box) {
+        return isInFrustum(box.minX, box.minY, box.minZ, box.maxX, box.maxY, box.maxZ);
+    }
+
+    /**
+     * Checks if there is a clear line of sight from the player's eye position to the target entity.
+     * 
+     * @param targetEntity The target entity to check for line of sight.
+     * @return True if there is a clear line of sight to the target entity, false otherwise.
+     */
+    public static boolean hasLineOfSight(Entity targetEntity) {
+        MinecraftClient client = MinecraftClient.getInstance();
+        if (client.player == null || client.world == null) {
+            return false;
+        }
+
+        Vec3d playerEyePos = client.player.getEyePos();
+        Box targetBoundingBox = targetEntity.getBoundingBox();
+
+        // Points to check for line of sight
+        Vec3d[] checkPoints = new Vec3d[] {targetBoundingBox.getCenter(),
+                targetBoundingBox.getCenter().add(0, targetBoundingBox.getLengthY() / 2, 0),
+                targetBoundingBox.getCenter().subtract(0, targetBoundingBox.getLengthY() / 2, 0),
+
+                // Corrected lines to get min/max corners as Vec3d
+                new Vec3d(targetBoundingBox.minX, targetBoundingBox.minY, targetBoundingBox.minZ),
+                new Vec3d(targetBoundingBox.maxX, targetBoundingBox.maxY, targetBoundingBox.maxZ),
+
+                // Existing other corners
+                new Vec3d(targetBoundingBox.minX, targetBoundingBox.maxY, targetBoundingBox.minZ),
+                new Vec3d(targetBoundingBox.maxX, targetBoundingBox.minY, targetBoundingBox.maxZ),
+                new Vec3d(targetBoundingBox.minX, targetBoundingBox.minY, targetBoundingBox.maxZ),
+                new Vec3d(targetBoundingBox.maxX, targetBoundingBox.maxY, targetBoundingBox.minZ)};
+
+        // Check each point in the bounding box for line of sight
+        for (Vec3d targetPoint : checkPoints) {
+            RaycastContext blockRaycastContext =
+                    new RaycastContext(playerEyePos, targetPoint, RaycastContext.ShapeType.COLLIDER,
+                            RaycastContext.FluidHandling.NONE, client.player);
+            BlockHitResult blockHit = client.world.raycast(blockRaycastContext);
+
+            // Check if the raycast hit a block
+            if (blockHit.getType() == HitResult.Type.MISS) {
+                return true;
+            } else if (blockHit.getType() == HitResult.Type.BLOCK) {
+                Vec3d hitPos = blockHit.getPos();
+                double distanceToBlockHit = playerEyePos.distanceTo(hitPos);
+                double distanceToTargetPoint = playerEyePos.distanceTo(targetPoint);
+
+                if (distanceToBlockHit >= distanceToTargetPoint - 0.01) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Checks if the target entity is visible to the player by verifying if it is within the view
+     * frustum and has a clear line of sight.
+     * 
+     * @param targetEntity The target entity to check for visibility.
+     * @return True if the entity is visible, false otherwise.
+     */
+    public static boolean isVisible(Entity targetEntity) {
+        if (!isInFrustum(targetEntity.getBoundingBox())) {
+            return false;
+        }
+
+        return hasLineOfSight(targetEntity);
     }
 
     /**

@@ -23,7 +23,6 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Box;
 import net.volcaronitee.nar.NotARat;
 import net.volcaronitee.nar.config.NarConfig;
-import net.volcaronitee.nar.config.NarData;
 import net.volcaronitee.nar.config.NarList;
 import net.volcaronitee.nar.util.LocationUtil;
 import net.volcaronitee.nar.util.LocationUtil.World;
@@ -102,7 +101,7 @@ public class EntityHighlight {
      * Registers the entity highlight feature to scan the world for entities.
      */
     public static void register() {
-        TickUtil.register(INSTANCE::scanWorld, 1);
+        TickUtil.register(INSTANCE::scanWorld, 5);
         TickUtil.register(INSTANCE::renderTitles, 5);
         WorldRenderEvents.AFTER_TRANSLUCENT.register(INSTANCE::renderBeaconBeams);
     }
@@ -130,9 +129,7 @@ public class EntityHighlight {
             }
 
             // Check if entity is visible
-            Box box = entity.getBoundingBox();
-            if (!NarData.getData().get("domain_expansion").getAsBoolean()
-                    && !RenderUtil.isVisible(box)) {
+            if (!RenderUtil.isVisible(entity)) {
                 return;
             }
 
