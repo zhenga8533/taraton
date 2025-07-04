@@ -1,6 +1,8 @@
 package net.volcaronitee.nar.feature.chat;
 
 import java.util.Map;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.Text;
 import net.volcaronitee.nar.config.NarConfig;
 import net.volcaronitee.nar.config.NarList;
@@ -69,18 +71,23 @@ public class TextSubstitution {
      *         null.
      */
     public Text modify(Text originalText) {
+        Screen currentScreen = MinecraftClient.getInstance().currentScreen;
+        if (NarConfig.getHandler().chat.textSubstitution || (currentScreen != null
+                && currentScreen.getTitle().getString().equals("Substitution Map"))) {
+            return originalText;
+        }
+
         String original = originalText.getString();
         String modified = original.replace("Volcaronitee", "§4§lThe Lion§r");
 
-        if (NarConfig.getHandler().chat.textSubstitution) {
-            for (Map.Entry<String, String> entry : SUBSTITUTION_MAP.map.entrySet()) {
-                String find = entry.getKey();
-                String replace = entry.getValue();
-                if (find.contains("Lion")) {
-                    replace = "§d§lSex Master§r";
-                }
-                modified = modified.replace(find, replace);
+        // Loop through the substitution map and replace text
+        for (Map.Entry<String, String> entry : SUBSTITUTION_MAP.map.entrySet()) {
+            String find = entry.getKey();
+            String replace = entry.getValue();
+            if (find.contains("Lion")) {
+                replace = "§d§lSex Master§r";
             }
+            modified = modified.replace(find, replace);
         }
 
         return Text.literal(modified).setStyle(originalText.getStyle());
