@@ -12,7 +12,6 @@ import net.minecraft.text.Text;
 import net.volcaronitee.nar.config.NarConfig;
 import net.volcaronitee.nar.config.NarList;
 import net.volcaronitee.nar.config.NarToggle;
-import net.volcaronitee.nar.config.controller.KeyValueController.KeyValuePair;
 import net.volcaronitee.nar.feature.general.ServerStatus;
 import net.volcaronitee.nar.util.PartyUtil;
 import net.volcaronitee.nar.util.ScheduleUtil;
@@ -144,20 +143,13 @@ public class ChatCommands {
         }
 
         // Check if username is blacklisted
-        if (NarToggle.getHandler().chat.blacklistLock && BLACK_LIST.getHandler().list.stream()
-                .anyMatch(pair -> pair.getKey().equals(username) && pair.getValue())) {
+        if (NarToggle.getHandler().chat.blacklistLock && BLACK_LIST.list.contains(username)) {
             return;
         }
 
         // Check if the text starts with any of the defined prefixes
         boolean isCommand = false;
-        for (KeyValuePair<String, Boolean> prefixPair : PREFIX_LIST.getHandler().list) {
-            // Skip prefixes that are disabled
-            if (!prefixPair.getValue()) {
-                continue;
-            }
-
-            String prefix = prefixPair.getKey();
+        for (String prefix : PREFIX_LIST.list) {
             if (chatMessage.startsWith(prefix)) {
                 chatMessage = chatMessage.substring(prefix.length());
                 isCommand = true;
@@ -233,8 +225,8 @@ public class ChatCommands {
      */
     private boolean handleLeaderCommand(ClientPlayerEntity player, String username, String[] args) {
         // Check if username is whitelisted
-        if (NarToggle.getHandler().chat.whitelistLock && !JoinWhitelist.WHITE_LIST.getHandler().list
-                .stream().anyMatch(pair -> pair.getKey().equals(username) && pair.getValue())) {
+        if (NarToggle.getHandler().chat.whitelistLock
+                && !JoinWhitelist.WHITE_LIST.list.contains(username)) {
             return false;
         }
 

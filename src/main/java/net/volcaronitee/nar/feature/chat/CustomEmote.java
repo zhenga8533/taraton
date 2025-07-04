@@ -1,10 +1,10 @@
 package net.volcaronitee.nar.feature.chat;
 
+import java.util.Map;
 import net.fabricmc.fabric.api.client.message.v1.ClientSendMessageEvents;
 import net.minecraft.text.Text;
 import net.volcaronitee.nar.config.NarConfig;
 import net.volcaronitee.nar.config.NarList;
-import net.volcaronitee.nar.config.controller.KeyValueController.KeyValuePair;
 
 /**
  * Handles custom emote mappings for chat messages.
@@ -43,14 +43,8 @@ public class CustomEmote {
         }
 
         // Replace each emote key with its corresponding value in the message
-        for (KeyValuePair<String, KeyValuePair<String, Boolean>> pair : EMOTE_MAP
-                .getHandler().map) {
-            // Skip if the emote is disabled
-            if (!pair.getValue().getValue() || !message.contains(pair.getKey())) {
-                continue;
-            }
-
-            message = message.replace(pair.getKey(), pair.getValue().getKey());
+        for (Map.Entry<String, String> entry : EMOTE_MAP.map.entrySet()) {
+            message = message.replace(entry.getKey(), entry.getValue());
         }
 
         return message;

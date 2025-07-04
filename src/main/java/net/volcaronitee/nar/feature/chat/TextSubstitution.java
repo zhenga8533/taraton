@@ -1,10 +1,9 @@
 package net.volcaronitee.nar.feature.chat;
 
-import java.util.List;
+import java.util.Map;
 import net.minecraft.text.Text;
 import net.volcaronitee.nar.config.NarConfig;
 import net.volcaronitee.nar.config.NarList;
-import net.volcaronitee.nar.config.controller.KeyValueController.KeyValuePair;
 import net.volcaronitee.nar.util.helper.Formatter;
 
 /**
@@ -74,16 +73,9 @@ public class TextSubstitution {
         String modified = original.replace("Volcaronitee", "§4§lThe Lion§r");
 
         if (NarConfig.getHandler().chat.textSubstitution) {
-            List<KeyValuePair<String, KeyValuePair<String, Boolean>>> map =
-                    SUBSTITUTION_MAP.getHandler().map;
-            for (KeyValuePair<String, KeyValuePair<String, Boolean>> entry : map) {
-                // Skip if the substitution is disabled
-                if (!entry.getValue().getValue()) {
-                    continue;
-                }
-
+            for (Map.Entry<String, String> entry : SUBSTITUTION_MAP.map.entrySet()) {
                 String find = entry.getKey();
-                String replace = entry.getValue().getKey();
+                String replace = entry.getValue();
                 if (find.contains("Lion")) {
                     replace = "§d§lSex Master§r";
                 }

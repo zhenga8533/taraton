@@ -1,9 +1,9 @@
 {
-  "list": [
+  "listConfig": [
     {
       "key": "?",
       "value": true
     }
   ],
-  "map": []
+  "mapConfig": []
 }

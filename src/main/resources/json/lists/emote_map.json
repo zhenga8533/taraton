@@ -1,6 +1,6 @@
 {
-  "list": [],
-  "map": [
+  "listConfig": [],
+  "mapConfig": [
     { "key": "<3", "value": { "key": "❤", "value": true } },
     { "key": ":star:", "value": { "key": "✮", "value": true } },
     { "key": ":yes:", "value": { "key": "✔", "value": true } },

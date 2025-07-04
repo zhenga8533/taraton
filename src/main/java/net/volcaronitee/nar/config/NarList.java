@@ -7,6 +7,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import dev.isxander.yacl3.api.ConfigCategory;
 import dev.isxander.yacl3.api.ListOption;
@@ -52,12 +54,14 @@ public class NarList {
     private ConfigClassHandler<NarList> handler;
     private Boolean isMap = false;
 
+    public final Set<String> list = new java.util.HashSet<>();
     @SerialEntry
-    public List<KeyValuePair<String, Boolean>> list =
+    private List<KeyValuePair<String, Boolean>> listConfig =
             new ArrayList<KeyValuePair<String, Boolean>>();
 
+    public final Map<String, String> map = new java.util.HashMap<>();
     @SerialEntry
-    public List<KeyValuePair<String, KeyValuePair<String, Boolean>>> map =
+    private List<KeyValuePair<String, KeyValuePair<String, Boolean>>> mapConfig =
             new ArrayList<KeyValuePair<String, KeyValuePair<String, Boolean>>>();
 
     /**
@@ -66,16 +70,18 @@ public class NarList {
     public NarList() {}
 
     /**
-     * Creates a new ListUtil instance with the specified title and configuration path.
+     * Creates a new ListUtil instance with the specified title, description, file name,
      * 
      * @param title The title for the configuration screen.
      * @param description A brief description of the configuration.
      * @param fileName The name of the configuration file to be used.
+     * @param saveCallback A callback to be executed when the configuration is saved.
      */
-    public NarList(String title, Text description, String fileName) {
+    public NarList(String title, Text description, String fileName, Runnable saveCallback) {
         this.title = title;
         this.description = description;
         this.fileName = fileName;
+        this.saveCallback = saveCallback;
 
         // Create handler for this ListUtil instance
         this.handler = ConfigClassHandler.createBuilder(NarList.class)
@@ -89,8 +95,19 @@ public class NarList {
         loadDefault();
         MinecraftClient.getInstance().send(() -> {
             handler.load();
-            saveCallback.run();
+            onSave(handler.instance());
         });
+    }
+
+    /**
+     * Creates a new ListUtil instance with the specified title and configuration path.
+     * 
+     * @param title The title for the configuration screen.
+     * @param description A brief description of the configuration.
+     * @param fileName The name of the configuration file to be used.
+     */
+    public NarList(String title, Text description, String fileName) {
+        this(title, description, fileName, null);
     }
 
     /**
@@ -100,15 +117,6 @@ public class NarList {
      */
     public NarList getHandler() {
         return handler.instance();
-    }
-
-    /**
-     * Sets a callback to be invoked when the configuration is saved.
-     * 
-     * @param saveCallback The callback to be executed when the configuration is saved.
-     */
-    public void setSaveCallback(Runnable saveCallback) {
-        this.saveCallback = saveCallback;
     }
 
     /**
@@ -168,13 +176,39 @@ public class NarList {
         return YetAnotherConfigLib.create(handler, (defaults, config, builder) -> {
             builder.title(Text.literal(title)).category(isMap ? createMapCategory(defaults, config)
                     : createListCategory(defaults, config)).save(() -> {
-                        if (saveCallback != null) {
-                            saveCallback.run();
-                        }
-                        handler.save();
+                        onSave(config);
                     }).build();
             return builder;
         }).generateScreen(parent);
+    }
+
+    /**
+     * Handles the saving of the configuration.
+     * 
+     * @param config The configuration object containing the current settings.
+     */
+    private void onSave(NarList config) {
+        // Update the static lists based on the configuration
+        list.clear();
+        for (KeyValuePair<String, Boolean> pair : config.listConfig) {
+            if (pair.getValue()) {
+                list.add(pair.getKey());
+            }
+        }
+
+        map.clear();
+        for (KeyValuePair<String, KeyValuePair<String, Boolean>> pair : config.mapConfig) {
+            if (pair.getValue().getValue()) {
+                map.put(pair.getKey(), pair.getValue().getKey());
+            }
+        }
+
+        // Call save callback if it is set
+        if (saveCallback != null) {
+            saveCallback.run();
+        }
+
+        handler.save();
     }
 
     /**
@@ -215,7 +249,8 @@ public class NarList {
                 .option(ListOption.<KeyValuePair<String, Boolean>>createBuilder()
                         .name(Text.literal(title))
                         .description(OptionDescription.createBuilder().text(description).build())
-                        .binding(config.list, () -> config.list, newVal -> config.list = newVal)
+                        .binding(config.listConfig, () -> config.listConfig,
+                                newVal -> config.listConfig = newVal)
                         .controller((option) -> KeyValueController.Builder.create(option)
                                 .keyController("Key", StringControllerBuilder::create)
                                 .valueController("Enabled", TickBoxControllerBuilder::create))
@@ -235,7 +270,8 @@ public class NarList {
                 .<KeyValuePair<String, KeyValuePair<String, Boolean>>>createBuilder()
                 .name(Text.literal(title))
                 .description(OptionDescription.createBuilder().text(description).build())
-                .binding(config.map, () -> config.map, newVal -> config.map = newVal)
+                .binding(config.mapConfig, () -> config.mapConfig,
+                        newVal -> config.mapConfig = newVal)
                 .controller((option) -> KeyValueController.Builder.create(option)
                         .keyController("Key", StringControllerBuilder::create).valueController(null,
                                 (subOption) -> KeyValueController.Builder.create(subOption)

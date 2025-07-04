@@ -56,8 +56,7 @@ public class JoinWhitelist {
         // Match username from the invite
         ClientPlayerEntity player = MinecraftClient.getInstance().player;
         String username = matcher.group(1);
-        if (WHITE_LIST.getHandler().list.stream()
-                .anyMatch(pair -> pair.getKey().equals(username) && pair.getValue())) {
+        if (WHITE_LIST.list.contains(username)) {
             // Accept the party invite after 4 ticks
             ScheduleUtil.schedule(() -> {
                 player.networkHandler.sendChatCommand("party accept " + username);

@@ -9,7 +9,6 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Pair;
 import net.volcaronitee.nar.config.NarConfig;
 import net.volcaronitee.nar.config.NarList;
-import net.volcaronitee.nar.config.controller.KeyValueController.KeyValuePair;
 import net.volcaronitee.nar.util.ScheduleUtil;
 import net.volcaronitee.nar.util.helper.Formatter;
 
@@ -24,17 +23,12 @@ public class ChatAlert {
                     .append(Formatter.createLink("regex101.com", "https://regex101.com"))
                     .append(Text.literal(" to test your regex patterns.\n\n\n§lOptions:§r\n\n"
                             + " --command [command] §7Executes a command.\n")),
-            "chat_alert_map.json");
+            "chat_alert_map.json", INSTANCE::onSave);
 
     private static List<Pair<Pattern, String>> CHAT_PATTERNS = new java.util.ArrayList<>();
 
     private Queue<String> commandQueue = new java.util.LinkedList<>();
     private int commandDelay = 0;
-
-    static {
-        CHAT_ALERT_MAP.setIsMap(true);
-        CHAT_ALERT_MAP.setSaveCallback(INSTANCE::onSave);
-    }
 
     /**
      * Private constructor to prevent instantiation.
@@ -106,15 +100,8 @@ public class ChatAlert {
      */
     private void onSave() {
         CHAT_PATTERNS.clear();
-        for (KeyValuePair<String, KeyValuePair<String, Boolean>> pattern : CHAT_ALERT_MAP
-                .getHandler().map) {
-            // Skip patterns that are disabled
-            if (!pattern.getValue().getValue()) {
-                continue;
-            }
-
-            CHAT_PATTERNS.add(
-                    new Pair<>(Pattern.compile(pattern.getKey()), pattern.getValue().getKey()));
-        }
+        CHAT_ALERT_MAP.map.forEach((key, value) -> {
+            CHAT_PATTERNS.add(new Pair<>(Pattern.compile(key), value));
+        });
     }
 }

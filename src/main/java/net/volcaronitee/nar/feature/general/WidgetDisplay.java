@@ -2,13 +2,11 @@ package net.volcaronitee.nar.feature.general;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.function.Supplier;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.PlayerListEntry;
 import net.minecraft.text.Text;
 import net.volcaronitee.nar.config.NarList;
-import net.volcaronitee.nar.config.controller.KeyValueController.KeyValuePair;
 import net.volcaronitee.nar.util.OverlayUtil;
 import net.volcaronitee.nar.util.OverlayUtil.LineContent;
 import net.volcaronitee.nar.util.TablistUtil;
@@ -20,14 +18,11 @@ import net.volcaronitee.nar.util.TickUtil;
 public class WidgetDisplay {
     private static final WidgetDisplay INSTANCE = new WidgetDisplay();
 
-    public static final NarList WIDGET_LIST = new NarList("Widget List",
-            Text.literal("A list of widgets to display in the overlay."), "widget_list.json");
+    public static final NarList WIDGET_LIST =
+            new NarList("Widget List", Text.literal("A list of widgets to display in the overlay."),
+                    "widget_list.json", INSTANCE::onSave);
 
-    private static final Map<String, Widget> WIDGETS = new java.util.HashMap<>();
-
-    static {
-        WIDGET_LIST.setSaveCallback(INSTANCE::onSave);
-    }
+    private static final List<Widget> WIDGETS = new ArrayList<>();
 
     /**
      * Private constructor to prevent instantiation.
@@ -58,7 +53,7 @@ public class WidgetDisplay {
             String name = displayName.getString();
             if (addToWidget == null) {
                 // Find the first active widget that matches the name
-                for (Widget widget : WIDGETS.values()) {
+                for (Widget widget : WIDGETS) {
                     if (name.startsWith(widget.name)) {
                         addToWidget = widget;
                         addToWidget.lines.clear();
@@ -82,14 +77,8 @@ public class WidgetDisplay {
      * Callback to save the spam patterns when the list is modified.
      */
     private void onSave() {
-        for (KeyValuePair<String, Boolean> widget : WIDGET_LIST.getHandler().list) {
-            // Skip widgets that are disabled
-            String key = widget.getKey();
-            if (!widget.getValue() || key.isEmpty() || WIDGETS.containsKey(key)) {
-                continue;
-            }
-
-            WIDGETS.put(key, new Widget(key));
+        for (String widget : WIDGET_LIST.list) {
+            WIDGETS.add(new Widget(widget));
         }
     }
 

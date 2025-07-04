@@ -65,7 +65,7 @@ public class EntityHighlight {
                             + "§8You can use relational operators like <, >, <=, >=, =, != for numeric values.\n\n\n"
                             + "§f§lExample:§r\n\n"
                             + "Lion --beacon --title WO LAI LE --color #FF0000 --height >2 --width <=1 --depth 16 --offset 32 --identifier Player --locations GARDEN,SPIDERS_DEN")),
-            "entity_list.json");
+            "entity_list.json", INSTANCE::onSave);
 
     private static final Map<Entity, Highlight> HIGHLIGHTED_ENTITIES = new HashMap<>();
 
@@ -81,7 +81,6 @@ public class EntityHighlight {
     static {
         OverlayUtil.createOverlay("entity_counter",
                 () -> NarConfig.getHandler().combat.entityCounter, LINES);
-        ENTITY_LIST.setSaveCallback(INSTANCE::onSave);
     }
 
     /**
@@ -399,11 +398,7 @@ public class EntityHighlight {
         HIGHLIGHT_NAMES.clear();
         NAME_HIGHLIGHT.clear();
 
-        ENTITY_LIST.getHandler().list.forEach(pair -> {
-            if (!pair.getValue()) {
-                return;
-            }
-
+        ENTITY_LIST.list.forEach(key -> {
             Identifier entity = null;
             String inputKey = "";
             boolean beacon = false;
@@ -417,7 +412,7 @@ public class EntityHighlight {
             List<World> locations = new ArrayList<>();
 
             // Parse the input key and options
-            String[] args = pair.getKey().trim().split(" --");
+            String[] args = key.trim().split(" --");
             for (String arg : args) {
 
                 if (arg.equals(args[0])) {

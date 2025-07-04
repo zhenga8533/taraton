@@ -6,7 +6,6 @@ import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
 import net.minecraft.text.Text;
 import net.volcaronitee.nar.config.NarConfig;
 import net.volcaronitee.nar.config.NarList;
-import net.volcaronitee.nar.config.controller.KeyValueController.KeyValuePair;
 import net.volcaronitee.nar.util.helper.Formatter;
 
 /**
@@ -19,13 +18,9 @@ public class SpamHider {
             Text.literal("A list of spam messages to hide in chat.\n\nUse ")
                     .append(Formatter.createLink("regex101.com", "https://regex101.com"))
                     .append(Text.literal(" to test your regex patterns.")),
-            "spam_list.json");
+            "spam_list.json", INSTANCE::onSave);
 
     private static List<Pattern> SPAM_PATTERNS = new java.util.ArrayList<>();
-
-    static {
-        SPAM_LIST.setSaveCallback(INSTANCE::onSave);
-    }
 
     /**
      * Private constructor to prevent instantiation.
@@ -71,13 +66,8 @@ public class SpamHider {
      */
     private void onSave() {
         SPAM_PATTERNS.clear();
-        for (KeyValuePair<String, Boolean> pattern : SPAM_LIST.getHandler().list) {
-            // Skip patterns that are disabled
-            if (!pattern.getValue()) {
-                continue;
-            }
-
-            SPAM_PATTERNS.add(Pattern.compile(pattern.getKey()));
+        for (String pattern : SPAM_LIST.list) {
+            SPAM_PATTERNS.add(Pattern.compile(pattern));
         }
     }
 }
