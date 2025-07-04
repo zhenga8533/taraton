@@ -2,7 +2,6 @@ package net.volcaronitee.nar.util;
 
 import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.argument;
 import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.literal;
-import com.google.gson.JsonPrimitive;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
@@ -69,6 +68,8 @@ public class CommandUtil {
                                 .then(literal("contract").executes(CommandUtil::contract))
                                 .then(literal("bindingvow").executes(CommandUtil::contract))
                                 .then(literal("domainexpansion")
+                                        .executes(CommandUtil::domainExpansion))
+                                .then(literal("ryoikitenkai")
                                         .executes(CommandUtil::domainExpansion))
 
                                 // Lists commands
@@ -221,7 +222,7 @@ public class CommandUtil {
             context.getSource().sendFeedback(NotARat.MOD_TITLE.copy()
                     .append(Text.literal(" 領域展開無量空処").formatted(Formatting.GREEN)));
         }
-        NarData.getData().add("domain_expansion", new JsonPrimitive(!bool));
+        NarData.getData().addProperty("domain_expansion", !bool);
 
         return 1;
     }

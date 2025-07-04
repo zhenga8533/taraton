@@ -76,39 +76,27 @@ public class RenderUtil {
         Vec3d playerEyePos = client.player.getEyePos();
         Box targetBoundingBox = targetEntity.getBoundingBox();
 
-        // Points to check for line of sight
-        Vec3d[] checkPoints = new Vec3d[] {targetBoundingBox.getCenter(),
-                targetBoundingBox.getCenter().add(0, targetBoundingBox.getLengthY() / 2, 0),
-                targetBoundingBox.getCenter().subtract(0, targetBoundingBox.getLengthY() / 2, 0),
-
-                // Corrected lines to get min/max corners as Vec3d
+        // Define the corners of the target entity's bounding box
+        Vec3d[] corners = new Vec3d[] {
                 new Vec3d(targetBoundingBox.minX, targetBoundingBox.minY, targetBoundingBox.minZ),
-                new Vec3d(targetBoundingBox.maxX, targetBoundingBox.maxY, targetBoundingBox.maxZ),
-
-                // Existing other corners
+                new Vec3d(targetBoundingBox.maxX, targetBoundingBox.minY, targetBoundingBox.minZ),
                 new Vec3d(targetBoundingBox.minX, targetBoundingBox.maxY, targetBoundingBox.minZ),
-                new Vec3d(targetBoundingBox.maxX, targetBoundingBox.minY, targetBoundingBox.maxZ),
+                new Vec3d(targetBoundingBox.maxX, targetBoundingBox.maxY, targetBoundingBox.minZ),
                 new Vec3d(targetBoundingBox.minX, targetBoundingBox.minY, targetBoundingBox.maxZ),
-                new Vec3d(targetBoundingBox.maxX, targetBoundingBox.maxY, targetBoundingBox.minZ)};
+                new Vec3d(targetBoundingBox.maxX, targetBoundingBox.minY, targetBoundingBox.maxZ),
+                new Vec3d(targetBoundingBox.minX, targetBoundingBox.maxY, targetBoundingBox.maxZ),
+                new Vec3d(targetBoundingBox.maxX, targetBoundingBox.maxY, targetBoundingBox.maxZ)};
 
         // Check each point in the bounding box for line of sight
-        for (Vec3d targetPoint : checkPoints) {
+        for (Vec3d point : corners) {
             RaycastContext blockRaycastContext =
-                    new RaycastContext(playerEyePos, targetPoint, RaycastContext.ShapeType.COLLIDER,
+                    new RaycastContext(playerEyePos, point, RaycastContext.ShapeType.COLLIDER,
                             RaycastContext.FluidHandling.NONE, client.player);
             BlockHitResult blockHit = client.world.raycast(blockRaycastContext);
 
             // Check if the raycast hit a block
             if (blockHit.getType() == HitResult.Type.MISS) {
                 return true;
-            } else if (blockHit.getType() == HitResult.Type.BLOCK) {
-                Vec3d hitPos = blockHit.getPos();
-                double distanceToBlockHit = playerEyePos.distanceTo(hitPos);
-                double distanceToTargetPoint = playerEyePos.distanceTo(targetPoint);
-
-                if (distanceToBlockHit >= distanceToTargetPoint - 0.01) {
-                    return true;
-                }
             }
         }
 

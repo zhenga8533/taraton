@@ -23,6 +23,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Box;
 import net.volcaronitee.nar.NotARat;
 import net.volcaronitee.nar.config.NarConfig;
+import net.volcaronitee.nar.config.NarData;
 import net.volcaronitee.nar.config.NarList;
 import net.volcaronitee.nar.util.LocationUtil;
 import net.volcaronitee.nar.util.LocationUtil.World;
@@ -129,7 +130,8 @@ public class EntityHighlight {
             }
 
             // Check if entity is visible
-            if (!RenderUtil.isVisible(entity)) {
+            if (!NarData.getData().get("domain_expansion").getAsBoolean()
+                    && !RenderUtil.isVisible(entity)) {
                 return;
             }
 
