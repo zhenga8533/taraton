@@ -36,7 +36,7 @@ public class NarData {
     /**
      * Loads the NAR data from the JSON file.
      */
-    public static void loadData() {
+    private static void loadData() {
         // Load the data from the JSON file if it exists
         if (DATA_FILE.toFile().exists()) {
             data = NarJson.loadJson("", FILE_NAME);
