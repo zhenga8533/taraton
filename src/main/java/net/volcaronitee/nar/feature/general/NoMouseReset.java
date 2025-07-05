@@ -1,11 +1,11 @@
 package net.volcaronitee.nar.feature.general;
 
-import org.lwjgl.glfw.GLFW;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.GenericContainerScreen;
 import net.minecraft.client.gui.screen.ingame.InventoryScreen;
+import net.minecraft.client.util.InputUtil;
 import net.volcaronitee.nar.config.NarConfig;
 
 /**
@@ -16,6 +16,8 @@ public class NoMouseReset {
     private static final NoMouseReset INSTANCE = new NoMouseReset();
 
     private long lastScreenOpen = 0;
+    private double lastMouseX = 0;
+    private double lastMouseY = 0;
     private Screen lastScreen = null;
 
     /**
@@ -36,36 +38,37 @@ public class NoMouseReset {
      * Registers the NoMouseReset feature to center the mouse cursor.
      */
     public static void register() {
-        ScreenEvents.BEFORE_INIT.register((client, screen, scaledWidth, scaledHeight) -> {
-            if (System.currentTimeMillis() - INSTANCE.lastScreenOpen > 200
-                    || !(INSTANCE.lastScreen instanceof GenericContainerScreen
-                            || INSTANCE.lastScreen instanceof InventoryScreen)) {
-                INSTANCE.centerMouse();
-            }
-
-            ScreenEvents.remove(screen).register(closedScreen -> {
-                INSTANCE.lastScreenOpen = System.currentTimeMillis();
-                INSTANCE.lastScreen = closedScreen;
-            });
-        });
+        ScreenEvents.BEFORE_INIT.register(INSTANCE::onScreen);
     }
 
     /**
-     * Centers the mouse cursor to the middle of the screen.
-     */
-    private void centerMouse() {
-        MinecraftClient client = MinecraftClient.getInstance();
-        double centerX = client.getWindow().getWidth() / 2.0;
-        double centerY = client.getWindow().getHeight() / 2.0;
-        GLFW.glfwSetCursorPos(client.getWindow().getHandle(), centerX, centerY);
-    }
-
-    /**
-     * Checks if the mouse should be centered based on the configuration.
+     * Handles the screen initialization event to set the mouse cursor position
      * 
-     * @return True if the mouse should be centered, false otherwise.
+     * @param client The Minecraft client instance.
+     * @param screen The screen being initialized.
+     * @param scaledWidth The scaled width of the screen.
+     * @param scaledHeight The scaled height of the screen.
      */
-    public boolean shouldCenter() {
-        return !NarConfig.getHandler().general.noMouseReset;
+    private void onScreen(MinecraftClient client, Screen screen, int scaledWidth,
+            int scaledHeight) {
+        if (!NarConfig.getHandler().general.noMouseReset) {
+            return;
+        }
+
+        // If the last screen was opened very recently, recall the mouse position
+        if (System.currentTimeMillis() - INSTANCE.lastScreenOpen <= 100
+                && (INSTANCE.lastScreen instanceof GenericContainerScreen
+                        || INSTANCE.lastScreen instanceof InventoryScreen)) {
+            InputUtil.setCursorParameters(client.getWindow().getHandle(), 212993,
+                    INSTANCE.lastMouseX, INSTANCE.lastMouseY);
+        }
+
+        // Register the screen close event to update the last screen and mouse position
+        ScreenEvents.remove(screen).register(closedScreen -> {
+            INSTANCE.lastScreenOpen = System.currentTimeMillis();
+            INSTANCE.lastMouseX = client.mouse.getX();
+            INSTANCE.lastMouseY = client.mouse.getY();
+            INSTANCE.lastScreen = closedScreen;
+        });
     }
 }
