@@ -6,6 +6,7 @@
     "accessor.BeaconBlockEntityRendererInvoker",
     "accessor.ChatHudAccessor",
     "accessor.FrustumInvoker",
+    "accessor.InGameHudAccessor",
     "accessor.WorldRendererAccessor",
     "ChatScreenMixin",
     "ClientPlayerEntityMixin",

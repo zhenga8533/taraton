@@ -18,6 +18,24 @@ public class Parser {
     }
 
     /**
+     * Parses an integer from the given string.
+     *
+     * @param str The string to parse.
+     * @return The parsed integer, or 0 if parsing fails.
+     */
+    public static int parseInt(String str) {
+        if (str == null || str.isEmpty()) {
+            return 0;
+        }
+
+        try {
+            return Integer.parseInt(str);
+        } catch (NumberFormatException e) {
+            return 0;
+        }
+    }
+
+    /**
      * Removes formatting characters from the given text.
      * 
      * @param text The text to clean.
