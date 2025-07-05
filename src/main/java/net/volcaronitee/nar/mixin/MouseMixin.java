@@ -22,8 +22,7 @@ public class MouseMixin {
      * @param ci The callback info to control the method's execution.
      */
     @Inject(method = "onMouseButton", at = @At("HEAD"))
-    public void NotARat$mouseOnMouseButton(long window, int button, int action, int mods,
-            CallbackInfo ci) {
+    public void nar$onMouseButton(long window, int button, int action, int mods, CallbackInfo ci) {
         ServerStatus.getInstance().onClick(button, action);
     }
 }

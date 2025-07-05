@@ -23,8 +23,8 @@ public abstract class InGameHudMixin {
      * @param ci The CallbackInfo for the injection.
      */
     @Inject(method = "renderStatusEffectOverlay", at = @At("HEAD"), cancellable = true)
-    private void volcclient$hideStatusEffectsOnHud(DrawContext context,
-            RenderTickCounter tickCounter, CallbackInfo ci) {
+    private void nar$hideStatusEffectsOnHud(DrawContext context, RenderTickCounter tickCounter,
+            CallbackInfo ci) {
         if (NarConfig.getHandler().qol.hidePotionEffects) {
             ci.cancel();
         }

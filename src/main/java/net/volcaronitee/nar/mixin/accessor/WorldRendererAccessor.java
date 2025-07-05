@@ -10,6 +10,11 @@ import net.minecraft.client.render.WorldRenderer;
  */
 @Mixin(WorldRenderer.class)
 public interface WorldRendererAccessor {
+    /**
+     * Accessor method to get the Frustum used for rendering.
+     * 
+     * @return The Frustum used for rendering in the WorldRenderer.
+     */
     @Accessor
     Frustum getFrustum();
 }

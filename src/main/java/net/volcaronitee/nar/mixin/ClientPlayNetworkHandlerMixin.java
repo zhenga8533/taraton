@@ -21,8 +21,7 @@ public class ClientPlayNetworkHandlerMixin {
      * @param ci Callback information for the method call
      */
     @Inject(method = "onStatistics", at = @At("HEAD"))
-    private void NotARat$clientPlayerNetworkHandlerOnStatistics(StatisticsS2CPacket packet,
-            CallbackInfo ci) {
+    private void nar$onStatistics(StatisticsS2CPacket packet, CallbackInfo ci) {
         ServerStatus.getInstance().onPingResponse();
     }
 
@@ -33,8 +32,7 @@ public class ClientPlayNetworkHandlerMixin {
      * @param ci Callback information for the method call
      */
     @Inject(method = "onWorldTimeUpdate", at = @At("TAIL"))
-    private void NotARat$clientPlayerNetworkHandlerOnWorldTimeUpdate(
-            WorldTimeUpdateS2CPacket packet, CallbackInfo ci) {
+    private void nar$onWorldTimeUpdate(WorldTimeUpdateS2CPacket packet, CallbackInfo ci) {
         ServerStatus.getInstance().recordServerTick();
     }
 

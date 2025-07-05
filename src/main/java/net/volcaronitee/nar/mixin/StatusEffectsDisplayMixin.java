@@ -23,7 +23,7 @@ public abstract class StatusEffectsDisplayMixin {
      * @param ci The CallbackInfo for the injection.
      */
     @Inject(method = "drawStatusEffects", at = @At("HEAD"), cancellable = true)
-    private void volcclient$hideStatusEffects(DrawContext context, int mouseX, int mouseY,
+    private void nar$hideStatusEffects(DrawContext context, int mouseX, int mouseY,
             float deltaTicks, CallbackInfo ci) {
         if (NarConfig.getHandler().qol.hidePotionEffects) {
             ci.cancel();

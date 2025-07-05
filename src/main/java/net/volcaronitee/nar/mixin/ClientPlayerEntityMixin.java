@@ -22,8 +22,7 @@ public abstract class ClientPlayerEntityMixin {
      * @param info Callback information for the method call
      */
     @Inject(method = "move", at = @At(value = "HEAD"))
-    private void NotARat$clientPlayerEntityMove(MovementType type, Vec3d movement,
-            CallbackInfo info) {
+    private void nar$playerMove(MovementType type, Vec3d movement, CallbackInfo info) {
         PlayerUtil.clientPlayerEntity$move();
     }
 }

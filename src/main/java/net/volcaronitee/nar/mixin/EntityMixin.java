@@ -18,7 +18,7 @@ public abstract class EntityMixin {
      * @param cir The callback info for the return value
      */
     @Inject(method = "isGlowing", at = @At("HEAD"), cancellable = true)
-    private void NotARat$entityIsGlowing(CallbackInfoReturnable<Boolean> cir) {
+    private void nar$entityIsGlowing(CallbackInfoReturnable<Boolean> cir) {
         Entity entity = (Entity) (Object) this;
         if (EntityHighlight.getInstance().getGlow(entity)) {
             cir.setReturnValue(true);
@@ -31,7 +31,7 @@ public abstract class EntityMixin {
      * @param cir The callback info for the return value
      */
     @Inject(method = "getTeamColorValue", at = @At("HEAD"), cancellable = true)
-    private void NotARat$entityGetTeamColorValue(CallbackInfoReturnable<Integer> cir) {
+    private void nar$entityGetTeamColorValue(CallbackInfoReturnable<Integer> cir) {
         Entity entity = (Entity) (Object) this;
         if (EntityHighlight.getInstance().getGlow(entity)) {
             cir.setReturnValue(EntityHighlight.getInstance().getColor(entity));

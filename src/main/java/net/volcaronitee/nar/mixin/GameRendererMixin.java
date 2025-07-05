@@ -20,7 +20,7 @@ public class GameRendererMixin {
     @ModifyArg(at = @At(value = "INVOKE",
             target = "Lnet/minecraft/util/math/RotationAxis;rotationDegrees(F)Lorg/joml/Quaternionf;"),
             method = "tiltViewWhenHurt", require = 4)
-    public float volcclient$changeBobIntensity(float value) {
+    public float nar$changeBobIntensity(float value) {
         return NarConfig.getHandler().qol.hurtCamIntensity * value;
     }
 }

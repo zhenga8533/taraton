@@ -24,7 +24,7 @@ import net.volcaronitee.nar.feature.chat.TextSubstitution;
 @Mixin(TextRenderer.class)
 public class TextRendererMixin {
     @Unique
-    private OrderedText NotARat$modifiedOrderedText = null;
+    private OrderedText nar$modifiedOrderedText = null;
 
     /**
      * Injects into the 'drawLayer' method that takes an OrderedText to modify the OrderedText
@@ -45,8 +45,8 @@ public class TextRendererMixin {
      */
     @Inject(method = "drawLayer(Lnet/minecraft/text/OrderedText;FFIZLorg/joml/Matrix4f;Lnet/minecraft/client/render/VertexConsumerProvider;Lnet/minecraft/client/font/TextRenderer$TextLayerType;IIZ)F",
             at = @At("HEAD"))
-    private void NotARat$drawLayerInject(OrderedText text, float x, float y, int color,
-            boolean shadow, Matrix4f matrix, VertexConsumerProvider vertexConsumerProvider,
+    private void nar$drawLayerInject(OrderedText text, float x, float y, int color, boolean shadow,
+            Matrix4f matrix, VertexConsumerProvider vertexConsumerProvider,
             TextRenderer.TextLayerType layerType, int backgroundColor, int light,
             boolean swapZIndex, CallbackInfoReturnable<Float> cir) {
 
@@ -80,7 +80,7 @@ public class TextRendererMixin {
             reconstructed.append(modified);
         }
 
-        this.NotARat$modifiedOrderedText = reconstructed.asOrderedText();
+        this.nar$modifiedOrderedText = reconstructed.asOrderedText();
     }
 
     /**
@@ -95,12 +95,12 @@ public class TextRendererMixin {
             method = "drawLayer(Lnet/minecraft/text/OrderedText;FFIZLorg/joml/Matrix4f;Lnet/minecraft/client/render/VertexConsumerProvider;Lnet/minecraft/client/font/TextRenderer$TextLayerType;IIZ)F",
             at = @At(value = "INVOKE",
                     target = "Lnet/minecraft/text/OrderedText;accept(Lnet/minecraft/text/CharacterVisitor;)Z"))
-    private boolean NotARat$drawLayerRedirect(OrderedText originalOrderedText,
+    private boolean nar$drawLayerRedirect(OrderedText originalOrderedText,
             CharacterVisitor drawer) {
         OrderedText textToAccept =
-                this.NotARat$modifiedOrderedText != null ? this.NotARat$modifiedOrderedText
+                this.nar$modifiedOrderedText != null ? this.nar$modifiedOrderedText
                         : originalOrderedText;
-        this.NotARat$modifiedOrderedText = null;
+        this.nar$modifiedOrderedText = null;
 
         return textToAccept.accept(drawer);
     }

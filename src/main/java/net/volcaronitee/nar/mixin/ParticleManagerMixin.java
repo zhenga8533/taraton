@@ -30,7 +30,7 @@ public class ParticleManagerMixin {
      */
     @Inject(method = "renderParticles(Lnet/minecraft/client/render/Camera;FLnet/minecraft/client/render/VertexConsumerProvider$Immediate;Lnet/minecraft/client/particle/ParticleTextureSheet;Ljava/util/Queue;)V",
             at = @At("HEAD"), cancellable = true)
-    private static void volcclient$hideAllParticles(Camera camera, float tickProgress,
+    private static void nar$renderParticles(Camera camera, float tickProgress,
             VertexConsumerProvider.Immediate vertexConsumers, ParticleTextureSheet sheet,
             Queue<Particle> particles, CallbackInfo ci) {
         if (!NarConfig.getHandler().qol.hideAllParticles) {

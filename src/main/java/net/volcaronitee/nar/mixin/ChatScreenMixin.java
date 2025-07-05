@@ -32,7 +32,7 @@ public abstract class ChatScreenMixin extends Screen {
      * @param cir The callback info to control the method's return value.
      */
     @Inject(method = "mouseClicked", at = @At("HEAD"), cancellable = true)
-    private void onMouseClicked(double mouseX, double mouseY, int button,
+    private void nar$onMouseClicked(double mouseX, double mouseY, int button,
             CallbackInfoReturnable<Boolean> cir) {
         CopyChat.getInstance().onMouseClicked(mouseX, mouseY, button, cir);
     }
