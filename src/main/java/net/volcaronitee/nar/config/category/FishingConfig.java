@@ -22,7 +22,7 @@ public class FishingConfig {
         return ConfigCategory.createBuilder().name(Text.literal("Fishing"))
 
                 // Fishing Option Group
-                .group(OptionGroup.createBuilder().name(Text.literal(""))
+                .group(OptionGroup.createBuilder().name(Text.literal("Fishing"))
 
                         // Hook Line and Sinker
                         .option(Option.<Boolean>createBuilder()
