@@ -69,11 +69,11 @@ public class ChatAlert {
                 if (!alert.message.isEmpty()) {
                     MinecraftClient client = MinecraftClient.getInstance();
                     client.inGameHud.setTitleTicks(alert.fadeIn, alert.stay, alert.fadeOut);
-                    client.inGameHud.setTitle(Text.literal(alert.message));
+                    Text title = Text.literal(alert.message);
+                    client.inGameHud.setTitle(title);
 
                     ScheduleUtil.schedule(() -> {
-                        Text title = ((InGameHudAccessor) client.inGameHud).getTitle();
-                        if (title == null || title.getString().equals(alert.message)) {
+                        if (((InGameHudAccessor) client.inGameHud).getTitle() == title) {
                             client.inGameHud.setDefaultTitleFade();
                         }
                     }, alert.fadeIn + alert.stay + alert.fadeOut - 1);
