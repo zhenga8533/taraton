@@ -31,7 +31,7 @@ public class RemoveSelfieMode {
      */
     private void onTick(MinecraftClient client) {
         GameOptions options = client.options;
-        if (!NarConfig.getHandler().general.removeSelfieMode || options == null)
+        if (!NarConfig.getHandler().qol.removeSelfieMode || options == null)
             return;
 
         if (options.togglePerspectiveKey.isPressed()) {

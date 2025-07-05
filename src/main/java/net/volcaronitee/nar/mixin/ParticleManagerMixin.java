@@ -33,7 +33,7 @@ public class ParticleManagerMixin {
     private static void volcclient$hideAllParticles(Camera camera, float tickProgress,
             VertexConsumerProvider.Immediate vertexConsumers, ParticleTextureSheet sheet,
             Queue<Particle> particles, CallbackInfo ci) {
-        if (!NarConfig.getHandler().general.hideAllParticles) {
+        if (!NarConfig.getHandler().qol.hideAllParticles) {
             return;
         }
 

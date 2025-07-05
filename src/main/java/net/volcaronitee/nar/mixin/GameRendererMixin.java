@@ -21,6 +21,6 @@ public class GameRendererMixin {
             target = "Lnet/minecraft/util/math/RotationAxis;rotationDegrees(F)Lorg/joml/Quaternionf;"),
             method = "tiltViewWhenHurt", require = 4)
     public float volcclient$changeBobIntensity(float value) {
-        return NarConfig.getHandler().general.hurtCamIntensity * value;
+        return NarConfig.getHandler().qol.hurtCamIntensity * value;
     }
 }

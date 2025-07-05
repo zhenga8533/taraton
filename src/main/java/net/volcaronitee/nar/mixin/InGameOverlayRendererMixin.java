@@ -26,6 +26,6 @@ public class InGameOverlayRendererMixin {
             target = "Lnet/minecraft/client/util/math/MatrixStack;translate(FFF)V"))
     private static void volcclient$renderFireOverlay(MatrixStack matrices,
             VertexConsumerProvider vertexConsumers, CallbackInfo ci) {
-        matrices.translate(0.0, NarConfig.getHandler().general.lowFire, 0.0);
+        matrices.translate(0.0, NarConfig.getHandler().qol.lowFire, 0.0);
     }
 }

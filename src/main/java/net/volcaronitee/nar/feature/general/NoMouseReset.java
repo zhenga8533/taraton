@@ -51,7 +51,7 @@ public class NoMouseReset {
      */
     private void onScreen(MinecraftClient client, Screen screen, int scaledWidth,
             int scaledHeight) {
-        if (!NarConfig.getHandler().general.noMouseReset) {
+        if (!NarConfig.getHandler().qol.noMouseReset) {
             return;
         }
 
