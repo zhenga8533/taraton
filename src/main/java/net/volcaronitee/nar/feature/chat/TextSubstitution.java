@@ -71,23 +71,25 @@ public class TextSubstitution {
      *         null.
      */
     public Text modify(Text originalText) {
-        Screen currentScreen = MinecraftClient.getInstance().currentScreen;
-        if (NarConfig.getHandler().chat.textSubstitution || (currentScreen != null
-                && currentScreen.getTitle().getString().equals("Substitution Map"))) {
-            return originalText;
-        }
-
         String original = originalText.getString();
         String modified = original.replace("Volcaronitee", "§4§lThe Lion§r");
 
+        Screen currentScreen = MinecraftClient.getInstance().currentScreen;
+        if (currentScreen != null
+                && currentScreen.getTitle().getString().equals("Substitution Map")) {
+            return originalText;
+        }
+
         // Loop through the substitution map and replace text
-        for (Map.Entry<String, String> entry : SUBSTITUTION_MAP.map.entrySet()) {
-            String find = entry.getKey();
-            String replace = entry.getValue();
-            if (find.contains("Lion")) {
-                replace = "§d§lSex Master§r";
+        if (NarConfig.getHandler().chat.textSubstitution) {
+            for (Map.Entry<String, String> entry : SUBSTITUTION_MAP.map.entrySet()) {
+                String find = entry.getKey();
+                String replace = entry.getValue();
+                if (find.contains("Lion")) {
+                    replace = "§d§lSex Master§r";
+                }
+                modified = modified.replace(find, replace);
             }
-            modified = modified.replace(find, replace);
         }
 
         return Text.literal(modified).setStyle(originalText.getStyle());
