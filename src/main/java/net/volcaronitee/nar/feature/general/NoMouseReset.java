@@ -3,6 +3,8 @@ package net.volcaronitee.nar.feature.general;
 import org.lwjgl.glfw.GLFW;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.screen.ingame.GenericContainerScreen;
 import net.volcaronitee.nar.config.NarConfig;
 
 /**
@@ -13,6 +15,7 @@ public class NoMouseReset {
     private static final NoMouseReset INSTANCE = new NoMouseReset();
 
     private long lastScreenOpen = 0;
+    private Screen lastScreen = null;
 
     /**
      * Private constructor to enforce singleton pattern.
@@ -32,13 +35,15 @@ public class NoMouseReset {
      * Registers the NoMouseReset feature to center the mouse cursor.
      */
     public static void register() {
-        ScreenEvents.AFTER_INIT.register((client, screen, scaledWidth, scaledHeight) -> {
-            if (System.currentTimeMillis() - INSTANCE.lastScreenOpen > 200) {
+        ScreenEvents.BEFORE_INIT.register((client, screen, scaledWidth, scaledHeight) -> {
+            if (System.currentTimeMillis() - INSTANCE.lastScreenOpen > 200
+                    || !(INSTANCE.lastScreen instanceof GenericContainerScreen)) {
                 INSTANCE.centerMouse();
             }
 
             ScreenEvents.remove(screen).register(closedScreen -> {
                 INSTANCE.lastScreenOpen = System.currentTimeMillis();
+                INSTANCE.lastScreen = closedScreen;
             });
         });
     }
