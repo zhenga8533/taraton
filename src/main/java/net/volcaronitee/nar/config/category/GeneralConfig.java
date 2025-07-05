@@ -5,6 +5,8 @@ import dev.isxander.yacl3.api.ConfigCategory;
 import dev.isxander.yacl3.api.Option;
 import dev.isxander.yacl3.api.OptionDescription;
 import dev.isxander.yacl3.api.OptionGroup;
+import dev.isxander.yacl3.api.controller.DoubleSliderControllerBuilder;
+import dev.isxander.yacl3.api.controller.FloatSliderControllerBuilder;
 import dev.isxander.yacl3.api.controller.IntegerSliderControllerBuilder;
 import dev.isxander.yacl3.api.controller.StringControllerBuilder;
 import dev.isxander.yacl3.config.v2.api.SerialEntry;
@@ -99,6 +101,22 @@ public class GeneralConfig {
                 // General Option Group
                 .group(OptionGroup.createBuilder().name(Text.literal("General"))
 
+                        // Hurt Cam Intensity
+                        .option(Option.<Float>createBuilder()
+                                .name(Text.literal("Hurt Cam Intensity"))
+                                .description(OptionDescription.createBuilder()
+                                        .webpImage(Identifier.of(NotARat.MOD_ID,
+                                                "config/general/hurt_cam_intensity.webp"))
+                                        .text(Text.literal(
+                                                "Sets the intensity of the hurt camera effect."))
+                                        .build())
+                                .binding(defaults.general.hurtCamIntensity,
+                                        () -> config.general.hurtCamIntensity,
+                                        newVal -> config.general.hurtCamIntensity = newVal)
+                                .controller(opt -> FloatSliderControllerBuilder.create(opt)
+                                        .range(0.0f, 2.0f).step(0.1f))
+                                .build())
+
                         // TODO: Image Bypass
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Image Bypass"))
                                 .description(OptionDescription.createBuilder()
@@ -111,6 +129,19 @@ public class GeneralConfig {
                                         () -> config.general.imageBypass,
                                         newVal -> config.general.imageBypass = newVal)
                                 .controller(NarConfig::createBooleanController).build())
+
+                        // Low Fire
+                        .option(Option.<Double>createBuilder().name(Text.literal("Low Fire"))
+                                .description(OptionDescription.createBuilder()
+                                        .webpImage(Identifier.of(NotARat.MOD_ID,
+                                                "config/general/low_fire.webp"))
+                                        .text(Text.literal("Sets the height of the fire overlay."))
+                                        .build())
+                                .binding(defaults.general.lowFire, () -> config.general.lowFire,
+                                        newVal -> config.general.lowFire = newVal)
+                                .controller(opt -> DoubleSliderControllerBuilder.create(opt)
+                                        .range(-0.5, 0.4).step(0.01))
+                                .build())
 
                         // No Mouse Reset
                         .option(Option.<Boolean>createBuilder().name(Text.literal("No Mouse Reset"))
@@ -369,7 +400,13 @@ public class GeneralConfig {
 
     // General Option Group
     @SerialEntry
+    public float hurtCamIntensity = 1.0f;
+
+    @SerialEntry
     public boolean imageBypass = false;
+
+    @SerialEntry
+    public double lowFire = 0.0;
 
     @SerialEntry
     public boolean noMouseReset = true;

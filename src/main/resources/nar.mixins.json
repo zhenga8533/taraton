@@ -12,6 +12,8 @@
     "ClientPlayerEntityMixin",
     "ClientPlayNetworkHandlerMixin",
     "EntityMixin",
+    "GameRendererMixin",
+    "InGameOverlayRendererMixin",
     "MouseMixin",
     "ParticleManagerMixin",
     "TextRendererMixin"
