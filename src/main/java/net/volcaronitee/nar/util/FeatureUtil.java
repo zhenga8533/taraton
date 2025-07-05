@@ -8,6 +8,7 @@ import net.volcaronitee.nar.feature.chat.PlaytimeWarning;
 import net.volcaronitee.nar.feature.chat.SpamHider;
 import net.volcaronitee.nar.feature.combat.EntityHighlight;
 import net.volcaronitee.nar.feature.fishing.HookLineAndSinker;
+import net.volcaronitee.nar.feature.general.NoMouseReset;
 import net.volcaronitee.nar.feature.general.RemoveSelfieMode;
 import net.volcaronitee.nar.feature.general.ServerRejoinAlert;
 import net.volcaronitee.nar.feature.general.ServerStatus;
@@ -18,6 +19,7 @@ import net.volcaronitee.nar.feature.general.WidgetDisplay;
 public class FeatureUtil {
     public static void init() {
         // General Features
+        NoMouseReset.register();
         RemoveSelfieMode.register();
         ServerRejoinAlert.register();
         ServerStatus.register();

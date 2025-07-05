@@ -31,30 +31,28 @@ public class MouseMixin {
     }
 
     /**
-     * Wraps the unlockCursor and lockCursor methods to conditionally set the cursor position based
-     * on the NoMouseReset feature.
+     * Wraps the lockCursor and unlockCursor methods to conditionally set the cursor X position.
      * 
      * @param instance The instance of the Mouse class.
-     * @param value The value to set for the cursor position (x or y).
-     * @return True if the cursor position should be set, false otherwise.
+     * @param value The value to set for the cursor position.
+     * @return True if the cursor should be locked or unlocked, false otherwise.
      */
     @WrapWithCondition(method = {"unlockCursor", "lockCursor"}, at = @At(value = "FIELD",
             target = "Lnet/minecraft/client/Mouse;x:D", opcode = Opcodes.PUTFIELD))
-    private boolean nar_shouldSetCursorX(Mouse instance, double value) {
+    private boolean nar$mouseMixinLockCursorX(Mouse instance, double value) {
         return NoMouseReset.getInstance().shouldCenter();
     }
 
     /**
-     * Wraps the unlockCursor and lockCursor methods to conditionally set the cursor position based
-     * on the NoMouseReset feature.
+     * Wraps the lockCursor and unlockCursor methods to conditionally set the cursor Y position.
      * 
      * @param instance The instance of the Mouse class.
-     * @param value The value to set for the cursor position (x or y).
-     * @return True if the cursor position should be set, false otherwise.
+     * @param value The value to set for the cursor position.
+     * @return True if the cursor should be locked or unlocked, false otherwise.
      */
     @WrapWithCondition(method = {"unlockCursor", "lockCursor"}, at = @At(value = "FIELD",
             target = "Lnet/minecraft/client/Mouse;y:D", opcode = Opcodes.PUTFIELD))
-    private boolean nar_shouldSetCursorY(Mouse instance, double value) {
+    private boolean nar$mouseMixinLockCursorY(Mouse instance, double value) {
         return NoMouseReset.getInstance().shouldCenter();
     }
 }
