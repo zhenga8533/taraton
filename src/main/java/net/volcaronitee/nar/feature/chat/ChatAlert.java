@@ -25,6 +25,10 @@ public class ChatAlert {
                             + " --command [command] §7Executes a command.\n")),
             "chat_alert_map.json", INSTANCE::onSave);
 
+    static {
+        CHAT_ALERT_MAP.setIsMap(true);
+    }
+
     private static List<Pair<Pattern, String>> CHAT_PATTERNS = new java.util.ArrayList<>();
 
     private Queue<String> commandQueue = new java.util.LinkedList<>();
