@@ -13,9 +13,11 @@
     "ClientPlayNetworkHandlerMixin",
     "EntityMixin",
     "GameRendererMixin",
+    "InGameHudMixin",
     "InGameOverlayRendererMixin",
     "MouseMixin",
     "ParticleManagerMixin",
+    "StatusEffectsDisplayMixin",
     "TextRendererMixin"
   ],
   "injectors": {

@@ -25,6 +25,7 @@ import net.volcaronitee.nar.config.category.ForagingConfig;
 import net.volcaronitee.nar.config.category.GeneralConfig;
 import net.volcaronitee.nar.config.category.KuudraConfig;
 import net.volcaronitee.nar.config.category.MiningConfig;
+import net.volcaronitee.nar.config.category.QolConfig;
 import net.volcaronitee.nar.config.category.RiftConfig;
 import net.volcaronitee.nar.config.category.TemplateConfig;
 
@@ -68,6 +69,7 @@ public class NarConfig {
         return YetAnotherConfigLib.create(HANDLER, (defaults, config, builder) -> {
             builder.title(Text.literal("NAR Config"))
                     .category(GeneralConfig.create(defaults, config))
+                    .category(QolConfig.create(defaults, config))
                     .category(ChatConfig.create(defaults, config))
                     .category(ContainerConfig.create(defaults, config))
                     .category(EconomyConfig.create(defaults, config))
@@ -130,6 +132,9 @@ public class NarConfig {
 
     @SerialEntry
     public GeneralConfig general = new GeneralConfig();
+
+    @SerialEntry
+    public QolConfig qol = new QolConfig();
 
     @SerialEntry
     public ChatConfig chat = new ChatConfig();
