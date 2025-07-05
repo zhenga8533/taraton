@@ -6,6 +6,8 @@ import java.nio.file.Path;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.hud.ChatHud;
+import net.minecraft.text.HoverEvent.ShowText;
+import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.volcaronitee.nar.NotARat;
@@ -51,8 +53,17 @@ public class Contract {
                 return false;
             }
         } else {
-            chatHud.addMessage(NotARat.MOD_TITLE.copy()
-                    .append(Text.literal(" Desktop is not supported!").formatted(Formatting.RED)));
+            String absolutePath = CONTRACT_FILE.toAbsolutePath().toString();
+            chatHud.addMessage(NotARat.MOD_TITLE.copy().append(Text.literal(
+                    " Desktop is not supported! Please open the contract file manually at: ")
+                    .formatted(Formatting.RED))
+                    .append(Text.literal(absolutePath).setStyle(Style.EMPTY
+                            .withColor(Formatting.BLUE).withUnderline(true)
+                            .withClickEvent(
+                                    new net.minecraft.text.ClickEvent.CopyToClipboard(absolutePath))
+                            .withHoverEvent(
+                                    new ShowText(Text.literal("Click to copy path to clipboard")
+                                            .formatted(Formatting.YELLOW))))));
             return false;
         }
     }
