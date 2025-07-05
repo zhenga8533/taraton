@@ -5,6 +5,7 @@ import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.GenericContainerScreen;
+import net.minecraft.client.gui.screen.ingame.InventoryScreen;
 import net.volcaronitee.nar.config.NarConfig;
 
 /**
@@ -37,7 +38,8 @@ public class NoMouseReset {
     public static void register() {
         ScreenEvents.BEFORE_INIT.register((client, screen, scaledWidth, scaledHeight) -> {
             if (System.currentTimeMillis() - INSTANCE.lastScreenOpen > 200
-                    || !(INSTANCE.lastScreen instanceof GenericContainerScreen)) {
+                    || !(INSTANCE.lastScreen instanceof GenericContainerScreen
+                            || INSTANCE.lastScreen instanceof InventoryScreen)) {
                 INSTANCE.centerMouse();
             }
 
