@@ -1,11 +1,29 @@
 package net.volcaronitee.nar.util.helper;
 
+import java.util.regex.Pattern;
+
 /**
  * Utility class for parsing and cleaning text by removing formatting characters.
  */
 public class Parser {
     public static final String PLAYER_PATTERN =
             "(?:\\[\\d+\\] )?(?:\\[[^\\]]*\\+?\\] )?(\\w+)(?: \\[[^\\]]+\\])?";
+
+    public static final Pattern IMAGE_URL_PATTERN =
+            Pattern.compile("\\b(?:https?|ftp):\\/\\/[\\w\\d\\-_.~%&?#/=+,]*[\\w\\d\\-_~%&?#/=+]",
+                    Pattern.CASE_INSENSITIVE);
+
+    public static boolean isImage(String url) {
+        if (url == null || url.isEmpty()) {
+            return false;
+        }
+        String lowerCaseUrl = url.toLowerCase();
+        return lowerCaseUrl.endsWith(".jpg") || lowerCaseUrl.endsWith(".jpeg")
+                || lowerCaseUrl.endsWith(".png") || lowerCaseUrl.endsWith(".gif")
+                || lowerCaseUrl.endsWith(".bmp") || lowerCaseUrl.endsWith(".webp")
+                || lowerCaseUrl.endsWith(".tiff") || lowerCaseUrl.endsWith(".ico")
+                || lowerCaseUrl.endsWith(".svg");
+    }
 
     /**
      * Checks if the given string is a valid numeric string.
