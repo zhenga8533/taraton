@@ -15,6 +15,7 @@
     "GameRendererMixin",
     "InGameHudMixin",
     "InGameOverlayRendererMixin",
+    "KeepAliveS2CPacketMixin",
     "MouseMixin",
     "ParticleManagerMixin",
     "StatusEffectsDisplayMixin",

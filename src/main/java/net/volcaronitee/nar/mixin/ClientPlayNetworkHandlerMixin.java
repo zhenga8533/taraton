@@ -6,7 +6,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.network.packet.s2c.play.StatisticsS2CPacket;
-import net.minecraft.network.packet.s2c.play.WorldTimeUpdateS2CPacket;
 import net.volcaronitee.nar.feature.general.ServerStatus;
 
 /**
@@ -24,23 +23,4 @@ public class ClientPlayNetworkHandlerMixin {
     private void nar$onStatistics(StatisticsS2CPacket packet, CallbackInfo ci) {
         ServerStatus.getInstance().onPingResponse();
     }
-
-    /**
-     * Injects custom behavior into the onWorldTimeUpdate method of ClientPlayNetworkHandler.
-     * 
-     * @param packet The WorldTimeUpdateS2CPacket containing world time data
-     * @param ci Callback information for the method call
-     */
-    @Inject(method = "onWorldTimeUpdate", at = @At("TAIL"))
-    private void nar$onWorldTimeUpdate(WorldTimeUpdateS2CPacket packet, CallbackInfo ci) {
-        ServerStatus.getInstance().recordServerTick();
-    }
-
-    /**
-     * TODO: Test these
-     * 
-     * - onTickStep(TickStepS2CPacket packet)
-     * 
-     * - onPlayerListHeader(PlayerListHeaderS2CPacket packet)
-     */
 }

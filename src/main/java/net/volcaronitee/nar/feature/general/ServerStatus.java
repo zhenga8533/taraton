@@ -1,7 +1,10 @@
 package net.volcaronitee.nar.feature.general;
 
+import java.util.ArrayList;
 import java.util.List;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.network.packet.c2s.play.ClientStatusC2SPacket;
 import net.minecraft.network.packet.c2s.play.ClientStatusC2SPacket.Mode;
@@ -58,10 +61,8 @@ public class ServerStatus {
     private int pingTickCounter = 0;
 
     // TPS measurement fields
-    private long lastTickTime = -1;
-    private final int TICK_SAMPLE_SIZE = 20;
-    private final double[] tickIntervals = new double[TICK_SAMPLE_SIZE];
-    private int tickIndex = 0;
+    private static long lastKeepAliveTime = -1;
+    private static final List<Long> tickDurations = new ArrayList<>();
 
     /**
      * Private constructor to prevent instantiation.
@@ -82,10 +83,13 @@ public class ServerStatus {
      */
     public static void register() {
         TickUtil.register(INSTANCE::updateStatus, 1);
+        ClientPlayConnectionEvents.DISCONNECT.register(INSTANCE::resetMeasurements);
     }
 
     /**
-     * Updates the server status information. * @param client The Minecraft client instance.
+     * Updates the server status information.
+     * 
+     * @param client The Minecraft client instance.
      */
     private void updateStatus(MinecraftClient client) {
         if (client.world == null || client.player == null) {
@@ -120,6 +124,7 @@ public class ServerStatus {
         }
 
         fps = client.getCurrentFps();
+        tps = estimateTps();
         day = MinecraftClient.getInstance().world.getTime() / 24000.0f;
 
         updateOverlay();
@@ -137,28 +142,53 @@ public class ServerStatus {
     }
 
     /**
-     * Records a server tick to calculate TPS. Actually fires every second for now...
+     * Called when a keep-alive packet is received from the server.
      */
-    public void recordServerTick() {
-        long now = System.currentTimeMillis();
-
-        if (INSTANCE.lastTickTime != -1) {
-            double interval = now - lastTickTime;
-            tickIntervals[tickIndex % TICK_SAMPLE_SIZE] = interval;
-            tickIndex++;
-
-            double avg = 0;
-            int count = Math.min(tickIndex, TICK_SAMPLE_SIZE);
-            for (int i = 0; i < count; i++) {
-                avg += tickIntervals[i];
+    public void onKeepAlivePacket() {
+        long currentTime = System.currentTimeMillis();
+        if (lastKeepAliveTime != -1) {
+            long duration = currentTime - lastKeepAliveTime;
+            tickDurations.add(duration);
+            while (tickDurations.size() > 10) {
+                tickDurations.remove(0);
             }
-            avg /= count;
+        }
+        lastKeepAliveTime = currentTime;
+    }
 
-            // TPS = 1000ms / (avg tick duration)
-            tps = Math.min(20.0, 20 * 1000.0 / avg);
+    /**
+     * Estimates the server's TPS (Ticks Per Second) based on the recorded tick durations.
+     * 
+     * @return The estimated TPS.
+     */
+    public double estimateTps() {
+        if (tickDurations.isEmpty()) {
+            return 20.0;
         }
 
-        lastTickTime = now;
+        long totalDuration = 0;
+        for (long duration : tickDurations) {
+            totalDuration += duration;
+        }
+
+        // Calculate given packets are sent ~550ms
+        double averageDuration = totalDuration / (double) tickDurations.size();
+        return Math.min(20.0, 20.0 * (550 / averageDuration));
+    }
+
+    /**
+     * Resets the measurements when the player disconnects.
+     * 
+     * @param client The Minecraft client instance.
+     */
+    public void resetMeasurements(ClientPlayNetworkHandler handler, MinecraftClient client) {
+        lastKeepAliveTime = -1;
+        tickDurations.clear();
+        ping = 0;
+        lastPingTime = 0;
+        awaitingPing = false;
+        pingTickCounter = 0;
+        tps = 20.0;
     }
 
     /**
