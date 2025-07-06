@@ -145,19 +145,6 @@ public class ContainerConfig {
                                         newVal -> config.container.equipmentDisplay = newVal)
                                 .controller(NarConfig::createBooleanController).build())
 
-                        // TODO: Max Supercraft
-                        .option(Option.<Boolean>createBuilder().name(Text.literal("Max Supercraft"))
-                                .description(OptionDescription.createBuilder()
-                                        .webpImage(Identifier.of(NotARat.MOD_ID,
-                                                "config/container/max_supercraft.webp"))
-                                        .text(Text.literal(
-                                                "Displays the maximum supercraft quantity in the crafting description."))
-                                        .build())
-                                .binding(defaults.container.maxSupercraft,
-                                        () -> config.container.maxSupercraft,
-                                        newVal -> config.container.maxSupercraft = newVal)
-                                .controller(NarConfig::createBooleanController).build())
-
                         .build())
 
                 .build();
@@ -189,7 +176,4 @@ public class ContainerConfig {
 
     @SerialEntry
     public boolean equipmentDisplay = false;
-
-    @SerialEntry
-    public boolean maxSupercraft = true;
 }
