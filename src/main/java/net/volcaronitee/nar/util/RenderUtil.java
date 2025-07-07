@@ -4,8 +4,13 @@ import org.joml.FrustumIntersection;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.Frustum;
+import net.minecraft.client.render.RenderLayer;
+import net.minecraft.client.render.VertexConsumer;
+import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.render.VertexRendering;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
+import net.minecraft.text.Text;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
@@ -179,5 +184,38 @@ public class RenderUtil {
                 entity.lastRenderZ + (entity.getZ() - entity.lastRenderZ) * tickProgress;
 
         renderBeaconBeam(context, interpolatedX, interpolatedY, interpolatedZ, colorComponents);
+    }
+
+    /**
+     * Renders a waypoint at the specified block position with the given text and color components.
+     * 
+     * @param context The rendering context containing the necessary matrices and world information.
+     * @param pos The block position of the waypoint.
+     * @param text The text to display at the waypoint.
+     * @param rgbaComponents An array of four float values representing the RGBA color components.
+     * @param beaconBeam Whether to render a beacon beam at the waypoint position.
+     */
+    public static void renderWaypoint(WorldRenderContext context, BlockPos pos, Text text,
+            float[] rgbaComponents, boolean beaconBeam) {
+        MatrixStack matrices = context.matrixStack();
+        Vec3d camera = context.camera().getPos();
+
+        matrices.push();
+        matrices.translate(-camera.x, -camera.y, -camera.z);
+
+        VertexConsumerProvider consumers = context.consumers();
+        VertexConsumer buffer = consumers.getBuffer(RenderLayer.getGuiOverlay());
+
+        double minX = pos.getX() - 0.5;
+        double minY = pos.getY() - 0.5;
+        double minZ = pos.getZ() - 0.5;
+        double maxX = pos.getX() + 0.5;
+        double maxY = pos.getY() + 0.5;
+        double maxZ = pos.getZ() + 0.5;
+        VertexRendering.drawFilledBox(matrices, buffer, minX, minY, minZ, maxX, maxY, maxZ,
+                rgbaComponents[0], rgbaComponents[1], rgbaComponents[2], rgbaComponents[3]);
+        matrices.pop();
+
+        renderBeaconBeam(context, pos, rgbaComponents);
     }
 }
