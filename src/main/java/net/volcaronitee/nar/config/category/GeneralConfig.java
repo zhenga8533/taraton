@@ -112,6 +112,22 @@ public class GeneralConfig {
                                         newVal -> config.general.imagePreview = newVal)
                                 .controller(NarConfig::createBooleanController).build())
 
+                        // Render Waypoint
+                        .option(Option.<Integer>createBuilder()
+                                .name(Text.literal("Render Waypoint"))
+                                .description(OptionDescription.createBuilder()
+                                        .webpImage(Identifier.of(NotARat.MOD_ID,
+                                                "config/general/render_waypoint.webp"))
+                                        .text(Text.literal(
+                                                "Sets time in seconds before waypoints are removed."))
+                                        .build())
+                                .binding(defaults.general.renderWaypoints,
+                                        () -> config.general.renderWaypoints,
+                                        newVal -> config.general.renderWaypoints = newVal)
+                                .controller(opt -> IntegerSliderControllerBuilder.create(opt)
+                                        .range(0, 120).step(10))
+                                .build())
+
                         // TODO: Skill Tracker
                         .option(Option.<Integer>createBuilder().name(Text.literal("Skill Tracker"))
                                 .description(OptionDescription.createBuilder()
@@ -154,22 +170,6 @@ public class GeneralConfig {
                                         () -> config.general.skyblockXpAlert,
                                         newVal -> config.general.skyblockXpAlert = newVal)
                                 .controller(NarConfig::createBooleanController).build())
-
-                        // TODO: Waypoint Timeout
-                        .option(Option.<Integer>createBuilder()
-                                .name(Text.literal("Waypoint Timeout"))
-                                .description(OptionDescription.createBuilder()
-                                        .webpImage(Identifier.of(NotARat.MOD_ID,
-                                                "config/general/waypoint_timeout.webp"))
-                                        .text(Text.literal(
-                                                "Sets time in seconds before waypoints are removed."))
-                                        .build())
-                                .binding(defaults.general.waypointTimeout,
-                                        () -> config.general.waypointTimeout,
-                                        newVal -> config.general.waypointTimeout = newVal)
-                                .controller(opt -> IntegerSliderControllerBuilder.create(opt)
-                                        .range(0, 120).step(10))
-                                .build())
 
                         // Widget Display
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Widget Display"))
@@ -300,6 +300,9 @@ public class GeneralConfig {
     public boolean imagePreview = false;
 
     @SerialEntry
+    public int renderWaypoints = 0;
+
+    @SerialEntry
     public int skillTracker = 0;
 
     @SerialEntry
@@ -307,9 +310,6 @@ public class GeneralConfig {
 
     @SerialEntry
     public boolean skyblockXpAlert = true;
-
-    @SerialEntry
-    public int waypointTimeout = 0;
 
     @SerialEntry
     public boolean widgetDisplay = true;
