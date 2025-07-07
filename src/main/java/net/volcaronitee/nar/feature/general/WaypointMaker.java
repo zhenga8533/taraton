@@ -21,8 +21,8 @@ import net.volcaronitee.nar.util.ScheduleUtil;
 public class WaypointMaker {
     private static final WaypointMaker INSTANCE = new WaypointMaker();
 
-    private static final Pattern WAYPOINT_PATTERN =
-            Pattern.compile(".*" + ParseUtil.PLAYER_PATTERN + ": x: \\d+, y: \\d+, z: \\d+.*");
+    private static final Pattern WAYPOINT_PATTERN = Pattern.compile("(?:.*)?"
+            + ParseUtil.PLAYER_PATTERN + ": x: (-?\\d+), y: (-?\\d+), z: (-?\\d+)(?:.*)?");
 
     private static final List<Waypoint> WAYPOINTS = new ArrayList<>();
 
