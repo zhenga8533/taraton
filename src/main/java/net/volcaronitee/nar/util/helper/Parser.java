@@ -1,6 +1,12 @@
 package net.volcaronitee.nar.util.helper;
 
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Function;
 import java.util.regex.Pattern;
+import net.minecraft.text.MutableText;
+import net.minecraft.text.OrderedText;
+import net.minecraft.text.Style;
+import net.minecraft.text.Text;
 
 /**
  * Utility class for parsing and cleaning text by removing formatting characters.
@@ -79,5 +85,48 @@ public class Parser {
         }
 
         return cleanedText.toString();
+    }
+
+    /**
+     * Modifies the given Text by applying a replacer function to segments of the text that have
+     * consistent styles.
+     * 
+     * @param text The text to modify.
+     * @param replacer The function to apply to each segment of text.
+     * @return The modified Text.
+     */
+    public static Text modifyText(OrderedText text, Function<Text, Text> replacer) {
+        MutableText reconstructed = Text.empty();
+        StringBuilder textBuilder = new StringBuilder();
+        AtomicReference<Style> currentStyle = new AtomicReference<>();
+
+        // Use the OrderedText API to iterate through the text segments
+        text.accept((index, style, codePoint) -> {
+            if (currentStyle.get() == null) {
+                currentStyle.set(style);
+            } else if (!style.equals(currentStyle.get())) {
+                if (!textBuilder.isEmpty()) {
+                    Text segmentToModify =
+                            Text.literal(textBuilder.toString()).setStyle(currentStyle.get());
+                    Text modified = replacer.apply(segmentToModify);
+                    reconstructed.append(modified);
+                }
+                textBuilder.setLength(0);
+                currentStyle.set(style);
+            }
+
+            textBuilder.append(Character.toChars(codePoint));
+            return true;
+        });
+
+        // Handle the last segment if it exists
+        if (!textBuilder.isEmpty()) {
+            Text segmentToModify =
+                    Text.literal(textBuilder.toString()).setStyle(currentStyle.get());
+            Text modified = replacer.apply(segmentToModify);
+            reconstructed.append(modified);
+        }
+
+        return reconstructed;
     }
 }

@@ -1,10 +1,16 @@
 package net.volcaronitee.nar.feature.general;
 
+import java.net.URI;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
 import net.fabricmc.fabric.api.client.message.v1.ClientSendMessageEvents;
+import net.minecraft.text.ClickEvent;
+import net.minecraft.text.MutableText;
+import net.minecraft.text.Style;
 import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 import net.volcaronitee.nar.config.NarConfig;
 import net.volcaronitee.nar.util.helper.Parser;
 
@@ -14,14 +20,15 @@ import net.volcaronitee.nar.util.helper.Parser;
 public class ImageViewer {
     private static final ImageViewer INSTANCE = new ImageViewer();
 
-    private static final int SHIFT_AMOUNT = -1;
+    private static final int SHIFT_AMOUNT = 3;
     private static final String IMAGE_PREFIX = "nar@";
     private static final Pattern BYPASS_PATTERN = Pattern.compile(IMAGE_PREFIX + "[^ ]+");
 
     /**
      * Private constructor to prevent instantiation.
      */
-    private ImageViewer() {}
+    private ImageViewer() {
+    }
 
     public static void register() {
         ClientSendMessageEvents.MODIFY_CHAT.register(INSTANCE::handleImageBypass);
@@ -57,14 +64,55 @@ public class ImageViewer {
         return resultBuilder.toString();
     }
 
+    /**
+     * Handles the decryption of image URLs in received chat messages.
+     * 
+     * @param message The chat message to process.
+     * @param overlay Whether the message is an overlay (e.g., from a mod or
+     *                external source).
+     * @return The modified chat message with decrypted image URLs.
+     */
     private Text handleImageViewer(Text message, boolean overlay) {
         if (!NarConfig.getHandler().general.imageViewer || overlay || message == null) {
             return message;
         }
 
-        // TODO
+        Text modifiedText = Parser.modifyText(message.asOrderedText(), segment -> {
+            String text = segment.getString();
+            Matcher matcher = BYPASS_PATTERN.matcher(text);
+            MutableText modifiedSegment = Text.empty();
+            int lastIndex = 0;
 
-        return message;
+            // Iterate through all matches and replace them with decrypted URLs
+            while (matcher.find()) {
+                modifiedSegment
+                        .append(Text.literal(text.substring(lastIndex, matcher.start())).setStyle(segment.getStyle()));
+                String originalUrl = matcher.group();
+                String decryptedUrl = decryptImageUrl(originalUrl.substring(IMAGE_PREFIX.length()));
+
+                // Add the decrypted URL with a clickable style
+                try {
+                    Style imageStyle = Style.EMPTY.withColor(Formatting.BLUE).withUnderline(true)
+                            .withClickEvent(new ClickEvent.OpenUrl(new URI(decryptedUrl)));
+                    Text decryptedText = Text.literal(decryptedUrl)
+                            .setStyle(imageStyle);
+                    modifiedSegment.append(decryptedText);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    modifiedSegment.append(Text.literal(originalUrl).setStyle(segment.getStyle()));
+                }
+                lastIndex = matcher.end();
+            }
+
+            // Append any remaining text after the last match
+            if (lastIndex < text.length()) {
+                modifiedSegment.append(Text.literal(text.substring(lastIndex)).setStyle(segment.getStyle()));
+            }
+
+            return modifiedSegment;
+        });
+
+        return modifiedText;
     }
 
     /**

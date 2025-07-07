@@ -1,6 +1,5 @@
 package net.volcaronitee.nar.mixin;
 
-import java.util.concurrent.atomic.AtomicReference;
 import org.joml.Matrix4f;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -11,11 +10,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.text.CharacterVisitor;
-import net.minecraft.text.MutableText;
 import net.minecraft.text.OrderedText;
-import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.volcaronitee.nar.feature.chat.TextSubstitution;
+import net.volcaronitee.nar.util.helper.Parser;
 
 /**
  * Mixin for TextRenderer to modify the OrderedText before rendering. Adapted for Minecraft 1.21.5
@@ -49,38 +47,8 @@ public class TextRendererMixin {
             Matrix4f matrix, VertexConsumerProvider vertexConsumerProvider,
             TextRenderer.TextLayerType layerType, int backgroundColor, int light,
             boolean swapZIndex, CallbackInfoReturnable<Float> cir) {
-
-        MutableText reconstructed = Text.empty();
-
-        StringBuilder currentTextBuilder = new StringBuilder();
-        AtomicReference<Style> currentStyleRef = new AtomicReference<>();
-
-        text.accept((index, style, codePoint) -> {
-            if (currentStyleRef.get() == null) {
-                currentStyleRef.set(style);
-            } else if (!style.equals(currentStyleRef.get())) {
-                if (!currentTextBuilder.isEmpty()) {
-                    Text segmentToModify = Text.literal(currentTextBuilder.toString())
-                            .setStyle(currentStyleRef.get());
-                    Text modified = TextSubstitution.getInstance().modify(segmentToModify);
-                    reconstructed.append(modified);
-                }
-                currentTextBuilder.setLength(0);
-                currentStyleRef.set(style);
-            }
-
-            currentTextBuilder.append(Character.toChars(codePoint));
-            return true;
-        });
-
-        if (!currentTextBuilder.isEmpty()) {
-            Text segmentToModify =
-                    Text.literal(currentTextBuilder.toString()).setStyle(currentStyleRef.get());
-            Text modified = TextSubstitution.getInstance().modify(segmentToModify);
-            reconstructed.append(modified);
-        }
-
-        this.nar$modifiedOrderedText = reconstructed.asOrderedText();
+        Text modifiedText = Parser.modifyText(text, TextSubstitution.getInstance()::modify);
+        this.nar$modifiedOrderedText = modifiedText.asOrderedText();
     }
 
     /**
