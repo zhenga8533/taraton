@@ -23,6 +23,7 @@ import net.volcaronitee.nar.feature.chat.JoinWhitelist;
 import net.volcaronitee.nar.feature.chat.SpamHider;
 import net.volcaronitee.nar.feature.chat.TextSubstitution;
 import net.volcaronitee.nar.feature.combat.EntityHighlight;
+import net.volcaronitee.nar.feature.general.ImagePreview;
 import net.volcaronitee.nar.feature.general.WidgetDisplay;
 import net.volcaronitee.nar.util.helper.Contract;
 
@@ -94,7 +95,7 @@ public class CommandUtil {
                                 .then(TextSubstitution.SUBSTITUTION_MAP.createCommand("submap"))
                                 .then(TextSubstitution.SUBSTITUTION_MAP.createCommand("sm"))
 
-                                // Chat commands
+                                // Chat/client commands
                                 .then(argument("default", StringArgumentType.greedyString())
                                         .executes(CommandUtil::defaultCommand))
 
@@ -236,8 +237,11 @@ public class CommandUtil {
      */
     private static int defaultCommand(CommandContext<FabricClientCommandSource> context) {
         ClientPlayerEntity clientPlayer = context.getSource().getPlayer();
-        if (ChatCommands.getInstance().handleCommand(clientPlayer,
-                StringArgumentType.getString(context, "default"))) {
+        String command = StringArgumentType.getString(context, "default").trim();
+
+        if (ChatCommands.getInstance().handleCommand(clientPlayer, command)) {
+            return 1;
+        } else if (ImagePreview.getInstance().handleCommand(command)) {
             return 1;
         } else {
             context.getSource().sendFeedback(NotARat.MOD_TITLE.copy()

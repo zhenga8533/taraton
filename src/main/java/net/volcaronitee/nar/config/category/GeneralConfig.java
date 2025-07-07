@@ -99,17 +99,17 @@ public class GeneralConfig {
                 // General Option Group
                 .group(OptionGroup.createBuilder().name(Text.literal("General"))
 
-                        // Image Viewer
-                        .option(Option.<Boolean>createBuilder().name(Text.literal("Image Viewer"))
+                        // Image Preview
+                        .option(Option.<Boolean>createBuilder().name(Text.literal("Image Preview"))
                                 .description(OptionDescription.createBuilder()
                                         .webpImage(Identifier.of(NotARat.MOD_ID,
-                                                "config/general/image_viewer.webp"))
+                                                "config/general/image_preview.webp"))
                                         .text(Text.literal(
                                                 "Bypasses the Hypixel image block and renders images. Converts image urls into special strings that can be rendered by other NAR users."))
                                         .build())
-                                .binding(defaults.general.imageViewer,
-                                        () -> config.general.imageViewer,
-                                        newVal -> config.general.imageViewer = newVal)
+                                .binding(defaults.general.imagePreview,
+                                        () -> config.general.imagePreview,
+                                        newVal -> config.general.imagePreview = newVal)
                                 .controller(NarConfig::createBooleanController).build())
 
                         // TODO: Skill Tracker
@@ -297,7 +297,7 @@ public class GeneralConfig {
 
     // General Option Group
     @SerialEntry
-    public boolean imageViewer = false;
+    public boolean imagePreview = false;
 
     @SerialEntry
     public int skillTracker = 0;

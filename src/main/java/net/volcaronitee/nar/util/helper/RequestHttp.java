@@ -5,6 +5,8 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Utility class for making HTTP requests and handling JSON responses.
@@ -12,6 +14,8 @@ import java.util.concurrent.CompletableFuture;
 public class RequestHttp {
     private static final HttpClient HTTP_CLIENT = HttpClient.newBuilder()
             .version(HttpClient.Version.HTTP_2).followRedirects(HttpClient.Redirect.NORMAL).build();
+
+    public static final ExecutorService EXECUTOR = Executors.newCachedThreadPool();
 
     /**
      * Performs a GET request to the specified URL and returns the response as a JsonObject.
