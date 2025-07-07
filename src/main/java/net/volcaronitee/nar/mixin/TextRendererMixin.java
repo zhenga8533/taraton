@@ -13,7 +13,7 @@ import net.minecraft.text.CharacterVisitor;
 import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
 import net.volcaronitee.nar.feature.chat.TextSubstitution;
-import net.volcaronitee.nar.util.helper.Parser;
+import net.volcaronitee.nar.util.ParseUtil;
 
 /**
  * Mixin for TextRenderer to modify the OrderedText before rendering. Adapted for Minecraft 1.21.5
@@ -47,7 +47,7 @@ public class TextRendererMixin {
             Matrix4f matrix, VertexConsumerProvider vertexConsumerProvider,
             TextRenderer.TextLayerType layerType, int backgroundColor, int light,
             boolean swapZIndex, CallbackInfoReturnable<Float> cir) {
-        Text modifiedText = Parser.modifyText(text, TextSubstitution.getInstance()::modify);
+        Text modifiedText = ParseUtil.modifyText(text, TextSubstitution.getInstance()::modify);
         this.nar$modifiedOrderedText = modifiedText.asOrderedText();
     }
 

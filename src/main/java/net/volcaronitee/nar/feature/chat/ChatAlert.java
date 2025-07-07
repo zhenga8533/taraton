@@ -4,16 +4,15 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Queue;
 import java.util.regex.Pattern;
-
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.Text;
 import net.volcaronitee.nar.config.NarConfig;
 import net.volcaronitee.nar.config.NarList;
 import net.volcaronitee.nar.mixin.accessor.InGameHudAccessor;
+import net.volcaronitee.nar.util.FormatUtil;
+import net.volcaronitee.nar.util.ParseUtil;
 import net.volcaronitee.nar.util.ScheduleUtil;
-import net.volcaronitee.nar.util.helper.Formatter;
-import net.volcaronitee.nar.util.helper.Parser;
 
 /**
  * Feature that alerts the player when certain chat messages are sent.
@@ -23,7 +22,7 @@ public class ChatAlert {
 
     public static final NarList CHAT_ALERT_MAP = new NarList("Chat Alert Map", Text
             .literal("A list of chat messages to alert on. Use ")
-            .append(Formatter.createLink("regex101.com", "https://regex101.com"))
+            .append(FormatUtil.createLink("regex101.com", "https://regex101.com"))
             .append(Text.literal(" to test your regex patterns.\n\n\n§lOptions:§r\n\n"
                     + " --fadeIn <ticks> §7Time in ticks needed for the alert to fade in.\n"
                     + " --stay <ticks> §7Time in ticks the alert will stay on screen.\n"
@@ -44,8 +43,7 @@ public class ChatAlert {
     /**
      * Private constructor to prevent instantiation.
      */
-    private ChatAlert() {
-    }
+    private ChatAlert() {}
 
     /**
      * Registers the chat alert handler to listen for incoming messages.
@@ -55,8 +53,7 @@ public class ChatAlert {
     }
 
     /**
-     * Handles incoming chat messages and checks if they match any configured
-     * alerts.
+     * Handles incoming chat messages and checks if they match any configured alerts.
      * 
      * @param message The chat message to check.
      * @param overlay Whether the message is an overlay message.
@@ -117,13 +114,13 @@ public class ChatAlert {
             // Parse the remaining parts for fadeIn, stay, fadeOut, and command
             for (String part : parts) {
                 if (part.startsWith("fadeIn ")) {
-                    fadeIn = Parser.parseInt(part.substring("fadeIn ".length()).trim());
+                    fadeIn = ParseUtil.parseInt(part.substring("fadeIn ".length()).trim());
                     fadeIn = fadeIn <= 0 ? 10 : fadeIn;
                 } else if (part.startsWith("stay ")) {
-                    stay = Parser.parseInt(part.substring("stay ".length()).trim());
+                    stay = ParseUtil.parseInt(part.substring("stay ".length()).trim());
                     stay = stay <= 0 ? 70 : stay;
                 } else if (part.startsWith("fadeOut ")) {
-                    fadeOut = Parser.parseInt(part.substring("fadeOut ".length()).trim());
+                    fadeOut = ParseUtil.parseInt(part.substring("fadeOut ".length()).trim());
                     fadeOut = fadeOut <= 0 ? 20 : fadeOut;
                 } else if (part.startsWith("command ")) {
                     command = part.substring("command ".length()).trim();
@@ -133,8 +130,7 @@ public class ChatAlert {
                 }
             }
 
-            CHAT_PATTERNS
-                    .add(new Alert(pattern, message, fadeIn, stay, fadeOut, command));
+            CHAT_PATTERNS.add(new Alert(pattern, message, fadeIn, stay, fadeOut, command));
         });
     }
 
@@ -154,8 +150,8 @@ public class ChatAlert {
          * 
          * @param pattern The regex pattern to match against chat messages.
          * @param message The message to display when the pattern matches.
-         * @param fadeIn  Time in ticks needed for the alert to fade in.
-         * @param stay    Time in ticks the alert will stay on screen.
+         * @param fadeIn Time in ticks needed for the alert to fade in.
+         * @param stay Time in ticks the alert will stay on screen.
          * @param fadeOut Time in ticks needed for the alert to fade out.
          * @param command The command to execute when the pattern matches.
          */

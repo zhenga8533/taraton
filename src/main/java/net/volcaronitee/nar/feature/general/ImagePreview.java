@@ -25,8 +25,8 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.volcaronitee.nar.NotARat;
 import net.volcaronitee.nar.config.NarConfig;
-import net.volcaronitee.nar.util.helper.Parser;
-import net.volcaronitee.nar.util.helper.RequestHttp;
+import net.volcaronitee.nar.util.ParseUtil;
+import net.volcaronitee.nar.util.RequestUtil;
 
 /**
  * Handles image URL bypassing in chat messages by encrypting image URLs.
@@ -147,12 +147,12 @@ public class ImagePreview {
             return message;
         }
 
-        Matcher matcher = Parser.IMAGE_URL_PATTERN.matcher(message);
+        Matcher matcher = ParseUtil.IMAGE_URL_PATTERN.matcher(message);
         StringBuilder resultBuilder = new StringBuilder();
 
         while (matcher.find()) {
             String originalUrl = matcher.group();
-            if (!Parser.isImage(originalUrl)) {
+            if (!ParseUtil.isImage(originalUrl)) {
                 matcher.appendReplacement(resultBuilder, originalUrl);
                 continue;
             }
@@ -177,7 +177,7 @@ public class ImagePreview {
             return message;
         }
 
-        Text modifiedText = Parser.modifyText(message.asOrderedText(), segment -> {
+        Text modifiedText = ParseUtil.modifyText(message.asOrderedText(), segment -> {
             String text = segment.getString();
             Matcher matcher = BYPASS_PATTERN.matcher(text);
             MutableText modifiedSegment = Text.empty();
@@ -256,7 +256,7 @@ public class ImagePreview {
             } catch (IOException e) {
                 return null;
             }
-        }, RequestHttp.EXECUTOR).thenAcceptAsync(image -> {
+        }, RequestUtil.EXECUTOR).thenAcceptAsync(image -> {
             if (image != null) {
                 MinecraftClient client = MinecraftClient.getInstance();
                 client.execute(() -> {

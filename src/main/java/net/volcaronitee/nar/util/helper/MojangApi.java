@@ -4,6 +4,7 @@ import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import com.google.gson.JsonObject;
 import net.volcaronitee.nar.config.NarJson;
+import net.volcaronitee.nar.util.RequestUtil;
 
 /**
  * Utility class for fetching player information from Mojang's session server.
@@ -41,7 +42,7 @@ public class MojangApi {
         String url = "https://sessionserver.mojang.com/session/minecraft/profile/" + cleanUuid;
 
         // Use RequestUtil.get to send the async GET request
-        return RequestHttp.get(url).thenApply(responseBody -> {
+        return RequestUtil.get(url).thenApply(responseBody -> {
             if (responseBody == null || responseBody.isEmpty()) {
                 return null;
             }

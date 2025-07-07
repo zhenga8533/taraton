@@ -1,4 +1,4 @@
-package net.volcaronitee.nar.util.helper;
+package net.volcaronitee.nar.util;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -11,11 +11,11 @@ import net.minecraft.util.Formatting;
 /**
  * Utility class for text formatting and constants.
  */
-public class Formatter {
+public class FormatUtil {
     /**
      * Private constructor to prevent instantiation.
      */
-    private Formatter() {}
+    private FormatUtil() {}
 
     /**
      * Creates a clickable link text component.

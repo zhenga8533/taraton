@@ -6,7 +6,7 @@ import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
 import net.minecraft.text.Text;
 import net.volcaronitee.nar.config.NarConfig;
 import net.volcaronitee.nar.config.NarList;
-import net.volcaronitee.nar.util.helper.Formatter;
+import net.volcaronitee.nar.util.FormatUtil;
 
 /**
  * Feature to filter out spam messages in chat.
@@ -16,7 +16,7 @@ public class SpamHider {
 
     public static final NarList SPAM_LIST = new NarList("Spam List",
             Text.literal("A list of spam messages to hide in chat.\n\nUse ")
-                    .append(Formatter.createLink("regex101.com", "https://regex101.com"))
+                    .append(FormatUtil.createLink("regex101.com", "https://regex101.com"))
                     .append(Text.literal(" to test your regex patterns.")),
             "spam_list.json", INSTANCE::onSave);
 

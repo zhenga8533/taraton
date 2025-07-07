@@ -1,4 +1,4 @@
-package net.volcaronitee.nar.util.helper;
+package net.volcaronitee.nar.util;
 
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -11,7 +11,7 @@ import java.util.concurrent.Executors;
 /**
  * Utility class for making HTTP requests and handling JSON responses.
  */
-public class RequestHttp {
+public class RequestUtil {
     private static final HttpClient HTTP_CLIENT = HttpClient.newBuilder()
             .version(HttpClient.Version.HTTP_2).followRedirects(HttpClient.Redirect.NORMAL).build();
 

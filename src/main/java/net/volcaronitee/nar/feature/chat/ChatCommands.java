@@ -13,9 +13,9 @@ import net.volcaronitee.nar.config.NarConfig;
 import net.volcaronitee.nar.config.NarList;
 import net.volcaronitee.nar.config.NarToggle;
 import net.volcaronitee.nar.feature.general.ServerStatus;
+import net.volcaronitee.nar.util.ParseUtil;
 import net.volcaronitee.nar.util.PartyUtil;
 import net.volcaronitee.nar.util.ScheduleUtil;
-import net.volcaronitee.nar.util.helper.Parser;
 
 /**
  * Feature for handling chat commands in the game.
@@ -30,13 +30,13 @@ public class ChatCommands {
             Text.literal("A list of prefixes to detect for chat commands."), "prefix_list.json");
 
     // Patterns for matching chat messages
-    private static final Pattern ALL_PATTERN = Pattern.compile(Parser.PLAYER_PATTERN + ": (.+)");
+    private static final Pattern ALL_PATTERN = Pattern.compile(ParseUtil.PLAYER_PATTERN + ": (.+)");
     private static final Pattern GUILD_PATTERN =
-            Pattern.compile("Guild > " + Parser.PLAYER_PATTERN + ": (.+)");
+            Pattern.compile("Guild > " + ParseUtil.PLAYER_PATTERN + ": (.+)");
     private static final Pattern PARTY_PATTERN =
-            Pattern.compile("Party > " + Parser.PLAYER_PATTERN + ": (.+)");
+            Pattern.compile("Party > " + ParseUtil.PLAYER_PATTERN + ": (.+)");
     private static final Pattern PRIVATE_PATTERN =
-            Pattern.compile("From " + Parser.PLAYER_PATTERN + ": (.+)");
+            Pattern.compile("From " + ParseUtil.PLAYER_PATTERN + ": (.+)");
 
     // List of responses for the 8-ball command
     private static final String[] EIGHT_BALL = {"As I see it, yes", "It is certain",
@@ -112,7 +112,7 @@ public class ChatCommands {
         }
 
         // Check if the text matches any of the defined patterns
-        String text = Parser.removeFormatting(message.getString());
+        String text = ParseUtil.removeFormatting(message.getString());
         Matcher allMatcher = ALL_PATTERN.matcher(text);
         Matcher guildMatcher = GUILD_PATTERN.matcher(text);
         Matcher partyMatcher = PARTY_PATTERN.matcher(text);
@@ -266,7 +266,7 @@ public class ChatCommands {
                     return false;
                 }
 
-                String size = Parser.isNumeric(arg1) ? arg1 : "10";
+                String size = ParseUtil.isNumeric(arg1) ? arg1 : "10";
                 scheduleCommand("stream open " + size);
                 return true;
             // Party warp commands
@@ -410,7 +410,7 @@ public class ChatCommands {
                     return false;
                 }
 
-                int sides = Parser.isNumeric(arg1) ? Integer.parseInt(arg1) : 6;
+                int sides = ParseUtil.isNumeric(arg1) ? Integer.parseInt(arg1) : 6;
                 int roll = (int) (Math.random() * sides) + 1;
                 scheduleCommand(head + " " + username + " rolled a " + roll + "!");
                 return true;

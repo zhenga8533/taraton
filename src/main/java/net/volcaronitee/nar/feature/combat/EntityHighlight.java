@@ -25,13 +25,13 @@ import net.volcaronitee.nar.NotARat;
 import net.volcaronitee.nar.config.NarConfig;
 import net.volcaronitee.nar.config.NarData;
 import net.volcaronitee.nar.config.NarList;
+import net.volcaronitee.nar.util.FormatUtil;
 import net.volcaronitee.nar.util.LocationUtil;
 import net.volcaronitee.nar.util.LocationUtil.World;
 import net.volcaronitee.nar.util.OverlayUtil;
 import net.volcaronitee.nar.util.OverlayUtil.LineContent;
 import net.volcaronitee.nar.util.RenderUtil;
 import net.volcaronitee.nar.util.TickUtil;
-import net.volcaronitee.nar.util.helper.Formatter;
 import net.volcaronitee.nar.util.helper.RelationalValue;
 import net.volcaronitee.nar.util.helper.RelationalValue.Operator;
 
@@ -48,7 +48,7 @@ public class EntityHighlight {
 
     public static final NarList ENTITY_LIST = new NarList("Entity List", Text
             .literal("A list of entities to highlight in the game.\n\nUse ")
-            .append(Formatter.createLink("digminecraft.com",
+            .append(FormatUtil.createLink("digminecraft.com",
                     "https://www.digminecraft.com/lists/entity_list_pc.php"))
             .append(Text.literal(
                     " to find vanilla entity names. You can also use 'F3 + I' to copy entity data to clipboard. If an entity ID is not found, it will be used to identify custom armor stand names.\n\n\n"

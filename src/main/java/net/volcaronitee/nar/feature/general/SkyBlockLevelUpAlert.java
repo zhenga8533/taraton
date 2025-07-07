@@ -7,8 +7,8 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.Text;
 import net.volcaronitee.nar.NotARat;
 import net.volcaronitee.nar.config.NarConfig;
+import net.volcaronitee.nar.util.ParseUtil;
 import net.volcaronitee.nar.util.ScheduleUtil;
-import net.volcaronitee.nar.util.helper.Parser;
 
 /**
  * Feature that alerts the player when they level up in SkyBlock.
@@ -44,7 +44,7 @@ public class SkyBlockLevelUpAlert {
         }
 
         // Check if the message contains SkyBlock level up
-        String text = Parser.removeFormatting(message.getString()).strip();
+        String text = ParseUtil.removeFormatting(message.getString()).strip();
         Matcher matcher = LEVEL_UP_PATTERN.matcher(text);
         if (!matcher.find()) {
             return;

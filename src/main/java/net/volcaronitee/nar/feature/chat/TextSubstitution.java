@@ -6,7 +6,7 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.Text;
 import net.volcaronitee.nar.config.NarConfig;
 import net.volcaronitee.nar.config.NarList;
-import net.volcaronitee.nar.util.helper.Formatter;
+import net.volcaronitee.nar.util.FormatUtil;
 
 /**
  * Feature for substituting text when rendering any text in the game,
@@ -40,7 +40,7 @@ public class TextSubstitution {
                     + "§mm - Strikethrough§r\n"
                     + "§nn - Underline§r\n"
                     + "§oo - Italic§r\n"
-                    + "§rr - Reset§r\n\n").append(Formatter.createLink(
+                    + "§rr - Reset§r\n\n").append(FormatUtil.createLink(
                         "htmlcolorcodes.com/minecraft-color-codes/", "https://htmlcolorcodes.com/minecraft-color-codes/")),
             "substitution_map.json");
     // @formatter:on

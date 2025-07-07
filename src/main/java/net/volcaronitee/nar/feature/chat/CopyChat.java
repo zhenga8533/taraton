@@ -12,7 +12,7 @@ import net.minecraft.text.Text;
 import net.volcaronitee.nar.NotARat;
 import net.volcaronitee.nar.config.NarConfig;
 import net.volcaronitee.nar.mixin.accessor.ChatHudAccessor;
-import net.volcaronitee.nar.util.helper.Formatter;
+import net.volcaronitee.nar.util.FormatUtil;
 
 /**
  * Handles copying chat messages when the user clicks on them while holding Shift.
@@ -84,7 +84,7 @@ public class CopyChat {
         // Concatenate the text from all parts of the message
         StringBuilder fullMessageText = new StringBuilder();
         for (ChatHudLine.Visible line : messageParts) {
-            fullMessageText.append(Formatter.orderedTextToString(line.content()));
+            fullMessageText.append(FormatUtil.orderedTextToString(line.content()));
         }
 
         String messageToCopy = fullMessageText.toString();

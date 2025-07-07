@@ -1,4 +1,4 @@
-package net.volcaronitee.nar.util.helper;
+package net.volcaronitee.nar.util;
 
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
@@ -11,7 +11,7 @@ import net.minecraft.text.Text;
 /**
  * Utility class for parsing and cleaning text by removing formatting characters.
  */
-public class Parser {
+public class ParseUtil {
     public static final String PLAYER_PATTERN =
             "(?:\\[\\d+\\] )?(?:\\[[^\\]]*\\+?\\] )?(\\w+)(?: \\[[^\\]]+\\])?";
 
