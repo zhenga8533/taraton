@@ -1,8 +1,10 @@
 package net.volcaronitee.nar.feature.chat;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Queue;
 import java.util.regex.Pattern;
+
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.Text;
@@ -42,7 +44,8 @@ public class ChatAlert {
     /**
      * Private constructor to prevent instantiation.
      */
-    private ChatAlert() {}
+    private ChatAlert() {
+    }
 
     /**
      * Registers the chat alert handler to listen for incoming messages.
@@ -52,7 +55,8 @@ public class ChatAlert {
     }
 
     /**
-     * Handles incoming chat messages and checks if they match any configured alerts.
+     * Handles incoming chat messages and checks if they match any configured
+     * alerts.
      * 
      * @param message The chat message to check.
      * @param overlay Whether the message is an overlay message.
@@ -100,11 +104,17 @@ public class ChatAlert {
     private void onSave() {
         CHAT_PATTERNS.clear();
         CHAT_ALERT_MAP.map.forEach((key, value) -> {
-            String[] parts = value.split("--");
-            String message = parts[0].trim();
+            // Split the key into parts to extract the regex pattern and options
+            String[] parts = key.split("--");
+            Pattern pattern = Pattern.compile(parts[0].trim());
+            parts = Arrays.copyOfRange(parts, 1, parts.length);
+
+            // Default values for fadeIn, stay, fadeOut, and command
+            String message = value;
             int fadeIn = 10, stay = 70, fadeOut = 20;
             String command = "";
 
+            // Parse the remaining parts for fadeIn, stay, fadeOut, and command
             for (String part : parts) {
                 if (part.startsWith("fadeIn ")) {
                     fadeIn = Parser.parseInt(part.substring("fadeIn ".length()).trim());
@@ -124,7 +134,7 @@ public class ChatAlert {
             }
 
             CHAT_PATTERNS
-                    .add(new Alert(Pattern.compile(key), message, fadeIn, stay, fadeOut, command));
+                    .add(new Alert(pattern, message, fadeIn, stay, fadeOut, command));
         });
     }
 
@@ -144,8 +154,8 @@ public class ChatAlert {
          * 
          * @param pattern The regex pattern to match against chat messages.
          * @param message The message to display when the pattern matches.
-         * @param fadeIn Time in ticks needed for the alert to fade in.
-         * @param stay Time in ticks the alert will stay on screen.
+         * @param fadeIn  Time in ticks needed for the alert to fade in.
+         * @param stay    Time in ticks the alert will stay on screen.
          * @param fadeOut Time in ticks needed for the alert to fade out.
          * @param command The command to execute when the pattern matches.
          */
