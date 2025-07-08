@@ -1,6 +1,5 @@
 package net.volcaronitee.nar.util;
 
-import java.io.InputStream;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -52,15 +51,11 @@ public class RequestUtil {
                 .header("User-Agent", "Mozilla/5.0").build();
 
         return HTTP_CLIENT.sendAsync(request, HttpResponse.BodyHandlers.ofInputStream())
-                .thenApply(response -> {
+                .thenApplyAsync(response -> {
                     if (response.statusCode() != 200) {
                         return null;
                     }
-                    try (InputStream is = response.body()) {
-                        return NativeImage.read(is);
-                    } catch (Exception e) {
-                        return null;
-                    }
+                    return ParseUtil.parseImageStream(response.body());
                 }).exceptionally(e -> {
                     e.printStackTrace();
                     return null;

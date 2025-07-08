@@ -1,8 +1,12 @@
 package net.volcaronitee.nar.util;
 
+import java.awt.image.BufferedImage;
+import java.io.InputStream;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
 import java.util.regex.Pattern;
+import javax.imageio.ImageIO;
+import net.minecraft.client.texture.NativeImage;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.OrderedText;
 import net.minecraft.text.Style;
@@ -32,6 +36,24 @@ public class ParseUtil {
     }
 
     /**
+     * Checks if the given string is a valid integer string.
+     * 
+     * @param str The string to check.
+     * @return True if the string is a valid integer, false otherwise.
+     */
+    public static boolean isInteger(String str) {
+        if (str == null || str.isEmpty()) {
+            return false;
+        }
+        try {
+            Integer.parseInt(str);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+
+    /**
      * Checks if the given string is a valid numeric string.
      * 
      * @param str The string to check.
@@ -56,6 +78,45 @@ public class ParseUtil {
             return Integer.parseInt(str);
         } catch (NumberFormatException e) {
             return 0;
+        }
+    }
+
+    /**
+     * Parses an image from the given InputStream and returns it as a NativeImage.
+     * 
+     * @param stream The InputStream containing the image data.
+     * @return The parsed NativeImage, or null if parsing fails.
+     */
+    public static NativeImage parseImageStream(InputStream stream) {
+        try (stream) {
+            try {
+                return NativeImage.read(stream);
+            } catch (Exception nativeException) {
+                BufferedImage bufferedImage = ImageIO.read(stream);
+
+                if (bufferedImage == null) {
+                    return null;
+                }
+
+                // Convert BufferedImage to NativeImage
+                NativeImage nativeImage =
+                        new NativeImage(bufferedImage.getWidth(), bufferedImage.getHeight(), false);
+                for (int y = 0; y < bufferedImage.getHeight(); y++) {
+                    for (int x = 0; x < bufferedImage.getWidth(); x++) {
+                        int rgb = bufferedImage.getRGB(x, y);
+                        int alpha = (rgb >> 24) & 0xFF;
+                        int red = (rgb >> 16) & 0xFF;
+                        int green = (rgb >> 8) & 0xFF;
+                        int blue = rgb & 0xFF;
+                        int abgr = (alpha << 24) | (blue << 16) | (green << 8) | red;
+                        nativeImage.setColor(x, y, abgr);
+                    }
+                }
+                return nativeImage;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
         }
     }
 
