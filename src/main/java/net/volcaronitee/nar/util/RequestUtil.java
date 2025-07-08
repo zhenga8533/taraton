@@ -40,6 +40,13 @@ public class RequestUtil {
         }
     }
 
+    /**
+     * Performs a GET request to the specified image URL and returns the image as a NativeImage.
+     * 
+     * @param imageUrl The URL of the image to fetch.
+     * @return CompletableFuture containing the NativeImage, or null if the request fails or the
+     *         response is not 200 OK.
+     */
     public static CompletableFuture<NativeImage> getImage(String imageUrl) {
         HttpRequest request = HttpRequest.newBuilder().uri(URI.create(imageUrl))
                 .header("User-Agent", "Mozilla/5.0").build();
