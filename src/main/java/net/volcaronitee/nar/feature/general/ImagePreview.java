@@ -67,6 +67,8 @@ public class ImagePreview {
      */
     public static void register() {
         ClientSendMessageEvents.MODIFY_CHAT.register(INSTANCE::handleImageBypass);
+        ClientSendMessageEvents.MODIFY_COMMAND.register(INSTANCE::handleImageBypass);
+
         ClientReceiveMessageEvents.MODIFY_GAME.register(INSTANCE::handleImagePreview);
         ScreenEvents.AFTER_INIT.register((client, screen, scaledWidth, scaledHeight) -> {
             ScreenEvents.remove(screen).register(closedScreen -> INSTANCE.resetImagePreview());
