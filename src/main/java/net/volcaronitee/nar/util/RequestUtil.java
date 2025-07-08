@@ -77,8 +77,8 @@ public class RequestUtil {
                         nativeImage.setColor(x, y, abgr);
                     }
                 }
-                return nativeImage;
 
+                return nativeImage;
             } catch (Exception e) {
                 e.printStackTrace();
                 return null;

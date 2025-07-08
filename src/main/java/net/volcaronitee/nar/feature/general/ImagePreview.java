@@ -14,6 +14,7 @@ import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.RenderTickCounter;
 import net.minecraft.client.texture.NativeImage;
 import net.minecraft.client.texture.NativeImageBackedTexture;
+import net.minecraft.client.util.Window;
 import net.minecraft.text.ClickEvent;
 import net.minecraft.text.HoverEvent;
 import net.minecraft.text.MutableText;
@@ -78,29 +79,34 @@ public class ImagePreview {
      * @param tickCounter The render tick counter for timing.
      */
     private void renderImagePreview(DrawContext context, RenderTickCounter tickCounter) {
-        if (!NarConfig.getHandler().general.imagePreview) {
+        MinecraftClient client = MinecraftClient.getInstance();
+        Window window = client.getWindow();
+        if (!NarConfig.getHandler().general.imagePreview || window.isMinimized()) {
             return;
         }
 
         // Get the current window dimensions and mouse position
         int windowWidth = context.getScaledWindowWidth();
         int windowHeight = context.getScaledWindowHeight();
-
-        MinecraftClient client = MinecraftClient.getInstance();
-        int mouseX = (int) (client.mouse.getX() * windowWidth / client.getWindow().getWidth());
-        int mouseY = (int) (client.mouse.getY() * windowHeight / client.getWindow().getHeight());
+        int mouseX = (int) (client.mouse.getX() * windowWidth / window.getWidth());
+        int mouseY = (int) (client.mouse.getY() * windowHeight / window.getHeight());
 
         if (hasLoaded && dynamicTexture != null && dynamicImage != null) {
             // Adjust the image preview size to fit within the window dimensions
-            int imageWidth = dynamicImage.getWidth() / 2;
-            int imageHeight = dynamicImage.getHeight() / 2;
+            int imageWidth = dynamicImage.getWidth() * windowWidth / window.getWidth();
+            int imageHeight = dynamicImage.getHeight() * windowHeight / window.getHeight();
 
-            double scaleX = (double) windowWidth / imageWidth;
-            double scaleY = (double) windowHeight / imageHeight;
-            double scale = Math.min(scaleX, scaleY);
+            int renderedWidth = imageWidth;
+            int renderedHeight = imageHeight;
 
-            int renderedWidth = (int) (imageWidth * scale);
-            int renderedHeight = (int) (imageHeight * scale);
+            if (imageWidth > windowWidth || imageHeight > windowHeight) {
+                double scaleX = (double) windowWidth / imageWidth;
+                double scaleY = (double) windowHeight / imageHeight;
+                double scale = Math.min(scaleX, scaleY);
+
+                renderedWidth = (int) (imageWidth * scale);
+                renderedHeight = (int) (imageHeight * scale);
+            }
 
             // Adjust the position of the image preview to be centered around the mouse cursor
             int x = mouseX;
@@ -228,7 +234,7 @@ public class ImagePreview {
      */
     public boolean handleCommand(String command) {
         String[] args = command.split(" ", 2);
-        if (!NarConfig.getHandler().general.imagePreview || args.length != 2
+        if (isLoading || !NarConfig.getHandler().general.imagePreview || args.length != 2
                 || !args[0].equalsIgnoreCase("showImage")) {
             return false;
         }
@@ -260,8 +266,9 @@ public class ImagePreview {
                     hasLoaded = false;
                     MinecraftClient.getInstance().player.sendMessage(NotARat.MOD_TITLE.copy()
                             .append(Text.literal(
-                                    "Failed to load image! Image data was null or invalid."))
-                            .formatted(Formatting.RED), false);
+                                    " Failed to load image! Image data was null or invalid.")
+                                    .formatted(Formatting.RED)),
+                            false);
                 }
                 isLoading = false;
             });
@@ -269,13 +276,11 @@ public class ImagePreview {
             throwable.printStackTrace();
             isLoading = false;
             hasLoaded = false;
-            MinecraftClient.getInstance().player
-                    .sendMessage(
-                            NotARat.MOD_TITLE.copy()
-                                    .append(Text.literal("Failed to load image from URL: "
-                                            + throwable.getMessage()))
-                                    .formatted(Formatting.RED),
-                            false);
+            MinecraftClient.getInstance().player.sendMessage(NotARat.MOD_TITLE.copy()
+                    .append(Text
+                            .literal(" Failed to load image from URL: " + throwable.getMessage())
+                            .formatted(Formatting.RED)),
+                    false);
             return null;
         });
 
