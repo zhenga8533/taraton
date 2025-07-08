@@ -209,8 +209,8 @@ public class CommandUtil {
     private static int domainExpansion(CommandContext<FabricClientCommandSource> context) {
         if (!Contract.isSigned()) {
             context.getSource().sendFeedback(NotARat.MOD_TITLE.copy().append(Text.literal(
-                    " Binding Vows are essentially contracts that an individual can make with one's self or another person. The act of abiding by the rules and restrictions agreed upon in these contracts can result in a greater power or the achievement of a goal, but breaking a binding vow has uncanny repercussions."))
-                    .formatted(Formatting.RED));
+                    " Binding Vows are essentially contracts that an individual can make with one's self or another person. The act of abiding by the rules and restrictions agreed upon in these contracts can result in a greater power or the achievement of a goal, but breaking a binding vow has uncanny repercussions.")
+                    .formatted(Formatting.RED)));
             return 0;
         }
 
