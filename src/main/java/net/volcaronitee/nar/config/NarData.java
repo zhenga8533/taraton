@@ -37,7 +37,7 @@ public class NarData {
      * Loads the NAR data from the JSON file.
      */
     private static void loadData() {
-        JsonObject templateData = NarJson.loadJson("", FILE_NAME);
+        JsonObject templateData = NarJson.loadTemplate(FILE_NAME);
 
         if (DATA_FILE.toFile().exists()) {
             // Load existing data from the file
