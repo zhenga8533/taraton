@@ -37,11 +37,24 @@ public class NarData {
      * Loads the NAR data from the JSON file.
      */
     private static void loadData() {
-        // Load the data from the JSON file if it exists
+        JsonObject templateData = NarJson.loadJson("", FILE_NAME);
+
         if (DATA_FILE.toFile().exists()) {
+            // Load existing data from the file
             data = NarJson.loadJson("", FILE_NAME);
+            if (data == null) {
+                data = templateData;
+            } else {
+                // Ensure all keys from the template are present in the data
+                for (String key : templateData.keySet()) {
+                    if (!data.has(key)) {
+                        data.add(key, templateData.get(key));
+                    }
+                }
+            }
         } else {
-            data = NarJson.loadTemplate(FILE_NAME);
+            // Use template if data file does not exist
+            data = templateData;
         }
     }
 
