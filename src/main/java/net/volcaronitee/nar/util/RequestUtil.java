@@ -19,6 +19,33 @@ public class RequestUtil {
     public static final ExecutorService EXECUTOR = Executors.newCachedThreadPool();
 
     /**
+     * Performs a POST request to the specified URL with the given body and returns the response as
+     * a CompletableFuture<String>.
+     * 
+     * @param url The URL to send the POST request to.
+     * @param body The body of the POST request, typically in JSON format.
+     * @return CompletableFuture<String> containing the response data, or null if the request fails
+     *         or the response is not 200 OK.
+     */
+    public static CompletableFuture<String> post(String url, String body) {
+        try {
+            HttpRequest request =
+                    HttpRequest.newBuilder().POST(HttpRequest.BodyPublishers.ofString(body))
+                            .uri(URI.create(url)).header("Content-Type", "application/json")
+                            .header("Accept", "application/json").build();
+
+            return HTTP_CLIENT.sendAsync(request, HttpResponse.BodyHandlers.ofString())
+                    .thenApply(HttpResponse::body).exceptionally(e -> {
+                        e.printStackTrace();
+                        return null;
+                    });
+        } catch (Exception e) {
+            e.printStackTrace();
+            return CompletableFuture.completedFuture(null);
+        }
+    }
+
+    /**
      * Performs a GET request to the specified URL and returns the response as a JsonObject.
      * 
      * @param url The URL to send the GET request to.
