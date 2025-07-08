@@ -3,18 +3,26 @@ package net.volcaronitee.nar.feature.chat;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import com.google.gson.JsonObject;
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.text.Text;
 import net.volcaronitee.nar.config.NarConfig;
+import net.volcaronitee.nar.config.NarData;
+import net.volcaronitee.nar.config.NarJson;
 import net.volcaronitee.nar.config.NarList;
 import net.volcaronitee.nar.config.NarToggle;
 import net.volcaronitee.nar.feature.general.ServerStatus;
 import net.volcaronitee.nar.util.ParseUtil;
 import net.volcaronitee.nar.util.PartyUtil;
+import net.volcaronitee.nar.util.RequestUtil;
 import net.volcaronitee.nar.util.ScheduleUtil;
 
 /**
@@ -45,6 +53,8 @@ public class ChatCommands {
             "Reply hazy, try again", "Ask again later", "Better not tell you now",
             "Cannot predict now", "Concentrate and ask again", "Don't count on it",
             "My reply is no", "My sources say no", "Outlook not so good", "Very doubtful"};
+
+    private static final Map<String, List<String>> WAIFUS = new HashMap<>();
 
     private int delay = 0;
 
@@ -97,7 +107,47 @@ public class ChatCommands {
      * Registers the chat command feature to listen for game messages.
      */
     public static void register() {
+        INSTANCE.addWaifu("waifu");
         ClientReceiveMessageEvents.GAME.register(INSTANCE::handleChatCommand);
+    }
+
+    /**
+     * Adds a waifu image URL to the WAIFUS list based on the specified category.
+     */
+    private void addWaifu(String category) {
+        // Determine the type of waifu based on the nsfw setting
+        String type = NarData.getData().get("nsfw").getAsBoolean() ? "nsfw" : "sfw";
+
+        // Fetch a waifu image URL from the API and add it to the list
+        RequestUtil.get("https://api.waifu.pics/" + type + "/" + category).thenAccept(response -> {
+            if (response != null) {
+                try {
+                    JsonObject json = NarJson.GSON.fromJson(response, JsonObject.class);
+                    if (json != null && json.has("url")) {
+                        // Create a new list for the category if it doesn't exist
+                        if (!WAIFUS.containsKey(category)) {
+                            WAIFUS.put(category, new ArrayList<>());
+                        }
+
+                        // Add the waifu image URL to the list for the category
+                        String url = json.get("url").getAsString();
+                        WAIFUS.get(category).add(url);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }).exceptionally(e -> {
+            e.printStackTrace();
+            return null;
+        });
+
+        // Limit the number of waifus in each category to 10
+        for (String cat : WAIFUS.keySet()) {
+            if (WAIFUS.get(cat).size() > 10) {
+                WAIFUS.get(cat).remove(0);
+            }
+        }
     }
 
     /**
@@ -266,7 +316,7 @@ public class ChatCommands {
                     return false;
                 }
 
-                String size = ParseUtil.isNumeric(arg1) ? arg1 : "10";
+                String size = ParseUtil.isInteger(arg1) ? arg1 : "10";
                 scheduleCommand("stream open " + size);
                 return true;
             // Party warp commands
@@ -410,7 +460,7 @@ public class ChatCommands {
                     return false;
                 }
 
-                int sides = ParseUtil.isNumeric(arg1) ? Integer.parseInt(arg1) : 6;
+                int sides = ParseUtil.isInteger(arg1) ? Integer.parseInt(arg1) : 6;
                 int roll = (int) (Math.random() * sides) + 1;
                 scheduleCommand(head + " " + username + " rolled a " + roll + "!");
                 return true;
@@ -421,7 +471,16 @@ public class ChatCommands {
                 if (!NarToggle.getHandler().chat.waifu) {
                     return false;
                 }
-                // TODO
+
+                // Add a waifu image URL to the WAIFUS list based on the category
+                String category = arg1.isEmpty() ? "waifu" : arg1.toLowerCase();
+                addWaifu(category);
+
+                // Get the last waifu image URL from the list for the specified category
+                List<String> waifuList = WAIFUS.getOrDefault(category, WAIFUS.get("waifu"));
+                String waifuUrl = waifuList.get(waifuList.size() - 1);
+                scheduleCommand(head + " " + waifuUrl);
+
                 return true;
             // Party help commands
             case "help":

@@ -65,14 +65,6 @@ public class CommandUtil {
                                 // Debug command
                                 .then(literal("debug").executes(CommandUtil::debug))
 
-                                // Contract command
-                                .then(literal("contract").executes(CommandUtil::contract))
-                                .then(literal("bindingvow").executes(CommandUtil::contract))
-                                .then(literal("domainexpansion")
-                                        .executes(CommandUtil::domainExpansion))
-                                .then(literal("ryoikitenkai")
-                                        .executes(CommandUtil::domainExpansion))
-
                                 // Lists commands
                                 .then(ChatCommands.BLACK_LIST.createCommand("blacklist"))
                                 .then(ChatCommands.BLACK_LIST.createCommand("bl"))
@@ -228,6 +220,27 @@ public class CommandUtil {
         return 1;
     }
 
+    public static int hehehe(CommandContext<FabricClientCommandSource> context) {
+        if (!Contract.isSigned()) {
+            context.getSource().sendFeedback(NotARat.MOD_TITLE.copy()
+                    .append(Text.literal(" 2 months.").formatted(Formatting.RED)));
+            return 0;
+        }
+
+        // Flip the nsfw state
+        boolean bool = NarData.getData().get("nsfw").getAsBoolean();
+        if (bool) {
+            context.getSource().sendFeedback(NotARat.MOD_TITLE.copy()
+                    .append(Text.literal(" Lock the fuck in.").formatted(Formatting.RED)));
+        } else {
+            context.getSource().sendFeedback(NotARat.MOD_TITLE.copy()
+                    .append(Text.literal(" Hehehe, I'm horny...").formatted(Formatting.GREEN)));
+        }
+        NarData.getData().addProperty("nsfw", !bool);
+
+        return 1;
+    }
+
     /**
      * Handles the default command for NAR, which is a catch-all for commands not explicitly
      * defined.
@@ -239,7 +252,13 @@ public class CommandUtil {
         ClientPlayerEntity clientPlayer = context.getSource().getPlayer();
         String command = StringArgumentType.getString(context, "default").trim();
 
-        if (ChatCommands.getInstance().handleCommand(clientPlayer, command)) {
+        if (command == "contract" || command == "bindingvow") {
+            return contract(context);
+        } else if (command == "domainexpansion" || command == "ryoikitenkai") {
+            return domainExpansion(context);
+        } else if (command == "hehehe") {
+            return hehehe(context);
+        } else if (ChatCommands.getInstance().handleCommand(clientPlayer, command)) {
             return 1;
         } else if (ImagePreview.getInstance().handleCommand(command)) {
             return 1;
