@@ -1,15 +1,13 @@
 package net.volcaronitee.nar.feature.general;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.net.URI;
-import java.util.concurrent.CompletableFuture;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
 import net.fabricmc.fabric.api.client.message.v1.ClientSendMessageEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.HudLayerRegistrationCallback;
 import net.fabricmc.fabric.api.client.rendering.v1.IdentifiedLayer;
+import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.render.RenderLayer;
@@ -66,6 +64,9 @@ public class ImagePreview {
     public static void register() {
         ClientSendMessageEvents.MODIFY_CHAT.register(INSTANCE::handleImageBypass);
         ClientReceiveMessageEvents.MODIFY_GAME.register(INSTANCE::handleImagePreview);
+        ScreenEvents.AFTER_INIT.register((client, screen, scaledWidth, scaledHeight) -> {
+            ScreenEvents.remove(screen).register(closedScreen -> INSTANCE.resetImagePreview());
+        });
         HudLayerRegistrationCallback.EVENT.register(layeredDrawer -> layeredDrawer
                 .attachLayerAfter(IdentifiedLayer.CHAT, LAYER, INSTANCE::renderImagePreview));
     }
@@ -81,34 +82,27 @@ public class ImagePreview {
             return;
         }
 
+        // Get the current window dimensions and mouse position
+        int windowWidth = context.getScaledWindowWidth();
+        int windowHeight = context.getScaledWindowHeight();
+
         MinecraftClient client = MinecraftClient.getInstance();
+        int mouseX = (int) (client.mouse.getX() * windowWidth / client.getWindow().getWidth());
+        int mouseY = (int) (client.mouse.getY() * windowHeight / client.getWindow().getHeight());
+
         if (hasLoaded && dynamicTexture != null && dynamicImage != null) {
-            int windowWidth = context.getScaledWindowWidth();
-            int windowHeight = context.getScaledWindowHeight();
+            // Adjust the image preview size to fit within the window dimensions
+            int imageWidth = dynamicImage.getWidth() / 2;
+            int imageHeight = dynamicImage.getHeight() / 2;
 
-            // Calculate mouse position relative to the window size
-            int mouseX = (int) (client.mouse.getX() * windowWidth / client.getWindow().getWidth());
-            int mouseY =
-                    (int) (client.mouse.getY() * windowHeight / client.getWindow().getHeight());
+            double scaleX = (double) windowWidth / imageWidth;
+            double scaleY = (double) windowHeight / imageHeight;
+            double scale = Math.min(scaleX, scaleY);
 
-            // Calculate the size and position of the image preview
-            int originalImageWidth = dynamicImage.getWidth();
-            int originalImageHeight = dynamicImage.getHeight();
+            int renderedWidth = (int) (imageWidth * scale);
+            int renderedHeight = (int) (imageHeight * scale);
 
-            int maxWidth = (int) (windowWidth * 0.5);
-            int maxHeight = (int) (windowHeight * 0.5);
-
-            double scale = 1.0;
-            if (originalImageWidth > maxWidth) {
-                scale = (double) maxWidth / originalImageWidth;
-            }
-            if (originalImageHeight * scale > maxHeight) {
-                scale = (double) maxHeight / originalImageHeight;
-            }
-
-            int renderedWidth = (int) (originalImageWidth * scale);
-            int renderedHeight = (int) (originalImageHeight * scale);
-
+            // Adjust the position of the image preview to be centered around the mouse cursor
             int x = mouseX;
             int y = mouseY - renderedHeight;
 
@@ -124,15 +118,13 @@ public class ImagePreview {
                 y = windowHeight - renderedHeight;
             }
 
-            // Draw the image preview with a border and shadow
-            context.fill(x - 2, y - 2, x + renderedWidth + 2, y + renderedHeight + 2, 0x80000000);
+            // Draw the image preview
             context.drawTexture(RenderLayer::getGuiTextured, TEXTURE_ID, x, y, 0.0F, 0.0F,
-                    renderedWidth, renderedHeight, originalImageWidth, originalImageHeight);
+                    renderedWidth, renderedHeight, renderedWidth, renderedHeight);
         } else if (isLoading) {
             // Display loading text if the image is still loading
-            context.drawText(client.textRenderer, Text.literal("Loading image..."),
-                    (int) client.mouse.getX(), (int) client.mouse.getY(),
-                    Formatting.YELLOW.getColorValue(), true);
+            context.drawText(client.textRenderer, Text.literal("Loading image..."), mouseX + 5,
+                    mouseY - 5, Formatting.YELLOW.getColorValue(), true);
         }
     }
 
@@ -235,48 +227,74 @@ public class ImagePreview {
      * @return True if the command was handled successfully, false otherwise.
      */
     public boolean handleCommand(String command) {
-        // Check if the command is "showImage <imageUrl>"
         String[] args = command.split(" ", 2);
-        if (args.length != 2 || !args[0].equalsIgnoreCase("showImage")) {
+        if (!NarConfig.getHandler().general.imagePreview || args.length != 2
+                || !args[0].equalsIgnoreCase("showImage")) {
             return false;
         }
 
-        // Parse the image URL from the command arguments
+        // Parse the image URL from the command
         String imageUrl = args[1];
-        if (!NarConfig.getHandler().general.imagePreview || imageUrl == null
-                || imageUrl.isEmpty()) {
+        if (imageUrl == null || imageUrl.isEmpty()) {
             return false;
         }
 
-        // Request the image from the URL and create a dynamic texture
-        CompletableFuture.supplyAsync(() -> {
-            try (InputStream is = URI.create(imageUrl).toURL().openStream()) {
-                NativeImage image = NativeImage.read(is);
-                return image;
-            } catch (IOException e) {
-                return null;
-            }
-        }, RequestUtil.EXECUTOR).thenAcceptAsync(image -> {
-            if (image != null) {
-                MinecraftClient client = MinecraftClient.getInstance();
-                client.execute(() -> {
-                    if (dynamicTexture != null) {
-                        dynamicTexture.close();
-                    }
+        // Reset the current image preview if it exists
+        resetImagePreview();
+        hasLoaded = false;
+        isLoading = true;
+
+        // Fetch the image from the URL
+        RequestUtil.getImage(imageUrl).thenAcceptAsync(image -> {
+            MinecraftClient client = MinecraftClient.getInstance();
+            client.execute(() -> {
+                resetImagePreview();
+
+                if (image != null) {
                     dynamicTexture = new NativeImageBackedTexture(
                             () -> NotARat.MOD_ID + ".image_preview", image);
                     client.getTextureManager().registerTexture(TEXTURE_ID, dynamicTexture);
                     dynamicImage = image;
                     hasLoaded = true;
-                    isLoading = false;
-                });
-            } else {
+                } else {
+                    hasLoaded = false;
+                    MinecraftClient.getInstance().player.sendMessage(NotARat.MOD_TITLE.copy()
+                            .append(Text.literal(
+                                    "Failed to load image! Image data was null or invalid."))
+                            .formatted(Formatting.RED), false);
+                }
                 isLoading = false;
-                hasLoaded = false;
-            }
-        }, MinecraftClient.getInstance());
+            });
+        }, MinecraftClient.getInstance()::execute).exceptionally(throwable -> {
+            throwable.printStackTrace();
+            isLoading = false;
+            hasLoaded = false;
+            MinecraftClient.getInstance().player
+                    .sendMessage(
+                            NotARat.MOD_TITLE.copy()
+                                    .append(Text.literal("Failed to load image from URL: "
+                                            + throwable.getMessage()))
+                                    .formatted(Formatting.RED),
+                            false);
+            return null;
+        });
 
         return true;
+    }
+
+    /**
+     * Resets the image preview by clearing the current texture and image.
+     */
+    private void resetImagePreview() {
+        if (dynamicTexture != null) {
+            MinecraftClient.getInstance().getTextureManager().destroyTexture(TEXTURE_ID);
+            dynamicTexture.close();
+            dynamicTexture = null;
+        }
+        if (dynamicImage != null) {
+            dynamicImage.close();
+            dynamicImage = null;
+        }
     }
 
     /**
