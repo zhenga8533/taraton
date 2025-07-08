@@ -24,9 +24,10 @@ public class TitleUtil {
                 // If the title's alive time has reached zero, remove it
                 if (title.aliveTime <= 0) {
                     TITLES.remove(title.key);
-                    if (currentKey.equals(title.key)) {
+                    if (currentKey != null && currentKey.equals(title.key)) {
                         currentKey = null;
                     }
+                    client.inGameHud.clearTitle();
                 }
             }
         });
@@ -78,6 +79,20 @@ public class TitleUtil {
         Title newTitle = new Title(title, subtitle, priority, 10, 70, 20);
         TITLES.put(newTitle.key, newTitle);
         newTitle.refresh();
+    }
+
+    /**
+     * Deletes a title from the game. If the title exists, it will be removed and its alive time set
+     * to zero, effectively removing it from display.
+     * 
+     * @param title The title text to delete.
+     * @param subtitle The subtitle text to delete.
+     */
+    public static void deleteTitle(String title, String subtitle) {
+        String key = title + subtitle;
+        if (TITLES.containsKey(key)) {
+            TITLES.get(key).aliveTime = 0;
+        }
     }
 
     /**
