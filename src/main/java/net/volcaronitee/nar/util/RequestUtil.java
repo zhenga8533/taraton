@@ -59,9 +59,11 @@ public class RequestUtil {
 
             return HTTP_CLIENT.sendAsync(request, HttpResponse.BodyHandlers.ofString())
                     .thenApply(HttpResponse::body).exceptionally(e -> {
+                        e.printStackTrace();
                         return null;
                     });
         } catch (Exception e) {
+            e.printStackTrace();
             return null;
         }
     }

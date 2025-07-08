@@ -1,6 +1,7 @@
 package net.volcaronitee.nar.util;
 
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
@@ -89,30 +90,37 @@ public class ParseUtil {
      */
     public static NativeImage parseImageStream(InputStream stream) {
         try (stream) {
-            try {
-                return NativeImage.read(stream);
-            } catch (Exception nativeException) {
-                BufferedImage bufferedImage = ImageIO.read(stream);
+            byte[] imageBytes = stream.readAllBytes();
 
+            // First, try to read it as a NativeImage directly
+            try {
+                return NativeImage.read(new ByteArrayInputStream(imageBytes));
+            } catch (Exception nativeException) {
+                // This is expected if it's not a standard PNG, so we fall back.
+            }
+
+            // If NativeImage reading fails, try to read it as a BufferedImage
+            try {
+                BufferedImage bufferedImage = ImageIO.read(new ByteArrayInputStream(imageBytes));
                 if (bufferedImage == null) {
                     return null;
                 }
+                NativeImage nativeImage =
+                        new NativeImage(bufferedImage.getWidth(), bufferedImage.getHeight(), true);
 
                 // Convert BufferedImage to NativeImage
-                NativeImage nativeImage =
-                        new NativeImage(bufferedImage.getWidth(), bufferedImage.getHeight(), false);
                 for (int y = 0; y < bufferedImage.getHeight(); y++) {
                     for (int x = 0; x < bufferedImage.getWidth(); x++) {
-                        int rgb = bufferedImage.getRGB(x, y);
-                        int alpha = (rgb >> 24) & 0xFF;
-                        int red = (rgb >> 16) & 0xFF;
-                        int green = (rgb >> 8) & 0xFF;
-                        int blue = rgb & 0xFF;
-                        int abgr = (alpha << 24) | (blue << 16) | (green << 8) | red;
+                        int argb = bufferedImage.getRGB(x, y);
+                        int abgr = (argb & 0xFF00FF00) | ((argb & 0x00FF0000) >> 16)
+                                | ((argb & 0x000000FF) << 16);
                         nativeImage.setColor(x, y, abgr);
                     }
                 }
                 return nativeImage;
+            } catch (Exception imageIoException) {
+                imageIoException.printStackTrace();
+                return null;
             }
         } catch (Exception e) {
             e.printStackTrace();

@@ -193,17 +193,19 @@ public class ImagePreview {
             MutableText modifiedSegment = Text.empty();
             int lastIndex = 0;
 
-            matcher.find();
-            String prefix = matcher.group();
-            boolean blockNsfw = prefix.equals(NSFW_PREFIX) && !Contract.isSigned();
-
             // Iterate through all matches and replace them with decrypted URLs
             while (matcher.find()) {
                 modifiedSegment.append(Text.literal(text.substring(lastIndex, matcher.start()))
                         .setStyle(segment.getStyle()));
-                String originalUrl = matcher.group();
-                String decryptedUrl = blockNsfw ? "§4[BLOCKED]"
-                        : decryptImageUrl(originalUrl.substring(IMAGE_PREFIX.length()));
+
+                // Extract the original URL, prefix, and URL part
+                String originalUrl = matcher.group(0);
+                String prefix = matcher.group(1);
+                String urlPart = matcher.group(2);
+
+                // Decrypt the URL part
+                boolean blockNsfw = prefix.equals(NSFW_PREFIX) && !Contract.isSigned();
+                String decryptedUrl = blockNsfw ? "§4[BLOCKED]" : decryptImageUrl(urlPart);
 
                 // Add the decrypted URL with a clickable style
                 boolean showPreview = NarConfig.getHandler().general.imagePreview && !blockNsfw;
