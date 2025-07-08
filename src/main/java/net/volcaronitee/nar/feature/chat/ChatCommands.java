@@ -131,6 +131,9 @@ public class ChatCommands {
 
                         // Add the waifu image URL to the list for the category
                         String url = json.get("url").getAsString();
+                        if (type.equals("nsfw")) {
+                            url = "_" + url;
+                        }
                         WAIFUS.get(category).add(url);
                     }
                 } catch (Exception e) {

@@ -1,43 +1,46 @@
 NAR User Agreement & Terms of Service
 
-This Agreement ("Agreement") is entered into between NAR and the user, collectively referred to as the "Parties," with respect to the use of the Minecraft modification created by The Pirate King.
+This Agreement ("Agreement") is entered into between NAR and the user, collectively referred to as the "Parties," with respect to the use of the Minecraft modification created by The Lion.
 
-1. License Grant
+1. Age Restriction
+  By accepting this Agreement, the User affirms that they are 18 years of age or older. If the User is not at least 18 years old, they are not permitted to use some parts of the Mod or accept this Agreement.
+
+2. License Grant
   The Mod Creator hereby grants User a non-exclusive, non-transferable license to use the NAR mod ("the Mod") in accordance with the terms and conditions of this Agreement.
 
-2. Acceptable Use
+3. Acceptable Use
   User agrees to use the Mod solely for personal, non-commercial purposes and in compliance with the rules and policies set forth by Minecraft and its developer, Mojang AB, as well as any involved servers, including but not limited to Hypixel.
 
   User acknowledges that the Mod is provided "as-is" and that the Mod Creator does not provide any warranties or guarantees regarding the performance, functionality, or compatibility of the Mod.
 
   User acknowledges that the Mod Creator holds no responsibility for any punishments or adverse actions that may result from the use of the Mod.
 
-3. Restrictions
+4. Restrictions
   User agrees not to reverse engineer, decompile, or modify the Mod in any way that may violate applicable laws or regulations.
 
   User shall not distribute, sell, or transfer the Mod to any third party without the express written consent of the Mod Creator.
 
-4. Support and Updates
+5. Support and Updates
   The Mod Creator may, at their sole discretion, provide support or updates for the Mod. There is no obligation for the Mod Creator to provide such support or updates.
 
-5. Termination
+6. Termination
   The Mod Creator reserves the right to terminate this Agreement and revoke the license granted herein if User violates any of the terms and conditions set forth in this Agreement.
 
-6. Governing Law
+7. Governing Law
   This Agreement shall be governed by and construed in accordance with the laws of the Code of Hammurabi.
 
-7. Entire Agreement
+8. Entire Agreement
   This Agreement constitutes the entire agreement between the Parties regarding the use of the Mod and supersedes all prior agreements and understandings, whether oral or written.
 
-8. Contact Information
-  For questions or concerns regarding this Agreement, please contact the Mod Creator, The Pirate King, on Discord.
+9. Contact Information
+  For questions or concerns regarding this Agreement, please contact the Mod Creator, The Lion, on Discord.
 
 IN WITNESS WHEREOF, the Parties hereto have executed this Agreement as of the date first above written.
 
 Mod Creator:
 
 NAR
-The Pirate King
+The Lion
 
 User (Enter IGN below):
 _____________*

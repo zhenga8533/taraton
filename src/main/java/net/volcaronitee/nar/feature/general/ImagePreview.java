@@ -26,6 +26,7 @@ import net.volcaronitee.nar.NotARat;
 import net.volcaronitee.nar.config.NarConfig;
 import net.volcaronitee.nar.util.ParseUtil;
 import net.volcaronitee.nar.util.RequestUtil;
+import net.volcaronitee.nar.util.helper.Contract;
 
 /**
  * Handles image URL bypassing in chat messages by encrypting image URLs.
@@ -38,7 +39,9 @@ public class ImagePreview {
             Identifier.of(NotARat.MOD_ID, "image_preview_texture");
     private static final int SHIFT_AMOUNT = 3;
     private static final String IMAGE_PREFIX = "nar@";
-    private static final Pattern BYPASS_PATTERN = Pattern.compile(IMAGE_PREFIX + "[^ ]+");
+    private static final String NSFW_PREFIX = "gnar@";
+    private static final Pattern BYPASS_PATTERN =
+            Pattern.compile("(" + IMAGE_PREFIX + "|" + NSFW_PREFIX + ")([^ ]+)");
 
     private NativeImageBackedTexture dynamicTexture;
     private NativeImage dynamicImage;
@@ -155,7 +158,14 @@ public class ImagePreview {
                 continue;
             }
 
-            String editedUrl = IMAGE_PREFIX + encryptImageUrl(originalUrl);
+            String editedUrl = "";
+            if (originalUrl.startsWith("_")) {
+                originalUrl = originalUrl.substring(1);
+                editedUrl = NSFW_PREFIX;
+            } else {
+                editedUrl = IMAGE_PREFIX;
+            }
+            editedUrl += encryptImageUrl(originalUrl);
             matcher.appendReplacement(resultBuilder, Matcher.quoteReplacement(editedUrl));
         }
 
@@ -181,19 +191,27 @@ public class ImagePreview {
             MutableText modifiedSegment = Text.empty();
             int lastIndex = 0;
 
+            matcher.find();
+            String prefix = matcher.group();
+            boolean blockNsfw = prefix.equals(NSFW_PREFIX) && !Contract.isSigned();
+
             // Iterate through all matches and replace them with decrypted URLs
             while (matcher.find()) {
                 modifiedSegment.append(Text.literal(text.substring(lastIndex, matcher.start()))
                         .setStyle(segment.getStyle()));
                 String originalUrl = matcher.group();
-                String decryptedUrl = decryptImageUrl(originalUrl.substring(IMAGE_PREFIX.length()));
+                String decryptedUrl = blockNsfw ? "§4[BLOCKED]"
+                        : decryptImageUrl(originalUrl.substring(IMAGE_PREFIX.length()));
 
                 // Add the decrypted URL with a clickable style
+                boolean showPreview = NarConfig.getHandler().general.imagePreview && !blockNsfw;
                 try {
-                    ClickEvent clickEvent = NarConfig.getHandler().general.imagePreview
+                    ClickEvent clickEvent = showPreview
                             ? new ClickEvent.RunCommand("nar showImage " + decryptedUrl)
-                            : new ClickEvent.OpenUrl(new URI(decryptedUrl));
-                    HoverEvent hoverEvent = NarConfig.getHandler().general.imagePreview
+                            : new ClickEvent.OpenUrl(
+                                    new URI(blockNsfw ? "https://roblox.com" : decryptedUrl));
+
+                    HoverEvent hoverEvent = showPreview
                             ? new HoverEvent.ShowText(Text.literal("Click to show image preview!")
                                     .formatted(Formatting.YELLOW))
                             : new HoverEvent.ShowText(Text.literal("Open image in browser.\n")
@@ -201,6 +219,7 @@ public class ImagePreview {
                                     .append(Text.literal(
                                             " Turn on image preview in config to view image in-game! ")
                                             .formatted(Formatting.DARK_GRAY)));
+
                     Style imageStyle = Style.EMPTY.withColor(Formatting.BLUE).withUnderline(true)
                             .withClickEvent(clickEvent).withHoverEvent(hoverEvent);
 

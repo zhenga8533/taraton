@@ -74,10 +74,10 @@ public class Contract {
      * @return True if the contract is signed, false otherwise.
      */
     public static boolean isSigned() {
-        // Check if line 43 is signed
+        // Check if line 46 is signed
         try {
             String clientUsername = MinecraftClient.getInstance().getSession().getUsername();
-            return Files.readAllLines(CONTRACT_FILE).get(42).contains(clientUsername);
+            return Files.readAllLines(CONTRACT_FILE).get(45).contains(clientUsername);
         } catch (Exception e) {
             e.printStackTrace();
             return false;
