@@ -32,6 +32,7 @@ import net.volcaronitee.nar.util.OverlayUtil;
 import net.volcaronitee.nar.util.OverlayUtil.LineContent;
 import net.volcaronitee.nar.util.RenderUtil;
 import net.volcaronitee.nar.util.TickUtil;
+import net.volcaronitee.nar.util.TitleUtil;
 import net.volcaronitee.nar.util.helper.RelationalValue;
 import net.volcaronitee.nar.util.helper.RelationalValue.Operator;
 
@@ -226,8 +227,6 @@ public class EntityHighlight {
      * @param client The Minecraft client instance.
      */
     private void renderTitles(MinecraftClient client) {
-        boolean hasTitle = false;
-
         // Loop through highlighted entities to check for titles
         for (Map.Entry<Entity, Highlight> entry : HIGHLIGHTED_ENTITIES.entrySet()) {
             Highlight highlight = entry.getValue();
@@ -236,14 +235,8 @@ public class EntityHighlight {
                 continue;
             }
 
-            client.inGameHud.setTitleTicks(0, 10, 10);
-            client.inGameHud.setTitle(Text.literal(highlight.title));
-            hasTitle = true;
+            TitleUtil.createTitle(highlight.title, "", 0, 0, 10, 10);
             break;
-        }
-
-        if (!hasTitle) {
-            client.inGameHud.setDefaultTitleFade();
         }
     }
 

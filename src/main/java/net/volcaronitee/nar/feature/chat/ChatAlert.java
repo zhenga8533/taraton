@@ -9,10 +9,10 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.Text;
 import net.volcaronitee.nar.config.NarConfig;
 import net.volcaronitee.nar.config.NarList;
-import net.volcaronitee.nar.mixin.accessor.InGameHudAccessor;
 import net.volcaronitee.nar.util.FormatUtil;
 import net.volcaronitee.nar.util.ParseUtil;
 import net.volcaronitee.nar.util.ScheduleUtil;
+import net.volcaronitee.nar.util.TitleUtil;
 
 /**
  * Feature that alerts the player when certain chat messages are sent.
@@ -68,16 +68,8 @@ public class ChatAlert {
             if (alert.pattern.matcher(message.getString()).find()) {
                 // Set title alert
                 if (!alert.message.isEmpty()) {
-                    MinecraftClient client = MinecraftClient.getInstance();
-                    client.inGameHud.setTitleTicks(alert.fadeIn, alert.stay, alert.fadeOut);
-                    Text title = Text.literal(alert.message);
-                    client.inGameHud.setTitle(title);
-
-                    ScheduleUtil.schedule(() -> {
-                        if (((InGameHudAccessor) client.inGameHud).getTitle() == title) {
-                            client.inGameHud.setDefaultTitleFade();
-                        }
-                    }, alert.fadeIn + alert.stay + alert.fadeOut - 1);
+                    TitleUtil.createTitle(alert.message, "", 0, alert.fadeIn, alert.stay,
+                            alert.fadeOut);
                 }
 
                 // Schedule the command execution if specified

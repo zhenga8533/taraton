@@ -130,7 +130,7 @@ public class CombatConfig {
                                         newVal -> config.combat.damageTracer = newVal)
                                 .controller(NarConfig::createEnumController).build())
 
-                        // TODO: Low Health Warning
+                        // Low Health Warning
                         .option(Option.<Integer>createBuilder()
                                 .name(Text.literal("Low Health Warning"))
                                 .description(OptionDescription.createBuilder()
