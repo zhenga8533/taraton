@@ -55,13 +55,6 @@ public class CommandUtil {
                                 // GUI command
                                 .then(literal("gui").executes(OverlayUtil::moveGui))
 
-                                // Proxy command
-                                .then(literal("echo").executes(CommandUtil::echo)
-                                        .then(argument("message", StringArgumentType.greedyString())
-                                                .executes(context -> CommandUtil.echoProxy(context,
-                                                        StringArgumentType.getString(context,
-                                                                "message")))))
-
                                 // Debug command
                                 .then(literal("debug").executes(CommandUtil::debug))
 
@@ -141,27 +134,15 @@ public class CommandUtil {
     }
 
     /**
-     * Echoes a message back to the player. This is a placeholder command that can be used for
-     * testing.
-     * 
-     * @param context The command context containing the source and arguments.
-     * @return 1 if the command was executed successfully, 0 otherwise.
-     */
-    private static int echo(CommandContext<FabricClientCommandSource> context) {
-        return 1;
-    }
-
-    /**
-     * Echoes a message back to the player. This method is used when the player provides a
+     * Echoes a message back to the player.
      * 
      * @param context The command context containing the source and arguments.
      * @param message The message to echo back to the player.
      * @return 1 if the command was executed successfully, 0 otherwise.
      */
-    private static int echoProxy(CommandContext<FabricClientCommandSource> context,
-            String message) {
-        context.getSource()
-                .sendFeedback(NotARat.MOD_TITLE.copy().append(Text.literal(" " + message)));
+    private static int echo(CommandContext<FabricClientCommandSource> context, String message) {
+        context.getSource().sendFeedback(NotARat.MOD_TITLE.copy()
+                .append(Text.literal(" " + message).formatted(Formatting.WHITE)));
         return 1;
     }
 
@@ -256,6 +237,8 @@ public class CommandUtil {
             return contract(context);
         } else if (command == "domainexpansion" || command == "ryoikitenkai") {
             return domainExpansion(context);
+        } else if (command == "echo") {
+            return echo(context, command.substring(5).trim());
         } else if (command == "hehehe") {
             return hehehe(context);
         } else if (ChatCommands.getInstance().handleCommand(clientPlayer, command)) {
