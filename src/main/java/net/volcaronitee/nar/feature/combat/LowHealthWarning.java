@@ -39,7 +39,7 @@ public class LowHealthWarning {
         if (healthRatio <= healthThreshold / 100.0f) {
             TitleUtil.createTitle(warningTitle, "", 0, 0, 10, 5);
         } else {
-            TitleUtil.deleteTitle(warningTitle, "");
+            TitleUtil.clearTitle();
         }
     }
 }

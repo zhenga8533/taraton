@@ -1,34 +1,29 @@
 package net.volcaronitee.nar.util;
 
-import java.util.HashMap;
-import java.util.Map;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.hud.InGameHud;
 import net.minecraft.text.Text;
+import net.volcaronitee.nar.mixin.accessor.InGameHudAccessor;
 
 /**
  * Utility class for managing and displaying titles in the game.
  */
 public class TitleUtil {
-    private static final Map<String, Title> TITLES = new HashMap<>();
-    private static String currentKey = null;
+    private static Title currentTitle = null;
 
     /**
      * Initializes the TitleUtil by registering a client tick event listener.
      */
     public static void init() {
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
-            for (Title title : TITLES.values()) {
-                title.aliveTime--;
+            if (currentTitle == null) {
+                return;
+            }
 
-                // If the title's alive time has reached zero, remove it
-                if (title.aliveTime <= 0) {
-                    TITLES.remove(title.key);
-                    if (currentKey != null && currentKey.equals(title.key)) {
-                        currentKey = null;
-                    }
-                    client.inGameHud.clearTitle();
-                }
+            currentTitle.aliveTime--;
+            if (currentTitle.aliveTime <= 0) {
+                clearTitle();
             }
         });
     }
@@ -49,15 +44,14 @@ public class TitleUtil {
             int stay, int fadeOut) {
         // Check if the title already exists and refresh it if so
         String key = title + subtitle;
-        if (TITLES.containsKey(key)) {
-            TITLES.get(key).refresh();
+        if (currentTitle != null && currentTitle.key.equals(key)) {
+            currentTitle.refresh();
             return;
         }
 
         // Create a new Title object and add it to the map
-        Title newTitle = new Title(title, subtitle, priority, fadeIn, stay, fadeOut);
-        TITLES.put(newTitle.key, newTitle);
-        newTitle.refresh();
+        currentTitle = new Title(title, subtitle, priority, fadeIn, stay, fadeOut);
+        currentTitle.refresh();
     }
 
     /**
@@ -72,17 +66,14 @@ public class TitleUtil {
     }
 
     /**
-     * Deletes a title from the game. If the title exists, it will be removed and its alive time set
-     * to zero, effectively removing it from display.
-     * 
-     * @param title The title text to delete.
-     * @param subtitle The subtitle text to delete.
+     * Clears the currently displayed title if it matches the current title.
      */
-    public static void deleteTitle(String title, String subtitle) {
-        String key = title + subtitle;
-        if (TITLES.containsKey(key)) {
-            TITLES.get(key).aliveTime = 0;
+    public static void clearTitle() {
+        InGameHud hud = MinecraftClient.getInstance().inGameHud;
+        if (hud != null && ((InGameHudAccessor) hud).getTitle() == currentTitle.title) {
+            hud.clearTitle();
         }
+        currentTitle = null;
     }
 
     /**
@@ -129,11 +120,10 @@ public class TitleUtil {
             aliveTime = fadeIn + stay + fadeOut;
 
             if (client != null && client.inGameHud != null
-                    && (currentKey == null || TITLES.get(currentKey).priority <= this.priority)) {
+                    && currentTitle.priority <= this.priority) {
                 client.inGameHud.setTitleTicks(fadeIn, stay, fadeOut);
                 client.inGameHud.setTitle(title);
                 client.inGameHud.setSubtitle(subtitle);
-                currentKey = key;
             }
         }
     }
