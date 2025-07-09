@@ -3,6 +3,7 @@ package net.volcaronitee.nar.util;
 import net.volcaronitee.nar.feature.chat.ChatAlert;
 import net.volcaronitee.nar.feature.chat.ChatCommands;
 import net.volcaronitee.nar.feature.chat.CustomEmote;
+import net.volcaronitee.nar.feature.chat.JoinMessage;
 import net.volcaronitee.nar.feature.chat.JoinWhitelist;
 import net.volcaronitee.nar.feature.chat.PlaytimeWarning;
 import net.volcaronitee.nar.feature.chat.SpamHider;
@@ -34,6 +35,7 @@ public class FeatureUtil {
         ChatAlert.register();
         ChatCommands.register();
         CustomEmote.register();
+        JoinMessage.register();
         JoinWhitelist.register();
         PlaytimeWarning.register();
         SpamHider.register();

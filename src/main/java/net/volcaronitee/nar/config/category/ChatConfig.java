@@ -24,6 +24,34 @@ public class ChatConfig {
      * @return A new {@link ConfigCategory} for the Chat features.
      */
     public static ConfigCategory create(NarConfig defaults, NarConfig config) {
+        // Party Leader Only Option
+        Option<Boolean> partyLeaderOnlyOption = Option.<Boolean>createBuilder()
+                .name(Text.literal("Party Leader Only"))
+                .description(OptionDescription.createBuilder()
+                        .webpImage(
+                                Identifier.of(NotARat.MOD_ID, "config/chat/party_leader_only.webp"))
+                        .text(Text.literal(
+                                "Only sends party join message when you are the party leader."))
+                        .build())
+                .binding(defaults.chat.partyLeaderOnly, () -> config.chat.partyLeaderOnly,
+                        newVal -> config.chat.partyLeaderOnly = newVal)
+                .controller(NarConfig::createBooleanController).build();
+
+        // Party Join Message Option
+        Option<String> partyJoinMessageOption = Option.<String>createBuilder()
+                .name(Text.literal("Party Join Message"))
+                .description(OptionDescription.createBuilder()
+                        .webpImage(Identifier.of(NotARat.MOD_ID,
+                                "config/chat/party_join_message.webp"))
+                        .text(Text.literal(
+                                "Sends message when anyone joins your party. Use {player} to substitute the player's name."))
+                        .build())
+                .binding(defaults.chat.partyJoinMessage, () -> config.chat.partyJoinMessage,
+                        newVal -> config.chat.partyJoinMessage = newVal)
+                .addListener((opt, val) -> partyLeaderOnlyOption
+                        .setAvailable(!config.chat.partyJoinMessage.isEmpty()))
+                .controller(opt -> StringControllerBuilder.create(opt)).build();
+
         return ConfigCategory.createBuilder().name(Text.literal("Chat"))
 
                 // Chat Option Group
@@ -184,47 +212,25 @@ public class ChatConfig {
                                         newVal -> config.chat.statusCommands = newVal)
                                 .controller(NarConfig::createBooleanController).build())
 
-                        // TODO: Guild Join Message
+                        // Guild Join Message
                         .option(Option.<String>createBuilder()
                                 .name(Text.literal("Guild Join Message"))
                                 .description(OptionDescription.createBuilder()
                                         .webpImage(Identifier.of(NotARat.MOD_ID,
                                                 "config/chat/guild_join_message.webp"))
                                         .text(Text.literal(
-                                                "Sends message when anyone joins your guild. Use %player% for their name."))
+                                                "Sends message when anyone joins your guild. Use {player} to substitute the player's name."))
                                         .build())
                                 .binding(defaults.chat.guildJoinMessage,
                                         () -> config.chat.guildJoinMessage,
                                         newVal -> config.chat.guildJoinMessage = newVal)
                                 .controller(opt -> StringControllerBuilder.create(opt)).build())
 
-                        // TODO: Party Join Message
-                        .option(Option.<String>createBuilder()
-                                .name(Text.literal("Party Join Message"))
-                                .description(OptionDescription.createBuilder()
-                                        .webpImage(Identifier.of(NotARat.MOD_ID,
-                                                "config/chat/party_join_message.webp"))
-                                        .text(Text.literal(
-                                                "Sends message when anyone joins your party. Use %player% for their name."))
-                                        .build())
-                                .binding(defaults.chat.partyJoinMessage,
-                                        () -> config.chat.partyJoinMessage,
-                                        newVal -> config.chat.partyJoinMessage = newVal)
-                                .controller(opt -> StringControllerBuilder.create(opt)).build())
+                        // Party Join Message
+                        .option(partyJoinMessageOption)
 
-                        // TODO: Party Leader Only
-                        .option(Option.<Boolean>createBuilder()
-                                .name(Text.literal("Party Leader Only"))
-                                .description(OptionDescription.createBuilder()
-                                        .webpImage(Identifier.of(NotARat.MOD_ID,
-                                                "config/chat/party_leader_only.webp"))
-                                        .text(Text.literal(
-                                                "Only sends party join message when you are the party leader."))
-                                        .build())
-                                .binding(defaults.chat.partyLeaderOnly,
-                                        () -> config.chat.partyLeaderOnly,
-                                        newVal -> config.chat.partyLeaderOnly = newVal)
-                                .controller(NarConfig::createBooleanController).build())
+                        // Party Leader Only
+                        .option(partyLeaderOnlyOption)
 
                         .build())
 
@@ -319,6 +325,12 @@ public class ChatConfig {
     public String guildJoinMessage = "";
 
     @SerialEntry
+    public String partyJoinMessage = "";
+
+    @SerialEntry
+    public boolean partyLeaderOnly = false;
+
+    @SerialEntry
     public boolean leaderCommands = false;
 
     @SerialEntry
@@ -326,12 +338,6 @@ public class ChatConfig {
 
     @SerialEntry
     public boolean statusCommands = false;
-
-    @SerialEntry
-    public String partyJoinMessage = "";
-
-    @SerialEntry
-    public boolean partyLeaderOnly = false;
 
     @SerialEntry
     public String serverKickAnnounce = "";
