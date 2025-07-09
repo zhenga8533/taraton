@@ -6,6 +6,7 @@ import java.util.Queue;
 import java.util.regex.Pattern;
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.text.Text;
 import net.volcaronitee.nar.config.NarConfig;
 import net.volcaronitee.nar.config.NarList;
@@ -77,8 +78,11 @@ public class ChatAlert {
                     commandDelay += 4;
                     COMMAND_QUEUE.add(alert.command);
                     ScheduleUtil.schedule(() -> {
-                        MinecraftClient.getInstance().player.networkHandler
-                                .sendChatCommand(COMMAND_QUEUE.poll());
+                        ClientPlayNetworkHandler networkHandler =
+                                MinecraftClient.getInstance().player.networkHandler;
+                        if (networkHandler != null) {
+                            networkHandler.sendChatCommand(COMMAND_QUEUE.poll());
+                        }
                         commandDelay -= 4;
                     }, commandDelay);
                 }
