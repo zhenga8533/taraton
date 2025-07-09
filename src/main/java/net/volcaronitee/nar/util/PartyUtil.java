@@ -218,6 +218,21 @@ public class PartyUtil {
     }
 
     /**
+     * Returns a random member from the party. If there are no moderators, it returns a random
+     * member from the members list. If there are no members, it returns an empty string.
+     * 
+     * @return A random member's username from the party, or an empty string if no members are
+     *         present.
+     */
+    public static String getRandomMember() {
+        if (MODERATORS.isEmpty()) {
+            return MEMBERS.isEmpty() ? "" : MEMBERS.iterator().next();
+        } else {
+            return MODERATORS.iterator().next();
+        }
+    }
+
+    /**
      * Returns a debug message containing the current party information.
      * 
      * @return A formatted string with party details including leader, moderators, and members.
