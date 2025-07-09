@@ -6,6 +6,7 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.volcaronitee.nar.NotARat;
+import net.volcaronitee.nar.util.TickUtil;
 
 /**
  * Handles the loading and saving of NAR data from a JSON file.
@@ -21,7 +22,8 @@ public class NarData {
      */
     public static void init() {
         loadData();
-        ClientLifecycleEvents.CLIENT_STOPPING.register(NarData::onClientClose);
+        TickUtil.register(NarData::saveData, 18000);
+        ClientLifecycleEvents.CLIENT_STOPPING.register(NarData::saveData);
     }
 
     /**
@@ -31,6 +33,10 @@ public class NarData {
      */
     public static JsonObject getData() {
         return data;
+    }
+
+    private static void saveData(MinecraftClient client) {
+        NarJson.saveJson("", FILE_NAME, data);
     }
 
     /**
@@ -56,14 +62,5 @@ public class NarData {
             // Use template if data file does not exist
             data = templateData;
         }
-    }
-
-    /**
-     * Handles the world unload event to save playtime data.
-     * 
-     * @param event The event triggered when the client is stopping.
-     */
-    private static void onClientClose(MinecraftClient client) {
-        NarJson.saveJson("", FILE_NAME, data);
     }
 }

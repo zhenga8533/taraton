@@ -251,7 +251,7 @@ public class ChatConfig {
                                         newVal -> config.chat.antiGhostParty = newVal)
                                 .controller(NarConfig::createBooleanController).build())
 
-                        // TODO: Auto Transfer
+                        // Auto Transfer
                         .option(Option.<ChatConfig.AutoTransfer>createBuilder()
                                 .name(Text.literal("Auto Transfer"))
                                 .description(OptionDescription.createBuilder()
