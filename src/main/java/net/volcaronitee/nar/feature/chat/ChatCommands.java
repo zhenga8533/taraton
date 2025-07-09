@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import com.google.gson.JsonObject;
@@ -54,7 +55,12 @@ public class ChatCommands {
             "Cannot predict now", "Concentrate and ask again", "Don't count on it",
             "My reply is no", "My sources say no", "Outlook not so good", "Very doubtful"};
 
+    // Waifu image URLs categorized by type
     private static final Map<String, List<String>> WAIFUS = new HashMap<>();
+    private static final Set<String> WAIFU_CATEGORIES = Set.of("waifu", "neko", "shinobu",
+            "megumin", "bully", "cuddle", "cry", "hug", "awoo", "kiss", "lick", "pat", "smug",
+            "bonk", "yeet", "blush", "smile", "wave", "highfive", "handhold", "nom", "bite",
+            "glomp", "slap", "kill", "kick", "happy", "wink", "trap", "blowjob");
 
     private int delay = 0;
 
@@ -113,8 +119,12 @@ public class ChatCommands {
 
     /**
      * Adds a waifu image URL to the WAIFUS list based on the specified category.
+     * 
+     * @param cat The category of the waifu image (e.g., "waifu", "neko", etc.).
      */
-    private void addWaifu(String category) {
+    private void addWaifu(String cat) {
+        String category = WAIFU_CATEGORIES.contains(cat) ? cat : "waifu";
+
         // Determine the type of waifu based on the nsfw setting
         String type = NarData.getData().get("nsfw").getAsBoolean() ? "nsfw" : "sfw";
 
@@ -146,9 +156,9 @@ public class ChatCommands {
         });
 
         // Limit the number of waifus in each category to 10
-        for (String cat : WAIFUS.keySet()) {
-            if (WAIFUS.get(cat).size() > 10) {
-                WAIFUS.get(cat).remove(0);
+        for (String key : WAIFUS.keySet()) {
+            if (WAIFUS.get(key).size() > 10) {
+                WAIFUS.get(key).remove(0);
             }
         }
     }

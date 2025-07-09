@@ -18,6 +18,7 @@ import net.volcaronitee.nar.util.PlayerUtil;
 import net.volcaronitee.nar.util.ScheduleUtil;
 import net.volcaronitee.nar.util.TablistUtil;
 import net.volcaronitee.nar.util.TickUtil;
+import net.volcaronitee.nar.util.TitleUtil;
 import net.volcaronitee.nar.util.helper.Contract;
 
 public class NotARat implements ClientModInitializer {
@@ -47,6 +48,7 @@ public class NotARat implements ClientModInitializer {
         ScheduleUtil.init();
         TablistUtil.init();
         TickUtil.init();
+        TitleUtil.init();
 
         FeatureUtil.init();
         CommandUtil.init();

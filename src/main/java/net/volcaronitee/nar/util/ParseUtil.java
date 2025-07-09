@@ -21,7 +21,7 @@ public class ParseUtil {
             "(?:\\[\\d+\\] )?(?:\\[[^\\]]*\\+?\\] )?(\\w+)(?: \\[[^\\]]+\\])?";
 
     public static final Pattern IMAGE_URL_PATTERN =
-            Pattern.compile("\\b(?:https?|ftp):\\/\\/[\\w\\d\\-_.~%&?#/=+,]*[\\w\\d\\-_~%&?#/=+]",
+            Pattern.compile("\\b_?(?:https?|ftp):\\/\\/[\\w\\d\\-_.~%&?#/=+,]*[\\w\\d\\-_~%&?#/=+]",
                     Pattern.CASE_INSENSITIVE);
 
     public static boolean isImage(String url) {

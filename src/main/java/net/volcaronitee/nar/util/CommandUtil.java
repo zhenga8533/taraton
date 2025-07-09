@@ -141,8 +141,9 @@ public class CommandUtil {
      * @return 1 if the command was executed successfully, 0 otherwise.
      */
     private static int echo(CommandContext<FabricClientCommandSource> context, String message) {
-        context.getSource().sendFeedback(NotARat.MOD_TITLE.copy()
-                .append(Text.literal(" " + message).formatted(Formatting.WHITE)));
+        MinecraftClient client = MinecraftClient.getInstance();
+        client.getMessageHandler().onGameMessage(NotARat.MOD_TITLE.copy()
+                .append(Text.literal(" " + message).formatted(Formatting.WHITE)), false);
         return 1;
     }
 
@@ -232,14 +233,16 @@ public class CommandUtil {
     private static int defaultCommand(CommandContext<FabricClientCommandSource> context) {
         ClientPlayerEntity clientPlayer = context.getSource().getPlayer();
         String command = StringArgumentType.getString(context, "default").trim();
+        String[] args = command.split(" ");
+        String core = args[0];
 
-        if (command == "contract" || command == "bindingvow") {
+        if (core.equals("contract") || core.equals("bindingvow")) {
             return contract(context);
-        } else if (command == "domainexpansion" || command == "ryoikitenkai") {
+        } else if (core.equals("domainexpansion") || core.equals("ryoikitenkai")) {
             return domainExpansion(context);
-        } else if (command == "echo") {
+        } else if (core.equals("echo")) {
             return echo(context, command.substring(5).trim());
-        } else if (command == "hehehe") {
+        } else if (core.equals("hehehe")) {
             return hehehe(context);
         } else if (ChatCommands.getInstance().handleCommand(clientPlayer, command)) {
             return 1;

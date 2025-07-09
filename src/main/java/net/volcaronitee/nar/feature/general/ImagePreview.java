@@ -279,6 +279,14 @@ public class ImagePreview {
             client.execute(() -> {
                 resetImagePreview();
 
+                // Check if the client is still in a valid state
+                if (client.currentScreen == null) {
+                    isLoading = false;
+                    hasLoaded = false;
+                    return;
+                }
+
+                // Check if the image is null or invalid
                 if (image != null) {
                     dynamicTexture = new NativeImageBackedTexture(
                             () -> NotARat.MOD_ID + ".image_preview", image);
