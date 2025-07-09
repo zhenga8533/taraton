@@ -19,6 +19,7 @@ import net.volcaronitee.nar.util.OverlayUtil;
 import net.volcaronitee.nar.util.OverlayUtil.LineContent;
 import net.volcaronitee.nar.util.ScheduleUtil;
 import net.volcaronitee.nar.util.TickUtil;
+import net.volcaronitee.nar.util.helper.Contract;
 
 /**
  * Feature that simulates fishing by automatically casting and recasting the fishing rod when the
@@ -131,6 +132,10 @@ public class HookLineAndSinker {
             LINES.add(new LineContent(name, () -> true));
 
             INSTANCE.hooked = true;
+            if (!Contract.isSigned()) {
+                break;
+            }
+
             int hookDelay = (int) (Math.random() * 3 + 1);
             int fishDelay = (int) (Math.random() * 2 + 5);
 
@@ -150,6 +155,7 @@ public class HookLineAndSinker {
                 MinecraftClient.getInstance().options.useKey.setPressed(false);
                 INSTANCE.hooked = false;
             }, hookDelay + fishDelay + 1);
+            break;
         }
     }
 }
