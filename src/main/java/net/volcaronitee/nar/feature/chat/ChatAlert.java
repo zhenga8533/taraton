@@ -30,11 +30,7 @@ public class ChatAlert {
                     + " --fadeOut <ticks> §7Time in ticks needed for the alert to fade out.\n"
                     + " --command <command> §7Executes a command.\n\n\n" + "§f§lExample:§r\n\n"
                     + "ROAR --fadeIn 10 --stay 70 --fadeOut 20 --command /say Hello World")),
-            "chat_alert_map.json", INSTANCE::onSave);
-
-    static {
-        CHAT_ALERT_MAP.setIsMap(true);
-    }
+            "chat_alert_map.json", true, INSTANCE::onSave);
 
     private final List<Alert> CHAT_PATTERNS = new java.util.ArrayList<>();
 

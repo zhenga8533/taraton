@@ -13,11 +13,8 @@ public class CustomEmote {
     private static final CustomEmote INSTANCE = new CustomEmote();
 
     public static final NarList EMOTE_MAP = new NarList("Emote Map",
-            Text.literal("A list of custom emote mappings to use in chat."), "emote_map.json");
-
-    static {
-        EMOTE_MAP.setIsMap(true);
-    }
+            Text.literal("A list of custom emote mappings to use in chat."), "emote_map.json",
+            true);
 
     /**
      * Private constructor to prevent instantiation.

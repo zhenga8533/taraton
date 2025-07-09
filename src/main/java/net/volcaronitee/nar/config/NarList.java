@@ -70,17 +70,21 @@ public class NarList {
     public NarList() {}
 
     /**
-     * Creates a new ListUtil instance with the specified title, description, file name,
+     * Constructor for NarList with parameters to initialize the title, description, file name,
+     * isMap flag, and a save callback.
      * 
-     * @param title The title for the configuration screen.
-     * @param description A brief description of the configuration.
-     * @param fileName The name of the configuration file to be used.
-     * @param saveCallback A callback to be executed when the configuration is saved.
+     * @param title The title of the list configuration.
+     * @param description The description of the list configuration.
+     * @param fileName The name of the file where the configuration will be saved.
+     * @param isMap Flag indicating if the configuration is a map-like structure.
+     * @param saveCallback A callback function to be executed when the configuration is saved.
      */
-    public NarList(String title, Text description, String fileName, Runnable saveCallback) {
+    public NarList(String title, Text description, String fileName, boolean isMap,
+            Runnable saveCallback) {
         this.title = title;
         this.description = description;
         this.fileName = fileName;
+        this.isMap = isMap;
         this.saveCallback = saveCallback;
 
         // Create handler for this ListUtil instance
@@ -100,14 +104,41 @@ public class NarList {
     }
 
     /**
-     * Creates a new ListUtil instance with the specified title and configuration path.
+     * Constructor for NarList with parameters to initialize the title, description, file name, and
+     * a save callback, without the isMap flag.
      * 
-     * @param title The title for the configuration screen.
-     * @param description A brief description of the configuration.
-     * @param fileName The name of the configuration file to be used.
+     * @param title The title of the list configuration.
+     * @param description The description of the list configuration.
+     * @param fileName The name of the file where the configuration will be saved.
+     * @param saveCallback A callback function to be executed when the configuration is saved.
+     */
+    public NarList(String title, Text description, String fileName, Runnable saveCallback) {
+        this(title, description, fileName, false, saveCallback);
+    }
+
+    /**
+     * Constructor for NarList with parameters to initialize the title, description, and file name,
+     * without the isMap flag and save callback.
+     * 
+     * @param title The title of the list configuration.
+     * @param description The description of the list configuration.
+     * @param fileName The name of the file where the configuration will be saved.
      */
     public NarList(String title, Text description, String fileName) {
-        this(title, description, fileName, null);
+        this(title, description, fileName, false, null);
+    }
+
+    /**
+     * Constructor for NarList with parameters to initialize the title, description, file name, and
+     * isMap flag, without a save callback.
+     * 
+     * @param title The title of the list configuration.
+     * @param description The description of the list configuration.
+     * @param fileName The name of the file where the configuration will be saved.
+     * @param isMap Flag indicating if the configuration is a map-like structure.
+     */
+    public NarList(String title, Text description, String fileName, boolean isMap) {
+        this(title, description, fileName, isMap, null);
     }
 
     /**
@@ -155,15 +186,6 @@ public class NarList {
 
         // Recreate the defaults
         loadDefault();
-    }
-
-    /**
-     * Sets whether the list is treated as a map.
-     * 
-     * @param isMap True if the list should be treated as a map, false otherwise.
-     */
-    public void setIsMap(boolean isMap) {
-        this.isMap = isMap;
     }
 
     /**
