@@ -1,5 +1,6 @@
 package net.volcaronitee.nar.util;
 
+import net.volcaronitee.nar.feature.chat.AutoCommand;
 import net.volcaronitee.nar.feature.chat.AutoKick;
 import net.volcaronitee.nar.feature.chat.AutoTransfer;
 import net.volcaronitee.nar.feature.chat.ChatAlert;
@@ -34,6 +35,7 @@ public class FeatureUtil {
         WidgetDisplay.register();
 
         // Chat Features
+        AutoCommand.register();
         AutoKick.register();
         AutoTransfer.register();
         ChatAlert.register();
