@@ -20,6 +20,11 @@ public class ParseUtil {
     public static final String PLAYER_PATTERN =
             "(?:\\[\\d+\\] )?(?:\\[[^\\]]*\\+?\\] )?(\\w+)(?: \\[[^\\]]+\\])?";
 
+    public static final Pattern PARTY_JOIN_PATTERN =
+            Pattern.compile("^(.*?)\\sjoined the party\\.$");
+    public static final Pattern GUILD_JOIN_PATTERN =
+            Pattern.compile("^(.*?)\\sjoined the guild\\.$");
+
     public static final Pattern IMAGE_URL_PATTERN =
             Pattern.compile("\\b_?(?:https?|ftp):\\/\\/[\\w\\d\\-_.~%&?#/=+,]*[\\w\\d\\-_~%&?#/=+]",
                     Pattern.CASE_INSENSITIVE);

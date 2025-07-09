@@ -3,8 +3,6 @@ package net.volcaronitee.nar.feature.chat;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.text.Text;
 import net.volcaronitee.nar.config.NarConfig;
 import net.volcaronitee.nar.config.NarList;
@@ -71,7 +69,7 @@ public class JoinParty {
         }
 
         if (WHITE_LIST.list.contains(player)) {
-            acceptInvite(player);
+            ScheduleUtil.scheduleCommand("party accept " + player);
         }
     }
 
@@ -86,22 +84,7 @@ public class JoinParty {
         }
 
         if (PartyUtil.getLastParty().contains(player)) {
-            acceptInvite(player);
+            ScheduleUtil.scheduleCommand("party accept " + player);
         }
-    }
-
-    /**
-     * Accepts a party invite for the specified player after a short delay.
-     * 
-     * @param player The name of the player whose invite is being accepted.
-     */
-    private void acceptInvite(String player) {
-        ScheduleUtil.schedule(() -> {
-            ClientPlayNetworkHandler networkHandler =
-                    MinecraftClient.getInstance().getNetworkHandler();
-            if (networkHandler != null) {
-                networkHandler.sendChatCommand("party accept " + player);
-            }
-        }, 4);
     }
 }

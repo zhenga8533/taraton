@@ -2,11 +2,8 @@ package net.volcaronitee.nar.feature.chat;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Queue;
 import java.util.regex.Pattern;
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.text.Text;
 import net.volcaronitee.nar.config.NarConfig;
 import net.volcaronitee.nar.config.NarList;
@@ -33,9 +30,6 @@ public class ChatAlert {
             "chat_alert_map.json", true, INSTANCE::onSave);
 
     private final List<Alert> CHAT_PATTERNS = new java.util.ArrayList<>();
-
-    private final Queue<String> COMMAND_QUEUE = new java.util.LinkedList<>();
-    private int commandDelay = 0;
 
     /**
      * Private constructor to prevent instantiation.
@@ -71,16 +65,7 @@ public class ChatAlert {
 
                 // Schedule the command execution if specified
                 if (!alert.command.isEmpty()) {
-                    commandDelay += 4;
-                    COMMAND_QUEUE.add(alert.command);
-                    ScheduleUtil.schedule(() -> {
-                        ClientPlayNetworkHandler networkHandler =
-                                MinecraftClient.getInstance().player.networkHandler;
-                        if (networkHandler != null) {
-                            networkHandler.sendChatCommand(COMMAND_QUEUE.poll());
-                        }
-                        commandDelay -= 4;
-                    }, commandDelay);
+                    ScheduleUtil.scheduleCommand(alert.command);
                 }
                 break;
             }
