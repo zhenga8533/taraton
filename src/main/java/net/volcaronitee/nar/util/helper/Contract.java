@@ -22,6 +22,8 @@ public class Contract {
     private final static Path CONTRACT_FILE =
             FabricLoader.getInstance().getConfigDir().resolve(NotARat.MOD_ID + "/contract.txt");
 
+    private final static int SIGN_INDEX = 45; // Line 46 in the contract file (0-indexed)
+
     /**
      * Initializes the contract by creating the contract file if it does not exist.
      */
@@ -74,10 +76,9 @@ public class Contract {
      * @return True if the contract is signed, false otherwise.
      */
     public static boolean isSigned() {
-        // Check if line 46 is signed
         try {
             String clientUsername = MinecraftClient.getInstance().getSession().getUsername();
-            return Files.readAllLines(CONTRACT_FILE).get(45).contains(clientUsername);
+            return Files.readAllLines(CONTRACT_FILE).get(SIGN_INDEX).contains(clientUsername);
         } catch (Exception e) {
             e.printStackTrace();
             return false;
@@ -90,7 +91,17 @@ public class Contract {
     private static void createContract() {
         // Check if the contract file already exists
         if (CONTRACT_FILE.toFile().exists()) {
-            return;
+            // Check if the contract file is valid by checking the signature line
+            try {
+                String line = Files.readAllLines(CONTRACT_FILE).get(SIGN_INDEX - 1);
+                if (!line.equals("User (Enter IGN below):")) {
+                    Files.deleteIfExists(CONTRACT_FILE);
+                } else {
+                    return; // Contract already exists and is valid
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
         // Copy the contract template to the config directory
