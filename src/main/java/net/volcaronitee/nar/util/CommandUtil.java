@@ -19,7 +19,6 @@ import net.volcaronitee.nar.config.NarToggle;
 import net.volcaronitee.nar.feature.chat.ChatAlert;
 import net.volcaronitee.nar.feature.chat.ChatCommands;
 import net.volcaronitee.nar.feature.chat.CustomEmote;
-import net.volcaronitee.nar.feature.chat.JoinWhitelist;
 import net.volcaronitee.nar.feature.chat.SpamHider;
 import net.volcaronitee.nar.feature.chat.TextSubstitution;
 import net.volcaronitee.nar.feature.combat.EntityHighlight;
@@ -67,8 +66,8 @@ public class CommandUtil {
                                 .then(ChatCommands.PREFIX_LIST.createCommand("pl"))
                                 .then(SpamHider.SPAM_LIST.createCommand("spamlist"))
                                 .then(SpamHider.SPAM_LIST.createCommand("sl"))
-                                .then(JoinWhitelist.WHITE_LIST.createCommand("whitelist"))
-                                .then(JoinWhitelist.WHITE_LIST.createCommand("wl"))
+                                .then(ChatCommands.WHITE_LIST.createCommand("whitelist"))
+                                .then(ChatCommands.WHITE_LIST.createCommand("wl"))
                                 .then(WidgetDisplay.WIDGET_LIST.createCommand("widgetlist"))
                                 .then(WidgetDisplay.WIDGET_LIST.createCommand("wgl"))
 

@@ -4,7 +4,7 @@ import net.volcaronitee.nar.feature.chat.ChatAlert;
 import net.volcaronitee.nar.feature.chat.ChatCommands;
 import net.volcaronitee.nar.feature.chat.CustomEmote;
 import net.volcaronitee.nar.feature.chat.JoinMessage;
-import net.volcaronitee.nar.feature.chat.JoinWhitelist;
+import net.volcaronitee.nar.feature.chat.JoinParty;
 import net.volcaronitee.nar.feature.chat.PlaytimeWarning;
 import net.volcaronitee.nar.feature.chat.SpamHider;
 import net.volcaronitee.nar.feature.combat.EntityHighlight;
@@ -36,7 +36,7 @@ public class FeatureUtil {
         ChatCommands.register();
         CustomEmote.register();
         JoinMessage.register();
-        JoinWhitelist.register();
+        JoinParty.register();
         PlaytimeWarning.register();
         SpamHider.register();
         SkyBlockLevelUpAlert.register();

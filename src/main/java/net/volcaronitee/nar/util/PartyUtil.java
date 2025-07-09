@@ -29,6 +29,7 @@ public class PartyUtil {
     private static String leader = "";
     private static final Set<String> MODERATORS = new HashSet<>();
     private static final Set<String> MEMBERS = new HashSet<>();
+    private static final Set<String> LAST_PARTY = new HashSet<>();
 
     private static final Map<String, String> UUID_CACHE = new HashMap<>();
 
@@ -101,11 +102,9 @@ public class PartyUtil {
         inParty = packet.isInParty();
         if (!inParty) {
             // Clear party info immediately if not in a party
-            MinecraftClient.getInstance().execute(() -> {
-                leader = "";
-                MODERATORS.clear();
-                MEMBERS.clear();
-            });
+            leader = "";
+            MODERATORS.clear();
+            MEMBERS.clear();
             return;
         }
 
@@ -164,6 +163,12 @@ public class PartyUtil {
                     MODERATORS.addAll(newModerators);
                     MEMBERS.clear();
                     MEMBERS.addAll(newMembers);
+
+                    // Update the last party members list
+                    LAST_PARTY.clear();
+                    LAST_PARTY.addAll(MODERATORS);
+                    LAST_PARTY.addAll(MEMBERS);
+                    LAST_PARTY.add(leader);
                 });
     }
 
@@ -201,6 +206,15 @@ public class PartyUtil {
      */
     public static Set<String> getMembers() {
         return MEMBERS;
+    }
+
+    /**
+     * Gets the set of usernames of the last party members.
+     * 
+     * @return A set of usernames of the last party members, or an empty set if not in a party.
+     */
+    public static Set<String> getLastParty() {
+        return LAST_PARTY;
     }
 
     /**

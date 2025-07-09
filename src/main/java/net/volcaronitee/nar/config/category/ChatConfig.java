@@ -251,7 +251,7 @@ public class ChatConfig {
                                         newVal -> config.chat.antiGhostParty = newVal)
                                 .controller(NarConfig::createBooleanController).build())
 
-                        // TODO: Join Reparty
+                        // Join Reparty
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Join Reparty"))
                                 .description(OptionDescription.createBuilder()
                                         .webpImage(Identifier.of(NotARat.MOD_ID,
