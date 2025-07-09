@@ -32,12 +32,6 @@ import net.volcaronitee.nar.util.ScheduleUtil;
 public class ChatCommands {
     private static final ChatCommands INSTANCE = new ChatCommands();
 
-    public static final NarList WHITE_LIST = new NarList("White List",
-            Text.literal("A list of players to allow the use of various features."),
-            "white_list.json");
-    public static final NarList BLACK_LIST = new NarList("Black List",
-            Text.literal("A list of players to block from sending chat commands."),
-            "black_list.json");
     public static final NarList PREFIX_LIST = new NarList("Prefix List",
             Text.literal("A list of prefixes to detect for chat commands."), "prefix_list.json");
 
@@ -209,7 +203,8 @@ public class ChatCommands {
         }
 
         // Check if username is blacklisted
-        if (NarToggle.getHandler().chat.blacklistLock && BLACK_LIST.list.contains(username)) {
+        if (NarToggle.getHandler().chat.blacklistLock
+                && AutoKick.BLACK_LIST.list.contains(username)) {
             return;
         }
 
@@ -291,7 +286,8 @@ public class ChatCommands {
      */
     private boolean handleLeaderCommand(ClientPlayerEntity player, String username, String[] args) {
         // Check if username is whitelisted
-        if (NarToggle.getHandler().chat.whitelistLock && !WHITE_LIST.list.contains(username)) {
+        if (NarToggle.getHandler().chat.whitelistLock
+                && !JoinParty.WHITE_LIST.list.contains(username)) {
             return false;
         }
 

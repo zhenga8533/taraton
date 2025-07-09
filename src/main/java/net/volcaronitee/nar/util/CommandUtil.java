@@ -16,9 +16,11 @@ import net.volcaronitee.nar.NotARat;
 import net.volcaronitee.nar.config.NarConfig;
 import net.volcaronitee.nar.config.NarData;
 import net.volcaronitee.nar.config.NarToggle;
+import net.volcaronitee.nar.feature.chat.AutoKick;
 import net.volcaronitee.nar.feature.chat.ChatAlert;
 import net.volcaronitee.nar.feature.chat.ChatCommands;
 import net.volcaronitee.nar.feature.chat.CustomEmote;
+import net.volcaronitee.nar.feature.chat.JoinParty;
 import net.volcaronitee.nar.feature.chat.SpamHider;
 import net.volcaronitee.nar.feature.chat.TextSubstitution;
 import net.volcaronitee.nar.feature.combat.EntityHighlight;
@@ -58,16 +60,16 @@ public class CommandUtil {
                                 .then(literal("debug").executes(CommandUtil::debug))
 
                                 // Lists commands
-                                .then(ChatCommands.BLACK_LIST.createCommand("blacklist"))
-                                .then(ChatCommands.BLACK_LIST.createCommand("bl"))
+                                .then(AutoKick.BLACK_LIST.createCommand("blacklist"))
+                                .then(AutoKick.BLACK_LIST.createCommand("bl"))
                                 .then(EntityHighlight.ENTITY_LIST.createCommand("entitylist"))
                                 .then(EntityHighlight.ENTITY_LIST.createCommand("el"))
                                 .then(ChatCommands.PREFIX_LIST.createCommand("prefixlist"))
                                 .then(ChatCommands.PREFIX_LIST.createCommand("pl"))
                                 .then(SpamHider.SPAM_LIST.createCommand("spamlist"))
                                 .then(SpamHider.SPAM_LIST.createCommand("sl"))
-                                .then(ChatCommands.WHITE_LIST.createCommand("whitelist"))
-                                .then(ChatCommands.WHITE_LIST.createCommand("wl"))
+                                .then(JoinParty.WHITE_LIST.createCommand("whitelist"))
+                                .then(JoinParty.WHITE_LIST.createCommand("wl"))
                                 .then(WidgetDisplay.WIDGET_LIST.createCommand("widgetlist"))
                                 .then(WidgetDisplay.WIDGET_LIST.createCommand("wgl"))
 

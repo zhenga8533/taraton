@@ -7,6 +7,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.text.Text;
 import net.volcaronitee.nar.config.NarConfig;
+import net.volcaronitee.nar.config.NarList;
 import net.volcaronitee.nar.util.PartyUtil;
 import net.volcaronitee.nar.util.ScheduleUtil;
 
@@ -15,6 +16,10 @@ import net.volcaronitee.nar.util.ScheduleUtil;
  */
 public class JoinParty {
     private static final JoinParty INSTANCE = new JoinParty();
+
+    public static final NarList WHITE_LIST = new NarList("White List",
+            Text.literal("A list of players to allow the use of various features."),
+            "white_list.json");
 
     private static final Pattern PARTY_INVITE_PATTERN = Pattern.compile(
             "-+\\n(?:\\[[^\\]]*\\+?\\] )?(\\w+) has invited you to join their party!\\nYou have \\d+ seconds to accept\\. Click here to join!\\n-+");
@@ -65,7 +70,7 @@ public class JoinParty {
             return;
         }
 
-        if (ChatCommands.WHITE_LIST.list.contains(player)) {
+        if (WHITE_LIST.list.contains(player)) {
             acceptInvite(player);
         }
     }

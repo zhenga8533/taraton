@@ -251,14 +251,37 @@ public class ChatConfig {
                                         newVal -> config.chat.antiGhostParty = newVal)
                                 .controller(NarConfig::createBooleanController).build())
 
+                        // TODO: Auto Transfer
+                        .option(Option.<ChatConfig.AutoTransfer>createBuilder()
+                                .name(Text.literal("Auto Transfer"))
+                                .description(OptionDescription.createBuilder()
+                                        .webpImage(Identifier.of(NotARat.MOD_ID,
+                                                "config/chat/auto_transfer.webp"))
+                                        .text(Text.literal(
+                                                "Transfers party leadership if it is transfered to you."))
+                                        .build())
+                                .binding(defaults.chat.autoTransfer, () -> config.chat.autoTransfer,
+                                        newVal -> config.chat.autoTransfer = newVal)
+                                .controller(NarConfig::createEnumController).build())
+
+                        // Auto Kick
+                        .option(Option.<Boolean>createBuilder().name(Text.literal("Auto Kick"))
+                                .description(OptionDescription.createBuilder()
+                                        .webpImage(Identifier.of(NotARat.MOD_ID,
+                                                "config/chat/auto_kick.webp"))
+                                        .text(Text.literal(
+                                                "Kicks players from your party if they are in the blacklist. Customize your blacklist using §e/vc bl§f."))
+                                        .build())
+                                .binding(defaults.chat.autoKick, () -> config.chat.autoKick,
+                                        newVal -> config.chat.autoKick = newVal)
+                                .controller(NarConfig::createBooleanController).build())
+
                         // Join Reparty
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Join Reparty"))
                                 .description(OptionDescription.createBuilder()
                                         .webpImage(Identifier.of(NotARat.MOD_ID,
                                                 "config/chat/join_reparty.webp"))
-                                        .text(Text.literal(
-                                                "Automatically accepts reparty invites send within 60 seconds."))
-                                        .build())
+                                        .text(Text.literal("Accepts reparty invites.")).build())
                                 .binding(defaults.chat.joinReparty, () -> config.chat.joinReparty,
                                         newVal -> config.chat.joinReparty = newVal)
                                 .controller(NarConfig::createBooleanController).build())
@@ -275,19 +298,6 @@ public class ChatConfig {
                                         () -> config.chat.joinWhitelist,
                                         newVal -> config.chat.joinWhitelist = newVal)
                                 .controller(NarConfig::createBooleanController).build())
-
-                        // TODO: Auto Transfer
-                        .option(Option.<ChatConfig.AutoTransfer>createBuilder()
-                                .name(Text.literal("Auto Transfer"))
-                                .description(OptionDescription.createBuilder()
-                                        .webpImage(Identifier.of(NotARat.MOD_ID,
-                                                "config/chat/auto_transfer.webp"))
-                                        .text(Text.literal(
-                                                "Automatically transfers party leadership when you leave the party."))
-                                        .build())
-                                .binding(defaults.chat.autoTransfer, () -> config.chat.autoTransfer,
-                                        newVal -> config.chat.autoTransfer = newVal)
-                                .controller(NarConfig::createEnumController).build())
 
                         .build())
 
@@ -347,10 +357,7 @@ public class ChatConfig {
     public boolean antiGhostParty = false;
 
     @SerialEntry
-    public boolean joinReparty = false;
-
-    @SerialEntry
-    public boolean joinWhitelist = true;
+    public boolean autoKick = false;
 
     @SerialEntry
     public AutoTransfer autoTransfer = AutoTransfer.OFF;
@@ -367,4 +374,10 @@ public class ChatConfig {
             };
         }
     }
+
+    @SerialEntry
+    public boolean joinReparty = false;
+
+    @SerialEntry
+    public boolean joinWhitelist = true;
 }
