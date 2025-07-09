@@ -68,17 +68,7 @@ public class TitleUtil {
      * @param priority The priority of the title, used to determine which title to display if
      */
     public static void createTitle(String title, String subtitle, int priority) {
-        // Check if the title already exists and refresh it if so
-        String key = title + subtitle;
-        if (TITLES.containsKey(key)) {
-            TITLES.get(key).refresh();
-            return;
-        }
-
-        // Create a new Title object and add it to the map
-        Title newTitle = new Title(title, subtitle, priority, 10, 70, 20);
-        TITLES.put(newTitle.key, newTitle);
-        newTitle.refresh();
+        createTitle(title, subtitle, priority, 10, 70, 20);
     }
 
     /**
@@ -139,7 +129,7 @@ public class TitleUtil {
             aliveTime = fadeIn + stay + fadeOut;
 
             if (client != null && client.inGameHud != null
-                    && (currentKey == null || TITLES.get(currentKey).priority < this.priority)) {
+                    && (currentKey == null || TITLES.get(currentKey).priority <= this.priority)) {
                 client.inGameHud.setTitleTicks(fadeIn, stay, fadeOut);
                 client.inGameHud.setTitle(title);
                 client.inGameHud.setSubtitle(subtitle);
