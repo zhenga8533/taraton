@@ -59,8 +59,6 @@ public class ChatCommands {
             "bonk", "yeet", "blush", "smile", "wave", "highfive", "handhold", "nom", "bite",
             "glomp", "slap", "kill", "kick", "happy", "wink", "trap", "blowjob");
 
-    private int delay = 0;
-
     /**
      * Enum representing the type of chat command.
      */
@@ -234,20 +232,6 @@ public class ChatCommands {
     }
 
     /**
-     * Schedules a command to be executed after a delay.
-     * 
-     * @param command The command to be executed.
-     */
-    private void scheduleCommand(String command) {
-        // Send the command to the player network handler
-        INSTANCE.delay += 6;
-        ScheduleUtil.schedule(() -> {
-            MinecraftClient.getInstance().player.networkHandler.sendChatCommand(command);
-            INSTANCE.delay -= 6;
-        }, INSTANCE.delay);
-    }
-
-    /**
      * Appends a command to the StringBuilder if the condition is true.
      * 
      * @param builder The StringBuilder to append to.
@@ -310,7 +294,7 @@ public class ChatCommands {
                     return false;
                 }
 
-                scheduleCommand("p settings allinvite");
+                ScheduleUtil.scheduleCommand("p settings allinvite");
                 return true;
             // Party mute commands
             case "mute":
@@ -318,7 +302,7 @@ public class ChatCommands {
                     return false;
                 }
 
-                scheduleCommand("p mute");
+                ScheduleUtil.scheduleCommand("p mute");
                 return true;
             // Stream open commands
             case "streamopen":
@@ -328,7 +312,7 @@ public class ChatCommands {
                 }
 
                 String size = ParseUtil.isInteger(arg1) ? arg1 : "10";
-                scheduleCommand("stream open " + size);
+                ScheduleUtil.scheduleCommand("stream open " + size);
                 return true;
             // Party warp commands
             case "warp":
@@ -336,7 +320,7 @@ public class ChatCommands {
                     return false;
                 }
 
-                scheduleCommand("p warp");
+                ScheduleUtil.scheduleCommand("p warp");
                 return true;
             // Join instance commands
             case "instance":
@@ -353,7 +337,7 @@ public class ChatCommands {
                     return false;
                 }
 
-                scheduleCommand("p " + arg1);
+                ScheduleUtil.scheduleCommand("p " + arg1);
                 return true;
             // Party kick commands
             case "kick":
@@ -362,7 +346,7 @@ public class ChatCommands {
                 }
 
                 String kick = arg1.isEmpty() ? username : arg1;
-                scheduleCommand("p kick " + kick);
+                ScheduleUtil.scheduleCommand("p kick " + kick);
                 return true;
             // Party transfer commands
             case "transfer":
@@ -373,7 +357,7 @@ public class ChatCommands {
                 }
 
                 String transfer = arg1.isEmpty() ? username : arg1;
-                scheduleCommand("p transfer " + transfer);
+                ScheduleUtil.scheduleCommand("p transfer " + transfer);
                 return true;
             // Party promote commands
             case "promote":
@@ -382,7 +366,7 @@ public class ChatCommands {
                 }
 
                 String promote = arg1.isEmpty() ? username : arg1;
-                scheduleCommand("p promote " + promote);
+                ScheduleUtil.scheduleCommand("p promote " + promote);
                 return true;
             // Party demote commands
             case "demote":
@@ -391,7 +375,7 @@ public class ChatCommands {
                 }
 
                 String demote = arg1.isEmpty() ? username : arg1;
-                scheduleCommand("p demote " + demote);
+                ScheduleUtil.scheduleCommand("p demote " + demote);
                 return true;
             // Leader help commands
             case "help":
@@ -416,7 +400,7 @@ public class ChatCommands {
                 appendCommand(helpMessage, "demote [player]", NarToggle.getHandler().chat.demote);
                 appendCommand(helpMessage, "lhelp", NarToggle.getHandler().chat.leaderHelp);
                 helpMessage.setLength(helpMessage.length() - 2);
-                scheduleCommand("pc " + helpMessage);
+                ScheduleUtil.scheduleCommand("pc " + helpMessage);
                 return true;
             // Default case for unrecognized commands
             default:
@@ -449,7 +433,7 @@ public class ChatCommands {
                 }
 
                 String response = EIGHT_BALL[(int) (Math.random() * EIGHT_BALL.length)];
-                scheduleCommand(head + " @" + username + ", " + response);
+                ScheduleUtil.scheduleCommand(head + " @" + username + ", " + response);
                 return true;
             // Coin flip commands
             case "coin":
@@ -462,7 +446,7 @@ public class ChatCommands {
 
                 boolean heads = Math.random() < 0.5;
                 String result = heads ? "Heads!" : "Tails!";
-                scheduleCommand(head + " " + username + " flipped a " + result);
+                ScheduleUtil.scheduleCommand(head + " " + username + " flipped a " + result);
                 return true;
             // Dice roll commands
             case "dice":
@@ -473,7 +457,7 @@ public class ChatCommands {
 
                 int sides = ParseUtil.isInteger(arg1) ? Integer.parseInt(arg1) : 6;
                 int roll = (int) (Math.random() * sides) + 1;
-                scheduleCommand(head + " " + username + " rolled a " + roll + "!");
+                ScheduleUtil.scheduleCommand(head + " " + username + " rolled a " + roll + "!");
                 return true;
             // Waifu commands
             case "waifu":
@@ -490,7 +474,7 @@ public class ChatCommands {
                 // Get the last waifu image URL from the list for the specified category
                 List<String> waifuList = WAIFUS.getOrDefault(category, WAIFUS.get("waifu"));
                 String waifuUrl = waifuList.get(waifuList.size() - 1);
-                scheduleCommand(head + " " + waifuUrl);
+                ScheduleUtil.scheduleCommand(head + " " + waifuUrl);
 
                 return true;
             // Party help commands
@@ -508,12 +492,12 @@ public class ChatCommands {
                 appendCommand(helpMessage, "dice [sides]", NarToggle.getHandler().chat.diceRoll);
                 appendCommand(helpMessage, "waifu", NarToggle.getHandler().chat.waifu);
                 appendCommand(helpMessage, "phelp", NarToggle.getHandler().chat.partyHelp);
-                scheduleCommand(head + " " + helpMessage);
+                ScheduleUtil.scheduleCommand(head + " " + helpMessage);
                 return true;
 
             // Hidden commands
             case "avengers":
-                scheduleCommand("p Somxone Kwuromi valyn Serten");
+                ScheduleUtil.scheduleCommand("p Somxone Kwuromi valyn Serten");
                 return true;
 
             // Default case for unrecognized commands
@@ -553,7 +537,7 @@ public class ChatCommands {
                 long y = Math.round(player.getY());
                 long z = Math.round(player.getZ());
                 String coords = String.format("x: %d, y: %d, z: %d", x, y, z);
-                scheduleCommand(head + " " + coords);
+                ScheduleUtil.scheduleCommand(head + " " + coords);
                 return true;
             // FPS commands
             case "fps":
@@ -562,7 +546,7 @@ public class ChatCommands {
                 }
 
                 int fps = MinecraftClient.getInstance().getCurrentFps();
-                scheduleCommand(head + " " + fps + " FPS");
+                ScheduleUtil.scheduleCommand(head + " " + fps + " FPS");
                 return true;
             // TPS commands
             case "tps":
@@ -571,7 +555,7 @@ public class ChatCommands {
                 }
 
                 double tps = ServerStatus.getInstance().getTps();
-                scheduleCommand(head + " " + String.format("%.2f TPS", tps));
+                ScheduleUtil.scheduleCommand(head + " " + String.format("%.2f TPS", tps));
                 return true;
             // Leave party commands
             case "leave":
@@ -579,7 +563,7 @@ public class ChatCommands {
                     return false;
                 }
 
-                scheduleCommand("p leave");
+                ScheduleUtil.scheduleCommand("p leave");
                 return true;
             // Limbo or lobby commands
             case "limbo":
@@ -589,7 +573,7 @@ public class ChatCommands {
                     return false;
                 }
 
-                scheduleCommand("l");
+                ScheduleUtil.scheduleCommand("l");
                 return true;
             // Ping commands
             case "ping":
@@ -598,7 +582,7 @@ public class ChatCommands {
                 }
 
                 int ping = ServerStatus.getInstance().getPing();
-                scheduleCommand(command + " " + ping + "ms");
+                ScheduleUtil.scheduleCommand(command + " " + ping + "ms");
                 return true;
             // Playtime commands
             case "playtime":
@@ -608,7 +592,7 @@ public class ChatCommands {
                 }
 
                 String playtime = PlaytimeWarning.getInstance().formatPlaytime();
-                scheduleCommand(head + " " + playtime + " playtime");
+                ScheduleUtil.scheduleCommand(head + " " + playtime + " playtime");
                 return true;
             // Stats commands
             case "stats":
@@ -627,7 +611,7 @@ public class ChatCommands {
                 ZonedDateTime now = ZonedDateTime.now();
                 DateTimeFormatter formatter =
                         DateTimeFormatter.ofLocalizedDateTime(FormatStyle.LONG);
-                scheduleCommand(head + " " + now.format(formatter));
+                ScheduleUtil.scheduleCommand(head + " " + now.format(formatter));
                 return true;
             // Status help commands
             case "help":
@@ -650,7 +634,7 @@ public class ChatCommands {
                 appendCommand(helpMessage, "time", NarToggle.getHandler().chat.time);
                 appendCommand(helpMessage, "shelp", NarToggle.getHandler().chat.statusHelp);
                 helpMessage.setLength(helpMessage.length() - 2);
-                scheduleCommand(head + " " + helpMessage);
+                ScheduleUtil.scheduleCommand(head + " " + helpMessage);
                 return true;
             // Default case for unrecognized commands
             default:
