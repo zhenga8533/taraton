@@ -6,7 +6,6 @@ import dev.isxander.yacl3.api.Option;
 import dev.isxander.yacl3.api.OptionDescription;
 import dev.isxander.yacl3.api.OptionGroup;
 import dev.isxander.yacl3.api.controller.IntegerSliderControllerBuilder;
-import dev.isxander.yacl3.api.controller.StringControllerBuilder;
 import dev.isxander.yacl3.config.v2.api.SerialEntry;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
@@ -250,32 +249,18 @@ public class GeneralConfig {
                                         newVal -> config.general.itemCooldownAlert = newVal)
                                 .controller(NarConfig::createBooleanController).build())
 
-                        // TODO: Reminder Text
-                        .option(Option.<String>createBuilder().name(Text.literal("Reminder Text"))
-                                .description(OptionDescription.createBuilder()
-                                        .webpImage(Identifier.of(NotARat.MOD_ID,
-                                                "config/general/reminder_text.webp"))
-                                        .text(Text.literal("Sets the text for the reminder alert."))
-                                        .build())
-                                .binding(defaults.general.reminderText,
-                                        () -> config.general.reminderText,
-                                        newVal -> config.general.reminderText = newVal)
-                                .controller(opt -> StringControllerBuilder.create(opt)).build())
-
-                        // TODO: Reminder Timer
-                        .option(Option.<Integer>createBuilder().name(Text.literal("Reminder Timer"))
+                        // Reminder Timer
+                        .option(Option.<Boolean>createBuilder().name(Text.literal("Reminder Timer"))
                                 .description(OptionDescription.createBuilder()
                                         .webpImage(Identifier.of(NotARat.MOD_ID,
                                                 "config/general/reminder_timer.webp"))
                                         .text(Text.literal(
-                                                "Sets the time in seconds for the reminder alert."))
+                                                "Enables the reminder timers. Set reminders using /vc rm."))
                                         .build())
                                 .binding(defaults.general.reminderTimer,
                                         () -> config.general.reminderTimer,
                                         newVal -> config.general.reminderTimer = newVal)
-                                .controller(opt -> IntegerSliderControllerBuilder.create(opt)
-                                        .range(0, 3600).step(30))
-                                .build())
+                                .controller(NarConfig::createBooleanController).build())
 
                         .build())
 
@@ -329,8 +314,5 @@ public class GeneralConfig {
     public boolean itemCooldownAlert = true;
 
     @SerialEntry
-    public String reminderText = "";
-
-    @SerialEntry
-    public int reminderTimer = 0;
+    public boolean reminderTimer = false;
 }
