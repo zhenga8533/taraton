@@ -58,7 +58,7 @@ public class NoMouseReset {
         }
 
         // If the last screen was opened very recently, recall the mouse position
-        if (INSTANCE.ticksSince < 3
+        if (INSTANCE.ticksSince < 1
                 && (INSTANCE.lastScreen instanceof GenericContainerScreen
                         || INSTANCE.lastScreen instanceof InventoryScreen)) {
             InputUtil.setCursorParameters(client.getWindow().getHandle(), 212993,
