@@ -60,7 +60,7 @@ public class CrimsonIsleConfig {
                 // Vanquisher Option Group
                 .group(OptionGroup.createBuilder().name(Text.literal("Vanquisher"))
 
-                        // TODO: Vanquisher Warp
+                        // Vanquisher Warp
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Vanquisher Warp"))
                                 .description(OptionDescription.createBuilder()

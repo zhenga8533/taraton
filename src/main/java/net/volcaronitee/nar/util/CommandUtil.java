@@ -24,6 +24,7 @@ import net.volcaronitee.nar.feature.chat.JoinParty;
 import net.volcaronitee.nar.feature.chat.SpamHider;
 import net.volcaronitee.nar.feature.chat.TextSubstitution;
 import net.volcaronitee.nar.feature.combat.EntityHighlight;
+import net.volcaronitee.nar.feature.crimson_isle.VanquisherWarp;
 import net.volcaronitee.nar.feature.general.ImagePreview;
 import net.volcaronitee.nar.feature.general.WidgetDisplay;
 import net.volcaronitee.nar.util.helper.Contract;
@@ -74,6 +75,8 @@ public class CommandUtil {
                                 .then(JoinParty.WHITE_LIST.createCommand("wl"))
                                 .then(WidgetDisplay.WIDGET_LIST.createCommand("widgetlist"))
                                 .then(WidgetDisplay.WIDGET_LIST.createCommand("wgl"))
+                                .then(VanquisherWarp.VANQ_LIST.createCommand("vanqlist"))
+                                .then(VanquisherWarp.VANQ_LIST.createCommand("vl"))
 
                                 // Maps commands
                                 .then(ChatAlert.CHAT_ALERT_MAP.createCommand("chatalertmap"))

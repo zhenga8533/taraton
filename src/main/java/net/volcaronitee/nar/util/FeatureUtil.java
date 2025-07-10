@@ -12,6 +12,7 @@ import net.volcaronitee.nar.feature.chat.PlaytimeWarning;
 import net.volcaronitee.nar.feature.chat.SpamHider;
 import net.volcaronitee.nar.feature.combat.EntityHighlight;
 import net.volcaronitee.nar.feature.combat.LowHealthWarning;
+import net.volcaronitee.nar.feature.crimson_isle.VanquisherWarp;
 import net.volcaronitee.nar.feature.fishing.HookLineAndSinker;
 import net.volcaronitee.nar.feature.general.ImagePreview;
 import net.volcaronitee.nar.feature.general.NoMouseReset;
@@ -57,5 +58,8 @@ public class FeatureUtil {
 
         // Fishing Features
         HookLineAndSinker.register();
+
+        // Crimson Isle Features
+        VanquisherWarp.register();
     }
 }
