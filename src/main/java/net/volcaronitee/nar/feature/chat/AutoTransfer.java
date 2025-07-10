@@ -23,6 +23,11 @@ public class AutoTransfer {
                     Pattern.compile("You were kicked while joining that server!")};
 
     /**
+     * Private constructor to prevent instantiation.
+     */
+    private AutoTransfer() {}
+
+    /**
      * Registers the AutoTransfer feature to listen for incoming messages.
      */
     public static void register() {

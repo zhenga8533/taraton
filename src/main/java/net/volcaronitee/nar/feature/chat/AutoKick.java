@@ -19,6 +19,11 @@ public class AutoKick {
             "black_list.json");
 
     /**
+     * Private constructor to prevent instantiation.
+     */
+    private AutoKick() {}
+
+    /**
      * Registers the AutoKick feature to listen for incoming messages.
      */
     public static void register() {

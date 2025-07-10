@@ -32,6 +32,11 @@ public class AutoCommand {
     private Map<Integer, Set<String>> commandsByLength;
     private String lastCommand;
 
+    /**
+     * Private constructor to prevent instantiation.
+     */
+    private AutoCommand() {}
+
     public static void register() {
         INSTANCE.dictionary = NarJson.loadJson(FILE_DIR, FILE_NAME);
         INSTANCE.initializeCommands();

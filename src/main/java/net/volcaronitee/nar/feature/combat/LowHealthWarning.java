@@ -13,6 +13,11 @@ public class LowHealthWarning {
     private static final LowHealthWarning INSTANCE = new LowHealthWarning();
 
     /**
+     * Private constructor to prevent instantiation.
+     */
+    private LowHealthWarning() {}
+
+    /**
      * Registers the LowHealthWarning feature to be called every tick.
      */
     public static void register() {
