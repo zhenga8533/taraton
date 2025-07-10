@@ -24,8 +24,8 @@ public class Searchbar {
         searchbar = new TextFieldWidget(MinecraftClient.getInstance().textRenderer, 100, 10,
                 Text.literal("Search..."));
 
-        OVERLAY.setSpecialRender(context -> {
-            searchbar.renderWidget(context, OVERLAY.getX(), OVERLAY.getY(), 1);
+        OVERLAY.setSpecialRender((context, delta) -> {
+            searchbar.renderWidget(context, OVERLAY.getX(), OVERLAY.getY(), delta);
         });
     }
 }

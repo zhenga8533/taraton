@@ -12,6 +12,7 @@ import net.volcaronitee.nar.feature.chat.PlaytimeWarning;
 import net.volcaronitee.nar.feature.chat.SpamHider;
 import net.volcaronitee.nar.feature.combat.EntityHighlight;
 import net.volcaronitee.nar.feature.combat.LowHealthWarning;
+import net.volcaronitee.nar.feature.container.Searchbar;
 import net.volcaronitee.nar.feature.crimson_isle.VanquisherWarp;
 import net.volcaronitee.nar.feature.fishing.HookLineAndSinker;
 import net.volcaronitee.nar.feature.general.ImagePreview;
@@ -52,7 +53,7 @@ public class FeatureUtil {
         SkyBlockXpAlert.register();
 
         // Container Features
-        // Searchbar.register();
+        Searchbar.register();
 
         // Combat Features
         EntityHighlight.register();

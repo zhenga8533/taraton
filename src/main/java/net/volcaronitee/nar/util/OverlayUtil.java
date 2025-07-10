@@ -123,7 +123,8 @@ public class OverlayUtil {
         }
 
         for (Overlay overlay : OVERLAYS.values()) {
-            overlay.render(context);
+            float delta = tickCounter.getDynamicDeltaTicks();
+            overlay.render(context, delta);
         }
     }
 
@@ -170,7 +171,7 @@ public class OverlayUtil {
         public void render(DrawContext context, int mouseX, int mouseY, float delta) {
             context.fill(0, 0, this.width, this.height, 0x40007BFF);
             for (Overlay overlay : OVERLAYS.values()) {
-                overlay.render(context);
+                overlay.render(context, delta);
             }
             super.render(context, mouseX, mouseY, delta);
         }
@@ -309,7 +310,13 @@ public class OverlayUtil {
      * Represents a special render function that can be used to render custom content
      */
     public interface SpecialRender {
-        void render(DrawContext context);
+        /**
+         * Renders custom content using the provided context and delta time.
+         * 
+         * @param context The context to use for rendering the custom content.
+         * @param delta The time delta since the last render.
+         */
+        void render(DrawContext context, float delta);
     }
 
     /**
@@ -367,8 +374,9 @@ public class OverlayUtil {
          * Renders the overlay using the provided context.
          * 
          * @param context The context to use for rendering the overlay.
+         * @param delta The time delta since the last render.
          */
-        private void render(DrawContext context) {
+        private void render(DrawContext context, float delta) {
             if (!shouldRender.get())
                 return;
             List<LineContent> lines =
@@ -376,7 +384,7 @@ public class OverlayUtil {
 
             // If special render is set, use it
             if (specialRender != null) {
-                specialRender.render(context);
+                specialRender.render(context, delta);
                 return;
             } else if (lines.isEmpty()) {
                 return;
