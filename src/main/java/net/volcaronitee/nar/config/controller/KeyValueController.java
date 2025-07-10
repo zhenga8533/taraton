@@ -94,7 +94,7 @@ public class KeyValueController<K, V> implements Controller<KeyValueController.K
         private Function<Option<K>, ControllerBuilder<K>> keyController;
         private String valueName;
         private Function<Option<V>, ControllerBuilder<V>> valueController;
-        private Double ratio = 0.5;
+        private Double ratio = 0.8;
 
         /**
          * Creates a new Builder for KeyValueController.
