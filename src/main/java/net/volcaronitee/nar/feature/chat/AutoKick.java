@@ -3,6 +3,7 @@ package net.volcaronitee.nar.feature.chat;
 import java.util.regex.Matcher;
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
 import net.minecraft.text.Text;
+import net.volcaronitee.nar.config.NarConfig;
 import net.volcaronitee.nar.config.NarList;
 import net.volcaronitee.nar.util.ParseUtil;
 import net.volcaronitee.nar.util.ScheduleUtil;
@@ -31,7 +32,7 @@ public class AutoKick {
      * @param overlay Whether the message is an overlay message.
      */
     private void handleAutoKick(Text message, boolean overlay) {
-        if (overlay) {
+        if (overlay || !NarConfig.getHandler().chat.autoKick) {
             return;
         }
 

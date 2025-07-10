@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.option.KeyBinding;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.item.Item;
@@ -131,29 +132,31 @@ public class HookLineAndSinker {
             }
             LINES.add(new LineContent(name, () -> true));
 
-            INSTANCE.hooked = true;
-            if (!Contract.isSigned()) {
+            // Check if the use key is pressed and if a contract is signed
+            KeyBinding useKey = MinecraftClient.getInstance().options.useKey;
+            if (useKey == null || useKey.isPressed() || !Contract.isSigned()) {
                 break;
             }
+            INSTANCE.hooked = true;
 
             int hookDelay = (int) (Math.random() * 3 + 1);
             int fishDelay = (int) (Math.random() * 2 + 5);
 
             // Interact with the fishing rod
             ScheduleUtil.schedule(() -> {
-                MinecraftClient.getInstance().options.useKey.setPressed(true);
+                useKey.setPressed(true);
             }, hookDelay);
             ScheduleUtil.schedule(() -> {
-                MinecraftClient.getInstance().options.useKey.setPressed(false);
+                useKey.setPressed(false);
             }, hookDelay + 1);
 
             // Wait and recast the fishing rod
             ScheduleUtil.schedule(() -> {
-                MinecraftClient.getInstance().options.useKey.setPressed(true);
+                useKey.setPressed(true);
             }, hookDelay + fishDelay);
             ScheduleUtil.schedule(() -> {
-                MinecraftClient.getInstance().options.useKey.setPressed(false);
                 INSTANCE.hooked = false;
+                useKey.setPressed(false);
             }, hookDelay + fishDelay + 1);
             break;
         }
