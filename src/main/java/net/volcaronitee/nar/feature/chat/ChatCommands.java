@@ -61,6 +61,10 @@ public class ChatCommands {
             "bonk", "yeet", "blush", "smile", "wave", "highfive", "handhold", "nom", "bite",
             "glomp", "slap", "kill", "kick", "happy", "wink", "trap", "blowjob");
 
+    // Instances
+    private static final String[] FLOORS = {"one", "two", "three", "four", "five", "six", "seven"};
+    private static final String[] TIERS = {"basic", "hot", "burning", "fiery", "infernal"};
+
     /**
      * Enum representing the type of chat command.
      */
@@ -330,7 +334,29 @@ public class ChatCommands {
                 if (!NarToggle.getHandler().chat.instance) {
                     return false;
                 }
-                // TODO
+
+                // Check if the argument is valid
+                char l1 = arg1.isEmpty() ? ' ' : arg1.charAt(0);
+                String l2 = arg1.length() > 1 ? String.valueOf(arg1.charAt(1)) : "";
+                int num = ParseUtil.isInteger(l2) ? Integer.parseInt(l2) : -1;
+                if (num == -1) {
+                    return false;
+                }
+
+                // Handle different instance commands
+                if (l1 == 'm' && num <= FLOORS.length) {
+                    String floor = FLOORS[num - 1];
+                    ScheduleUtil.scheduleCommand("joininstance master_catacombs_floor_" + floor);
+                } else if (l1 == 'f' && num <= FLOORS.length) {
+                    String floor = FLOORS[num - 1];
+                    ScheduleUtil.scheduleCommand("joininstance catacombs_floor_" + floor);
+                } else if (l1 == 't' && num <= TIERS.length) {
+                    String tier = TIERS[num - 1];
+                    ScheduleUtil.scheduleCommand("joininstance kuudra_" + tier);
+                } else {
+                    return false;
+                }
+
                 return true;
             // Party invite commands
             case "invite":
