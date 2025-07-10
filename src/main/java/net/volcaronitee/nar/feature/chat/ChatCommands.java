@@ -34,6 +34,8 @@ public class ChatCommands {
 
     public static final NarList PREFIX_LIST = new NarList("Prefix List",
             Text.literal("A list of prefixes to detect for chat commands."), "prefix_list.json");
+    public static final NarList AVENGER_LIST =
+            new NarList("The Avengers", Text.literal("DUN DUN DUNDUN"), "avenger_list.json");
 
     // Patterns for matching chat messages
     private static final Pattern ALL_PATTERN = Pattern.compile(ParseUtil.PLAYER_PATTERN + ": (.+)");
@@ -497,7 +499,9 @@ public class ChatCommands {
 
             // Hidden commands
             case "avengers":
-                ScheduleUtil.scheduleCommand("p Somxone Kwuromi valyn Serten");
+            case "avenger":
+                String avengers = String.join(" ", AVENGER_LIST.list);
+                ScheduleUtil.scheduleCommand("p " + avengers);
                 return true;
 
             // Default case for unrecognized commands

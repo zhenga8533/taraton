@@ -60,6 +60,8 @@ public class CommandUtil {
                                 .then(literal("debug").executes(CommandUtil::debug))
 
                                 // Lists commands
+                                .then(ChatCommands.AVENGER_LIST.createCommand("avengerlist"))
+                                .then(ChatCommands.AVENGER_LIST.createCommand("al"))
                                 .then(AutoKick.BLACK_LIST.createCommand("blacklist"))
                                 .then(AutoKick.BLACK_LIST.createCommand("bl"))
                                 .then(EntityHighlight.ENTITY_LIST.createCommand("entitylist"))
