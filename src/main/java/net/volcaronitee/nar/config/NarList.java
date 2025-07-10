@@ -273,7 +273,7 @@ public class NarList {
                         .description(OptionDescription.createBuilder().text(description).build())
                         .binding(config.listConfig, () -> config.listConfig,
                                 newVal -> config.listConfig = newVal)
-                        .controller((option) -> KeyValueController.Builder.create(option)
+                        .controller((option) -> KeyValueController.Builder.create(option).ratio(0.8)
                                 .keyController("Key", StringControllerBuilder::create)
                                 .valueController("Enabled", TickBoxControllerBuilder::create))
                         .initial(new KeyValuePair<>("", true)).build())
@@ -294,12 +294,12 @@ public class NarList {
                 .description(OptionDescription.createBuilder().text(description).build())
                 .binding(config.mapConfig, () -> config.mapConfig,
                         newVal -> config.mapConfig = newVal)
-                .controller((option) -> KeyValueController.Builder.create(option)
-                        .keyController("Key", StringControllerBuilder::create).valueController(null,
-                                (subOption) -> KeyValueController.Builder.create(subOption)
-                                        .keyController("Value", StringControllerBuilder::create)
-                                        .valueController("Enabled",
-                                                TickBoxControllerBuilder::create)))
+                .controller((option) -> KeyValueController.Builder.create(option).ratio(0.4)
+                        .keyController("Key", StringControllerBuilder::create)
+                        .valueController(null, (subOption) -> KeyValueController.Builder
+                                .create(subOption).ratio(2.0 / 3.0)
+                                .keyController("Value", StringControllerBuilder::create)
+                                .valueController("Enabled", TickBoxControllerBuilder::create)))
                 .initial(new KeyValuePair<>("", new KeyValuePair<>("", true))).build()).build();
     }
 }
