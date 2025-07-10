@@ -7,6 +7,7 @@ import net.minecraft.client.gui.screen.ingame.GenericContainerScreen;
 import net.minecraft.client.gui.screen.ingame.InventoryScreen;
 import net.minecraft.client.util.InputUtil;
 import net.volcaronitee.nar.config.NarConfig;
+import net.volcaronitee.nar.util.TickUtil;
 
 /**
  * Feature to prevent Minecraft from resetting the mouse cursor position when opening or closing
@@ -15,7 +16,7 @@ import net.volcaronitee.nar.config.NarConfig;
 public class NoMouseReset {
     private static final NoMouseReset INSTANCE = new NoMouseReset();
 
-    private long lastScreenOpen = 0;
+    private int ticksSince = 0;
     private double lastMouseX = 0;
     private double lastMouseY = 0;
     private Screen lastScreen = null;
@@ -39,6 +40,7 @@ public class NoMouseReset {
      */
     public static void register() {
         ScreenEvents.BEFORE_INIT.register(INSTANCE::onScreen);
+        TickUtil.register(client -> INSTANCE.ticksSince++, 1);
     }
 
     /**
@@ -56,7 +58,7 @@ public class NoMouseReset {
         }
 
         // If the last screen was opened very recently, recall the mouse position
-        if (System.currentTimeMillis() - INSTANCE.lastScreenOpen <= 100
+        if (INSTANCE.ticksSince < 3
                 && (INSTANCE.lastScreen instanceof GenericContainerScreen
                         || INSTANCE.lastScreen instanceof InventoryScreen)) {
             InputUtil.setCursorParameters(client.getWindow().getHandle(), 212993,
@@ -65,7 +67,7 @@ public class NoMouseReset {
 
         // Register the screen close event to update the last screen and mouse position
         ScreenEvents.remove(screen).register(closedScreen -> {
-            INSTANCE.lastScreenOpen = System.currentTimeMillis();
+            INSTANCE.ticksSince = 0;
             INSTANCE.lastMouseX = client.mouse.getX();
             INSTANCE.lastMouseY = client.mouse.getY();
             INSTANCE.lastScreen = closedScreen;
