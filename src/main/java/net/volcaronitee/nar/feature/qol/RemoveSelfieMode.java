@@ -1,4 +1,4 @@
-package net.volcaronitee.nar.feature.general;
+package net.volcaronitee.nar.feature.qol;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.GameOptions;

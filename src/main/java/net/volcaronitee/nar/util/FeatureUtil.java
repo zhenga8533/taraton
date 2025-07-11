@@ -12,31 +12,32 @@ import net.volcaronitee.nar.feature.chat.PlaytimeWarning;
 import net.volcaronitee.nar.feature.chat.SpamHider;
 import net.volcaronitee.nar.feature.combat.EntityHighlight;
 import net.volcaronitee.nar.feature.combat.LowHealthWarning;
-import net.volcaronitee.nar.feature.container.Searchbar;
 import net.volcaronitee.nar.feature.crimson_isle.VanquisherWarp;
 import net.volcaronitee.nar.feature.fishing.HookLineAndSinker;
 import net.volcaronitee.nar.feature.general.ImagePreview;
-import net.volcaronitee.nar.feature.general.NoMouseReset;
 import net.volcaronitee.nar.feature.general.ReminderTimer;
-import net.volcaronitee.nar.feature.general.RemoveSelfieMode;
 import net.volcaronitee.nar.feature.general.ServerRejoinAlert;
 import net.volcaronitee.nar.feature.general.ServerStatus;
 import net.volcaronitee.nar.feature.general.SkyBlockLevelUpAlert;
 import net.volcaronitee.nar.feature.general.SkyBlockXpAlert;
 import net.volcaronitee.nar.feature.general.WaypointMaker;
 import net.volcaronitee.nar.feature.general.WidgetDisplay;
+import net.volcaronitee.nar.feature.qol.NoMouseReset;
+import net.volcaronitee.nar.feature.qol.RemoveSelfieMode;
 
 public class FeatureUtil {
     public static void init() {
         // General Features
         ImagePreview.register();
-        NoMouseReset.register();
         ReminderTimer.register();
-        RemoveSelfieMode.register();
         ServerRejoinAlert.register();
         ServerStatus.register();
         WaypointMaker.register();
         WidgetDisplay.register();
+
+        // QOL Features
+        NoMouseReset.register();
+        RemoveSelfieMode.register();
 
         // Chat Features
         AutoCommand.register();

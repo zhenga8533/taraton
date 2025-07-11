@@ -1,4 +1,4 @@
-package net.volcaronitee.nar.feature.general;
+package net.volcaronitee.nar.feature.qol;
 
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.minecraft.client.MinecraftClient;
@@ -58,9 +58,8 @@ public class NoMouseReset {
         }
 
         // If the last screen was opened very recently, recall the mouse position
-        if (INSTANCE.ticksSince < 1
-                && (INSTANCE.lastScreen instanceof GenericContainerScreen
-                        || INSTANCE.lastScreen instanceof InventoryScreen)) {
+        if (INSTANCE.ticksSince < 1 && (INSTANCE.lastScreen instanceof GenericContainerScreen
+                || INSTANCE.lastScreen instanceof InventoryScreen)) {
             InputUtil.setCursorParameters(client.getWindow().getHandle(), 212993,
                     INSTANCE.lastMouseX, INSTANCE.lastMouseY);
         }
