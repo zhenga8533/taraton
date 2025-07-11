@@ -237,20 +237,6 @@ public class ChatConfig {
                 // Party Option Group
                 .group(OptionGroup.createBuilder().name(Text.literal("Message"))
 
-                        // TODO: Anti-Ghost Party
-                        .option(Option.<Boolean>createBuilder()
-                                .name(Text.literal("Anti-Ghost Party"))
-                                .description(OptionDescription.createBuilder()
-                                        .webpImage(Identifier.of(NotARat.MOD_ID,
-                                                "config/chat/anti_ghost_party.webp"))
-                                        .text(Text.literal(
-                                                "Prevents ghost parties from being created when partying multiple people."))
-                                        .build())
-                                .binding(defaults.chat.antiGhostParty,
-                                        () -> config.chat.antiGhostParty,
-                                        newVal -> config.chat.antiGhostParty = newVal)
-                                .controller(NarConfig::createBooleanController).build())
-
                         // Auto Transfer
                         .option(Option.<ChatConfig.AutoTransfer>createBuilder()
                                 .name(Text.literal("Auto Transfer"))
@@ -353,9 +339,6 @@ public class ChatConfig {
     public String serverKickAnnounce = "";
 
     // Party Option Group
-    @SerialEntry
-    public boolean antiGhostParty = false;
-
     @SerialEntry
     public boolean autoKick = false;
 
