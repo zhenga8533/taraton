@@ -304,6 +304,15 @@ public class OverlayUtil {
         public void setText(String text) {
             this.text = text;
         }
+
+        /**
+         * Gets the text of the line content, including the start text.
+         * 
+         * @return The full text of the line content.
+         */
+        public String getText() {
+            return startText + text;
+        }
     }
 
     /**

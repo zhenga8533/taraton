@@ -24,6 +24,8 @@ public class WidgetDisplay {
 
     private static final List<Widget> WIDGETS = new ArrayList<>();
 
+    private static final Widget STATS_WIDGET = new Widget("Stats", () -> false);
+
     /**
      * Private constructor to prevent instantiation.
      */
@@ -34,6 +36,34 @@ public class WidgetDisplay {
      */
     public static void register() {
         TickUtil.register(INSTANCE::updateWidgets, 10);
+    }
+
+    /**
+     * Returns the singleton instance of WidgetDisplay.
+     * 
+     * @return The singleton instance of WidgetDisplay.
+     */
+    public static WidgetDisplay getInstance() {
+        return INSTANCE;
+    }
+
+    /**
+     * Returns the singleton instance of WidgetDisplay.
+     * 
+     * @return The singleton instance of WidgetDisplay.
+     */
+    public List<String> getStatsWidget() {
+        List<LineContent> lines = STATS_WIDGET.lines;
+        List<String> stats = new ArrayList<>();
+
+        for (LineContent line : lines) {
+            String text = line.getText();
+            if (text != null && !text.isEmpty()) {
+                stats.add(text);
+            }
+        }
+
+        return stats;
     }
 
     /**
@@ -88,20 +118,31 @@ public class WidgetDisplay {
     private static class Widget {
         private List<LineContent> lines;
         private final String name;
-        private static final Supplier<Boolean> active = () -> true;
 
         /**
          * Constructor for Widget.
          * 
          * @param name The name of the widget to display.
+         * @param active A supplier that determines if the widget is active.
          */
-        public Widget(String name) {
+        public Widget(String name, Supplier<Boolean> active) {
             this.name = name;
             this.lines = new ArrayList<>(List.of(new LineContent("§e§l" + name + ":", active),
                     new LineContent(" Tall: §c❁100", active),
                     new LineContent(" Handsome: §9☣100", active)));
 
-            OverlayUtil.createOverlay(name, active, lines);
+            if (active.get()) {
+                OverlayUtil.createOverlay(name, active, lines);
+            }
+        }
+
+        /**
+         * Constructor for Widget that defaults to always active.
+         * 
+         * @param name The name of the widget to display.
+         */
+        public Widget(String name) {
+            this(name, () -> true);
         }
     }
 }

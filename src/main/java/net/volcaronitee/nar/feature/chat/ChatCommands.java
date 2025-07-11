@@ -21,6 +21,7 @@ import net.volcaronitee.nar.config.NarJson;
 import net.volcaronitee.nar.config.NarList;
 import net.volcaronitee.nar.config.NarToggle;
 import net.volcaronitee.nar.feature.general.ServerStatus;
+import net.volcaronitee.nar.feature.general.WidgetDisplay;
 import net.volcaronitee.nar.util.ParseUtil;
 import net.volcaronitee.nar.util.PartyUtil;
 import net.volcaronitee.nar.util.RequestUtil;
@@ -637,7 +638,14 @@ public class ChatCommands {
                 if (!NarToggle.getHandler().chat.stats) {
                     return false;
                 }
-                // TODO
+
+                List<String> stats = WidgetDisplay.getInstance().getStatsWidget();
+                String statsMessage = String.join(", ", stats);
+                if (statsMessage.isEmpty()) {
+                    statsMessage = "No stats available.";
+                }
+
+                ScheduleUtil.scheduleCommand(head + " " + statsMessage);
                 return true;
             // Time commands
             case "time":
