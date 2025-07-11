@@ -56,13 +56,13 @@ public class OverlayUtil {
      */
     public static Overlay createOverlay(String name, Supplier<Boolean> shouldRender,
             List<LineContent> templateLines) {
-        JsonObject overlayJson = NarJson.loadJson("overlays", name + ".json");
+        JsonObject overlayJson = NarJson.loadJson("overlays", name.toLowerCase() + ".json");
         int x = overlayJson.has("x") ? overlayJson.get("x").getAsInt() : 100;
         int y = overlayJson.has("y") ? overlayJson.get("y").getAsInt() : 100;
         float scale = overlayJson.has("scale") ? overlayJson.get("scale").getAsFloat() : 1.0f;
 
         Overlay overlay = new Overlay(x, y, scale, shouldRender, templateLines);
-        OVERLAYS.put(name, overlay);
+        OVERLAYS.put(name.toLowerCase(), overlay);
 
         return overlay;
     }
