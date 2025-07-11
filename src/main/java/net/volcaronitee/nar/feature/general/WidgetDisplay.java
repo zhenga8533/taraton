@@ -3,7 +3,6 @@ package net.volcaronitee.nar.feature.general;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.PlayerListEntry;
 import net.minecraft.text.Text;
 import net.volcaronitee.nar.config.NarList;
@@ -24,8 +23,6 @@ public class WidgetDisplay {
 
     private static final List<Widget> WIDGETS = new ArrayList<>();
 
-    private static final Widget STATS_WIDGET = new Widget("Stats", () -> false);
-
     /**
      * Private constructor to prevent instantiation.
      */
@@ -35,7 +32,7 @@ public class WidgetDisplay {
      * Registers the widget display feature to listen for client tick events.
      */
     public static void register() {
-        TickUtil.register(INSTANCE::updateWidgets, 10);
+        TickUtil.register(client -> INSTANCE.updateWidgets(WIDGETS), 10);
     }
 
     /**
@@ -48,30 +45,11 @@ public class WidgetDisplay {
     }
 
     /**
-     * Returns the singleton instance of WidgetDisplay.
-     * 
-     * @return The singleton instance of WidgetDisplay.
-     */
-    public List<String> getStatsWidget() {
-        List<LineContent> lines = STATS_WIDGET.lines;
-        List<String> stats = new ArrayList<>();
-
-        for (LineContent line : lines) {
-            String text = line.getText();
-            if (text != null && !text.isEmpty()) {
-                stats.add(text);
-            }
-        }
-
-        return stats;
-    }
-
-    /**
      * Updates the widget display overlay based on the current configuration.
      * 
-     * @param client The Minecraft client instance.
+     * @param widgets The list of widgets to update.
      */
-    private void updateWidgets(MinecraftClient client) {
+    public void updateWidgets(List<Widget> widgets) {
         // Loop through the player list entries and populate the widgets
         Widget addToWidget = null;
         for (PlayerListEntry entry : TablistUtil.getTablist()) {
@@ -83,7 +61,7 @@ public class WidgetDisplay {
             String name = displayName.getString();
             if (addToWidget == null) {
                 // Find the first active widget that matches the name
-                for (Widget widget : WIDGETS) {
+                for (Widget widget : widgets) {
                     if (name.startsWith(widget.name)) {
                         addToWidget = widget;
                         addToWidget.lines.clear();
@@ -115,7 +93,7 @@ public class WidgetDisplay {
     /**
      * Widget is a class that represents a single widget in the overlay.
      */
-    private static class Widget {
+    public static class Widget {
         private List<LineContent> lines;
         private final String name;
 
@@ -143,6 +121,10 @@ public class WidgetDisplay {
          */
         public Widget(String name) {
             this(name, () -> true);
+        }
+
+        public List<LineContent> getLines() {
+            return lines;
         }
     }
 }

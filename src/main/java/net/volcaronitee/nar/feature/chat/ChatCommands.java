@@ -22,6 +22,8 @@ import net.volcaronitee.nar.config.NarList;
 import net.volcaronitee.nar.config.NarToggle;
 import net.volcaronitee.nar.feature.general.ServerStatus;
 import net.volcaronitee.nar.feature.general.WidgetDisplay;
+import net.volcaronitee.nar.feature.general.WidgetDisplay.Widget;
+import net.volcaronitee.nar.util.OverlayUtil.LineContent;
 import net.volcaronitee.nar.util.ParseUtil;
 import net.volcaronitee.nar.util.PartyUtil;
 import net.volcaronitee.nar.util.RequestUtil;
@@ -65,6 +67,9 @@ public class ChatCommands {
     // Instances
     private static final String[] FLOORS = {"one", "two", "three", "four", "five", "six", "seven"};
     private static final String[] TIERS = {"basic", "hot", "burning", "fiery", "infernal"};
+
+    // Stats widget
+    private static final Widget STATS_WIDGET = new Widget("Stats", () -> false);
 
     /**
      * Enum representing the type of chat command.
@@ -639,7 +644,19 @@ public class ChatCommands {
                     return false;
                 }
 
-                List<String> stats = WidgetDisplay.getInstance().getStatsWidget();
+                // Update the stats widget with current player stats
+                WidgetDisplay.getInstance().updateWidgets(List.of(STATS_WIDGET));
+                List<String> stats = new ArrayList<>();
+
+                // Collect stats from the widget lines
+                for (LineContent line : STATS_WIDGET.getLines()) {
+                    String text = line.getText();
+                    if (text != null && !text.isEmpty()) {
+                        stats.add(text);
+                    }
+                }
+
+                // Format the stats message
                 String statsMessage = String.join(", ", stats);
                 if (statsMessage.isEmpty()) {
                     statsMessage = "No stats available.";
