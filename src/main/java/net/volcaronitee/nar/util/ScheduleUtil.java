@@ -12,7 +12,7 @@ import net.minecraft.util.Pair;
  */
 public class ScheduleUtil {
     private static List<Pair<Runnable, Integer>> tasks = new ArrayList<>();
-    private static int delay = 0;
+    private static int totalDelay = 0;
 
     /**
      * Initializes the ScheduleUtil by registering a server tick event listener.
@@ -45,10 +45,11 @@ public class ScheduleUtil {
      * Schedules a command to be executed after a delay.
      * 
      * @param command The command to be executed.
+     * @param delay The delay in ticks before executing the command.
      */
-    public static void scheduleCommand(String command) {
+    public static void scheduleCommand(String command, int delay) {
         // Send the command to the player network handler
-        delay += 6;
+        totalDelay += delay;
         ScheduleUtil.schedule(() -> {
             ClientPlayNetworkHandler networkHandler =
                     MinecraftClient.getInstance().getNetworkHandler();
@@ -56,7 +57,16 @@ public class ScheduleUtil {
                 String formattedCommand = command.startsWith("/") ? command.substring(1) : command;
                 networkHandler.sendChatCommand(formattedCommand);
             }
-            delay -= 6;
-        }, delay);
+            totalDelay -= delay;
+        }, totalDelay);
+    }
+
+    /**
+     * Schedules a command to be executed after a delay.
+     * 
+     * @param command The command to be executed.
+     */
+    public static void scheduleCommand(String command) {
+        scheduleCommand(command, 6);
     }
 }
