@@ -1,5 +1,7 @@
 package net.volcaronitee.nar.feature.crimson_isle;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Pattern;
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
 import net.minecraft.text.Text;
@@ -13,9 +15,9 @@ import net.volcaronitee.nar.util.ScheduleUtil;
 public class VanquisherWarp {
     private static final VanquisherWarp INSTANCE = new VanquisherWarp();
 
-    public static final NarList VANQ_LIST = new NarList("Vanq Warp List",
+    public static final NarList VANQUISHER_LIST = new NarList("Vanquisher List",
             Text.literal("A list of players to warp into lobby when a vanquisher spawns."),
-            "vanq_list.json");
+            "vanquisher_list.json");
 
     private static final Pattern SPAWN_PATTERN =
             Pattern.compile("A Vanquisher is spawning nearby!");
@@ -48,7 +50,7 @@ public class VanquisherWarp {
      */
     private void handleVanqWarp(Text message, boolean overlay) {
         if (overlay || !NarConfig.getHandler().crimsonIsle.vanquisherWarp
-                || VANQ_LIST.list.isEmpty()) {
+                || VANQUISHER_LIST.list.isEmpty()) {
             return;
         }
 
@@ -67,9 +69,15 @@ public class VanquisherWarp {
             return;
         }
 
-        String players = String.join(" ", VANQ_LIST.list);
-        ScheduleUtil.scheduleCommand("p " + players);
-        partyCount = VANQ_LIST.list.size();
+        // Invite all players in the vanquisher list to the party
+        List<String> vanquisherList = new ArrayList<>(VANQUISHER_LIST.list);
+        partyCount = vanquisherList.size();
+
+        for (int i = 0; i < partyCount; i += 5) {
+            int end = Math.min(i + 5, partyCount);
+            String players = String.join(" ", vanquisherList.subList(i, end));
+            ScheduleUtil.scheduleCommand("p " + players);
+        }
     }
 
     /**

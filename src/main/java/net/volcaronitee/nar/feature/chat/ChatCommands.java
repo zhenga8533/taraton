@@ -526,8 +526,15 @@ public class ChatCommands {
             // Hidden commands
             case "avengers":
             case "avenger":
-                String avengers = String.join(" ", AVENGER_LIST.list);
-                ScheduleUtil.scheduleCommand("p " + avengers);
+                // Schedule the avengers in groups of five
+                List<String> avengersList = new ArrayList<>(AVENGER_LIST.list);
+                int groupSize = 5;
+                for (int i = 0; i < avengersList.size(); i += groupSize) {
+                    List<String> group =
+                            avengersList.subList(i, Math.min(i + groupSize, avengersList.size()));
+                    String avengers = String.join(" ", group);
+                    ScheduleUtil.scheduleCommand("p " + avengers);
+                }
                 return true;
 
             // Default case for unrecognized commands
