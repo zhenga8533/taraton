@@ -53,7 +53,7 @@ public class FeatureUtil {
         SkyBlockXpAlert.register();
 
         // Container Features
-        Searchbar.register();
+        // Searchbar.register();
 
         // Combat Features
         EntityHighlight.register();
