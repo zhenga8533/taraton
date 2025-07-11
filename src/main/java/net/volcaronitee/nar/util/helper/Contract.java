@@ -12,7 +12,6 @@ import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.volcaronitee.nar.NotARat;
-import net.volcaronitee.nar.config.NarJson;
 
 /**
  * Utility class for handling the contract file.
@@ -106,7 +105,7 @@ public class Contract {
 
         // Copy the contract template to the config directory
         try {
-            Files.copy(Path.of(NarJson.class.getResource(CONTRACT_PATH).toURI()), CONTRACT_FILE);
+            Files.copy(Contract.class.getResourceAsStream(CONTRACT_PATH), CONTRACT_FILE);
         } catch (Exception e) {
             e.printStackTrace();
         }
