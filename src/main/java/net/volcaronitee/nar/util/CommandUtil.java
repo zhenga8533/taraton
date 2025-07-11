@@ -27,6 +27,7 @@ import net.volcaronitee.nar.feature.combat.EntityHighlight;
 import net.volcaronitee.nar.feature.crimson_isle.VanquisherWarp;
 import net.volcaronitee.nar.feature.general.ImagePreview;
 import net.volcaronitee.nar.feature.general.WidgetDisplay;
+import net.volcaronitee.nar.feature.qol.CommandHotkey;
 import net.volcaronitee.nar.util.helper.Contract;
 
 /**
@@ -75,14 +76,16 @@ public class CommandUtil {
                                 .then(JoinParty.WHITE_LIST.createCommand("wl"))
                                 .then(WidgetDisplay.WIDGET_LIST.createCommand("widgetlist"))
                                 .then(WidgetDisplay.WIDGET_LIST.createCommand("wgl"))
-                                .then(VanquisherWarp.VANQ_LIST.createCommand("vanqlist"))
-                                .then(VanquisherWarp.VANQ_LIST.createCommand("vl"))
+                                .then(VanquisherWarp.VANQUISHER_LIST.createCommand("vanqlist"))
+                                .then(VanquisherWarp.VANQUISHER_LIST.createCommand("vl"))
 
                                 // Maps commands
                                 .then(ChatAlert.CHAT_ALERT_MAP.createCommand("chatalertmap"))
                                 .then(ChatAlert.CHAT_ALERT_MAP.createCommand("cam"))
                                 .then(CustomEmote.EMOTE_MAP.createCommand("emotemap"))
                                 .then(CustomEmote.EMOTE_MAP.createCommand("em"))
+                                .then(CommandHotkey.HOTKEY_MAP.createCommand("hotkeymap"))
+                                .then(CommandHotkey.HOTKEY_MAP.createCommand("hkm"))
                                 .then(TextSubstitution.SUBSTITUTION_MAP.createCommand("submap"))
                                 .then(TextSubstitution.SUBSTITUTION_MAP.createCommand("sm"))
 

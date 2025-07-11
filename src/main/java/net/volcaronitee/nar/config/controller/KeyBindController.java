@@ -22,9 +22,9 @@ public class KeyBindController implements Controller<Integer> {
     static {
         // Manually map all common non-printable keys and mouse buttons
         KEY_NAMES.put(GLFW.GLFW_KEY_UNKNOWN, Text.literal("None"));
-        KEY_NAMES.put(-100, Text.literal("Mouse 1")); // Left Click
-        KEY_NAMES.put(-99, Text.literal("Mouse 2")); // Right Click
-        KEY_NAMES.put(-98, Text.literal("Mouse 3")); // Middle Click
+        KEY_NAMES.put(GLFW.GLFW_MOUSE_BUTTON_LEFT, Text.literal("Left Mouse Button"));
+        KEY_NAMES.put(GLFW.GLFW_MOUSE_BUTTON_RIGHT, Text.literal("Right Mouse Button"));
+        KEY_NAMES.put(GLFW.GLFW_MOUSE_BUTTON_MIDDLE, Text.literal("Middle Mouse Button"));
         KEY_NAMES.put(GLFW.GLFW_KEY_SPACE, Text.literal("Space"));
         KEY_NAMES.put(GLFW.GLFW_KEY_APOSTROPHE, Text.literal("'"));
         KEY_NAMES.put(GLFW.GLFW_KEY_COMMA, Text.literal(","));
@@ -72,6 +72,10 @@ public class KeyBindController implements Controller<Integer> {
         for (int i = 0; i < 10; i++) {
             KEY_NAMES.put(GLFW.GLFW_KEY_KP_0 + i, Text.literal("Numpad " + i));
         }
+        for (int i = 0; i < 8; i++) {
+            KEY_NAMES.put(GLFW.GLFW_MOUSE_BUTTON_1 + i, Text.literal("Mouse Button " + (i + 1)));
+        }
+
         KEY_NAMES.put(GLFW.GLFW_KEY_KP_DECIMAL, Text.literal("Numpad ."));
         KEY_NAMES.put(GLFW.GLFW_KEY_KP_DIVIDE, Text.literal("Numpad /"));
         KEY_NAMES.put(GLFW.GLFW_KEY_KP_MULTIPLY, Text.literal("Numpad *"));
