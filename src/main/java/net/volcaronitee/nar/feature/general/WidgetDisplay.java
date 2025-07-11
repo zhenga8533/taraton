@@ -17,9 +17,11 @@ import net.volcaronitee.nar.util.TickUtil;
 public class WidgetDisplay {
     private static final WidgetDisplay INSTANCE = new WidgetDisplay();
 
-    public static final NarList WIDGET_LIST =
-            new NarList("Widget List", Text.literal("A list of widgets to display in the overlay."),
-                    "widget_list.json", INSTANCE::onSave);
+    public static final NarList WIDGET_LIST = new NarList("Widget List",
+            Text.literal("A list of widgets to display in the overlay."), "widget_list.json");
+    static {
+        WIDGET_LIST.setSaveCallback(INSTANCE::onSave);
+    }
 
     private static final List<Widget> WIDGETS = new ArrayList<>();
 

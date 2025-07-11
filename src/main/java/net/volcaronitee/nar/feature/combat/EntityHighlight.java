@@ -66,7 +66,10 @@ public class EntityHighlight {
                             + "§8You can use relational operators like <, >, <=, >=, =, != for numeric values.\n\n\n"
                             + "§f§lExample:§r\n\n"
                             + "Lion --beacon --title WO LAI LE --color #FF0000 --height >2 --width <=1 --depth 16 --offset 32 --identifier Player --locations GARDEN,SPIDERS_DEN")),
-            "entity_list.json", INSTANCE::onSave);
+            "entity_list.json");
+    static {
+        ENTITY_LIST.setSaveCallback(INSTANCE::onSave);
+    }
 
     private static final Map<Entity, Highlight> HIGHLIGHTED_ENTITIES = new HashMap<>();
 

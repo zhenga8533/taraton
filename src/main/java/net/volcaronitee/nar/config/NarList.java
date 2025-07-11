@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.BiFunction;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import dev.isxander.yacl3.api.ConfigCategory;
 import dev.isxander.yacl3.api.ListOption;
@@ -49,10 +50,11 @@ public class NarList {
     private String title;
     private Text description;
     private String fileName;
-    private Runnable saveCallback;
-
     private ConfigClassHandler<NarList> handler;
-    private Boolean isMap = false;
+
+    private BiFunction<NarList, NarList, ConfigCategory> createCategory =
+            (defaults, config) -> createListCategory(defaults, config);
+    private Runnable saveCallback;
 
     public final Set<String> list = new java.util.HashSet<>();
     @SerialEntry
@@ -63,6 +65,9 @@ public class NarList {
     @SerialEntry
     private List<KeyValuePair<String, KeyValuePair<String, Boolean>>> mapConfig =
             new ArrayList<KeyValuePair<String, KeyValuePair<String, Boolean>>>();
+
+    @SerialEntry
+    public List<?> customConfig = new ArrayList<>();
 
     /**
      * Default constructor for ListUtil.
@@ -76,16 +81,11 @@ public class NarList {
      * @param title The title of the list configuration.
      * @param description The description of the list configuration.
      * @param fileName The name of the file where the configuration will be saved.
-     * @param isMap Flag indicating if the configuration is a map-like structure.
-     * @param saveCallback A callback function to be executed when the configuration is saved.
      */
-    public NarList(String title, Text description, String fileName, boolean isMap,
-            Runnable saveCallback) {
+    public NarList(String title, Text description, String fileName) {
         this.title = title;
         this.description = description;
         this.fileName = fileName;
-        this.isMap = isMap;
-        this.saveCallback = saveCallback;
 
         // Create handler for this ListUtil instance
         this.handler = ConfigClassHandler.createBuilder(NarList.class)
@@ -104,50 +104,40 @@ public class NarList {
     }
 
     /**
-     * Constructor for NarList with parameters to initialize the title, description, file name, and
-     * a save callback, without the isMap flag.
-     * 
-     * @param title The title of the list configuration.
-     * @param description The description of the list configuration.
-     * @param fileName The name of the file where the configuration will be saved.
-     * @param saveCallback A callback function to be executed when the configuration is saved.
-     */
-    public NarList(String title, Text description, String fileName, Runnable saveCallback) {
-        this(title, description, fileName, false, saveCallback);
-    }
-
-    /**
-     * Constructor for NarList with parameters to initialize the title, description, and file name,
-     * without the isMap flag and save callback.
-     * 
-     * @param title The title of the list configuration.
-     * @param description The description of the list configuration.
-     * @param fileName The name of the file where the configuration will be saved.
-     */
-    public NarList(String title, Text description, String fileName) {
-        this(title, description, fileName, false, null);
-    }
-
-    /**
-     * Constructor for NarList with parameters to initialize the title, description, file name, and
-     * isMap flag, without a save callback.
-     * 
-     * @param title The title of the list configuration.
-     * @param description The description of the list configuration.
-     * @param fileName The name of the file where the configuration will be saved.
-     * @param isMap Flag indicating if the configuration is a map-like structure.
-     */
-    public NarList(String title, Text description, String fileName, boolean isMap) {
-        this(title, description, fileName, isMap, null);
-    }
-
-    /**
      * Gets the handler for this ListUtil instance.
      * 
      * @return The ConfigClassHandler for this ListUtil instance.
      */
     public NarList getHandler() {
         return handler.instance();
+    }
+
+    /**
+     * Sets the save callback for this ListUtil instance.
+     * 
+     * @param saveCallback The callback to be executed when the configuration is saved.
+     */
+    public void setSaveCallback(Runnable saveCallback) {
+        this.saveCallback = saveCallback;
+    }
+
+    /**
+     * Gets the title of the list configuration.
+     * 
+     * @param isMap True if the configuration is a map, false if it is a list.
+     */
+    public void setIsMap(Boolean isMap) {
+        this.createCategory = isMap ? this::createMapCategory : this::createListCategory;
+    }
+
+    /**
+     * Sets a custom category creation function for the ListUtil instance.
+     * 
+     * @param createCategory A BiFunction that takes two NarList instances (defaults and config) and
+     *        returns a ConfigCategory instance.
+     */
+    public void setCustomCategory(BiFunction<NarList, NarList, ConfigCategory> createCategory) {
+        this.createCategory = createCategory;
     }
 
     /**
@@ -196,8 +186,8 @@ public class NarList {
      */
     public Screen createScreen(Screen parent) {
         return YetAnotherConfigLib.create(handler, (defaults, config, builder) -> {
-            builder.title(Text.literal(title)).category(isMap ? createMapCategory(defaults, config)
-                    : createListCategory(defaults, config)).save(() -> {
+            builder.title(Text.literal(title)).category(createCategory.apply(defaults, config))
+                    .save(() -> {
                         onSave(config);
                     }).build();
             return builder;

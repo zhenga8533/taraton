@@ -25,9 +25,12 @@ public class ReminderTimer {
 
     private static final Pattern TIME_PATTERN = Pattern.compile("(\\d+)([hms])");
 
-    private static final NarList REMINDER_MAP =
-            new NarList("Reminder Map", Text.literal("A list of reminders for the player."),
-                    "reminder_map.json", true, INSTANCE::onSave);
+    private static final NarList REMINDER_MAP = new NarList("Reminder Map",
+            Text.literal("A list of reminders for the player."), "reminder_map.json");
+    static {
+        REMINDER_MAP.setIsMap(true);
+        REMINDER_MAP.setSaveCallback(INSTANCE::onSave);
+    }
 
     private static final Map<String, Long> TIME_REMINDERS = new HashMap<>();
     private static final Map<String, CronExpression> CRON_EXPRESSIONS = new HashMap<>();
