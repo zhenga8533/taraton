@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.BiFunction;
+import com.google.gson.reflect.TypeToken;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import dev.isxander.yacl3.api.ConfigCategory;
 import dev.isxander.yacl3.api.ListOption;
@@ -92,7 +93,10 @@ public class NarList {
                 .serializer(config -> GsonConfigSerializerBuilder.create(config)
                         .setPath(CONFIG_PATH.resolve(fileName))
                         .appendGsonBuilder(gsonBuilder -> gsonBuilder.setPrettyPrinting()
-                                .disableHtmlEscaping().serializeNulls())
+                                .disableHtmlEscaping().serializeNulls().registerTypeAdapter(
+                                        new TypeToken<KeyValueController.KeyValuePair<?, ?>>() {}
+                                                .getType(),
+                                        new KeyValueController.KeyValuePair.KeyValueTypeAdapter()))
                         .build())
                 .build();
 

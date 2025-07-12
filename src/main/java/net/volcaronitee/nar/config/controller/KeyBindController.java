@@ -10,21 +10,15 @@ import dev.isxander.yacl3.api.utils.Dimension;
 import dev.isxander.yacl3.gui.AbstractWidget;
 import dev.isxander.yacl3.gui.YACLScreen;
 import dev.isxander.yacl3.gui.controllers.ControllerWidget;
-import net.minecraft.client.gui.DrawContext;
 import net.minecraft.text.Text;
 
 /**
- * A self-contained controller for managing a keybind option in YACL3.
+ * A controller for setting key bindings.
  */
 public class KeyBindController implements Controller<Integer> {
     private static final BiMap<Integer, Text> KEY_NAMES = HashBiMap.create();
-
     static {
-        // Manually map all common non-printable keys and mouse buttons
         KEY_NAMES.put(GLFW.GLFW_KEY_UNKNOWN, Text.literal("None"));
-        KEY_NAMES.put(GLFW.GLFW_MOUSE_BUTTON_LEFT, Text.literal("Left Mouse Button"));
-        KEY_NAMES.put(GLFW.GLFW_MOUSE_BUTTON_RIGHT, Text.literal("Right Mouse Button"));
-        KEY_NAMES.put(GLFW.GLFW_MOUSE_BUTTON_MIDDLE, Text.literal("Middle Mouse Button"));
         KEY_NAMES.put(GLFW.GLFW_KEY_SPACE, Text.literal("Space"));
         KEY_NAMES.put(GLFW.GLFW_KEY_APOSTROPHE, Text.literal("'"));
         KEY_NAMES.put(GLFW.GLFW_KEY_COMMA, Text.literal(","));
@@ -66,16 +60,6 @@ public class KeyBindController implements Controller<Integer> {
         KEY_NAMES.put(GLFW.GLFW_KEY_RIGHT_SUPER, Text.literal("Right Super"));
         KEY_NAMES.put(GLFW.GLFW_KEY_MENU, Text.literal("Menu"));
 
-        for (int i = 0; i < 25; i++) {
-            KEY_NAMES.put(GLFW.GLFW_KEY_F1 + i, Text.literal("F" + (i + 1)));
-        }
-        for (int i = 0; i < 10; i++) {
-            KEY_NAMES.put(GLFW.GLFW_KEY_KP_0 + i, Text.literal("Numpad " + i));
-        }
-        for (int i = 0; i < 8; i++) {
-            KEY_NAMES.put(GLFW.GLFW_MOUSE_BUTTON_1 + i, Text.literal("Mouse Button " + (i + 1)));
-        }
-
         KEY_NAMES.put(GLFW.GLFW_KEY_KP_DECIMAL, Text.literal("Numpad ."));
         KEY_NAMES.put(GLFW.GLFW_KEY_KP_DIVIDE, Text.literal("Numpad /"));
         KEY_NAMES.put(GLFW.GLFW_KEY_KP_MULTIPLY, Text.literal("Numpad *"));
@@ -83,25 +67,52 @@ public class KeyBindController implements Controller<Integer> {
         KEY_NAMES.put(GLFW.GLFW_KEY_KP_ADD, Text.literal("Numpad +"));
         KEY_NAMES.put(GLFW.GLFW_KEY_KP_ENTER, Text.literal("Numpad Enter"));
         KEY_NAMES.put(GLFW.GLFW_KEY_KP_EQUAL, Text.literal("Numpad ="));
+
+        KEY_NAMES.put(GLFW.GLFW_MOUSE_BUTTON_LEFT, Text.literal("Left Mouse"));
+        KEY_NAMES.put(GLFW.GLFW_MOUSE_BUTTON_RIGHT, Text.literal("Right Mouse"));
+        KEY_NAMES.put(GLFW.GLFW_MOUSE_BUTTON_MIDDLE, Text.literal("Middle Mouse"));
+
+        for (int i = 3; i < 8; i++) {
+            KEY_NAMES.put(GLFW.GLFW_MOUSE_BUTTON_1 + i, Text.literal("Mouse " + (i + 1)));
+        }
+
+        for (int i = 0; i < 25; i++) {
+            KEY_NAMES.put(GLFW.GLFW_KEY_F1 + i, Text.literal("F" + (i + 1)));
+        }
+
+        for (int i = 0; i < 10; i++) {
+            KEY_NAMES.put(GLFW.GLFW_KEY_KP_0 + i, Text.literal("Numpad " + i));
+        }
     }
 
+    private final Option<Integer> option;
+
+    /**
+     * Create a new KeyBindController.
+     * 
+     * @param option The option to control.
+     */
+    public KeyBindController(Option<Integer> option) {
+        this.option = option;
+    }
+
+    /**
+     * Get the display text for a given key code.
+     * 
+     * @param keyCode The GLFW key code.
+     * @return The display text for the key.
+     */
     public static Text getkeyText(int keyCode) {
         if (KEY_NAMES.containsKey(keyCode)) {
             return KEY_NAMES.get(keyCode);
         }
+
         String keyName = GLFW.glfwGetKeyName(keyCode, 0);
         if (keyName != null) {
             return Text.literal(keyName.toUpperCase());
         }
+
         return Text.literal("Unknown (" + keyCode + ")");
-    }
-
-    // --- Controller Implementation ---
-
-    private final Option<Integer> option;
-
-    public KeyBindController(Option<Integer> option) {
-        this.option = option;
     }
 
     @Override
@@ -119,16 +130,27 @@ public class KeyBindController implements Controller<Integer> {
         return getkeyText(this.option.pendingValue());
     }
 
-
-    // --- Nested Builder Class ---
-
+    /**
+     * A builder for KeyBindController.
+     */
     public static class Builder implements ControllerBuilder<Integer> {
         private final Option<Integer> option;
 
+        /**
+         * Create a new Builder.
+         * 
+         * @param option The option to control.
+         */
         public Builder(Option<Integer> option) {
             this.option = option;
         }
 
+        /**
+         * Create a new Builder.
+         * 
+         * @param option The option to control.
+         * @return A new Builder.
+         */
         public static Builder create(Option<Integer> option) {
             return new Builder(option);
         }
@@ -139,64 +161,41 @@ public class KeyBindController implements Controller<Integer> {
         }
     }
 
-
-    // --- Nested Widget Class ---
-
+    /**
+     * The widget for the KeyBindController.
+     */
     public static class KeyBindControllerWidget extends ControllerWidget<KeyBindController> {
         private boolean listening = false;
 
+        /**
+         * Create a new KeyBindControllerWidget.
+         * 
+         * @param control The KeyBindController to use.
+         * @param screen The YACLScreen to use.
+         * @param dim The dimensions of the widget.
+         */
         public KeyBindControllerWidget(KeyBindController control, YACLScreen screen,
                 Dimension<Integer> dim) {
             super(control, screen, dim);
         }
 
+        /**
+         * Set whether the widget is listening for key input.
+         * 
+         * @param listening Whether the widget is listening.
+         */
         private void setListening(boolean listening) {
             this.listening = listening;
-            // When we start listening, we want to be focused.
-            // When we stop, we can unfocus.
             this.setFocused(listening);
-        }
-
-        private Text getMessage() {
-            if (this.listening) {
-                return Text.literal("> ").append(Text.literal("..."));
-            } else {
-                return this.control.formatValue();
-            }
-        }
-
-        @Override
-        public void render(DrawContext graphics, int mouseX, int mouseY, float delta) {
-            // We override render completely because this widget is a single button,
-            // not a label + control like the base class assumes.
-            this.hovered = this.isMouseOver(mouseX, mouseY);
-
-            // Render a simple button background
-            graphics.fill(this.getDimension().x(), this.getDimension().y(),
-                    this.getDimension().x() + this.getDimension().width(),
-                    this.getDimension().y() + this.getDimension().height(), 0x80000000);
-            if (this.isHovered() || this.isFocused()) {
-                graphics.drawBorder(this.getDimension().x(), this.getDimension().y(),
-                        this.getDimension().width(), this.getDimension().height(), 0xFFFFFFFF);
-            }
-
-            // Render the text
-            int textColor =
-                    this.isAvailable() ? (isFocused() ? 0xFFFFFFFF : 0xFFE0E0E0) : 0xFFa0a0a0;
-            graphics.drawCenteredTextWithShadow(this.textRenderer, this.getMessage(),
-                    this.getDimension().x() + this.getDimension().width() / 2,
-                    this.getDimension().y() + (this.getDimension().height() - 8) / 2, textColor);
         }
 
         @Override
         public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
             if (this.listening) {
-                if (keyCode == GLFW.GLFW_KEY_ESCAPE) {
-                    this.setListening(false);
-                } else {
+                if (keyCode != GLFW.GLFW_KEY_ESCAPE) {
                     this.control.option().requestSet(keyCode);
-                    this.setListening(false);
                 }
+                this.setListening(false);
                 return true;
             }
             return super.keyPressed(keyCode, scanCode, modifiers);
@@ -204,13 +203,11 @@ public class KeyBindController implements Controller<Integer> {
 
         @Override
         public boolean mouseClicked(double mouseX, double mouseY, int button) {
-            if (this.isMouseOver(mouseX, mouseY) && this.isAvailable()) {
+            if (this.isAvailable() && this.isMouseOver(mouseX, mouseY)) {
                 if (this.listening) {
-                    this.control.option().requestSet(button - 100);
-                    this.setListening(false);
-                } else {
-                    this.setListening(true);
+                    this.control.option().requestSet(button);
                 }
+                this.setListening(!this.listening);
                 return true;
             }
 
@@ -233,12 +230,16 @@ public class KeyBindController implements Controller<Integer> {
 
         @Override
         protected int getUnhoveredControlWidth() {
-            return this.textRenderer.getWidth(this.getMessage()) + 4;
+            return this.textRenderer.getWidth(this.getValueText()) + 4;
         }
 
         @Override
         protected Text getValueText() {
-            return getMessage();
+            if (this.listening) {
+                return Text.literal("> ... <");
+            } else {
+                return this.control.formatValue();
+            }
         }
 
         @Override
