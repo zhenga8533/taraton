@@ -15,6 +15,7 @@ import dev.isxander.yacl3.api.controller.StringControllerBuilder;
 import dev.isxander.yacl3.api.controller.TickBoxControllerBuilder;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.Text;
+import net.volcaronitee.nar.config.NarConfig;
 import net.volcaronitee.nar.config.NarJson;
 import net.volcaronitee.nar.config.NarList;
 import net.volcaronitee.nar.config.controller.KeyBindController;
@@ -59,7 +60,7 @@ public class CommandHotkey {
      * @param action The action of the key event (press, release, repeat).
      */
     public void onKeyPress(int key, int action) {
-        if (action != GLFW.GLFW_PRESS) {
+        if (!NarConfig.getHandler().qol.commandHotkeys || action != GLFW.GLFW_PRESS) {
             return;
         }
 

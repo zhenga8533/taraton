@@ -30,6 +30,20 @@ public class QolConfig {
                 // Quality of Life Option Group
                 .group(OptionGroup.createBuilder().name(Text.literal("Quality of Life"))
 
+                        // Command Hotkeys
+                        .option(Option.<Boolean>createBuilder()
+                                .name(Text.literal("Command Hotkeys"))
+                                .description(OptionDescription.createBuilder()
+                                        .webpImage(Identifier.of(NotARat.MOD_ID,
+                                                "config/qol/command_hotkeys.webp"))
+                                        .text(Text.literal(
+                                                "Enables the ability to bind commands to hotkeys. Customize your hotkey bindings using §e/vc hkm§f."))
+                                        .build())
+                                .binding(defaults.qol.commandHotkeys,
+                                        () -> config.qol.commandHotkeys,
+                                        newVal -> config.qol.commandHotkeys = newVal)
+                                .controller(NarConfig::createBooleanController).build())
+
                         // No Mouse Reset
                         .option(Option.<Boolean>createBuilder().name(Text.literal("No Mouse Reset"))
                                 .description(OptionDescription.createBuilder()
@@ -156,6 +170,9 @@ public class QolConfig {
 
 
     // Quality of Life Option Group
+    @SerialEntry
+    public boolean commandHotkeys = true;
+
     @SerialEntry
     public boolean noMouseReset = true;
 
