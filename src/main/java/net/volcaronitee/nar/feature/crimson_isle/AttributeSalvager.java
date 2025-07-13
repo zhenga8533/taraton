@@ -66,6 +66,7 @@ public class AttributeSalvager {
             return;
         }
 
+        // Schedule picking up output after 10 ticks (0.5 seconds)
         ScheduleUtil.schedule(() -> {
             if (!isValidScreen()) {
                 return;
@@ -81,8 +82,8 @@ public class AttributeSalvager {
             client.interactionManager.clickSlot(handler.syncId, ANVIL_INDEX, button,
                     SlotActionType.PICKUP, client.player);
 
-            // Schedule pickup after 10 ticks (0.5 seconds)
-            ScheduleUtil.schedule(INSTANCE::pickupOutput, 20);
+            // Schedule picking up output after 15 ticks (0.75 seconds)
+            ScheduleUtil.schedule(INSTANCE::pickupOutput, 15);
         }, 10);
     }
 
@@ -104,8 +105,8 @@ public class AttributeSalvager {
         client.interactionManager.clickSlot(handler.syncId, OUTPUT_INDEX, 0, SlotActionType.PICKUP,
                 client.player);
 
-        // Schedule placing in inventory after 20 ticks (1 second)
-        ScheduleUtil.schedule(INSTANCE::releaseOutput, 20);
+        // Schedule placing in inventory after 10 ticks (0.5 seconds)
+        ScheduleUtil.schedule(INSTANCE::releaseOutput, 10);
     }
 
     /**
