@@ -162,17 +162,28 @@ public class ServerStatus {
      * @return The estimated TPS.
      */
     public double estimateTps() {
+        // Return 20.0 immediately if the list is empty
         if (tickDurations.isEmpty()) {
             return 20.0;
         }
 
         long totalDuration = 0;
-        for (long duration : tickDurations) {
-            totalDuration += duration;
+        int validTickCount = 0;
+
+        // Sum up the durations and count valid ticks
+        for (Long duration : tickDurations) {
+            if (duration != null) {
+                totalDuration += duration;
+                validTickCount++;
+            }
         }
 
-        // Calculate given packets are sent ~550ms
-        double averageDuration = totalDuration / (double) tickDurations.size();
+        if (validTickCount == 0) {
+            return 20.0;
+        }
+
+        // Calculate average duration and estimate TPS
+        double averageDuration = totalDuration / (double) validTickCount;
         return Math.min(20.0, 20.0 * (550 / averageDuration));
     }
 
