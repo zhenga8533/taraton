@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.loader.api.ModContainer;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.volcaronitee.nar.config.NarConfig;
@@ -52,5 +53,29 @@ public class NotARat implements ClientModInitializer {
 
         FeatureUtil.init();
         CommandUtil.init();
+    }
+
+    /**
+     * Sends a message to the in-game chat.
+     * 
+     * @param message The message to send.
+     */
+    public static void sendMessage(Text message) {
+        MinecraftClient client = MinecraftClient.getInstance();
+        if (client == null || client.inGameHud == null || client.player == null) {
+            return;
+        }
+
+        client.inGameHud.getChatHud()
+                .addMessage(MOD_TITLE.copy().append(Text.literal(" ")).append(message));
+    }
+
+    /**
+     * Sends a message to the in-game chat.
+     * 
+     * @param message The message to send.
+     */
+    public static void sendMessage(String message) {
+        sendMessage(Text.literal(message));
     }
 }

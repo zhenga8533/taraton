@@ -14,6 +14,7 @@ import net.volcaronitee.nar.feature.combat.EntityHighlight;
 import net.volcaronitee.nar.feature.combat.LowHealthWarning;
 import net.volcaronitee.nar.feature.crimson_isle.VanquisherWarp;
 import net.volcaronitee.nar.feature.fishing.HookLineAndSinker;
+import net.volcaronitee.nar.feature.general.DeveloperKey;
 import net.volcaronitee.nar.feature.general.ImagePreview;
 import net.volcaronitee.nar.feature.general.ReminderTimer;
 import net.volcaronitee.nar.feature.general.ServerRejoinAlert;
@@ -30,6 +31,7 @@ import net.volcaronitee.nar.feature.qol.RemoveSelfieMode;
 public class FeatureUtil {
     public static void init() {
         // General Features
+        DeveloperKey.register();
         ImagePreview.register();
         ReminderTimer.register();
         ServerRejoinAlert.register();
