@@ -23,6 +23,7 @@ import net.volcaronitee.nar.feature.general.SkyBlockLevelUpAlert;
 import net.volcaronitee.nar.feature.general.SkyBlockXpAlert;
 import net.volcaronitee.nar.feature.general.WaypointMaker;
 import net.volcaronitee.nar.feature.general.WidgetDisplay;
+import net.volcaronitee.nar.feature.qol.AutoFusion;
 import net.volcaronitee.nar.feature.qol.NoMouseReset;
 import net.volcaronitee.nar.feature.qol.RemoveSelfieMode;
 
@@ -37,6 +38,7 @@ public class FeatureUtil {
         WidgetDisplay.register();
 
         // QOL Features
+        AutoFusion.register();
         NoMouseReset.register();
         RemoveSelfieMode.register();
 
