@@ -25,6 +25,7 @@ import net.volcaronitee.nar.feature.general.WaypointMaker;
 import net.volcaronitee.nar.feature.general.WidgetDisplay;
 import net.volcaronitee.nar.feature.qol.AutoFusion;
 import net.volcaronitee.nar.feature.qol.AutoSalvage;
+import net.volcaronitee.nar.feature.qol.DragShiftClick;
 import net.volcaronitee.nar.feature.qol.NoMouseReset;
 import net.volcaronitee.nar.feature.qol.RemoveSelfieMode;
 
@@ -42,6 +43,7 @@ public class FeatureUtil {
         // QOL Features
         AutoFusion.register();
         AutoSalvage.register();
+        DragShiftClick.register();
         NoMouseReset.register();
         RemoveSelfieMode.register();
 
