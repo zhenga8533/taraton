@@ -3,8 +3,11 @@ package net.volcaronitee.nar.feature.qol;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenMouseEvents;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.NbtComponent;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.SlotActionType;
 import net.volcaronitee.nar.config.NarConfig;
@@ -18,6 +21,7 @@ public class AutoSalvage {
 
     private static final String SCREEN_TITLE = "Attribute Transfer";
 
+    private static final int INPUT_INDEX = 13;
     private static final int ANVIL_INDEX = 22;
     private static final int OUTPUT_INDEX = 31;
 
@@ -64,7 +68,7 @@ public class AutoSalvage {
             return;
         }
 
-        // Schedule picking up output after 10 ticks (0.5 seconds)
+        // Schedule anvil click after 10 ticks (0.5 seconds)
         ScheduleUtil.schedule(() -> {
             if (!isValidScreen()) {
                 return;
@@ -103,8 +107,8 @@ public class AutoSalvage {
         client.interactionManager.clickSlot(handler.syncId, OUTPUT_INDEX, 0, SlotActionType.PICKUP,
                 client.player);
 
-        // Schedule placing in inventory after 5 ticks (0.25 seconds)
-        ScheduleUtil.schedule(INSTANCE::releaseOutput, 5);
+        // Schedule placing in inventory after 10 ticks (0.5 seconds)
+        ScheduleUtil.schedule(INSTANCE::releaseOutput, 10);
     }
 
     /**
@@ -117,8 +121,8 @@ public class AutoSalvage {
 
         MinecraftClient client = MinecraftClient.getInstance();
         ScreenHandler handler = client.player.currentScreenHandler;
-        ItemStack heldStack = client.player.getMainHandStack();
-        if (heldStack.isEmpty()) {
+        ItemStack heldStack = handler.getCursorStack();
+        if (heldStack == null || heldStack.isEmpty()) {
             return;
         }
 
@@ -127,7 +131,7 @@ public class AutoSalvage {
             if (handler.getSlot(i).getStack().isEmpty()) {
                 client.interactionManager.clickSlot(handler.syncId, i, 0, SlotActionType.PICKUP,
                         client.player);
-                return;
+                break;
             }
         }
 
@@ -135,18 +139,63 @@ public class AutoSalvage {
         ScheduleUtil.schedule(INSTANCE::pickupInput, 5);
     }
 
+    /**
+     * Picks up the next valid input item from the player's inventory.
+     */
     private void pickupInput() {
-        // Find valid input
         if (!isValidScreen()) {
             return;
         }
 
-        // Schedule releasing input after 5 ticks (0.25 seconds)
-        ScheduleUtil.schedule(INSTANCE::releaseInput, 5);
+        MinecraftClient client = MinecraftClient.getInstance();
+        ScreenHandler handler = client.player.currentScreenHandler;
+
+        // Find first empty slot in inventory
+        boolean found = false;
+        for (int i = 54; i < handler.slots.size(); i++) {
+            ItemStack stack = handler.getSlot(i).getStack();
+            if (stack == null || stack.isEmpty()) {
+                continue;
+            }
+
+            // Get the custom data component from the item stack
+            NbtComponent customData = stack.get(DataComponentTypes.CUSTOM_DATA);
+            if (customData == null) {
+                continue;
+            }
+            NbtCompound nbt = customData.copyNbt();
+
+            // Pick up the item if it has attributes
+            if (nbt.contains("attributes")) {
+                client.interactionManager.clickSlot(handler.syncId, i, 0, SlotActionType.PICKUP,
+                        client.player);
+                found = true;
+                break;
+            }
+        }
+
+        // Schedule releasing input after 15 ticks (0.75 seconds) if found
+        if (found) {
+            ScheduleUtil.schedule(INSTANCE::releaseInput, 15);
+        }
     }
 
+    /**
+     * Releases the held input item into the input slot of the screen.
+     */
     private void releaseInput() {
-        // Cycle
-        // onMouseClick(0);
+        if (!isValidScreen()) {
+            return;
+        }
+
+        MinecraftClient client = MinecraftClient.getInstance();
+        ScreenHandler handler = client.player.currentScreenHandler;
+
+        // Place in input slot
+        client.interactionManager.clickSlot(handler.syncId, INPUT_INDEX, 0, SlotActionType.PICKUP,
+                client.player);
+
+        // Cycle after 5 ticks (0.25 seconds)
+        ScheduleUtil.schedule(() -> INSTANCE.onMouseClick(0), 5);
     }
 }
