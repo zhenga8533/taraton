@@ -8,6 +8,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.SlotActionType;
+import net.volcaronitee.nar.config.NarConfig;
 import net.volcaronitee.nar.util.ScheduleUtil;
 
 /**
@@ -60,7 +61,8 @@ public class AttributeSalvager {
      * @param button The mouse button that was clicked.
      */
     private void onMouseClick(Screen screen, double mouseX, double mouseY, int button) {
-        if (button != 0 || !isValidScreen()) {
+        if (!NarConfig.getHandler().crimsonIsle.attributeSalvager || button != 0
+                || !isValidScreen()) {
             return;
         }
 
