@@ -39,7 +39,11 @@ public class NoMouseReset {
      */
     public static void register() {
         ScreenEvents.BEFORE_INIT.register(INSTANCE::onScreen);
-        TickUtil.register(client -> INSTANCE.saveMouse = false, 1);
+        TickUtil.register(client -> {
+            if (client.currentScreen == null) {
+                INSTANCE.saveMouse = false;
+            }
+        }, 1);
     }
 
     /**
