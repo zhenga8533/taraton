@@ -68,6 +68,20 @@ public class QolConfig {
                                         newVal -> config.qol.commandHotkeys = newVal)
                                 .controller(NarConfig::createBooleanController).build())
 
+                        // Drag Shift Click
+                        .option(Option.<Boolean>createBuilder()
+                                .name(Text.literal("Drag Shift Click"))
+                                .description(OptionDescription.createBuilder()
+                                        .webpImage(Identifier.of(NotARat.MOD_ID,
+                                                "config/qol/drag_shift_click.webp"))
+                                        .text(Text.literal(
+                                                "Allows players to drag the mouse while holding Shift to quickly shift-click multiple items in inventories."))
+                                        .build())
+                                .binding(defaults.qol.dragShiftClick,
+                                        () -> config.qol.dragShiftClick,
+                                        newVal -> config.qol.dragShiftClick = newVal)
+                                .controller(NarConfig::createBooleanController).build())
+
                         // Remove Selfie Mode
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Remove Selfie Mode"))
@@ -206,6 +220,9 @@ public class QolConfig {
 
     @SerialEntry
     public boolean commandHotkeys = true;
+
+    @SerialEntry
+    public boolean dragShiftClick = false;
 
     @SerialEntry
     public boolean removeSelfieMode = false;

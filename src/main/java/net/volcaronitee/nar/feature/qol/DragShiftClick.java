@@ -9,6 +9,7 @@ import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.screen.slot.SlotActionType;
+import net.volcaronitee.nar.config.NarConfig;
 import net.volcaronitee.nar.mixin.accessor.HandledScreenAccessor;
 
 /**
@@ -31,8 +32,9 @@ public class DragShiftClick {
      * @param client The Minecraft client instance.
      */
     private static void onClientTick(MinecraftClient client) {
-        // Ensure the client is in a valid state to check input
-        if (client.getWindow() == null || client.currentScreen == null) {
+        // Ensure the feature is enabled and we have a valid window and screen.
+        if (!NarConfig.getHandler().qol.dragShiftClick || client.getWindow() == null
+                || client.currentScreen == null) {
             if (isDragging) {
                 isDragging = false;
                 draggedSlots.clear();
