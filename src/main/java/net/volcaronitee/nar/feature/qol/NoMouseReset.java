@@ -7,7 +7,6 @@ import net.minecraft.client.gui.screen.ingame.GenericContainerScreen;
 import net.minecraft.client.gui.screen.ingame.InventoryScreen;
 import net.minecraft.client.util.InputUtil;
 import net.volcaronitee.nar.config.NarConfig;
-import net.volcaronitee.nar.util.TickUtil;
 
 /**
  * Feature to prevent Minecraft from resetting the mouse cursor position when opening or closing
@@ -16,7 +15,9 @@ import net.volcaronitee.nar.util.TickUtil;
 public class NoMouseReset {
     private static final NoMouseReset INSTANCE = new NoMouseReset();
 
-    private boolean saveMouse = false;
+    private static final long TIME_THRESHOLD = 100; // milliseconds
+
+    private long lastOpen = 0;
     private double lastMouseX = 0;
     private double lastMouseY = 0;
 
@@ -39,11 +40,6 @@ public class NoMouseReset {
      */
     public static void register() {
         ScreenEvents.BEFORE_INIT.register(INSTANCE::onScreen);
-        TickUtil.register(client -> {
-            if (client.currentScreen == null) {
-                INSTANCE.saveMouse = false;
-            }
-        }, 1);
     }
 
     /**
@@ -58,19 +54,18 @@ public class NoMouseReset {
             int scaledHeight) {
         if (!NarConfig.getHandler().qol.noMouseReset || !(screen instanceof GenericContainerScreen
                 || screen instanceof InventoryScreen)) {
-            saveMouse = false;
             return;
         }
 
         // If the last screen was opened very recently, recall the mouse position
-        if (saveMouse) {
+        if (System.currentTimeMillis() - lastOpen < TIME_THRESHOLD) {
             InputUtil.setCursorParameters(client.getWindow().getHandle(), 212993, lastMouseX,
                     lastMouseY);
         }
 
         // Register the screen close event to update the last screen and mouse position
         ScreenEvents.remove(screen).register(closedScreen -> {
-            INSTANCE.saveMouse = true;
+            INSTANCE.lastOpen = System.currentTimeMillis();
             INSTANCE.lastMouseX = client.mouse.getX();
             INSTANCE.lastMouseY = client.mouse.getY();
         });
