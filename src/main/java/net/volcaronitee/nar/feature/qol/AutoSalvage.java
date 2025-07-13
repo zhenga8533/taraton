@@ -56,6 +56,28 @@ public class AutoSalvage {
     }
 
     /**
+     * Checks if the given item stack has attributes.
+     * 
+     * @param stack The item stack to check.
+     * @return True if the item stack has attributes, false otherwise.
+     */
+    private boolean hasAttributes(ItemStack stack) {
+        if (stack == null || stack.isEmpty()) {
+            return false;
+        }
+
+        // Get the custom data component from the item stack
+        NbtComponent customData = stack.get(DataComponentTypes.CUSTOM_DATA);
+        if (customData == null) {
+            return false;
+        }
+        NbtCompound nbt = customData.copyNbt();
+
+        // Check if the item has attributes
+        return nbt.contains("attributes");
+    }
+
+    /**
      * Handles mouse click events in the screen.
      * 
      * @param screen The current screen.
@@ -78,6 +100,14 @@ public class AutoSalvage {
             ScreenHandler handler = client.player.currentScreenHandler;
             ItemStack outputStack = handler.getSlot(OUTPUT_INDEX).getStack();
             if (outputStack.getItem() == Items.BARRIER) {
+                ItemStack inputStack = handler.getSlot(INPUT_INDEX).getStack();
+                if (inputStack.getItem() == Items.PRISMARINE_SHARD && hasAttributes(inputStack)) {
+                    client.interactionManager.clickSlot(handler.syncId, ANVIL_INDEX, button,
+                            SlotActionType.PICKUP, client.player);
+
+                    // Schedule picking up next input after 10 ticks (0.5 seconds)
+                    ScheduleUtil.schedule(INSTANCE::pickupInput, 10);
+                }
                 return;
             }
 
@@ -154,19 +184,7 @@ public class AutoSalvage {
         boolean found = false;
         for (int i = 54; i < handler.slots.size(); i++) {
             ItemStack stack = handler.getSlot(i).getStack();
-            if (stack == null || stack.isEmpty()) {
-                continue;
-            }
-
-            // Get the custom data component from the item stack
-            NbtComponent customData = stack.get(DataComponentTypes.CUSTOM_DATA);
-            if (customData == null) {
-                continue;
-            }
-            NbtCompound nbt = customData.copyNbt();
-
-            // Pick up the item if it has attributes
-            if (nbt.contains("attributes")) {
+            if (hasAttributes(stack)) {
                 client.interactionManager.clickSlot(handler.syncId, i, 0, SlotActionType.PICKUP,
                         client.player);
                 found = true;
