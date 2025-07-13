@@ -42,6 +42,18 @@ public class QolConfig {
                                         newVal -> config.qol.autoFusion = newVal)
                                 .controller(NarConfig::createBooleanController).build())
 
+                        // Auto Salvage
+                        .option(Option.<Boolean>createBuilder().name(Text.literal("Auto Salvage"))
+                                .description(OptionDescription.createBuilder()
+                                        .webpImage(Identifier.of(NotARat.MOD_ID,
+                                                "config/crimson_isle/attribute_salvager.webp"))
+                                        .text(Text.literal(
+                                                "Automatically salvages items with attributes in the Attribute Transfer screen."))
+                                        .build())
+                                .binding(defaults.qol.autoSalvage, () -> config.qol.autoSalvage,
+                                        newVal -> config.qol.autoSalvage = newVal)
+                                .controller(NarConfig::createBooleanController).build())
+
                         // Command Hotkeys
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Command Hotkeys"))
@@ -188,6 +200,9 @@ public class QolConfig {
     // Macro Option Group
     @SerialEntry
     public boolean autoFusion = false;
+
+    @SerialEntry
+    public boolean autoSalvage = false;
 
     @SerialEntry
     public boolean commandHotkeys = true;

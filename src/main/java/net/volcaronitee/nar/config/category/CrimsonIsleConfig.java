@@ -27,20 +27,6 @@ public class CrimsonIsleConfig {
                 // Crimson Isle Option Group
                 .group(OptionGroup.createBuilder().name(Text.literal("Crimson Isle"))
 
-                        // Attribute Salvager
-                        .option(Option.<Boolean>createBuilder()
-                                .name(Text.literal("Attribute Salvager"))
-                                .description(OptionDescription.createBuilder()
-                                        .webpImage(Identifier.of(NotARat.MOD_ID,
-                                                "config/crimson_isle/attribute_salvager.webp"))
-                                        .text(Text.literal(
-                                                "Salvages items with attributes in the Attribute Transfer screen."))
-                                        .build())
-                                .binding(defaults.crimsonIsle.attributeSalvager,
-                                        () -> config.crimsonIsle.attributeSalvager,
-                                        newVal -> config.crimsonIsle.attributeSalvager = newVal)
-                                .controller(NarConfig::createBooleanController).build())
-
                         // Vanquisher Warp
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Vanquisher Warp"))
@@ -94,9 +80,6 @@ public class CrimsonIsleConfig {
     }
 
     // Crimson Isle Option Group
-    @SerialEntry
-    public boolean attributeSalvager = false;
-
     @SerialEntry
     public boolean vanquisherWarp = false;
 

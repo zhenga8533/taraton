@@ -12,7 +12,6 @@ import net.volcaronitee.nar.feature.chat.PlaytimeWarning;
 import net.volcaronitee.nar.feature.chat.SpamHider;
 import net.volcaronitee.nar.feature.combat.EntityHighlight;
 import net.volcaronitee.nar.feature.combat.LowHealthWarning;
-import net.volcaronitee.nar.feature.crimson_isle.AttributeSalvager;
 import net.volcaronitee.nar.feature.crimson_isle.VanquisherWarp;
 import net.volcaronitee.nar.feature.fishing.HookLineAndSinker;
 import net.volcaronitee.nar.feature.general.ImagePreview;
@@ -24,6 +23,7 @@ import net.volcaronitee.nar.feature.general.SkyBlockXpAlert;
 import net.volcaronitee.nar.feature.general.WaypointMaker;
 import net.volcaronitee.nar.feature.general.WidgetDisplay;
 import net.volcaronitee.nar.feature.qol.AutoFusion;
+import net.volcaronitee.nar.feature.qol.AutoSalvage;
 import net.volcaronitee.nar.feature.qol.NoMouseReset;
 import net.volcaronitee.nar.feature.qol.RemoveSelfieMode;
 
@@ -39,6 +39,7 @@ public class FeatureUtil {
 
         // QOL Features
         AutoFusion.register();
+        AutoSalvage.register();
         NoMouseReset.register();
         RemoveSelfieMode.register();
 
@@ -67,7 +68,6 @@ public class FeatureUtil {
         HookLineAndSinker.register();
 
         // Crimson Isle Features
-        AttributeSalvager.register();
         VanquisherWarp.register();
     }
 }

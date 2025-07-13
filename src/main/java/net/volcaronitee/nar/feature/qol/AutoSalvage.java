@@ -1,4 +1,4 @@
-package net.volcaronitee.nar.feature.crimson_isle;
+package net.volcaronitee.nar.feature.qol;
 
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenMouseEvents;
@@ -12,11 +12,10 @@ import net.volcaronitee.nar.config.NarConfig;
 import net.volcaronitee.nar.util.ScheduleUtil;
 
 /**
- * AttributeSalvager automates the process of salvaging attributes in the "Attribute Transfer"
- * screen.
+ * AutoSalvage automates the process of salvaging attributes in the "Attribute Transfer" screen.
  */
-public class AttributeSalvager {
-    private static final AttributeSalvager INSTANCE = new AttributeSalvager();
+public class AutoSalvage {
+    private static final AutoSalvage INSTANCE = new AutoSalvage();
 
     private static final String SCREEN_TITLE = "Attribute Transfer";
 
@@ -26,10 +25,10 @@ public class AttributeSalvager {
     /**
      * Private constructor to prevent instantiation.
      */
-    private AttributeSalvager() {}
+    private AutoSalvage() {}
 
     /**
-     * Registers the event listeners for the AttributeSalvager.
+     * Registers the event listeners for the AutoSalvage.
      */
     public static void register() {
         ScreenEvents.AFTER_INIT.register((client, screen, width, height) -> {
@@ -61,8 +60,7 @@ public class AttributeSalvager {
      * @param button The mouse button that was clicked.
      */
     private void onMouseClick(Screen screen, double mouseX, double mouseY, int button) {
-        if (!NarConfig.getHandler().crimsonIsle.attributeSalvager || button != 0
-                || !isValidScreen()) {
+        if (!NarConfig.getHandler().qol.autoSalvage || button != 0 || !isValidScreen()) {
             return;
         }
 
