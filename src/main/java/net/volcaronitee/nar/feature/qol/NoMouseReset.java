@@ -16,10 +16,9 @@ import net.volcaronitee.nar.util.TickUtil;
 public class NoMouseReset {
     private static final NoMouseReset INSTANCE = new NoMouseReset();
 
-    private int ticksSince = 0;
+    private boolean saveMouse = false;
     private double lastMouseX = 0;
     private double lastMouseY = 0;
-    private Screen lastScreen = null;
 
     /**
      * Private constructor to enforce singleton pattern.
@@ -40,7 +39,7 @@ public class NoMouseReset {
      */
     public static void register() {
         ScreenEvents.BEFORE_INIT.register(INSTANCE::onScreen);
-        TickUtil.register(client -> INSTANCE.ticksSince++, 1);
+        TickUtil.register(client -> INSTANCE.saveMouse = false, 1);
     }
 
     /**
@@ -53,23 +52,23 @@ public class NoMouseReset {
      */
     private void onScreen(MinecraftClient client, Screen screen, int scaledWidth,
             int scaledHeight) {
-        if (!NarConfig.getHandler().qol.noMouseReset) {
+        if (!NarConfig.getHandler().qol.noMouseReset || !(screen instanceof GenericContainerScreen
+                || screen instanceof InventoryScreen)) {
+            saveMouse = false;
             return;
         }
 
         // If the last screen was opened very recently, recall the mouse position
-        if (INSTANCE.ticksSince < 1 && (INSTANCE.lastScreen instanceof GenericContainerScreen
-                || INSTANCE.lastScreen instanceof InventoryScreen)) {
-            InputUtil.setCursorParameters(client.getWindow().getHandle(), 212993,
-                    INSTANCE.lastMouseX, INSTANCE.lastMouseY);
+        if (saveMouse) {
+            InputUtil.setCursorParameters(client.getWindow().getHandle(), 212993, lastMouseX,
+                    lastMouseY);
         }
 
         // Register the screen close event to update the last screen and mouse position
         ScreenEvents.remove(screen).register(closedScreen -> {
-            INSTANCE.ticksSince = 0;
+            INSTANCE.saveMouse = true;
             INSTANCE.lastMouseX = client.mouse.getX();
             INSTANCE.lastMouseY = client.mouse.getY();
-            INSTANCE.lastScreen = closedScreen;
         });
     }
 }
