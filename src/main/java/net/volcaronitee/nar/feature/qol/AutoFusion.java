@@ -1,7 +1,6 @@
 package net.volcaronitee.nar.feature.qol;
 
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
-import net.fabricmc.fabric.api.client.screen.v1.ScreenMouseEvents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.item.ItemStack;
@@ -11,6 +10,9 @@ import net.minecraft.screen.slot.SlotActionType;
 import net.volcaronitee.nar.config.NarConfig;
 import net.volcaronitee.nar.util.ScheduleUtil;
 
+/**
+ * Feature that automatically confirms fusions in the "Confirm Fusion" screen.
+ */
 public class AutoFusion {
     private static final AutoFusion INSTANCE = new AutoFusion();
 
@@ -27,53 +29,38 @@ public class AutoFusion {
      * Registers the event listeners for the AutoFusion.
      */
     public static void register() {
-        ScreenEvents.AFTER_INIT.register((client, screen, width, height) -> {
-            ScreenMouseEvents.afterMouseClick(screen).register(INSTANCE::onMouseClick);
-        });
+        ScreenEvents.AFTER_INIT.register(INSTANCE::onScreenOpen);
     }
 
     /**
-     * Checks if the current screen is the valid "Confirm Fusion" screen.
+     * Called when a screen is opened.
      * 
-     * @return True if the current screen is the "Confirm Fusion" screen, false otherwise.
+     * @param client The Minecraft client instance.
+     * @param screen The screen that was opened.
+     * @param width The width of the screen.
+     * @param height The height of the screen.
      */
-    private boolean isValidScreen() {
-        MinecraftClient client = MinecraftClient.getInstance();
-        if (client == null || client.player == null || client.currentScreen == null) {
-            return false;
-        }
-
-        String screenTitle = client.currentScreen.getTitle().getString();
-        return screenTitle.equals(SCREEN_TITLE);
-    }
-
-    /**
-     * Handles mouse click events in the screen.
-     * 
-     * @param screen The current screen.
-     * @param mouseX The X coordinate of the mouse.
-     * @param mouseY The Y coordinate of the mouse.
-     * @param button The mouse button clicked.
-     */
-    private void onMouseClick(Screen screen, double mouseX, double mouseY, int button) {
-        if (!NarConfig.getHandler().qol.autoFusion || button != 0 || !isValidScreen()) {
+    private void onScreenOpen(MinecraftClient client, Screen screen, int width, int height) {
+        if (!NarConfig.getHandler().qol.autoFusion
+                || !screen.getTitle().getString().equals(SCREEN_TITLE)) {
             return;
         }
 
-        // Schedule picking up output after 5 ticks (0.25 seconds)
         ScheduleUtil.schedule(() -> {
-            if (!isValidScreen()) {
+            if (client.currentScreen == null
+                    || !client.currentScreen.getTitle().getString().equals(SCREEN_TITLE)) {
                 return;
             }
 
-            MinecraftClient client = MinecraftClient.getInstance();
+            // Click the fusion slot if it contains the expected item
             ScreenHandler handler = client.player.currentScreenHandler;
             ItemStack outputStack = handler.getSlot(FUSION_INDEX).getStack();
             if (outputStack.getItem() != Items.LIME_TERRACOTTA) {
+                System.out.println(outputStack.getItem());
                 return;
             }
 
-            client.interactionManager.clickSlot(handler.syncId, FUSION_INDEX, button,
+            client.interactionManager.clickSlot(handler.syncId, FUSION_INDEX, 0,
                     SlotActionType.PICKUP, client.player);
         }, 5);
     }
