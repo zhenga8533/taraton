@@ -195,7 +195,7 @@ public class AutoSalvage {
         client.interactionManager.clickSlot(handler.syncId, INPUT_INDEX, 0, SlotActionType.PICKUP,
                 client.player);
 
-        // Cycle after 5 ticks (0.25 seconds)
-        ScheduleUtil.schedule(() -> INSTANCE.onMouseClick(0), 5);
+        // Cycle after 10 ticks (0.5 seconds)
+        ScheduleUtil.schedule(() -> INSTANCE.onMouseClick(0), 10);
     }
 }
