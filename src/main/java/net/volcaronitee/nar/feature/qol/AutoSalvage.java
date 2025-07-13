@@ -3,7 +3,6 @@ package net.volcaronitee.nar.feature.qol;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenMouseEvents;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.screen.ScreenHandler;
@@ -32,7 +31,8 @@ public class AutoSalvage {
      */
     public static void register() {
         ScreenEvents.AFTER_INIT.register((client, screen, width, height) -> {
-            ScreenMouseEvents.afterMouseClick(screen).register(INSTANCE::onMouseClick);
+            ScreenMouseEvents.afterMouseClick(screen).register(
+                    (clickedScreen, mouseX, mouseY, button) -> INSTANCE.onMouseClick(button));
         });
     }
 
@@ -59,7 +59,7 @@ public class AutoSalvage {
      * @param mouseY The Y coordinate of the mouse.
      * @param button The mouse button that was clicked.
      */
-    private void onMouseClick(Screen screen, double mouseX, double mouseY, int button) {
+    private void onMouseClick(int button) {
         if (!NarConfig.getHandler().qol.autoSalvage || button != 0 || !isValidScreen()) {
             return;
         }
@@ -103,8 +103,8 @@ public class AutoSalvage {
         client.interactionManager.clickSlot(handler.syncId, OUTPUT_INDEX, 0, SlotActionType.PICKUP,
                 client.player);
 
-        // Schedule placing in inventory after 10 ticks (0.5 seconds)
-        ScheduleUtil.schedule(INSTANCE::releaseOutput, 10);
+        // Schedule placing in inventory after 5 ticks (0.25 seconds)
+        ScheduleUtil.schedule(INSTANCE::releaseOutput, 5);
     }
 
     /**
@@ -130,5 +130,23 @@ public class AutoSalvage {
                 return;
             }
         }
+
+        // Schedule picking up next input after 5 ticks (0.25 seconds)
+        ScheduleUtil.schedule(INSTANCE::pickupInput, 5);
+    }
+
+    private void pickupInput() {
+        // Find valid input
+        if (!isValidScreen()) {
+            return;
+        }
+
+        // Schedule releasing input after 5 ticks (0.25 seconds)
+        ScheduleUtil.schedule(INSTANCE::releaseInput, 5);
+    }
+
+    private void releaseInput() {
+        // Cycle
+        // onMouseClick(0);
     }
 }
