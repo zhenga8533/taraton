@@ -222,7 +222,6 @@ public class DeveloperKey {
 
         // If no valid item is hovered, do nothing
         if (hoveredStack.isEmpty()) {
-            NotARat.sendMessage(Text.literal("No item hovered.").formatted(Formatting.RED));
             return;
         }
 
