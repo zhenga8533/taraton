@@ -5,7 +5,6 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.Text;
 import net.volcaronitee.nar.NotARat;
 import net.volcaronitee.nar.config.NarConfig;
@@ -19,7 +18,7 @@ public class SkyBlockXpAlert {
     private static final SkyBlockXpAlert INSTANCE = new SkyBlockXpAlert();
 
     private static final Pattern SKYBLOCK_XP_PATTERN =
-            Pattern.compile("(§b\\+\\d+ SkyBlock XP §7\\([^§]*§7\\)§b \\(\\d+\\/100\\))");
+            Pattern.compile("(§b\\+\\d+ SkyBlock XP)( §7\\([^§]*§7\\)§b \\(\\d+\\/100\\))");
 
     private static final Set<String> XP_TEXTS = new HashSet<>();
 
@@ -48,21 +47,26 @@ public class SkyBlockXpAlert {
             return;
         }
 
-        // Extract the XP text from the matched group
-        String xpText = matcher.group(1);
-        if (XP_TEXTS.contains(xpText)) {
+        // Use the full matched string for the cooldown to prevent duplicates
+        String fullMatch = matcher.group(0);
+        if (XP_TEXTS.contains(fullMatch)) {
             return;
         }
-        XP_TEXTS.add(xpText);
+        XP_TEXTS.add(fullMatch);
 
-        MinecraftClient client = MinecraftClient.getInstance();
-        client.inGameHud.getChatHud()
-                .addMessage(NotARat.MOD_TITLE.copy().append(Text.literal(" " + xpText)));
-        TitleUtil.createTitle(xpText, "", 1);
+        // Group 1 contains the first part (e.g., "§b+1 SkyBlock XP")
+        String title = matcher.group(1);
+
+        // Group 2 contains the second part (e.g., " §7(Attribute Levels)§b (91/100)")
+        String subtitle = matcher.group(2);
+
+        // Use the captured groups to send the title and subtitle
+        NotARat.sendMessage(Text.of(title + subtitle));
+        TitleUtil.createTitle(title, subtitle, 1);
 
         // Set a cooldown to prevent spamming the alert
         ScheduleUtil.schedule(() -> {
-            XP_TEXTS.remove(xpText);
+            XP_TEXTS.remove(fullMatch);
         }, 200);
     }
 }
