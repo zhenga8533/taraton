@@ -28,6 +28,7 @@ import net.volcaronitee.nar.feature.crimson_isle.VanquisherWarp;
 import net.volcaronitee.nar.feature.general.ImagePreview;
 import net.volcaronitee.nar.feature.general.WidgetDisplay;
 import net.volcaronitee.nar.feature.qol.CommandHotkey;
+import net.volcaronitee.nar.feature.qol.HideEntity;
 import net.volcaronitee.nar.util.helper.Contract;
 
 /**
@@ -68,6 +69,8 @@ public class CommandUtil {
                                 .then(AutoKick.BLACK_LIST.createCommand("bl"))
                                 .then(EntityHighlight.ENTITY_LIST.createCommand("entitylist"))
                                 .then(EntityHighlight.ENTITY_LIST.createCommand("el"))
+                                .then(HideEntity.HOW_LIST.createCommand("hideonworldlist"))
+                                .then(HideEntity.HOW_LIST.createCommand("howl"))
                                 .then(ChatCommands.PREFIX_LIST.createCommand("prefixlist"))
                                 .then(ChatCommands.PREFIX_LIST.createCommand("pl"))
                                 .then(SpamHider.SPAM_LIST.createCommand("spamlist"))

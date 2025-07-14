@@ -3,13 +3,19 @@ package net.volcaronitee.nar.feature.qol;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.text.Text;
 import net.volcaronitee.nar.config.NarConfig;
+import net.volcaronitee.nar.config.NarList;
+import net.volcaronitee.nar.util.LocationUtil;
 
 /**
  * Feature to hide entities based on their distance from the main player.
  */
 public class HideEntity {
     private static final HideEntity INSTANCE = new HideEntity();
+
+    public static final NarList HOW_LIST = new NarList("Hide on World",
+            Text.literal("A list of worlds where entities will be hidden."), "how_list.json");
 
     /**
      * Private constructor to prevent instantiation.
@@ -32,6 +38,10 @@ public class HideEntity {
      * @return True if the entity should be hidden, false otherwise.
      */
     public boolean shouldHide(Entity entity) {
+        if (!HOW_LIST.list.isEmpty() && !HOW_LIST.list.contains(LocationUtil.getWorld().name())) {
+            return false;
+        }
+
         return isFarEntity(entity) || isClosePlayer(entity);
     }
 
