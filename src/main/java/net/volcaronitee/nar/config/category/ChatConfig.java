@@ -346,7 +346,7 @@ public class ChatConfig {
     public AutoTransfer autoTransfer = AutoTransfer.OFF;
 
     public enum AutoTransfer implements NameableEnum {
-        OFF, ON_TRANSFER, ON_KICK;
+        OFF, ON_TRANSFER, ON_KICK, ON_BOTH;
 
         @Override
         public Text getDisplayName() {
@@ -354,6 +354,7 @@ public class ChatConfig {
                 case OFF -> Text.literal("Disabled");
                 case ON_TRANSFER -> Text.literal("On Transfer");
                 case ON_KICK -> Text.literal("On Kick");
+                case ON_BOTH -> Text.literal("On Transfer and Kick");
             };
         }
     }

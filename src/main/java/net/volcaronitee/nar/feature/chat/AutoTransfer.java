@@ -41,13 +41,24 @@ public class AutoTransfer {
      * @param overlay Whether the message is an overlay message.
      */
     private void handleAutoTransfer(Text message, boolean overlay) {
-        if (overlay) {
+        ChatConfig.AutoTransfer autoTransfer = NarConfig.getHandler().chat.autoTransfer;
+        if (autoTransfer == ChatConfig.AutoTransfer.OFF || overlay) {
             return;
         }
 
         String text = message.getString();
-        handleOnTransfer(text);
-        handleOnKick(text);
+
+        // Handle on transfer
+        if (autoTransfer == ChatConfig.AutoTransfer.ON_TRANSFER
+                || autoTransfer == ChatConfig.AutoTransfer.ON_BOTH) {
+            handleOnTransfer(text);
+        }
+
+        // Handle on kick
+        if (autoTransfer == ChatConfig.AutoTransfer.ON_KICK
+                || autoTransfer == ChatConfig.AutoTransfer.ON_BOTH) {
+            handleOnKick(text);
+        }
     }
 
     /**
