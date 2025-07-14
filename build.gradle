@@ -30,7 +30,11 @@ repositories {
 		url "https://repo.hypixel.net/repository/Hypixel/"
 	}
 
-  	mavenLocal()
+  maven {
+    url "https://pkgs.dev.azure.com/djtheredstoner/DevAuth/_packaging/public/maven/v1"
+  }
+
+  mavenLocal()
 }
 
 fabricApi {
@@ -52,10 +56,10 @@ dependencies {
 	modImplementation "dev.isxander:yet-another-config-lib:${project.yacl}"
 	modImplementation "com.terraformersmc:modmenu:${project.mod_menu}"
 	modImplementation "net.hypixel:mod-api:${project.hypixel_mod_api}"
-  modImplementation "maven.modrinth:hypixel-mod-api:${project.hypixel_fabric_mod_api}"
+	modImplementation "maven.modrinth:hypixel-mod-api:${project.hypixel_fabric_mod_api}"
 
-	// Testing
-	modImplementation "com.ptsmods:devlogin:3.5"
+	// Development
+	modRuntimeOnly "me.djtheredstoner:DevAuth-fabric:${project.devauth}"
 }
 
 processResources {

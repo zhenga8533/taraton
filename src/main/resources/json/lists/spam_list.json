@@ -13,6 +13,5 @@
       "key": "Your Molten Wave hit (\\d+(?:,\\d{3})*(?:\\.\\d+)?) enem(?:y|ies) for (\\d+(?:,\\d{3})*(?:\\.\\d+)?) damage.",
       "value": true
     }
-  ],
-  "mapConfig": []
+  ]
 }

@@ -1,0 +1,92 @@
+{
+  "listConfig": [
+    {
+      "key": "UNKNOWN",
+      "value": false
+    },
+    {
+      "key": "PRIVATE_ISLAND",
+      "value": false
+    },
+    {
+      "key": "GARDEN",
+      "value": false
+    },
+    {
+      "key": "HUB",
+      "value": false
+    },
+    {
+      "key": "DARK_AUCTION",
+      "value": false
+    },
+    {
+      "key": "DUNGEON_HUB",
+      "value": false
+    },
+    {
+      "key": "THE_FARMING_ISLANDS",
+      "value": false
+    },
+    {
+      "key": "THE_PARK",
+      "value": false
+    },
+    {
+      "key": "GALATEA",
+      "value": false
+    },
+    {
+      "key": "SPIDERS_DEN",
+      "value": false
+    },
+    {
+      "key": "BLAZING_FORTRESS",
+      "value": false
+    },
+    {
+      "key": "THE_END",
+      "value": false
+    },
+    {
+      "key": "CRIMSON_ISLE",
+      "value": false
+    },
+    {
+      "key": "GOLD_MINE",
+      "value": false
+    },
+    {
+      "key": "DEEP_CAVERN",
+      "value": false
+    },
+    {
+      "key": "DWARVEN_MINES",
+      "value": false
+    },
+    {
+      "key": "CRYSTAL_HOLLOWS",
+      "value": false
+    },
+    {
+      "key": "BACKWATER_BAYOU",
+      "value": false
+    },
+    {
+      "key": "WINTER_ISLAND",
+      "value": false
+    },
+    {
+      "key": "THE_RIFT",
+      "value": false
+    },
+    {
+      "key": "DUNGEON",
+      "value": false
+    },
+    {
+      "key": "KUUDRA",
+      "value": false
+    }
+  ]
+}
