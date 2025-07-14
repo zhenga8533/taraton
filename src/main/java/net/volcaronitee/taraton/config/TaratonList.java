@@ -103,7 +103,6 @@ public class TaratonList {
         loadDefault();
         MinecraftClient.getInstance().send(() -> {
             handler.load();
-            onSave(handler.instance());
         });
     }
 
@@ -123,6 +122,9 @@ public class TaratonList {
      */
     public void setSaveCallback(Runnable saveCallback) {
         this.saveCallback = saveCallback;
+        MinecraftClient.getInstance().send(() -> {
+            onSave(handler.instance());
+        });
     }
 
     /**
