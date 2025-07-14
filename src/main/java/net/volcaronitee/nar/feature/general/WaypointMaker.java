@@ -21,7 +21,7 @@ import net.volcaronitee.nar.util.ScheduleUtil;
 public class WaypointMaker {
     private static final WaypointMaker INSTANCE = new WaypointMaker();
 
-    private static final Pattern WAYPOINT_PATTERN = Pattern.compile("(?:.*)?"
+    private static final Pattern WAYPOINT_PATTERN = Pattern.compile("(?:.*?)?"
             + ParseUtil.PLAYER_PATTERN + ": x: (-?\\d+), y: (-?\\d+), z: (-?\\d+)(?:.*)?");
 
     private static final List<Waypoint> WAYPOINTS = new ArrayList<>();
@@ -61,7 +61,7 @@ public class WaypointMaker {
         int x = ParseUtil.parseInt(matcher.group(2));
         int y = ParseUtil.parseInt(matcher.group(3));
         int z = ParseUtil.parseInt(matcher.group(4));
-        float[] rgba = new float[] {0.0f, 1.0f, 0.0f, 1.0f};
+        float[] rgba = new float[] {0.0f, 1.0f, 0.0f, 0.5f};
         Text waypointName = Text.literal(playerName).formatted(Formatting.GREEN);
 
         // Create a new waypoint with timeout
@@ -75,9 +75,12 @@ public class WaypointMaker {
     }
 
     /**
-     * Renders beacon beams in the world.
+     * Renders all waypoints in the world.
+     * 
+     * @param context The rendering context.
      */
     private void renderWaypoints(WorldRenderContext context) {
+        // Loop through your list of waypoints
         for (Waypoint waypoint : WAYPOINTS) {
             waypoint.render(context);
         }

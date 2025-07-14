@@ -1,15 +1,23 @@
 package net.volcaronitee.nar.util;
 
+import java.util.List;
 import org.joml.FrustumIntersection;
+import org.joml.Matrix4f;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.render.Camera;
 import net.minecraft.client.render.Frustum;
+import net.minecraft.client.render.LightmapTextureManager;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.render.VertexConsumerProvider.Immediate;
 import net.minecraft.client.render.VertexRendering;
+import net.minecraft.client.util.BufferAllocator;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
+import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
@@ -26,6 +34,8 @@ import net.volcaronitee.nar.mixin.accessor.WorldRendererAccessor;
  * Utility class for rendering-related operations.
  */
 public class RenderUtil {
+    private static final BufferAllocator ALLOCATOR = new BufferAllocator(1536);
+
     /**
      * Checks if the given axis-aligned bounding box (AABB) is within the current view frustum.
      * 
@@ -187,35 +197,117 @@ public class RenderUtil {
     }
 
     /**
+     * Renders a filled box at the specified block position with the given color components.
+     * 
+     * @param matrices The matrix stack for rendering transformations.
+     * @param camera The camera for obtaining the current view position.
+     * @param pos The block position where the filled box will be rendered.
+     * @param rgba An array of four float values representing the RGBA color components.
+     */
+    public static void renderFilledBox(MatrixStack matrices, Camera camera, BlockPos pos,
+            float[] rgba) {
+        Immediate consumers =
+                MinecraftClient.getInstance().getBufferBuilders().getEntityVertexConsumers();
+        Vec3d cameraPos = camera.getPos();
+        matrices.push();
+        matrices.translate(pos.getX() - cameraPos.x - 1, pos.getY() - cameraPos.y,
+                pos.getZ() - cameraPos.z - 1);
+
+        VertexConsumer buffer = consumers.getBuffer(RenderLayer.getDebugFilledBox());
+        VertexRendering.drawFilledBox(matrices, buffer, 0, 0, 0, 1, 1, 1, rgba[0], rgba[1], rgba[2],
+                rgba[3]);
+
+        consumers.draw();
+        matrices.pop();
+    }
+
+    /**
+     * Renders text at the specified position in the world.
+     * 
+     * @param context The rendering context containing the necessary matrices and world information.
+     * @param text The text to render, represented as an OrderedText.
+     * @param pos The position in the world where the text will be rendered.
+     * @param scale The scale factor for the text size.
+     * @param yOffset The vertical offset for the text position.
+     * @param throughWalls Whether to render the text through walls or not.
+     */
+    public static void renderText(WorldRenderContext context, List<OrderedText> lines, Vec3d pos,
+            float scale, float yOffset, boolean throughWalls) {
+        Matrix4f positionMatrix = new Matrix4f();
+        Camera camera = context.camera();
+        Vec3d cameraPos = camera.getPos();
+        TextRenderer textRenderer = MinecraftClient.getInstance().textRenderer;
+
+        float distance = (float) cameraPos.distanceTo(pos);
+        float distanceScale = distance * scale * 0.025f;
+
+        // Set up the position matrix for rendering text
+        positionMatrix.translate((float) (pos.getX() - cameraPos.getX()),
+                (float) (pos.getY() - cameraPos.getY()), (float) (pos.getZ() - cameraPos.getZ()))
+                .rotate(camera.getRotation()).scale(distanceScale, -distanceScale, distanceScale);
+
+        int textColor = 0xFFFFFFFF;
+        int backgroundColor = 0x90000000;
+
+        Immediate consumers = VertexConsumerProvider.immediate(ALLOCATOR);
+
+        // Calculate the total height of the text block to vertically center it
+        float totalTextHeight = lines.size() * textRenderer.fontHeight;
+        float currentY = yOffset - (totalTextHeight / 2f);
+
+        // Loop through each line of text
+        for (OrderedText line : lines) {
+            // Center each line individually based on its specific width
+            float xOffset = -textRenderer.getWidth(line) / 2f;
+
+            // Draw the current line
+            textRenderer.draw(line, xOffset, currentY, textColor, false, positionMatrix, consumers,
+                    throughWalls ? TextRenderer.TextLayerType.SEE_THROUGH
+                            : TextRenderer.TextLayerType.NORMAL,
+                    backgroundColor, LightmapTextureManager.MAX_LIGHT_COORDINATE);
+
+            // Move down to the next line's position
+            currentY += textRenderer.fontHeight;
+        }
+
+        consumers.draw();
+    }
+
+    /**
      * Renders a waypoint at the specified block position with the given text and color components.
      * 
      * @param context The rendering context containing the necessary matrices and world information.
      * @param pos The block position of the waypoint.
      * @param text The text to display at the waypoint.
-     * @param rgbaComponents An array of four float values representing the RGBA color components.
+     * @param rgba An array of four float values representing the RGBA color components.
      * @param beaconBeam Whether to render a beacon beam at the waypoint position.
      */
     public static void renderWaypoint(WorldRenderContext context, BlockPos pos, Text text,
-            float[] rgbaComponents, boolean beaconBeam) {
+            float[] rgba, boolean beaconBeam) {
         MatrixStack matrices = context.matrixStack();
-        Vec3d camera = context.camera().getPos();
+        Camera camera = context.camera();
 
-        matrices.push();
-        matrices.translate(-camera.x, -camera.y, -camera.z);
+        float x = pos.getX() - 0.5f;
+        float y = pos.getY();
+        float z = pos.getZ() - 0.5f;
 
-        VertexConsumerProvider consumers = context.consumers();
-        VertexConsumer buffer = consumers.getBuffer(RenderLayer.getGuiOverlay());
+        // Render waypoint box
+        renderFilledBox(matrices, camera, pos, rgba);
 
-        double minX = pos.getX() - 0.5;
-        double minY = pos.getY() - 0.5;
-        double minZ = pos.getZ() - 0.5;
-        double maxX = pos.getX() + 0.5;
-        double maxY = pos.getY() + 0.5;
-        double maxZ = pos.getZ() + 0.5;
-        VertexRendering.drawFilledBox(matrices, buffer, minX, minY, minZ, maxX, maxY, maxZ,
-                rgbaComponents[0], rgbaComponents[1], rgbaComponents[2], rgbaComponents[3]);
-        matrices.pop();
+        // Render waypoint beacon
+        if (beaconBeam) {
+            renderBeaconBeam(context, x, y, z, rgba);
+        }
 
-        renderBeaconBeam(context, pos, rgbaComponents);
+        // Calculate distance and format it for rendering
+        double distance = camera.getPos().distanceTo(new Vec3d(x, y, z));
+        String distanceColor = distance < 16 ? "§a"
+                : distance < 32 ? "§2" : distance < 64 ? "§e" : distance < 128 ? "§c" : "§4";
+        Text distanceText = Text.literal(String.format("§8[%s%.1f§7m§8]", distanceColor, distance));
+
+        // Render waypoint text
+        List<OrderedText> orderedTexts =
+                List.of(text.asOrderedText(), distanceText.asOrderedText());
+        renderText(context, orderedTexts, new Vec3d(x, y + 1.5f, z), 0.25f, 0, true);
     }
 }
