@@ -63,6 +63,7 @@ public class ChatCommands {
             "megumin", "bully", "cuddle", "cry", "hug", "awoo", "kiss", "lick", "pat", "smug",
             "bonk", "yeet", "blush", "smile", "wave", "highfive", "handhold", "nom", "bite",
             "glomp", "slap", "kill", "kick", "happy", "wink", "trap", "blowjob");
+    private static final Set<String> WAIFU_NSFW = Set.of("nsfw", "x");
 
     // Instances
     private static final String[] FLOORS = {"one", "two", "three", "four", "five", "six", "seven"};
@@ -133,7 +134,8 @@ public class ChatCommands {
         // Determine category and type
         String category = WAIFU_CATEGORIES.contains(cat) ? cat : "waifu";
         String type =
-                NarData.getData().get("nsfw").getAsBoolean() && cat.equals("nsfw") ? "nsfw" : "sfw";
+                NarData.getData().get("nsfw").getAsBoolean() && WAIFU_NSFW.contains(cat) ? "nsfw"
+                        : "sfw";
 
         // Fetch a waifu image URL from the API and add it to the list
         RequestUtil.get("https://api.waifu.pics/" + type + "/" + category).thenAccept(response -> {
