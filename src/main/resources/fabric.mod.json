@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "id": "nar",
+  "id": "taraton",
   "version": "1.0.0",
-  "name": "Not A Rat",
+  "name": "Taraton",
   "description": "This is an example description! Tell everyone what your mod is about!",
   "authors": ["Volcaronitee"],
   "contact": {
@@ -10,13 +10,13 @@
     "sources": "https://github.com/FabricMC/fabric-example-mod"
   },
   "license": "MIT",
-  "icon": "assets/nar/icon.png",
+  "icon": "assets/taraton/icon.png",
   "environment": "client",
   "entrypoints": {
-    "client": ["net.volcaronitee.nar.NotARat"],
-    "modmenu": ["net.volcaronitee.nar.config.ModMenuIntegration"]
+    "client": ["net.volcaronitee.taraton.Taraton"],
+    "modmenu": ["net.volcaronitee.taraton.config.ModMenuIntegration"]
   },
-  "mixins": ["nar.mixins.json"],
+  "mixins": ["taraton.mixins.json"],
   "depends": {
     "fabricloader": ">=0.16.14",
     "minecraft": "~1.21.5",
