@@ -5,7 +5,6 @@ import dev.isxander.yacl3.api.NameableEnum;
 import dev.isxander.yacl3.api.Option;
 import dev.isxander.yacl3.api.OptionDescription;
 import dev.isxander.yacl3.api.OptionGroup;
-import dev.isxander.yacl3.api.controller.BooleanControllerBuilder;
 import dev.isxander.yacl3.api.controller.IntegerSliderControllerBuilder;
 import dev.isxander.yacl3.config.v2.api.SerialEntry;
 import net.minecraft.text.Text;
@@ -133,7 +132,7 @@ public class EconomyConfig {
                                 .binding(defaults.economy.tradeEvaluation,
                                         () -> config.economy.tradeEvaluation,
                                         newVal -> config.economy.tradeEvaluation = newVal)
-                                .controller(opt -> BooleanControllerBuilder.create(opt)).build())
+                                .controller(TaratonConfig::createBooleanController).build())
 
                         .build())
 
