@@ -23,7 +23,6 @@ import net.volcaronitee.nar.config.category.FarmingConfig;
 import net.volcaronitee.nar.config.category.FishingConfig;
 import net.volcaronitee.nar.config.category.ForagingConfig;
 import net.volcaronitee.nar.config.category.GeneralConfig;
-import net.volcaronitee.nar.config.category.KuudraConfig;
 import net.volcaronitee.nar.config.category.MiningConfig;
 import net.volcaronitee.nar.config.category.QolConfig;
 import net.volcaronitee.nar.config.category.RiftConfig;
@@ -81,7 +80,6 @@ public class NarConfig {
                     .category(EventsConfig.create(defaults, config))
                     .category(CrimsonIsleConfig.create(defaults, config))
                     .category(DungeonsConfig.create(defaults, config))
-                    .category(KuudraConfig.create(defaults, config))
                     .category(RiftConfig.create(defaults, config));
 
             return builder;
@@ -168,9 +166,6 @@ public class NarConfig {
 
     @SerialEntry
     public DungeonsConfig dungeons = new DungeonsConfig();
-
-    @SerialEntry
-    public KuudraConfig kuudra = new KuudraConfig();
 
     @SerialEntry
     public RiftConfig rift = new RiftConfig();
