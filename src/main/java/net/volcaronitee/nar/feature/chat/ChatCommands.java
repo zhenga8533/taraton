@@ -130,10 +130,10 @@ public class ChatCommands {
      * @param cat The category of the waifu image (e.g., "waifu", "neko", etc.).
      */
     private void addWaifu(String cat) {
+        // Determine category and type
         String category = WAIFU_CATEGORIES.contains(cat) ? cat : "waifu";
-
-        // Determine the type of waifu based on the nsfw setting
-        String type = NarData.getData().get("nsfw").getAsBoolean() ? "nsfw" : "sfw";
+        String type =
+                NarData.getData().get("nsfw").getAsBoolean() && cat.equals("nsfw") ? "nsfw" : "sfw";
 
         // Fetch a waifu image URL from the API and add it to the list
         RequestUtil.get("https://api.waifu.pics/" + type + "/" + category).thenAccept(response -> {
