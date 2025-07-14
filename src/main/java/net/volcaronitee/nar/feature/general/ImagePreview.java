@@ -295,11 +295,9 @@ public class ImagePreview {
                     hasLoaded = true;
                 } else {
                     hasLoaded = false;
-                    MinecraftClient.getInstance().player.sendMessage(NotARat.MOD_TITLE.copy()
-                            .append(Text.literal(
-                                    " Failed to load image! Image data was null or invalid.")
-                                    .formatted(Formatting.RED)),
-                            false);
+                    NotARat.sendMessage(
+                            Text.literal("Failed to load image! Image data was null or invalid.")
+                                    .formatted(Formatting.RED));
                 }
                 isLoading = false;
             });
@@ -307,11 +305,9 @@ public class ImagePreview {
             throwable.printStackTrace();
             isLoading = false;
             hasLoaded = false;
-            MinecraftClient.getInstance().player.sendMessage(NotARat.MOD_TITLE.copy()
-                    .append(Text
-                            .literal(" Failed to load image from URL: " + throwable.getMessage())
-                            .formatted(Formatting.RED)),
-                    false);
+            NotARat.sendMessage(
+                    Text.literal("Failed to load image from URL: " + throwable.getMessage())
+                            .formatted(Formatting.RED));
             return null;
         });
 

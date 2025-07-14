@@ -21,7 +21,6 @@ import net.minecraft.registry.Registries;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Box;
-import net.volcaronitee.nar.NotARat;
 import net.volcaronitee.nar.config.NarConfig;
 import net.volcaronitee.nar.config.NarData;
 import net.volcaronitee.nar.config.NarList;
@@ -464,10 +463,7 @@ public class EntityHighlight {
                             World world = World.valueOf(loc.trim());
                             locations.add(world);
                         } catch (IllegalArgumentException e) {
-                            MinecraftClient.getInstance().inGameHud.getChatHud()
-                                    .addMessage(NotARat.MOD_TITLE.copy()
-                                            .append(Text.literal(" §cInvalid location: "
-                                                    + loc.trim() + " §7(EntityHighlight.java)")));
+                            continue;
                         }
                     }
                 }

@@ -247,8 +247,8 @@ public class NarList {
             return 1;
         }).then(literal("reset").executes(context -> {
             reset();
-            context.getSource().sendFeedback(NotARat.MOD_TITLE.copy()
-                    .append(Text.literal(" List reset successfully.").formatted(Formatting.GREEN)));
+            NotARat.sendMessage(
+                    Text.literal("List reset successfully.").formatted(Formatting.GREEN));
             return 1;
         }));
     }

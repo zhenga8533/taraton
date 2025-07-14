@@ -9,7 +9,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
 import net.fabricmc.fabric.api.client.message.v1.ClientSendMessageEvents;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.volcaronitee.nar.NotARat;
@@ -133,10 +132,8 @@ public class AutoCommand {
 
         // Run the best suggestion if found
         if (bestSuggestion == null) {
-            MinecraftClient.getInstance().inGameHud.getChatHud()
-                    .addMessage(NotARat.MOD_TITLE.copy()
-                            .append(Text.literal(" Running command instead: " + bestSuggestion)
-                                    .formatted(Formatting.YELLOW)));
+            NotARat.sendMessage(Text.literal("Trying command: ").formatted(Formatting.YELLOW)
+                    .append(Text.literal(lastCommand).formatted(Formatting.WHITE)));
             ScheduleUtil.scheduleCommand(bestSuggestion);
         }
     }

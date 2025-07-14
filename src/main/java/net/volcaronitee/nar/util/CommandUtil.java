@@ -150,9 +150,7 @@ public class CommandUtil {
      * @return 1 if the command was executed successfully, 0 otherwise.
      */
     private static int echo(CommandContext<FabricClientCommandSource> context, String message) {
-        MinecraftClient client = MinecraftClient.getInstance();
-        client.getMessageHandler().onGameMessage(NotARat.MOD_TITLE.copy()
-                .append(Text.literal(" " + message).formatted(Formatting.WHITE)), false);
+        NotARat.sendMessage(message);
         return 1;
     }
 
@@ -191,41 +189,37 @@ public class CommandUtil {
      */
     private static int domainExpansion(CommandContext<FabricClientCommandSource> context) {
         if (!Contract.isSigned()) {
-            context.getSource().sendFeedback(NotARat.MOD_TITLE.copy().append(Text.literal(
-                    " Binding Vows are essentially contracts that an individual can make with one's self or another person. The act of abiding by the rules and restrictions agreed upon in these contracts can result in a greater power or the achievement of a goal, but breaking a binding vow has uncanny repercussions.")
-                    .formatted(Formatting.RED)));
+            NotARat.sendMessage(Text.literal(
+                    "Binding Vows are essentially contracts that an individual can make with one's self or another person. The act of abiding by the rules and restrictions agreed upon in these contracts can result in a greater power or the achievement of a goal, but breaking a binding vow has uncanny repercussions.")
+                    .formatted(Formatting.RED));
             return 0;
         }
 
         // Flip the domain expansion state
         boolean bool = NarData.getData().get("domain_expansion").getAsBoolean();
-        if (bool) {
-            context.getSource().sendFeedback(NotARat.MOD_TITLE.copy()
-                    .append(Text.literal(" 領域展開伏魔御廚子").formatted(Formatting.RED)));
-        } else {
-            context.getSource().sendFeedback(NotARat.MOD_TITLE.copy()
-                    .append(Text.literal(" 領域展開無量空処").formatted(Formatting.GREEN)));
-        }
         NarData.getData().addProperty("domain_expansion", !bool);
+
+        if (bool) {
+            NotARat.sendMessage(Text.literal("領域展開伏魔御廚子").formatted(Formatting.RED));
+        } else {
+            NotARat.sendMessage(Text.literal("領域展開無量空処").formatted(Formatting.GREEN));
+        }
 
         return 1;
     }
 
     public static int hehehe(CommandContext<FabricClientCommandSource> context) {
         if (!Contract.isSigned()) {
-            context.getSource().sendFeedback(NotARat.MOD_TITLE.copy()
-                    .append(Text.literal(" 2 months.").formatted(Formatting.RED)));
+            NotARat.sendMessage(Text.literal("2 months.").formatted(Formatting.RED));
             return 0;
         }
 
         // Flip the nsfw state
         boolean bool = NarData.getData().get("nsfw").getAsBoolean();
         if (bool) {
-            context.getSource().sendFeedback(NotARat.MOD_TITLE.copy()
-                    .append(Text.literal(" Lock the fuck in.").formatted(Formatting.RED)));
+            NotARat.sendMessage(Text.literal("Lock the fuck in.").formatted(Formatting.RED));
         } else {
-            context.getSource().sendFeedback(NotARat.MOD_TITLE.copy()
-                    .append(Text.literal(" Hehehe, I'm horny...").formatted(Formatting.GREEN)));
+            NotARat.sendMessage(Text.literal("Hehehe, I'm horny...").formatted(Formatting.GREEN));
         }
         NarData.getData().addProperty("nsfw", !bool);
 
@@ -258,8 +252,8 @@ public class CommandUtil {
         } else if (ImagePreview.getInstance().handleCommand(command)) {
             return 1;
         } else {
-            context.getSource().sendFeedback(NotARat.MOD_TITLE.copy()
-                    .append(Text.literal(" Command not found!").formatted(Formatting.RED)));
+            NotARat.sendMessage(Text.literal("Unknown command: ").formatted(Formatting.RED)
+                    .append(Text.literal(command).formatted(Formatting.YELLOW)));
             return 0;
         }
     }

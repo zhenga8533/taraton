@@ -5,7 +5,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.hud.ChatHud;
 import net.minecraft.text.ClickEvent;
 import net.minecraft.text.HoverEvent.ShowText;
 import net.minecraft.text.Style;
@@ -36,8 +35,6 @@ public class Contract {
      * @return True if the contract file was opened successfully, false otherwise.
      */
     public static boolean openContract() {
-        ChatHud chatHud = MinecraftClient.getInstance().inGameHud.getChatHud();
-
         // Check if the desktop is supported for opening files
         if (Desktop.isDesktopSupported()) {
             Desktop desktop = Desktop.getDesktop();
@@ -50,21 +47,23 @@ public class Contract {
                 }
                 return true;
             } catch (Exception e) {
-                chatHud.addMessage(NotARat.MOD_TITLE.copy().append(
-                        Text.literal(" Failed to open contract file!").formatted(Formatting.RED)));
+                NotARat.sendMessage(
+                        Text.literal("Failed to open contract file!").formatted(Formatting.RED));
                 return false;
             }
         } else {
             String absolutePath = CONTRACT_FILE.toAbsolutePath().toString();
-            chatHud.addMessage(NotARat.MOD_TITLE.copy().append(Text.literal(
-                    " Desktop is not supported! Please open the contract file manually at: ")
-                    .formatted(Formatting.RED))
+            Text message = Text
+                    .literal(
+                            "Desktop is not supported! Please open the contract file manually at: ")
+                    .formatted(Formatting.RED)
                     .append(Text.literal(absolutePath)
                             .setStyle(Style.EMPTY.withColor(Formatting.BLUE).withUnderline(true)
                                     .withClickEvent(new ClickEvent.CopyToClipboard(absolutePath))
                                     .withHoverEvent(new ShowText(
                                             Text.literal("Click to copy path to clipboard")
-                                                    .formatted(Formatting.YELLOW))))));
+                                                    .formatted(Formatting.YELLOW)))));
+            NotARat.sendMessage(message);
             return false;
         }
     }

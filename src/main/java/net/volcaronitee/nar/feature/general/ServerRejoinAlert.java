@@ -3,7 +3,8 @@ package net.volcaronitee.nar.feature.general;
 import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
-import net.minecraft.client.MinecraftClient;
+import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 import net.volcaronitee.nar.NotARat;
 import net.volcaronitee.nar.config.NarConfig;
 import net.volcaronitee.nar.util.LocationUtil;
@@ -51,9 +52,11 @@ public class ServerRejoinAlert {
                     .replaceAll("(?i)(\\d+)(h|m)\\s*(0m\\s*|0s)?", "$1$2").replaceAll("\\s+", " ")
                     .trim();
 
-            MinecraftClient.getInstance().inGameHud.getChatHud()
-                    .addMessage(NotARat.MOD_TITLE.copy().append(" §cRejoined §7"
-                            + INSTANCE.currentServer + " §cafter §7" + formattedDuration + "§r."));
+            NotARat.sendMessage(Text.literal("Rjoined ").formatted(Formatting.RED)
+                    .append(Text.literal(INSTANCE.currentServer).formatted(Formatting.GRAY))
+                    .append(Text.literal(" after ").formatted(Formatting.RED))
+                    .append(Text.literal(formattedDuration).formatted(Formatting.GRAY))
+                    .append(Text.literal(".").formatted(Formatting.RED)));
         }
     }
 }

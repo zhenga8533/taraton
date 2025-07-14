@@ -9,6 +9,7 @@ import net.minecraft.client.gui.hud.ChatHud;
 import net.minecraft.client.gui.hud.ChatHudLine;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 import net.volcaronitee.nar.NotARat;
 import net.volcaronitee.nar.config.NarConfig;
 import net.volcaronitee.nar.mixin.accessor.ChatHudAccessor;
@@ -92,9 +93,9 @@ public class CopyChat {
         // Copy the message content to the clipboard and send a confirmation message
         if (!messageToCopy.isEmpty()) {
             client.keyboard.setClipboard(messageToCopy);
-            Text sendMessage = NotARat.MOD_TITLE.copy().append(
-                    Text.literal(" §aCopied chat message to clipboard: §8§o" + messageToCopy));
-            client.player.sendMessage(sendMessage, false);
+            NotARat.sendMessage(Text.literal("Copied chat message to clipboard: ")
+                    .formatted(Formatting.GREEN).append(Text.literal(messageToCopy)
+                            .formatted(Formatting.GRAY, Formatting.ITALIC)));
             cir.setReturnValue(true);
             cir.cancel();
         }

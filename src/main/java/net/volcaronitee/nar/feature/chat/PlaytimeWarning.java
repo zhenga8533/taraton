@@ -72,9 +72,10 @@ public class PlaytimeWarning {
 
         if (playtime % PLAYTIME_THRESHOLD == 0) { // Every 8 hour
             int hours = playtime / 3600;
-            client.inGameHud.getChatHud().addMessage(NotARat.MOD_TITLE.copy()
-                    .append(Text.literal(" You have played for " + hours
-                            + " hours. Excessive game playing may cause problems in your normal daily life.")
+            NotARat.sendMessage(Text.literal("You have played for ").formatted(Formatting.RED)
+                    .append(Text.literal(hours + " hours").formatted(Formatting.DARK_RED))
+                    .append(Text.literal(
+                            ". Excessive game playing may cause problems in your normal daily life.")
                             .formatted(Formatting.RED)));
         }
     }
