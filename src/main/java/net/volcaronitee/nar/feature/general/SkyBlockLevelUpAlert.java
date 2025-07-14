@@ -3,9 +3,7 @@ package net.volcaronitee.nar.feature.general;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.Text;
-import net.volcaronitee.nar.NotARat;
 import net.volcaronitee.nar.config.NarConfig;
 import net.volcaronitee.nar.util.ParseUtil;
 import net.volcaronitee.nar.util.ScheduleUtil;
@@ -57,10 +55,8 @@ public class SkyBlockLevelUpAlert {
         INSTANCE.levelUpText = text.replace("]", "§8]");
 
         ScheduleUtil.schedule(() -> {
-            MinecraftClient client = MinecraftClient.getInstance();
-            client.inGameHud.getChatHud().addMessage(
-                    NotARat.MOD_TITLE.copy().append(Text.literal("§3§lSKYBLOCK LEVEL UP")));
-            TitleUtil.createTitle(INSTANCE.levelUpText, INSTANCE.levelUpText, 2);
+            String title = "§3§lSKYBLOCK LEVEL UP";
+            TitleUtil.createTitle(title, INSTANCE.levelUpText, 2);
         }, 2);
     }
 }
