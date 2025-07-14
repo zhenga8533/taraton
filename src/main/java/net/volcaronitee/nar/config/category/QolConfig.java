@@ -133,7 +133,7 @@ public class QolConfig {
                                         newVal -> config.qol.hideAllParticles = newVal)
                                 .controller(NarConfig::createBooleanController).build())
 
-                        // TODO: Hide Far Entities
+                        // Hide Far Entities
                         .option(Option.<Integer>createBuilder()
                                 .name(Text.literal("Hide Far Entities"))
                                 .description(OptionDescription.createBuilder()
@@ -149,7 +149,7 @@ public class QolConfig {
                                         .range(0, 128).step(4))
                                 .build())
 
-                        // TODO: Hide Close Players
+                        // Hide Close Players
                         .option(Option.<Integer>createBuilder()
                                 .name(Text.literal("Hide Close Players"))
                                 .description(OptionDescription.createBuilder()
