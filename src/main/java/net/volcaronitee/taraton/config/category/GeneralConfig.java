@@ -75,9 +75,9 @@ public class GeneralConfig {
                                         .text(Text.literal(
                                                 "Notifies you in chat when a new version of Taraton is available."))
                                         .build())
-                                .binding(defaults.general.performanceMode,
-                                        () -> config.general.performanceMode,
-                                        newVal -> config.general.performanceMode = newVal)
+                                .binding(defaults.general.updateNotification,
+                                        () -> config.general.updateNotification,
+                                        newVal -> config.general.updateNotification = newVal)
                                 .controller(TaratonConfig::createBooleanController).build())
 
                         // TODO: Socket Connection
@@ -290,6 +290,9 @@ public class GeneralConfig {
 
     @SerialEntry
     public boolean performanceMode = false;
+
+    @SerialEntry
+    public boolean updateNotification = true;
 
     @SerialEntry
     public boolean socketConnection = true;

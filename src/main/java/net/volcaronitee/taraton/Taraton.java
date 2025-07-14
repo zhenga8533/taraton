@@ -59,23 +59,26 @@ public class Taraton implements ClientModInitializer {
      * Sends a message to the in-game chat.
      * 
      * @param message The message to send.
+     * @return True if the message was sent successfully, false otherwise.
      */
-    public static void sendMessage(Text message) {
+    public static boolean sendMessage(Text message) {
         MinecraftClient client = MinecraftClient.getInstance();
         if (client == null || client.inGameHud == null || client.player == null) {
-            return;
+            return false;
         }
 
         client.inGameHud.getChatHud()
                 .addMessage(MOD_TITLE.copy().append(Text.literal(" ")).append(message));
+        return true;
     }
 
     /**
      * Sends a message to the in-game chat.
      * 
      * @param message The message to send.
+     * @return True if the message was sent successfully, false otherwise.
      */
-    public static void sendMessage(String message) {
-        sendMessage(Text.literal(message));
+    public static boolean sendMessage(String message) {
+        return sendMessage(Text.literal(message));
     }
 }
