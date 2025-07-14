@@ -66,6 +66,20 @@ public class GeneralConfig {
                                         newVal -> config.general.performanceMode = newVal)
                                 .controller(NarConfig::createBooleanController).build())
 
+                        // Update Notification
+                        .option(Option.<Boolean>createBuilder()
+                                .name(Text.literal("Update Notification"))
+                                .description(OptionDescription.createBuilder()
+                                        .webpImage(Identifier.of(NotARat.MOD_ID,
+                                                "config/general/update_notification.webp"))
+                                        .text(Text.literal(
+                                                "Notifies you in chat when a new version of NotARat is available."))
+                                        .build())
+                                .binding(defaults.general.performanceMode,
+                                        () -> config.general.performanceMode,
+                                        newVal -> config.general.performanceMode = newVal)
+                                .controller(NarConfig::createBooleanController).build())
+
                         // TODO: Socket Connection
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Socket Connection"))
