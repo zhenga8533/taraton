@@ -25,8 +25,8 @@ public class EntityRendererMixin {
      * @param cir The callback info to control the rendering behavior.
      */
     @Inject(method = "shouldRender", at = @At("HEAD"), cancellable = true)
-    private void onShouldRender(Entity entity, Frustum frustum, double x, double y, double z,
-            CallbackInfoReturnable<Boolean> cir) {
+    private void taraton$shouldEntityRender(Entity entity, Frustum frustum, double x, double y,
+            double z, CallbackInfoReturnable<Boolean> cir) {
         if (HideEntity.getInstance().shouldHide(entity)) {
             cir.setReturnValue(false);
             cir.cancel();

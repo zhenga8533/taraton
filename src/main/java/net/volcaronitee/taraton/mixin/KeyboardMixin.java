@@ -23,7 +23,7 @@ public class KeyboardMixin {
      * @param info The callback info.
      */
     @Inject(method = "onKey", at = @At("HEAD"))
-    private void onKey(long window, int key, int scancode, int action, int modifiers,
+    private void taraton$onKey(long window, int key, int scancode, int action, int modifiers,
             CallbackInfo info) {
         CommandHotkey.getInstance().onKeyPress(key, action);
     }
