@@ -21,6 +21,7 @@ import net.volcaronitee.taraton.feature.general.ServerRejoinAlert;
 import net.volcaronitee.taraton.feature.general.ServerStatus;
 import net.volcaronitee.taraton.feature.general.SkyBlockLevelUpAlert;
 import net.volcaronitee.taraton.feature.general.SkyBlockXpAlert;
+import net.volcaronitee.taraton.feature.general.UpdateNotification;
 import net.volcaronitee.taraton.feature.general.WaypointMaker;
 import net.volcaronitee.taraton.feature.general.WidgetDisplay;
 import net.volcaronitee.taraton.feature.qol.AutoFusion;
@@ -37,6 +38,7 @@ public class FeatureUtil {
         ReminderTimer.register();
         ServerRejoinAlert.register();
         ServerStatus.register();
+        UpdateNotification.register();
         WaypointMaker.register();
         WidgetDisplay.register();
 
