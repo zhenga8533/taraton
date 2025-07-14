@@ -1,6 +1,7 @@
 package net.volcaronitee.nar.config.category;
 
 import dev.isxander.yacl3.api.ConfigCategory;
+import dev.isxander.yacl3.api.NameableEnum;
 import dev.isxander.yacl3.api.Option;
 import dev.isxander.yacl3.api.OptionDescription;
 import dev.isxander.yacl3.api.OptionGroup;
@@ -43,7 +44,8 @@ public class QolConfig {
                                 .controller(NarConfig::createBooleanController).build())
 
                         // Auto Salvage
-                        .option(Option.<Boolean>createBuilder().name(Text.literal("Auto Salvage"))
+                        .option(Option.<QolConfig.AutoSalvage>createBuilder()
+                                .name(Text.literal("Auto Salvage"))
                                 .description(OptionDescription.createBuilder()
                                         .webpImage(Identifier.of(NotARat.MOD_ID,
                                                 "config/crimson_isle/attribute_salvager.webp"))
@@ -52,7 +54,7 @@ public class QolConfig {
                                         .build())
                                 .binding(defaults.qol.autoSalvage, () -> config.qol.autoSalvage,
                                         newVal -> config.qol.autoSalvage = newVal)
-                                .controller(NarConfig::createBooleanController).build())
+                                .controller(NarConfig::createEnumController).build())
 
                         // Command Hotkeys
                         .option(Option.<Boolean>createBuilder()
@@ -216,7 +218,20 @@ public class QolConfig {
     public boolean autoFusion = false;
 
     @SerialEntry
-    public boolean autoSalvage = false;
+    public AutoSalvage autoSalvage = AutoSalvage.OFF;
+
+    public enum AutoSalvage implements NameableEnum {
+        OFF, ITEM, INVENTORY;
+
+        @Override
+        public Text getDisplayName() {
+            return switch (this) {
+                case OFF -> Text.literal("Disabled");
+                case ITEM -> Text.literal("Item");
+                case INVENTORY -> Text.literal("Inventory");
+            };
+        }
+    }
 
     @SerialEntry
     public boolean commandHotkeys = true;

@@ -11,6 +11,7 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.SlotActionType;
 import net.volcaronitee.nar.config.NarConfig;
+import net.volcaronitee.nar.config.category.QolConfig;
 import net.volcaronitee.nar.util.ScheduleUtil;
 
 /**
@@ -86,7 +87,8 @@ public class AutoSalvage {
      * @param button The mouse button that was clicked.
      */
     private void onMouseClick(int button) {
-        if (!NarConfig.getHandler().qol.autoSalvage || button != 0 || !isValidScreen()) {
+        if (NarConfig.getHandler().qol.autoSalvage == QolConfig.AutoSalvage.OFF || button != 0
+                || !isValidScreen()) {
             return;
         }
 
@@ -166,7 +168,9 @@ public class AutoSalvage {
         }
 
         // Schedule picking up next input after 5 ticks (0.25 seconds)
-        ScheduleUtil.schedule(INSTANCE::pickupInput, 5);
+        if (NarConfig.getHandler().qol.autoSalvage == QolConfig.AutoSalvage.INVENTORY) {
+            ScheduleUtil.schedule(INSTANCE::pickupInput, 5);
+        }
     }
 
     /**
