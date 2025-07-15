@@ -2,11 +2,8 @@ package net.volcaronitee.taraton.config;
 
 import java.nio.file.Path;
 import com.google.gson.JsonObject;
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.client.MinecraftClient;
 import net.volcaronitee.taraton.Taraton;
-import net.volcaronitee.taraton.util.TickUtil;
 
 /**
  * Handles the loading and saving of Taraton data from a JSON file.
@@ -22,8 +19,6 @@ public class TaratonData {
      */
     public static void init() {
         loadData();
-        TickUtil.register(TaratonData::saveData, 18000);
-        ClientLifecycleEvents.CLIENT_STOPPING.register(TaratonData::saveData);
     }
 
     /**
@@ -35,10 +30,6 @@ public class TaratonData {
         return data;
     }
 
-    private static void saveData(MinecraftClient client) {
-        TaratonJson.saveJson("", FILE_NAME, data);
-    }
-
     /**
      * Loads the Taraton data from the JSON file.
      */
@@ -47,7 +38,7 @@ public class TaratonData {
 
         if (DATA_FILE.toFile().exists()) {
             // Load existing data from the file
-            data = TaratonJson.loadJson("", FILE_NAME);
+            data = TaratonJson.registerJson("", FILE_NAME).getJsonObject();
             if (data == null) {
                 data = templateData;
             } else {

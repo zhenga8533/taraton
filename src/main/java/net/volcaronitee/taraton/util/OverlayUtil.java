@@ -101,8 +101,8 @@ public class OverlayUtil {
                 return;
             }
 
-            int x = templateJson.has("x") ? templateJson.get("x").getAsInt() : 0;
-            int y = templateJson.has("y") ? templateJson.get("y").getAsInt() : 0;
+            int x = templateJson.has("x") ? templateJson.get("x").getAsInt() : 100;
+            int y = templateJson.has("y") ? templateJson.get("y").getAsInt() : 100;
             float scale = templateJson.has("scale") ? templateJson.get("scale").getAsFloat() : 1.0f;
 
             overlay.x = x;

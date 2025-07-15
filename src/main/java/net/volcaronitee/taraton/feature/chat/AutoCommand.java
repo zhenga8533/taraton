@@ -37,7 +37,7 @@ public class AutoCommand {
     private AutoCommand() {}
 
     public static void register() {
-        INSTANCE.dictionary = TaratonJson.loadJson(FILE_DIR, FILE_NAME);
+        INSTANCE.dictionary = TaratonJson.registerJson(FILE_DIR, FILE_NAME).getJsonObject();
         INSTANCE.initializeCommands();
         ClientSendMessageEvents.COMMAND.register(INSTANCE::onCommandSend);
         ClientReceiveMessageEvents.GAME.register(INSTANCE::correctCommand);
