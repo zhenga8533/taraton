@@ -84,6 +84,18 @@ public class QolConfig {
                                         newVal -> config.qol.dragShiftClick = newVal)
                                 .controller(TaratonConfig::createBooleanController).build())
 
+                        // Protect Item
+                        .option(Option.<Boolean>createBuilder().name(Text.literal("Protect Item"))
+                                .description(OptionDescription.createBuilder()
+                                        .webpImage(Identifier.of(Taraton.MOD_ID,
+                                                "config/qol/protect_item.webp"))
+                                        .text(Text.literal(
+                                                "Prevents items registered in the Protect Item list from being dropped or thrown."))
+                                        .build())
+                                .binding(defaults.qol.protectItem, () -> config.qol.protectItem,
+                                        newVal -> config.qol.protectItem = newVal)
+                                .controller(TaratonConfig::createBooleanController).build())
+
                         // Remove Selfie Mode
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Remove Selfie Mode"))
@@ -238,6 +250,9 @@ public class QolConfig {
 
     @SerialEntry
     public boolean dragShiftClick = false;
+
+    @SerialEntry
+    public boolean protectItem = true;
 
     @SerialEntry
     public boolean removeSelfieMode = false;

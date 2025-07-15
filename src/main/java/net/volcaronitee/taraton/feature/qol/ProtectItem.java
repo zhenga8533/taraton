@@ -14,6 +14,7 @@ import net.minecraft.screen.slot.SlotActionType;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.volcaronitee.taraton.Taraton;
+import net.volcaronitee.taraton.config.TaratonConfig;
 import net.volcaronitee.taraton.config.TaratonList;
 
 /**
@@ -131,7 +132,7 @@ public class ProtectItem {
      *         otherwise.
      */
     private boolean cancelStack(ItemStack stack) {
-        if (stack == null || stack.isEmpty()) {
+        if (!TaratonConfig.getHandler().qol.protectItem || stack == null || stack.isEmpty()) {
             return false;
         }
 
