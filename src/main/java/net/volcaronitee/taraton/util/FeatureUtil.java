@@ -12,6 +12,7 @@ import net.volcaronitee.taraton.feature.chat.PlaytimeWarning;
 import net.volcaronitee.taraton.feature.chat.SpamHider;
 import net.volcaronitee.taraton.feature.combat.EntityHighlight;
 import net.volcaronitee.taraton.feature.combat.LowHealthWarning;
+import net.volcaronitee.taraton.feature.container.ContainerPreview;
 import net.volcaronitee.taraton.feature.crimson_isle.VanquisherWarp;
 import net.volcaronitee.taraton.feature.fishing.HookLineAndSinker;
 import net.volcaronitee.taraton.feature.general.DeveloperKey;
@@ -64,6 +65,7 @@ public class FeatureUtil {
         SkyBlockXpAlert.register();
 
         // Container Features
+        ContainerPreview.register();
         // Searchbar.register();
 
         // Combat Features
