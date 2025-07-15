@@ -36,9 +36,10 @@ public class ChatCommands {
     private static final ChatCommands INSTANCE = new ChatCommands();
 
     public static final TaratonList PREFIX_LIST = new TaratonList("Prefix List",
-            Text.literal("A list of prefixes to detect for chat commands."), "prefix_list.json");
-    public static final TaratonList AVENGER_LIST =
-            new TaratonList("The Avengers", Text.literal("DUN DUN DUNDUN"), "avenger_list.json");
+            Text.literal("A list of prefixes to detect for chat commands."), "prefix_list.json",
+            new String[] {"Prefix"});
+    public static final TaratonList AVENGER_LIST = new TaratonList("The Avengers",
+            Text.literal("DUN DUN DUNDUN"), "avenger_list.json", new String[] {"Username"});
 
     // Patterns for matching chat messages
     private static final Pattern ALL_PATTERN = Pattern.compile(ParseUtil.PLAYER_PATTERN + ": (.+)");

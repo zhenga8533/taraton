@@ -27,7 +27,7 @@ public class ChatAlert {
                     + " --fadeOut <ticks> §7Time in ticks needed for the alert to fade out.\n"
                     + " --command <command> §7Executes a command.\n\n\n" + "§f§lExample:§r\n\n"
                     + "ROAR --fadeIn 10 --stay 70 --fadeOut 20 --command /say Hello World")),
-            "chat_alert_map.json");
+            "chat_alert_map.json", new String[] {"Pattern", "Message"});
     static {
         CHAT_ALERT_MAP.setIsMap(true);
         CHAT_ALERT_MAP.setSaveCallback(INSTANCE::onSave);

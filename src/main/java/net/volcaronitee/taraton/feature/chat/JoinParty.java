@@ -17,7 +17,7 @@ public class JoinParty {
 
     public static final TaratonList WHITE_LIST = new TaratonList("White List",
             Text.literal("A list of players to allow the use of various features."),
-            "white_list.json");
+            "white_list.json", new String[] {"Username"});
 
     private static final Pattern PARTY_INVITE_PATTERN = Pattern.compile(
             "-+\\n(?:\\[[^\\]]*\\+?\\] )?(\\w+) has invited you to join their party!\\nYou have \\d+ seconds to accept\\. Click here to join!\\n-+");

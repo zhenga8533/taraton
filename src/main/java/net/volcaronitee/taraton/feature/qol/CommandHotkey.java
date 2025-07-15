@@ -31,7 +31,8 @@ public class CommandHotkey {
     private static final Type HOTKEY_TYPE =
             new TypeToken<KeyValuePair<Integer, KeyValuePair<String, Boolean>>>() {}.getType();
     public static final TaratonList HOTKEY_MAP =
-            new TaratonList(TITLE, Text.literal("A list of command hotkeys."), "hotkey_map.json");
+            new TaratonList(TITLE, Text.literal("A list of command hotkeys."), "hotkey_map.json",
+                    new String[] {"Hotkey", "Command"});
     static {
         HOTKEY_MAP.setCustomCategory(INSTANCE::createCustomCategory);
         HOTKEY_MAP.setSaveCallback(INSTANCE::onSave);

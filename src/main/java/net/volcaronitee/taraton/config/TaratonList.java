@@ -51,6 +51,8 @@ public class TaratonList {
     private String title;
     private Text description;
     private String fileName;
+    private String[] categoryNames = new String[] {"Key", "Value"};
+
     private ConfigClassHandler<TaratonList> handler;
 
     private BiFunction<TaratonList, TaratonList, ConfigCategory> createCategory =
@@ -82,11 +84,13 @@ public class TaratonList {
      * @param title The title of the list configuration.
      * @param description The description of the list configuration.
      * @param fileName The name of the file where the configuration will be saved.
+     * @param categoryNames An array of category names for the configuration.
      */
-    public TaratonList(String title, Text description, String fileName) {
+    public TaratonList(String title, Text description, String fileName, String[] categoryNames) {
         this.title = title;
         this.description = description;
         this.fileName = fileName;
+        this.categoryNames = categoryNames;
 
         // Create handler for this ListUtil instance
         this.handler = ConfigClassHandler.createBuilder(TaratonList.class)
@@ -272,7 +276,7 @@ public class TaratonList {
                         .binding(config.listConfig, () -> config.listConfig,
                                 newVal -> config.listConfig = newVal)
                         .controller((option) -> KeyValueController.Builder.create(option).ratio(0.8)
-                                .keyController("Key", StringControllerBuilder::create)
+                                .keyController(categoryNames[0], StringControllerBuilder::create)
                                 .valueController("Enabled", TickBoxControllerBuilder::create))
                         .initial(new KeyValuePair<>("", true)).build())
                 .build();
@@ -293,10 +297,10 @@ public class TaratonList {
                 .binding(config.mapConfig, () -> config.mapConfig,
                         newVal -> config.mapConfig = newVal)
                 .controller((option) -> KeyValueController.Builder.create(option).ratio(0.4)
-                        .keyController("Key", StringControllerBuilder::create)
+                        .keyController(categoryNames[0], StringControllerBuilder::create)
                         .valueController(null, (subOption) -> KeyValueController.Builder
                                 .create(subOption).ratio(2.0 / 3.0)
-                                .keyController("Value", StringControllerBuilder::create)
+                                .keyController(categoryNames[1], StringControllerBuilder::create)
                                 .valueController("Enabled", TickBoxControllerBuilder::create)))
                 .initial(new KeyValuePair<>("", new KeyValuePair<>("", true))).build()).build();
     }

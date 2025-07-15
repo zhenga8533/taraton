@@ -13,7 +13,8 @@ public class CustomEmote {
     private static final CustomEmote INSTANCE = new CustomEmote();
 
     public static final TaratonList EMOTE_MAP = new TaratonList("Emote Map",
-            Text.literal("A list of custom emote mappings to use in chat."), "emote_map.json");
+            Text.literal("A list of custom emote mappings to use in chat."), "emote_map.json",
+            new String[] {"Shortcode", "Emote"});
     static {
         EMOTE_MAP.setIsMap(true);
     }

@@ -25,8 +25,9 @@ public class ReminderTimer {
 
     private static final Pattern TIME_PATTERN = Pattern.compile("(\\d+)([hms])");
 
-    private static final TaratonList REMINDER_MAP = new TaratonList("Reminder Map",
-            Text.literal("A list of reminders for the player."), "reminder_map.json");
+    private static final TaratonList REMINDER_MAP =
+            new TaratonList("Reminder Map", Text.literal("A list of reminders for the player."),
+                    "reminder_map.json", new String[] {"Message", "Time"});
     static {
         REMINDER_MAP.setIsMap(true);
         REMINDER_MAP.setSaveCallback(INSTANCE::onSave);

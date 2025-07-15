@@ -18,7 +18,8 @@ public class WidgetDisplay {
     private static final WidgetDisplay INSTANCE = new WidgetDisplay();
 
     public static final TaratonList WIDGET_LIST = new TaratonList("Widget List",
-            Text.literal("A list of widgets to display in the overlay."), "widget_list.json");
+            Text.literal("A list of widgets to display in the overlay."), "widget_list.json",
+            new String[] {"Widget"});
     static {
         WIDGET_LIST.setSaveCallback(INSTANCE::onSave);
     }

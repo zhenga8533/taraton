@@ -42,7 +42,7 @@ public class TextSubstitution {
                     + "§oo - Italic§r\n"
                     + "§rr - Reset§r\n\n").append(FormatUtil.createLink(
                         "htmlcolorcodes.com/minecraft-color-codes/", "https://htmlcolorcodes.com/minecraft-color-codes/")),
-            "substitution_map.json");
+            "substitution_map.json", new String[] {"Find", "Replace"});
     // @formatter:on
     static {
         SUBSTITUTION_MAP.setIsMap(true);

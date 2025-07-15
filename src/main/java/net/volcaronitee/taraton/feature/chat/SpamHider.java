@@ -18,7 +18,7 @@ public class SpamHider {
             Text.literal("A list of spam messages to hide in chat.\n\nUse ")
                     .append(FormatUtil.createLink("regex101.com", "https://regex101.com"))
                     .append(Text.literal(" to test your regex patterns.")),
-            "spam_list.json");
+            "spam_list.json", new String[] {"Pattern"});
     static {
         SPAM_LIST.setSaveCallback(INSTANCE::onSave);
     }

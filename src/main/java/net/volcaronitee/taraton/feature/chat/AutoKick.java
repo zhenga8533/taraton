@@ -16,7 +16,7 @@ public class AutoKick {
 
     public static final TaratonList BLACK_LIST = new TaratonList("Black List",
             Text.literal("A list of players to block from using various features."),
-            "black_list.json");
+            "black_list.json", new String[] {"Username"});
 
     /**
      * Private constructor to prevent instantiation.

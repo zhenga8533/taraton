@@ -16,13 +16,13 @@ public class HideEntity {
     private static final HideEntity INSTANCE = new HideEntity();
 
     public static final TaratonList HOW_LIST = new TaratonList("Hide on World",
-            Text.literal("A list of worlds where entities will be hidden."), "how_list.json");
+            Text.literal("A list of worlds where entities will be hidden."), "how_list.json",
+            new String[] {"World"});
 
     /**
      * Private constructor to prevent instantiation.
      */
-    private HideEntity() {
-    }
+    private HideEntity() {}
 
     /**
      * Returns the singleton instance of HideEntity.
@@ -34,8 +34,7 @@ public class HideEntity {
     }
 
     /**
-     * Checks if an entity should be hidden based on its distance from the main
-     * player.
+     * Checks if an entity should be hidden based on its distance from the main player.
      * 
      * @param entity The entity to check.
      * @return True if the entity should be hidden, false otherwise.
@@ -71,12 +70,10 @@ public class HideEntity {
     }
 
     /**
-     * Checks if the entity is a player and is within a certain distance from the
-     * main player.
+     * Checks if the entity is a player and is within a certain distance from the main player.
      * 
      * @param entity The entity to check.
-     * @return True if the entity is a player and is within the specified distance,
-     *         false otherwise.
+     * @return True if the entity is a player and is within the specified distance, false otherwise.
      */
     public boolean isClosePlayer(Entity entity) {
         int minDistance = TaratonConfig.getHandler().qol.hideClosePlayers;

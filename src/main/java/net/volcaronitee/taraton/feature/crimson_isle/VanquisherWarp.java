@@ -17,7 +17,7 @@ public class VanquisherWarp {
 
     public static final TaratonList VANQUISHER_LIST = new TaratonList("Vanquisher List",
             Text.literal("A list of players to warp into lobby when a vanquisher spawns."),
-            "vanquisher_list.json");
+            "vanquisher_list.json", new String[] {"Username"});
 
     private static final Pattern SPAWN_PATTERN =
             Pattern.compile("A Vanquisher is spawning nearby!");
