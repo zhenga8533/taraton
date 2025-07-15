@@ -1,0 +1,150 @@
+package net.volcaronitee.taraton.feature.qol;
+
+import org.jetbrains.annotations.Nullable;
+import com.mojang.brigadier.context.CommandContext;
+import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.NbtComponent;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.network.packet.c2s.play.ClickSlotC2SPacket;
+import net.minecraft.network.packet.c2s.play.PlayerActionC2SPacket;
+import net.minecraft.screen.slot.SlotActionType;
+import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
+import net.volcaronitee.taraton.Taraton;
+import net.volcaronitee.taraton.config.TaratonList;
+
+/**
+ * Feature to protect specific items from being dropped or thrown in the game.
+ */
+public class ProtectItem {
+    private static final ProtectItem INSTANCE = new ProtectItem();
+
+    private static final TaratonList PROTECT_ITEM_MAP = new TaratonList("Protect Item Map",
+            Text.literal("A list of items to protect from being dropped."), "protect_item_map.json",
+            new String[] {"UUID", "Name"});
+
+    /**
+     * Private constructor to prevent instantiation.
+     */
+    private ProtectItem() {}
+
+    /**
+     * Returns the singleton instance of ProtectItem.
+     * 
+     * @return The singleton instance of ProtectItem.
+     */
+    public static ProtectItem getInstance() {
+        return INSTANCE;
+    }
+
+    /**
+     * Toggles the protection status of the item currently held in the player's main hand.
+     * 
+     * @param context The command context containing the command source.
+     */
+    public int protect(CommandContext<FabricClientCommandSource> context) {
+        ItemStack heldStack = MinecraftClient.getInstance().player.getMainHandStack();
+        String itemUuid = getItemUuid(heldStack);
+        String itemName = heldStack.getName().getString();
+
+        if (itemUuid == null) {
+            Taraton.sendMessage(
+                    Text.literal("No UUID found for the held item.").formatted(Formatting.RED));
+        } else if (PROTECT_ITEM_MAP.map.containsKey(itemUuid)) {
+            PROTECT_ITEM_MAP.removeMap(itemUuid);
+            Taraton.sendMessage(Text.literal("Item removed from protect list: " + itemUuid)
+                    .formatted(Formatting.YELLOW));
+        } else {
+            PROTECT_ITEM_MAP.addMap(itemUuid, itemName, true);
+            Taraton.sendMessage(Text.literal("Item added to protect list: " + itemUuid)
+                    .formatted(Formatting.GREEN));
+        }
+
+        return 1;
+    }
+
+    /**
+     * Retrieves the UUID of the item from its NBT data.
+     * 
+     * @param stack The ItemStack from which to retrieve the UUID.
+     * @return The UUID of the item as a String, or null if not found.
+     */
+    @Nullable
+    private String getItemUuid(ItemStack stack) {
+        if (stack == null || stack.isEmpty()) {
+            return null;
+        }
+
+        NbtComponent customData = stack.get(DataComponentTypes.CUSTOM_DATA);
+        if (customData == null) {
+            return null;
+        }
+
+        NbtCompound nbt = customData.copyNbt();
+
+        // Safely navigate the NBT structure using Optional chaining
+        return nbt.getCompound("ExtraAttributes")
+                .flatMap(extraAttributes -> extraAttributes.getString("uuid")).orElse(null);
+    }
+
+    /**
+     * Checks if the item throw action should be canceled based on the player's click packet.
+     * 
+     * @param clickPacket The ClickSlotC2SPacket containing the click action to be checked.
+     * @return True if the throw action should be canceled, false otherwise.
+     */
+    public boolean shouldCancelThrow(ClickSlotC2SPacket clickPacket) {
+        if (clickPacket.actionType() == SlotActionType.THROW && clickPacket.slot() == -999) {
+            ItemStack cursorStack =
+                    MinecraftClient.getInstance().player.currentScreenHandler.getCursorStack();
+            return cancelStack(cursorStack);
+        }
+
+        return false;
+    }
+
+    /**
+     * Checks if the item drop action should be canceled based on the player's action packet.
+     * 
+     * @param actionPacket The PlayerActionC2SPacket containing the action to be checked.
+     * @return True if the drop action should be canceled, false otherwise.
+     */
+    public boolean shouldCancelDrop(PlayerActionC2SPacket actionPacket) {
+        PlayerActionC2SPacket.Action action = actionPacket.getAction();
+        if (action == PlayerActionC2SPacket.Action.DROP_ITEM
+                || action == PlayerActionC2SPacket.Action.DROP_ALL_ITEMS) {
+            ItemStack handStack = MinecraftClient.getInstance().player.getMainHandStack();
+            return cancelStack(handStack);
+        }
+
+        return false;
+    }
+
+    /**
+     * Checks if the item stack should be canceled from being dropped or thrown.
+     * 
+     * @param stack The ItemStack to check for protection.
+     * @return True if the item stack is protected and should not be dropped or thrown, false
+     *         otherwise.
+     */
+    private boolean cancelStack(ItemStack stack) {
+        if (stack == null || stack.isEmpty()) {
+            return false;
+        }
+
+        String itemUuid = getItemUuid(stack);
+        Text name = stack.getName();
+
+        // Check if the item UUID is in the protect list
+        if (itemUuid != null && PROTECT_ITEM_MAP.map.containsKey(itemUuid)) {
+            Taraton.sendMessage(
+                    Text.literal("Prevented dropping: ").formatted(Formatting.YELLOW).append(name));
+            return true;
+        }
+
+        return false;
+    }
+}

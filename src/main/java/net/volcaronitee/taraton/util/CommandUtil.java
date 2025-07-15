@@ -30,6 +30,7 @@ import net.volcaronitee.taraton.feature.general.ImagePreview;
 import net.volcaronitee.taraton.feature.general.WidgetDisplay;
 import net.volcaronitee.taraton.feature.qol.CommandHotkey;
 import net.volcaronitee.taraton.feature.qol.HideEntity;
+import net.volcaronitee.taraton.feature.qol.ProtectItem;
 import net.volcaronitee.taraton.util.helper.Contract;
 
 /**
@@ -65,6 +66,12 @@ public class CommandUtil {
 
                                 // Debug command
                                 .then(literal("debug").executes(CommandUtil::debug))
+
+                                // Protect command
+                                .then(literal("protect")
+                                        .executes(ProtectItem.getInstance()::protect))
+                                .then(literal("protectitem")
+                                        .executes(ProtectItem.getInstance()::protect))
 
                                 // Lists commands
                                 .then(ChatCommands.AVENGER_LIST.createCommand("avengerlist"))

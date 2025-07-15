@@ -176,6 +176,49 @@ public class TaratonList {
     }
 
     /**
+     * Adds a key-value pair to the list configuration.
+     * 
+     * @param key The key for the list entry.
+     * @param enabled True if the entry is enabled, false otherwise.
+     */
+    public void addList(String key, boolean enabled) {
+        listConfig.add(new KeyValuePair<>(key, enabled));
+        onSave(handler.instance());
+    }
+
+    /**
+     * Removes a key-value pair from the list configuration by its key.
+     * 
+     * @param key The key of the entry to be removed from the list configuration.
+     */
+    public void removeList(String key) {
+        listConfig.removeIf(pair -> pair.getKey().equals(key));
+        onSave(handler.instance());
+    }
+
+    /**
+     * Adds a key-value pair to the map configuration.
+     * 
+     * @param key The key for the map entry.
+     * @param value The value for the map entry.
+     * @param enabled True if the entry is enabled, false otherwise.
+     */
+    public void addMap(String key, String value, boolean enabled) {
+        mapConfig.add(new KeyValuePair<>(key, new KeyValuePair<>(value, enabled)));
+        onSave(handler.instance());
+    }
+
+    /**
+     * Removes a key-value pair from the map configuration by its key.
+     * 
+     * @param key The key of the entry to be removed from the map configuration.
+     */
+    public void removeMap(String key) {
+        mapConfig.removeIf(pair -> pair.getKey().equals(key));
+        onSave(handler.instance());
+    }
+
+    /**
      * Resets the configuration by deleting the configuration file and recreating the defaults.
      */
     public void reset() {
