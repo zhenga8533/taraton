@@ -103,6 +103,7 @@ public class TaratonList {
         loadDefault();
         MinecraftClient.getInstance().send(() -> {
             handler.load();
+            onSave(handler.instance());
         });
     }
 
