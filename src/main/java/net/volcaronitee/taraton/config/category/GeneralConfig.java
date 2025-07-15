@@ -5,6 +5,7 @@ import dev.isxander.yacl3.api.ConfigCategory;
 import dev.isxander.yacl3.api.Option;
 import dev.isxander.yacl3.api.OptionDescription;
 import dev.isxander.yacl3.api.OptionGroup;
+import dev.isxander.yacl3.api.controller.DoubleSliderControllerBuilder;
 import dev.isxander.yacl3.api.controller.IntegerSliderControllerBuilder;
 import dev.isxander.yacl3.config.v2.api.SerialEntry;
 import net.minecraft.text.Text;
@@ -199,6 +200,74 @@ public class GeneralConfig {
 
                         .build())
 
+                // Rendering Option Group
+                .group(OptionGroup.createBuilder().name(Text.literal("Rendering"))
+
+                        // Held Item Scale
+                        .option(Option.<Double>createBuilder().name(Text.literal("Held Item Scale"))
+                                .description(OptionDescription.createBuilder()
+                                        .webpImage(Identifier.of(Taraton.MOD_ID,
+                                                "config/general/held_item_scale.webp"))
+                                        .text(Text.literal(
+                                                "Sets the scale of the held item in the player's hand."))
+                                        .build())
+                                .binding(defaults.general.heldItemScale,
+                                        () -> config.general.heldItemScale,
+                                        newVal -> config.general.heldItemScale = newVal)
+                                .controller(opt -> DoubleSliderControllerBuilder.create(opt)
+                                        .range(0.1, 2.0).step(0.01))
+                                .build())
+
+                        // Held Item Rotation X
+                        .option(Option.<Integer>createBuilder()
+                                .name(Text.literal("Held Item Rotation X"))
+                                .description(OptionDescription.createBuilder()
+                                        .webpImage(Identifier.of(Taraton.MOD_ID,
+                                                "config/general/held_item_rotation_x.webp"))
+                                        .text(Text.literal(
+                                                "Sets the rotation of the held item on the X axis."))
+                                        .build())
+                                .binding(defaults.general.heldItemRotationX,
+                                        () -> config.general.heldItemRotationX,
+                                        newVal -> config.general.heldItemRotationX = newVal)
+                                .controller(opt -> IntegerSliderControllerBuilder.create(opt)
+                                        .range(-180, 180).step(5))
+                                .build())
+
+                        // Held Item Rotation Y
+                        .option(Option.<Integer>createBuilder()
+                                .name(Text.literal("Held Item Rotation Y"))
+                                .description(OptionDescription.createBuilder()
+                                        .webpImage(Identifier.of(Taraton.MOD_ID,
+                                                "config/general/held_item_rotation_y.webp"))
+                                        .text(Text.literal(
+                                                "Sets the rotation of the held item on the Y axis."))
+                                        .build())
+                                .binding(defaults.general.heldItemRotationY,
+                                        () -> config.general.heldItemRotationY,
+                                        newVal -> config.general.heldItemRotationY = newVal)
+                                .controller(opt -> IntegerSliderControllerBuilder.create(opt)
+                                        .range(-180, 180).step(5))
+                                .build())
+
+                        // Held Item Rotation Z
+                        .option(Option.<Integer>createBuilder()
+                                .name(Text.literal("Held Item Rotation Z"))
+                                .description(OptionDescription.createBuilder()
+                                        .webpImage(Identifier.of(Taraton.MOD_ID,
+                                                "config/general/held_item_rotation_z.webp"))
+                                        .text(Text.literal(
+                                                "Sets the rotation of the held item on the Z axis."))
+                                        .build())
+                                .binding(defaults.general.heldItemRotationZ,
+                                        () -> config.general.heldItemRotationZ,
+                                        newVal -> config.general.heldItemRotationZ = newVal)
+                                .controller(opt -> IntegerSliderControllerBuilder.create(opt)
+                                        .range(-180, 180).step(5))
+                                .build())
+
+                        .build())
+
                 // Server Option Group
                 .group(OptionGroup.createBuilder().name(Text.literal("Server"))
 
@@ -315,6 +384,19 @@ public class GeneralConfig {
 
     @SerialEntry
     public boolean widgetDisplay = true;
+
+    // Rendering Option Group
+    @SerialEntry
+    public double heldItemScale = 1.0;
+
+    @SerialEntry
+    public int heldItemRotationX = 0;
+
+    @SerialEntry
+    public int heldItemRotationY = 0;
+
+    @SerialEntry
+    public int heldItemRotationZ = 0;
 
     // Server Option Group
     @SerialEntry

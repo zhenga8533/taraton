@@ -15,6 +15,7 @@
     "EntityMixin",
     "EntityRendererMixin",
     "GameRendererMixin",
+    "HeldItemRendererMixin",
     "InGameHudMixin",
     "InGameOverlayRendererMixin",
     "KeepAliveS2CPacketMixin",
