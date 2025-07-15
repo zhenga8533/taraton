@@ -1,6 +1,7 @@
 package net.volcaronitee.taraton.feature.qol;
 
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.Text;
@@ -20,7 +21,8 @@ public class HideEntity {
     /**
      * Private constructor to prevent instantiation.
      */
-    private HideEntity() {}
+    private HideEntity() {
+    }
 
     /**
      * Returns the singleton instance of HideEntity.
@@ -32,7 +34,8 @@ public class HideEntity {
     }
 
     /**
-     * Checks if an entity should be hidden based on its distance from the main player.
+     * Checks if an entity should be hidden based on its distance from the main
+     * player.
      * 
      * @param entity The entity to check.
      * @return True if the entity should be hidden, false otherwise.
@@ -68,10 +71,12 @@ public class HideEntity {
     }
 
     /**
-     * Checks if the entity is a player and is within a certain distance from the main player.
+     * Checks if the entity is a player and is within a certain distance from the
+     * main player.
      * 
      * @param entity The entity to check.
-     * @return True if the entity is a player and is within the specified distance, false otherwise.
+     * @return True if the entity is a player and is within the specified distance,
+     *         false otherwise.
      */
     public boolean isClosePlayer(Entity entity) {
         int minDistance = TaratonConfig.getHandler().qol.hideClosePlayers;
@@ -82,6 +87,12 @@ public class HideEntity {
         // Get the main player and check if it's null or the same as the entity
         PlayerEntity mainPlayer = MinecraftClient.getInstance().player;
         if (mainPlayer == null || entity == mainPlayer) {
+            return false;
+        }
+
+        // Check if the entity is an NPC
+        ClientPlayNetworkHandler networkHandler = MinecraftClient.getInstance().getNetworkHandler();
+        if (networkHandler == null || networkHandler.getPlayerListEntry(entity.getUuid()) == null) {
             return false;
         }
 
