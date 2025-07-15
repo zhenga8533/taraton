@@ -79,7 +79,7 @@ public class TaratonJson {
      * 
      * @param client The Minecraft client instance, used for context.
      */
-    private static void saveInstances(MinecraftClient client) {
+    public static void saveInstances(MinecraftClient client) {
         for (JsonInstance jsonInstance : jsonInstances) {
             jsonInstance.save();
         }

@@ -15,6 +15,7 @@ import net.minecraft.util.Formatting;
 import net.volcaronitee.taraton.Taraton;
 import net.volcaronitee.taraton.config.TaratonConfig;
 import net.volcaronitee.taraton.config.TaratonData;
+import net.volcaronitee.taraton.config.TaratonJson;
 import net.volcaronitee.taraton.config.TaratonToggle;
 import net.volcaronitee.taraton.feature.chat.AutoKick;
 import net.volcaronitee.taraton.feature.chat.ChatAlert;
@@ -58,6 +59,9 @@ public class CommandUtil {
 
                                 // GUI command
                                 .then(literal("gui").executes(OverlayUtil::moveGui))
+
+                                // Save command
+                                .then(literal("save").executes(CommandUtil::save))
 
                                 // Debug command
                                 .then(literal("debug").executes(CommandUtil::debug))
@@ -158,6 +162,18 @@ public class CommandUtil {
     }
 
     /**
+     * Saves the current state of Taraton data to disk.
+     * 
+     * @param context The command context containing the source and arguments.
+     * @return 1 if the command was executed successfully, 0 otherwise.
+     */
+    private static int save(CommandContext<FabricClientCommandSource> context) {
+        TaratonJson.saveInstances(MinecraftClient.getInstance());
+        Taraton.sendMessage(Text.literal("Successfully saved data!").formatted(Formatting.GREEN));
+        return 1;
+    }
+
+    /**
      * Displays debug information for the Taraton.
      * 
      * @param context The command context containing the source and arguments.
@@ -166,7 +182,7 @@ public class CommandUtil {
     private static int debug(CommandContext<FabricClientCommandSource> context) {
         String debugMessage = String.format("Taraton Debug:\n%s\n\n%s\n\n%s",
                 PlayerUtil.debugPlayer(), LocationUtil.debugLocation(), PartyUtil.debugParty());
-        context.getSource().sendFeedback(Text.literal(debugMessage.strip()));
+        Taraton.sendMessage(Text.literal(debugMessage).formatted(Formatting.YELLOW));
         return 1;
     }
 
