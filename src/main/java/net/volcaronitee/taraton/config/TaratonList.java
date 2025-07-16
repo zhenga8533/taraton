@@ -182,8 +182,9 @@ public class TaratonList {
      * @param enabled True if the entry is enabled, false otherwise.
      */
     public void addList(String key, boolean enabled) {
-        listConfig.add(new KeyValuePair<>(key, enabled));
-        onSave(handler.instance());
+        TaratonList config = handler.instance();
+        config.listConfig.add(new KeyValuePair<>(key, enabled));
+        onSave(config);
     }
 
     /**
@@ -192,8 +193,9 @@ public class TaratonList {
      * @param key The key of the entry to be removed from the list configuration.
      */
     public void removeList(String key) {
-        listConfig.removeIf(pair -> pair.getKey().equals(key));
-        onSave(handler.instance());
+        TaratonList config = handler.instance();
+        config.listConfig.removeIf(pair -> pair.getKey().equals(key));
+        onSave(config);
     }
 
     /**
@@ -204,8 +206,9 @@ public class TaratonList {
      * @param enabled True if the entry is enabled, false otherwise.
      */
     public void addMap(String key, String value, boolean enabled) {
-        mapConfig.add(new KeyValuePair<>(key, new KeyValuePair<>(value, enabled)));
-        onSave(handler.instance());
+        TaratonList config = handler.instance();
+        config.mapConfig.add(new KeyValuePair<>(key, new KeyValuePair<>(value, enabled)));
+        onSave(config);
     }
 
     /**
@@ -214,8 +217,9 @@ public class TaratonList {
      * @param key The key of the entry to be removed from the map configuration.
      */
     public void removeMap(String key) {
-        mapConfig.removeIf(pair -> pair.getKey().equals(key));
-        onSave(handler.instance());
+        TaratonList config = handler.instance();
+        config.mapConfig.removeIf(pair -> pair.getKey().equals(key));
+        onSave(config);
     }
 
     /**
