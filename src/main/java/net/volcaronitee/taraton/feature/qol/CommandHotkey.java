@@ -137,11 +137,11 @@ public class CommandHotkey {
                             typedList.addAll(newVal);
                         })
                         .controller((option) -> KeyValueController.Builder.create(option).ratio(0.4)
-                                .keyController("Key", KeyBindController.Builder::create)
+                                .keyController("Keybind", KeyBindController.Builder::create)
                                 .valueController(null,
                                         (subOption) -> KeyValueController.Builder.create(subOption)
                                                 .ratio(2.0 / 3.0)
-                                                .keyController("Value",
+                                                .keyController("Command",
                                                         StringControllerBuilder::create)
                                                 .valueController("Enabled",
                                                         TickBoxControllerBuilder::create)))
