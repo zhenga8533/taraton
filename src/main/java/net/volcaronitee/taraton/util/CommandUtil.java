@@ -27,6 +27,7 @@ import net.volcaronitee.taraton.feature.chat.TextSubstitution;
 import net.volcaronitee.taraton.feature.combat.EntityHighlight;
 import net.volcaronitee.taraton.feature.crimson_isle.VanquisherWarp;
 import net.volcaronitee.taraton.feature.general.ImagePreview;
+import net.volcaronitee.taraton.feature.general.PlayerScale;
 import net.volcaronitee.taraton.feature.general.WidgetDisplay;
 import net.volcaronitee.taraton.feature.qol.CommandHotkey;
 import net.volcaronitee.taraton.feature.qol.HideEntity;
@@ -100,6 +101,8 @@ public class CommandUtil {
                                 .then(CustomEmote.EMOTE_MAP.createCommand("em"))
                                 .then(CommandHotkey.HOTKEY_MAP.createCommand("hotkeymap"))
                                 .then(CommandHotkey.HOTKEY_MAP.createCommand("hkm"))
+                                .then(PlayerScale.PLAYER_SCALE_MAP.createCommand("playerscalemap"))
+                                .then(PlayerScale.PLAYER_SCALE_MAP.createCommand("psm"))
                                 .then(ProtectItem.PROTECT_MAP.createCommand("protectmap"))
                                 .then(ProtectItem.PROTECT_MAP.createCommand("pm"))
                                 .then(TextSubstitution.SUBSTITUTION_MAP.createCommand("submap"))

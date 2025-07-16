@@ -19,7 +19,7 @@ public class LivingEntityMixin {
      * @param cir The callback info for the method, allowing modification of the return value.
      */
     @Inject(method = "getHandSwingDuration", at = @At("RETURN"), cancellable = true)
-    private void modifyHandSwingDuration(CallbackInfoReturnable<Integer> cir) {
+    private void taraton$modifyHandSwingDuration(CallbackInfoReturnable<Integer> cir) {
         double speedMultiplier = TaratonConfig.getHandler().general.heldItemSwingSpeed;
         LivingEntity entity = (LivingEntity) (Object) this;
 

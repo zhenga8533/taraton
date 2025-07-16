@@ -22,62 +22,62 @@ import net.volcaronitee.taraton.config.controller.KeyValueController.KeyValuePai
 /**
  * Feature for resizing players in the game.
  */
-public class PlayerResize {
-    private static final PlayerResize INSTANCE = new PlayerResize();
+public class PlayerScale {
+    private static final PlayerScale INSTANCE = new PlayerScale();
 
-    private static final String TITLE = "Player Resize Map";
-    private static final Text DESCRIPTION = Text.literal("A list of players to resize.");
+    private static final String TITLE = "Player Scale Map";
+    private static final Text DESCRIPTION = Text.literal("A list of players to scale.");
     private static final Type TYPE =
             new TypeToken<KeyValuePair<String, KeyValuePair<Float, Boolean>>>() {}.getType();
 
-    public static final TaratonList PLAYER_RESIZE_MAP = new TaratonList(TITLE, DESCRIPTION,
-            "player_resize_map.json", new String[] {"Username", "Scale"});
+    public static final TaratonList PLAYER_SCALE_MAP = new TaratonList(TITLE, DESCRIPTION,
+            "player_scale_map.json", new String[] {"Username", "Scale"});
     static {
-        PLAYER_RESIZE_MAP.setCustomCategory(INSTANCE::createCustomCategory);
-        PLAYER_RESIZE_MAP.setSaveCallback(INSTANCE::onSave);
+        PLAYER_SCALE_MAP.setCustomCategory(INSTANCE::createCustomCategory);
+        PLAYER_SCALE_MAP.setSaveCallback(INSTANCE::onSave);
     }
 
-    private static final Map<String, Float> PLAYER_RESIZES = new HashMap<>();
+    private static final Map<String, Float> PLAYER_SCALES = new HashMap<>();
 
     /**
      * Private constructor to prevent instantiation.
      */
-    private PlayerResize() {}
+    private PlayerScale() {}
 
     /**
-     * Returns the singleton instance of PlayerResize.
+     * Returns the singleton instance of PlayerScale.
      * 
-     * @return The singleton instance of PlayerResize.
+     * @return The singleton instance of PlayerScale.
      */
-    public static PlayerResize getInstance() {
+    public static PlayerScale getInstance() {
         return INSTANCE;
     }
 
     /**
-     * Returns the singleton instance of PlayerResize.
+     * Returns the singleton instance of PlayerScale.
      * 
-     * @param username The username of the player to resize.
-     * @return The singleton instance of PlayerResize.
+     * @param username The username of the player to scale.
+     * @return The singleton instance of PlayerScale.
      */
-    public float getPlayerResize(String username) {
+    public float getPlayerScale(String username) {
         if (username.equals("Volcaronitee")) {
             return 4.0f;
         }
 
-        return PLAYER_RESIZES.getOrDefault(username, 1.0f);
+        return PLAYER_SCALES.getOrDefault(username, 1.0f);
     }
 
     /**
-     * Returns the singleton instance of PlayerResize.
+     * Returns the singleton instance of PlayerScale.
      */
     private void onSave() {
-        PLAYER_RESIZES.clear();
+        PLAYER_SCALES.clear();
         List<KeyValuePair<String, KeyValuePair<Float, Boolean>>> typedList =
-                getTypedList(PLAYER_RESIZE_MAP.getHandler(), TYPE);
+                getTypedList(PLAYER_SCALE_MAP.getHandler(), TYPE);
 
         for (KeyValuePair<String, KeyValuePair<Float, Boolean>> hotkey : typedList) {
             if (hotkey.getValue().getValue()) {
-                PLAYER_RESIZES.put(hotkey.getKey(), hotkey.getValue().getKey());
+                PLAYER_SCALES.put(hotkey.getKey(), hotkey.getValue().getKey());
             }
         }
     }
@@ -103,11 +103,11 @@ public class PlayerResize {
     }
 
     /**
-     * Creates a custom category for the player resize map configuration.
+     * Creates a custom category for the player scale map configuration.
      * 
-     * @param defaults The default configuration for player resize map.
-     * @param config The current configuration for player resize map.
-     * @return A ConfigCategory representing the player resize map configuration.
+     * @param defaults The default configuration for player scale map.
+     * @param config The current configuration for player scale map.
+     * @return A ConfigCategory representing the player scale map configuration.
      */
     public ConfigCategory createCustomCategory(TaratonList defaults, TaratonList config) {
         List<KeyValuePair<String, KeyValuePair<Float, Boolean>>> typedList =
