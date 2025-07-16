@@ -25,6 +25,7 @@ import net.volcaronitee.taraton.feature.chat.JoinParty;
 import net.volcaronitee.taraton.feature.chat.SpamHider;
 import net.volcaronitee.taraton.feature.chat.TextSubstitution;
 import net.volcaronitee.taraton.feature.combat.EntityHighlight;
+import net.volcaronitee.taraton.feature.container.WardrobeSwap;
 import net.volcaronitee.taraton.feature.crimson_isle.VanquisherWarp;
 import net.volcaronitee.taraton.feature.general.ImagePreview;
 import net.volcaronitee.taraton.feature.general.PlayerScale;
@@ -61,6 +62,10 @@ public class CommandUtil {
 
                                 // GUI command
                                 .then(literal("gui").executes(OverlayUtil::moveGui))
+
+                                // Wardrobe Swap command
+                                .then(literal("wardrobe")
+                                        .executes(WardrobeSwap.getInstance()::setWardrobe))
 
                                 // Save command
                                 .then(literal("save").executes(CommandUtil::save))

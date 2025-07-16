@@ -207,6 +207,7 @@ public class TaratonList {
      */
     public void addMap(String key, String value, boolean enabled) {
         TaratonList config = handler.instance();
+        config.mapConfig.removeIf(pair -> pair.getKey().equals(key));
         config.mapConfig.add(new KeyValuePair<>(key, new KeyValuePair<>(value, enabled)));
         onSave(config);
     }
@@ -258,7 +259,7 @@ public class TaratonList {
      * 
      * @param config The configuration object containing the current settings.
      */
-    private void onSave(TaratonList config) {
+    public void onSave(TaratonList config) {
         // Update the static lists based on the configuration
         list.clear();
         for (KeyValuePair<String, Boolean> pair : config.listConfig) {
