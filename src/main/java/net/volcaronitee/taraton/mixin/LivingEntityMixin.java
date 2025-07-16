@@ -25,9 +25,10 @@ public class LivingEntityMixin {
 
         // Only apply to the main player to avoid affecting other entities
         if (speedMultiplier != 1.0 && entity == MinecraftClient.getInstance().player) {
-            int originalDuration = cir.getReturnValueI();
-            int newDuration = (int) (originalDuration / speedMultiplier);
-            cir.setReturnValue(Math.max(1, newDuration));
+            int originalDuration = cir.getReturnValue();
+            double calculatedDuration = Math.max(1.0, originalDuration / speedMultiplier);
+            int modifiedDuration = (int) Math.round(calculatedDuration);
+            cir.setReturnValue(modifiedDuration);
         }
     }
 }
