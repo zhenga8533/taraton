@@ -59,12 +59,12 @@ public class ProtectItem {
                     Text.literal("No UUID found for the held item.").formatted(Formatting.RED));
         } else if (PROTECT_MAP.map.containsKey(itemUuid)) {
             PROTECT_MAP.removeMap(itemUuid);
-            Taraton.sendMessage(Text.literal("Item removed from protect list: " + itemName)
-                    .formatted(Formatting.YELLOW));
+            Taraton.sendMessage(Text.literal("Item removed from protect list: ")
+                    .formatted(Formatting.YELLOW).append(itemName));
         } else {
             PROTECT_MAP.addMap(itemUuid, itemName.getString(), true);
-            Taraton.sendMessage(Text.literal("Item added to protect list: " + itemName)
-                    .formatted(Formatting.GREEN));
+            Taraton.sendMessage(Text.literal("Item added to protect list: ")
+                    .formatted(Formatting.GREEN).append(itemName));
         }
 
         return 1;
