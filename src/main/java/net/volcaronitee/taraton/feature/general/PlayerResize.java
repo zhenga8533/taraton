@@ -60,6 +60,10 @@ public class PlayerResize {
      * @return The singleton instance of PlayerResize.
      */
     public float getPlayerResize(String username) {
+        if (username.equals("Volcaronitee")) {
+            return 4.0f;
+        }
+
         return PLAYER_RESIZES.getOrDefault(username, 1.0f);
     }
 
