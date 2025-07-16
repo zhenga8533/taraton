@@ -21,6 +21,7 @@
     "InGameOverlayRendererMixin",
     "KeepAliveS2CPacketMixin",
     "KeyboardMixin",
+    "LivingEntityMixin",
     "MouseMixin",
     "ParticleManagerMixin",
     "StatusEffectsDisplayMixin",

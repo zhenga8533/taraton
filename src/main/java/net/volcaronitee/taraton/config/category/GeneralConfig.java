@@ -218,6 +218,22 @@ public class GeneralConfig {
                                         .range(0.1, 2.0).step(0.01))
                                 .build())
 
+                        // Held Item Swing Speed
+                        .option(Option.<Double>createBuilder()
+                                .name(Text.literal("Held Item Swing Speed"))
+                                .description(OptionDescription.createBuilder()
+                                        .webpImage(Identifier.of(Taraton.MOD_ID,
+                                                "config/general/held_item_swing_speed.webp"))
+                                        .text(Text.literal(
+                                                "Sets the speed of the held item swing animation."))
+                                        .build())
+                                .binding(defaults.general.heldItemSwingSpeed,
+                                        () -> config.general.heldItemSwingSpeed,
+                                        newVal -> config.general.heldItemSwingSpeed = newVal)
+                                .controller(opt -> DoubleSliderControllerBuilder.create(opt)
+                                        .range(0.1, 4.0).step(0.1))
+                                .build())
+
                         // Held Item Rotation X
                         .option(Option.<Integer>createBuilder()
                                 .name(Text.literal("Held Item Rotation X"))
@@ -388,6 +404,9 @@ public class GeneralConfig {
     // Rendering Option Group
     @SerialEntry
     public double heldItemScale = 1.0;
+
+    @SerialEntry
+    public double heldItemSwingSpeed = 1.0;
 
     @SerialEntry
     public int heldItemRotationX = 0;
