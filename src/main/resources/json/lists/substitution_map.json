@@ -1,7 +1,9 @@
 {
   "mapConfig": [
     { "key": "Somxone", "value": { "key": "§3§lGringo§r", "value": true } },
-    { "key": "kwuromi", "value": { "key": "§e§lReiss§r", "value": true } },
-    { "key": "valyn", "value": { "key": "§0§lHei Gui§r", "value": true } }
+    { "key": "kwuromi", "value": { "key": "§e§lGoodnight§r", "value": true } },
+    { "key": "bnnoah", "value": { "key": "§0§lHei Gui§r", "value": true } },
+    { "key": "Serten", "value": { "key": "§9§lPopo§r", "value": true } },
+    { "key": "bloosi", "value": { "key": "§d§lHomewrecker§r", "value": true } }
   ]
 }
