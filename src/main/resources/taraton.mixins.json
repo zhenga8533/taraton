@@ -10,6 +10,7 @@
     "accessor.InGameHudAccessor",
     "accessor.WorldRendererAccessor",
     "ChatScreenMixin",
+    "ClientCommonNetworkHandlerMixin",
     "ClientPlayerEntityMixin",
     "ClientPlayNetworkHandlerMixin",
     "EntityMixin",

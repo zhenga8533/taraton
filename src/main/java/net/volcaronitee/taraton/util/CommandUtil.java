@@ -100,6 +100,8 @@ public class CommandUtil {
                                 .then(CustomEmote.EMOTE_MAP.createCommand("em"))
                                 .then(CommandHotkey.HOTKEY_MAP.createCommand("hotkeymap"))
                                 .then(CommandHotkey.HOTKEY_MAP.createCommand("hkm"))
+                                .then(ProtectItem.PROTECT_MAP.createCommand("protectmap"))
+                                .then(ProtectItem.PROTECT_MAP.createCommand("pm"))
                                 .then(TextSubstitution.SUBSTITUTION_MAP.createCommand("submap"))
                                 .then(TextSubstitution.SUBSTITUTION_MAP.createCommand("sm"))
 

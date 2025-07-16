@@ -23,9 +23,12 @@ import net.volcaronitee.taraton.config.TaratonList;
 public class ProtectItem {
     private static final ProtectItem INSTANCE = new ProtectItem();
 
-    private static final TaratonList PROTECT_ITEM_MAP = new TaratonList("Protect Item Map",
-            Text.literal("A list of items to protect from being dropped."), "protect_item_map.json",
+    public static final TaratonList PROTECT_MAP = new TaratonList("Protect Map",
+            Text.literal("A list of items to protect from being dropped."), "protect_map.json",
             new String[] {"UUID", "Name"});
+    static {
+        PROTECT_MAP.setIsMap(true);
+    }
 
     /**
      * Private constructor to prevent instantiation.
@@ -49,18 +52,18 @@ public class ProtectItem {
     public int protect(CommandContext<FabricClientCommandSource> context) {
         ItemStack heldStack = MinecraftClient.getInstance().player.getMainHandStack();
         String itemUuid = getItemUuid(heldStack);
-        String itemName = heldStack.getName().getString();
+        Text itemName = heldStack.getName();
 
         if (itemUuid == null) {
             Taraton.sendMessage(
                     Text.literal("No UUID found for the held item.").formatted(Formatting.RED));
-        } else if (PROTECT_ITEM_MAP.map.containsKey(itemUuid)) {
-            PROTECT_ITEM_MAP.removeMap(itemUuid);
-            Taraton.sendMessage(Text.literal("Item removed from protect list: " + itemUuid)
+        } else if (PROTECT_MAP.map.containsKey(itemUuid)) {
+            PROTECT_MAP.removeMap(itemUuid);
+            Taraton.sendMessage(Text.literal("Item removed from protect list: " + itemName)
                     .formatted(Formatting.YELLOW));
         } else {
-            PROTECT_ITEM_MAP.addMap(itemUuid, itemName, true);
-            Taraton.sendMessage(Text.literal("Item added to protect list: " + itemUuid)
+            PROTECT_MAP.addMap(itemUuid, itemName.getString(), true);
+            Taraton.sendMessage(Text.literal("Item added to protect list: " + itemName)
                     .formatted(Formatting.GREEN));
         }
 
@@ -85,10 +88,7 @@ public class ProtectItem {
         }
 
         NbtCompound nbt = customData.copyNbt();
-
-        // Safely navigate the NBT structure using Optional chaining
-        return nbt.getCompound("ExtraAttributes")
-                .flatMap(extraAttributes -> extraAttributes.getString("uuid")).orElse(null);
+        return nbt.getString("uuid").orElse(null);
     }
 
     /**
@@ -140,7 +140,7 @@ public class ProtectItem {
         Text name = stack.getName();
 
         // Check if the item UUID is in the protect list
-        if (itemUuid != null && PROTECT_ITEM_MAP.map.containsKey(itemUuid)) {
+        if (itemUuid != null && PROTECT_MAP.map.containsKey(itemUuid)) {
             Taraton.sendMessage(
                     Text.literal("Prevented dropping: ").formatted(Formatting.YELLOW).append(name));
             return true;
