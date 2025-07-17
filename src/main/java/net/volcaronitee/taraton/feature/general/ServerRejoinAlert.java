@@ -52,7 +52,7 @@ public class ServerRejoinAlert {
                     .replaceAll("(?i)(\\d+)(h|m)\\s*(0m\\s*|0s)?", "$1$2").replaceAll("\\s+", " ")
                     .trim();
 
-            Taraton.sendMessage(Text.literal("Rjoined ").formatted(Formatting.RED)
+            Taraton.sendMessage(Text.literal("Rejoined ").formatted(Formatting.RED)
                     .append(Text.literal(INSTANCE.currentServer).formatted(Formatting.GRAY))
                     .append(Text.literal(" after ").formatted(Formatting.RED))
                     .append(Text.literal(formattedDuration).formatted(Formatting.GRAY))
