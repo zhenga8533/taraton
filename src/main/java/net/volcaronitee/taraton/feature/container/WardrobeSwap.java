@@ -214,6 +214,10 @@ public class WardrobeSwap {
      */
     private static class WardrobeScreen extends HandledScreen<ScreenHandler> {
         private final HandledScreen<?> parent;
+        private final Text instructions =
+                Text.literal("Hover over a slot and press any key to bind it.")
+                        .formatted(Formatting.YELLOW);
+        private Text tooltip = instructions.copy();
 
         /**
          * Constructor for the WardrobeScreen.
@@ -239,9 +243,7 @@ public class WardrobeSwap {
             this.parent.render(context, mouseX, mouseY, delta);
             parentSuppressor.setSuppressTooltip(false);
 
-            context.drawTooltip(this.textRenderer,
-                    Text.literal("Hover over a slot and press any key to bind it."), mouseX,
-                    mouseY);
+            context.drawTooltip(this.textRenderer, tooltip, mouseX, mouseY);
         }
 
         @Override
@@ -270,10 +272,23 @@ public class WardrobeSwap {
                     WARDROBE_SWAP_MAP.getHandler().save();
                     INSTANCE.onSave();
 
-                    Taraton.sendMessage(Text
-                            .literal("Set hotkey for slot " + slotIndex + " to "
-                                    + GLFW.glfwGetKeyName(keyCode, scanCode).toUpperCase() + "!")
-                            .formatted(Formatting.GREEN));
+                    // Get the key name for display
+                    String keyName = GLFW.glfwGetKeyName(keyCode, scanCode);
+                    keyName = keyName != null ? keyName.toUpperCase() : "???";
+
+                    // Show confirmation tooltip
+                    Text confirmation = Text
+                            .literal("Set hotkey for slot " + slotIndex + " to " + keyName + "!")
+                            .formatted(Formatting.GREEN);
+                    tooltip = confirmation.copy();
+                    ScheduleUtil.schedule(() -> {
+                        if (tooltip.getString().equals(confirmation.getString())) {
+                            tooltip = instructions.copy();
+                        }
+                    }, 60);
+
+                    // Send confirmation message
+                    Taraton.sendMessage(tooltip);
                 }
             }
 
