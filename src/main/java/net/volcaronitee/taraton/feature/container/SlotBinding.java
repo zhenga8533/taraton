@@ -24,11 +24,13 @@ import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.gui.screen.ingame.InventoryScreen;
+import net.minecraft.client.network.ClientPlayerInteractionManager;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
+import net.minecraft.screen.slot.SlotActionType;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.volcaronitee.taraton.Taraton;
@@ -46,6 +48,9 @@ public class SlotBinding {
 
     private static final int INVENTORY_INDEX = 5;
     private static final int INVENTORY_SLOTS = 39;
+
+    private static final int HOTBAR_START_INDEX = 36;
+    private static final int HOTBAR_END_INDEX = 44;
 
     private static final String TITLE = "Slot Binding Map";
     private static final Text DESCRIPTION = Text.literal("A list of slot bindings.");
@@ -162,8 +167,69 @@ public class SlotBinding {
      * @param button The mouse button that was clicked.
      * @return True if the mouse click should be allowed, false otherwise.
      */
+    /**
+     * Overrides mouse clicks if targeting a slot binding. If a user Shift-clicks a slot with a
+     * single binding, it will swap the items with its bound hotbar/inventory slot.
+     *
+     * @param screen The screen where the mouse click occurred.
+     * @param mouseX The x-coordinate of the mouse click.
+     * @param mouseY The y-coordinate of the mouse click.
+     * @param button The mouse button that was clicked.
+     * @return False if the click was handled and should be cancelled, true otherwise.
+     */
     private boolean allowMouseClick(Screen screen, double mouseX, double mouseY, int button) {
-        return true;
+        // We only care about Shift + Left Click on a container screen
+        if (!Screen.hasShiftDown() || button != 0
+                || !(screen instanceof HandledScreen<?> handledScreen)) {
+            return true;
+        }
+
+        // Check if the screen has slot bindings
+        HandledScreenAccessor accessor = (HandledScreenAccessor) handledScreen;
+        Slot hoveredSlot = accessor.getFocusedSlot();
+
+        if (hoveredSlot == null || !SLOT_BINDINGS.containsKey(hoveredSlot.id)) {
+            return true;
+        }
+
+        List<Integer> targets = SLOT_BINDINGS.get(hoveredSlot.id);
+
+        // Check that there is exactly one binding. Do nothing if there are multiple.
+        if (targets == null || targets.size() != 1) {
+            Taraton.sendMessage(Text.literal("You can only swap items with a single binding!")
+                    .formatted(Formatting.RED));
+            return true;
+        }
+
+        // Swap logic
+        int sourceSlotId = hoveredSlot.id;
+        int targetSlotId = targets.get(0);
+
+        // Standard player inventory slot IDs
+        int inventorySlotId;
+        int hotbarSlotIndex;
+
+        // Determine which slot is in the hotbar and which is in the main inventory.
+        if (sourceSlotId >= HOTBAR_START_INDEX && sourceSlotId <= HOTBAR_END_INDEX) {
+            hotbarSlotIndex = sourceSlotId - HOTBAR_START_INDEX;
+            inventorySlotId = targetSlotId;
+        } else if (targetSlotId >= HOTBAR_START_INDEX && targetSlotId <= HOTBAR_END_INDEX) {
+            hotbarSlotIndex = targetSlotId - HOTBAR_START_INDEX;
+            inventorySlotId = sourceSlotId;
+        } else {
+            return true;
+        }
+
+        // Get objects needed for the interaction.
+        MinecraftClient client = MinecraftClient.getInstance();
+        ClientPlayerInteractionManager interactionManager = client.interactionManager;
+        int syncId = handledScreen.getScreenHandler().syncId;
+
+        // Perform the swap
+        interactionManager.clickSlot(syncId, inventorySlotId, hotbarSlotIndex, SlotActionType.SWAP,
+                client.player);
+
+        return false;
     }
 
     /**
@@ -427,6 +493,16 @@ public class SlotBinding {
          * @param slot The slot index to bind.
          */
         private void createBinding(int slot) {
+            // Check that one slot is a hotbar slot and the other is an inventory slot
+            if (!(currentSlot >= HOTBAR_START_INDEX && currentSlot <= HOTBAR_END_INDEX)
+                    && !(slot >= HOTBAR_START_INDEX && slot <= HOTBAR_END_INDEX)) {
+                Text confirmation =
+                        Text.literal("You can only bind a hotbar slot to an inventory slot!")
+                                .formatted(Formatting.RED);
+                confirmTooltip(confirmation);
+                return;
+            }
+
             // If binding a different slot, update the current bind
             TaratonList config = SLOT_BINDING_MAP.getInstance();
             List<KeyValuePair<Integer, KeyValuePair<Integer, Boolean>>> typedList =
