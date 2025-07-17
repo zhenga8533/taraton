@@ -54,7 +54,7 @@ public class ChatAlert {
      * @param overlay Whether the message is an overlay message.
      */
     private void handleChatAlert(Text message, boolean overlay) {
-        if (!TaratonConfig.getHandler().chat.chatAlert) {
+        if (!TaratonConfig.getInstance().chat.chatAlert) {
             return;
         }
 

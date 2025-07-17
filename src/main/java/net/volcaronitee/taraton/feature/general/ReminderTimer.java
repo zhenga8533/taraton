@@ -57,7 +57,7 @@ public class ReminderTimer {
      * @param client The Minecraft client instance.
      */
     private void onTick(MinecraftClient client) {
-        if (!TaratonConfig.getHandler().general.reminderTimer || client == null
+        if (!TaratonConfig.getInstance().general.reminderTimer || client == null
                 || client.world == null) {
             return;
         }

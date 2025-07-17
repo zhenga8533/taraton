@@ -80,7 +80,7 @@ public class TextSubstitution {
         }
 
         // Loop through the substitution map and replace text
-        if (TaratonConfig.getHandler().chat.textSubstitution) {
+        if (TaratonConfig.getInstance().chat.textSubstitution) {
             for (Map.Entry<String, String> entry : SUBSTITUTION_MAP.map.entrySet()) {
                 String find = entry.getKey();
                 String replace = entry.getValue();

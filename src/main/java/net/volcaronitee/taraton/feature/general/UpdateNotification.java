@@ -57,7 +57,7 @@ public class UpdateNotification {
      * If an update is available, sends a clickable chat message to the player.
      */
     private static void notifyPlayer() {
-        if (!TaratonConfig.getHandler().general.updateNotification || !updateAvailable) {
+        if (!TaratonConfig.getInstance().general.updateNotification || !updateAvailable) {
             return;
         }
 

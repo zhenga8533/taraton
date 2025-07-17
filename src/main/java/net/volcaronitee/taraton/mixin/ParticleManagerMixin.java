@@ -33,7 +33,7 @@ public class ParticleManagerMixin {
     private static void taraton$renderParticles(Camera camera, float tickProgress,
             VertexConsumerProvider.Immediate vertexConsumers, ParticleTextureSheet sheet,
             Queue<Particle> particles, CallbackInfo ci) {
-        if (!TaratonConfig.getHandler().qol.hideAllParticles) {
+        if (!TaratonConfig.getInstance().qol.hideAllParticles) {
             return;
         }
 

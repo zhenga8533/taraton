@@ -25,7 +25,7 @@ public abstract class StatusEffectsDisplayMixin {
     @Inject(method = "drawStatusEffects", at = @At("HEAD"), cancellable = true)
     private void taraton$hideStatusEffects(DrawContext context, int mouseX, int mouseY,
             float deltaTicks, CallbackInfo ci) {
-        if (TaratonConfig.getHandler().qol.hidePotionEffects) {
+        if (TaratonConfig.getInstance().qol.hidePotionEffects) {
             ci.cancel();
         }
     }

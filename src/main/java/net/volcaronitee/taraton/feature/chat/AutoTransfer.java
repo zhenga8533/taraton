@@ -41,7 +41,7 @@ public class AutoTransfer {
      * @param overlay Whether the message is an overlay message.
      */
     private void handleAutoTransfer(Text message, boolean overlay) {
-        ChatConfig.AutoTransfer autoTransfer = TaratonConfig.getHandler().chat.autoTransfer;
+        ChatConfig.AutoTransfer autoTransfer = TaratonConfig.getInstance().chat.autoTransfer;
         if (autoTransfer == ChatConfig.AutoTransfer.OFF || overlay) {
             return;
         }
@@ -67,7 +67,7 @@ public class AutoTransfer {
      * @param text The message text to check for transfer patterns.
      */
     private void handleOnTransfer(String text) {
-        if (TaratonConfig.getHandler().chat.autoTransfer != ChatConfig.AutoTransfer.ON_TRANSFER) {
+        if (TaratonConfig.getInstance().chat.autoTransfer != ChatConfig.AutoTransfer.ON_TRANSFER) {
             return;
         }
 
@@ -94,7 +94,7 @@ public class AutoTransfer {
      * @param text The message text to check for kick patterns.
      */
     private void handleOnKick(String text) {
-        if (TaratonConfig.getHandler().chat.autoTransfer != ChatConfig.AutoTransfer.ON_KICK
+        if (TaratonConfig.getInstance().chat.autoTransfer != ChatConfig.AutoTransfer.ON_KICK
                 || !PartyUtil.isInParty()) {
             return;
         }

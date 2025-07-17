@@ -25,7 +25,7 @@ public abstract class InGameHudMixin {
     @Inject(method = "renderStatusEffectOverlay", at = @At("HEAD"), cancellable = true)
     private void taraton$hideStatusEffectsOnHud(DrawContext context, RenderTickCounter tickCounter,
             CallbackInfo ci) {
-        if (TaratonConfig.getHandler().qol.hidePotionEffects) {
+        if (TaratonConfig.getInstance().qol.hidePotionEffects) {
             ci.cancel();
         }
     }

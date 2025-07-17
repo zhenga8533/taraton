@@ -116,8 +116,17 @@ public class TaratonList {
      * 
      * @return The ConfigClassHandler for this ListUtil instance.
      */
-    public TaratonList getHandler() {
+    public TaratonList getInstance() {
         return handler.instance();
+    }
+
+    /**
+     * Gets the handler for this ListUtil instance.
+     * 
+     * @return The ConfigClassHandler for this ListUtil instance.
+     */
+    public ConfigClassHandler<TaratonList> getHandler() {
+        return handler;
     }
 
     /**
@@ -259,7 +268,7 @@ public class TaratonList {
      * 
      * @param config The configuration object containing the current settings.
      */
-    public void onSave(TaratonList config) {
+    private void onSave(TaratonList config) {
         // Update the static lists based on the configuration
         list.clear();
         for (KeyValuePair<String, Boolean> pair : config.listConfig) {

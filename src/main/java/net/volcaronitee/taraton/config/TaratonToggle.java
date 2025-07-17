@@ -38,7 +38,7 @@ public class TaratonToggle {
      * 
      * @return The ConfigClassHandler for Taraton toggles.
      */
-    public static TaratonToggle getHandler() {
+    public static TaratonToggle getInstance() {
         return HANDLER.instance();
     }
 

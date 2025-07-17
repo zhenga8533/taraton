@@ -24,23 +24,23 @@ public class ServerStatus {
 
     private static final List<LineContent> LINES = List.of(
             new LineContent("§8[§6XYZ§8]§r ", "§7-195, 88, 58",
-                    () -> TaratonToggle.getHandler().general.xyz),
+                    () -> TaratonToggle.getInstance().general.xyz),
             new LineContent("§8[§6Y/P§8]§r ", "§7-89.15 / 30.89",
-                    () -> TaratonToggle.getHandler().general.yawPitch),
+                    () -> TaratonToggle.getInstance().general.yawPitch),
             new LineContent("§8[§6ANG§8]§r ", "§7East",
-                    () -> TaratonToggle.getHandler().general.direction),
+                    () -> TaratonToggle.getInstance().general.direction),
             new LineContent("§8[§6PNG§8]§r ", "§a58 §7ms",
-                    () -> TaratonToggle.getHandler().general.ping),
+                    () -> TaratonToggle.getInstance().general.ping),
             new LineContent("§8[§6FPS§8]§r ", "§a60 §7fps",
-                    () -> TaratonToggle.getHandler().general.fps),
+                    () -> TaratonToggle.getInstance().general.fps),
             new LineContent("§8[§6TPS§8]§r ", "§a19.8 §7tps",
-                    () -> TaratonToggle.getHandler().general.tps),
+                    () -> TaratonToggle.getInstance().general.tps),
             new LineContent("§8[§6CPS§8]§r ", "§a0 §7: §a0",
-                    () -> TaratonToggle.getHandler().general.cps),
+                    () -> TaratonToggle.getInstance().general.cps),
             new LineContent("§8[§6DAY§8]§r ", "§a0.75",
-                    () -> TaratonToggle.getHandler().general.day));
+                    () -> TaratonToggle.getInstance().general.day));
     private static final Overlay OVERLAY = OverlayUtil.createOverlay("server_status",
-            () -> TaratonConfig.getHandler().general.serverStatus, LINES);
+            () -> TaratonConfig.getInstance().general.serverStatus, LINES);
 
     // Fields to store server status information
     private int x = 0;
@@ -207,7 +207,7 @@ public class ServerStatus {
      * Updates the overlay with the current server status information.
      */
     private void updateOverlay() {
-        if (!TaratonConfig.getHandler().general.serverStatus)
+        if (!TaratonConfig.getInstance().general.serverStatus)
             return;
 
         // Update the overlay lines with the current values

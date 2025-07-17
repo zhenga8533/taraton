@@ -38,7 +38,7 @@ public class SkyBlockLevelUpAlert {
      * @param overlay Whether the message is an overlay message.
      */
     private void parseMessage(Text message, boolean overlay) {
-        if (!TaratonConfig.getHandler().general.skyblockLevelUpAlert || overlay) {
+        if (!TaratonConfig.getInstance().general.skyblockLevelUpAlert || overlay) {
             return;
         }
 

@@ -83,7 +83,7 @@ public class EntityHighlight {
 
     static {
         OverlayUtil.createOverlay("entity_counter",
-                () -> TaratonConfig.getHandler().combat.entityCounter, LINES);
+                () -> TaratonConfig.getInstance().combat.entityCounter, LINES);
     }
 
     /**
@@ -116,7 +116,7 @@ public class EntityHighlight {
      */
     private void scanWorld(MinecraftClient client) {
         HIGHLIGHTED_ENTITIES.clear();
-        if (!TaratonConfig.getHandler().combat.entityHighlight || client.world == null) {
+        if (!TaratonConfig.getInstance().combat.entityHighlight || client.world == null) {
             return;
         }
 

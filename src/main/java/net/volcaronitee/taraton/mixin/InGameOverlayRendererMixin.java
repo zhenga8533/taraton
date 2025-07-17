@@ -26,6 +26,6 @@ public class InGameOverlayRendererMixin {
             target = "Lnet/minecraft/client/util/math/MatrixStack;translate(FFF)V"))
     private static void taraton$renderFireOverlay(MatrixStack matrices,
             VertexConsumerProvider vertexConsumers, CallbackInfo ci) {
-        matrices.translate(0.0, TaratonConfig.getHandler().qol.lowFire, 0.0);
+        matrices.translate(0.0, TaratonConfig.getInstance().qol.lowFire, 0.0);
     }
 }

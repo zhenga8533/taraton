@@ -34,7 +34,7 @@ public class ServerRejoinAlert {
      * Handles the location update event. This method checks if the server rejoin alert
      */
     private void onLocationUpdate() {
-        if (!TaratonConfig.getHandler().general.serverRejoinAlert) {
+        if (!TaratonConfig.getInstance().general.serverRejoinAlert) {
             return;
         }
 

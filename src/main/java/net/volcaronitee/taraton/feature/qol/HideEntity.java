@@ -54,7 +54,7 @@ public class HideEntity {
      * @return True if the entity is too far away, false otherwise.
      */
     public boolean isFarEntity(Entity entity) {
-        int maxDistance = TaratonConfig.getHandler().qol.hideFarEntities;
+        int maxDistance = TaratonConfig.getInstance().qol.hideFarEntities;
         if (maxDistance == 0) {
             return false;
         }
@@ -76,7 +76,7 @@ public class HideEntity {
      * @return True if the entity is a player and is within the specified distance, false otherwise.
      */
     public boolean isClosePlayer(Entity entity) {
-        int minDistance = TaratonConfig.getHandler().qol.hideClosePlayers;
+        int minDistance = TaratonConfig.getInstance().qol.hideClosePlayers;
         if (minDistance == 0 || !(entity instanceof PlayerEntity)) {
             return false;
         }

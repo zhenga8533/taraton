@@ -60,7 +60,7 @@ public class CommandHotkey {
      * @param action The action of the key event (press, release, repeat).
      */
     public void onKeyPress(int key, int action) {
-        if (!TaratonConfig.getHandler().qol.commandHotkeys || action != GLFW.GLFW_PRESS) {
+        if (!TaratonConfig.getInstance().qol.commandHotkeys || action != GLFW.GLFW_PRESS) {
             return;
         }
 
@@ -85,7 +85,7 @@ public class CommandHotkey {
     private void onSave() {
         COMMAND_HOTKEYS.clear();
         List<KeyValuePair<Integer, KeyValuePair<String, Boolean>>> typedList =
-                getTypedList(HOTKEY_MAP.getHandler(), HOTKEY_TYPE);
+                getTypedList(HOTKEY_MAP.getInstance(), HOTKEY_TYPE);
 
         for (KeyValuePair<Integer, KeyValuePair<String, Boolean>> hotkey : typedList) {
             if (hotkey.getValue().getValue()) {

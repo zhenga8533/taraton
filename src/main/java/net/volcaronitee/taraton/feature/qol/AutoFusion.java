@@ -41,7 +41,7 @@ public class AutoFusion {
      * @param height The height of the screen.
      */
     private void onScreenOpen(MinecraftClient client, Screen screen, int width, int height) {
-        if (!TaratonConfig.getHandler().qol.autoFusion
+        if (!TaratonConfig.getInstance().qol.autoFusion
                 || !screen.getTitle().getString().equals(SCREEN_TITLE)) {
             return;
         }

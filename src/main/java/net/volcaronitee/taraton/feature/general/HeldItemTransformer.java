@@ -23,15 +23,15 @@ public class HeldItemTransformer {
     public void applyTransformations(MatrixStack matrices) {
         // Rotation
         float rotationX =
-                (float) Math.toRadians(TaratonConfig.getHandler().general.heldItemRotationX);
+                (float) Math.toRadians(TaratonConfig.getInstance().general.heldItemRotationX);
         float rotationY =
-                (float) Math.toRadians(TaratonConfig.getHandler().general.heldItemRotationY);
+                (float) Math.toRadians(TaratonConfig.getInstance().general.heldItemRotationY);
         float rotationZ =
-                (float) Math.toRadians(TaratonConfig.getHandler().general.heldItemRotationZ);
+                (float) Math.toRadians(TaratonConfig.getInstance().general.heldItemRotationZ);
         matrices.multiply(new Quaternionf().rotateXYZ(rotationX, rotationY, rotationZ));
 
         // Scale
-        float scale = (float) TaratonConfig.getHandler().general.heldItemScale;
+        float scale = (float) TaratonConfig.getInstance().general.heldItemScale;
         matrices.scale(scale, scale, scale);
     }
 }

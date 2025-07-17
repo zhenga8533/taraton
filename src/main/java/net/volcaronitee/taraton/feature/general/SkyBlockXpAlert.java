@@ -36,7 +36,7 @@ public class SkyBlockXpAlert {
      * @param overlay Whether the message is an overlay message.
      */
     private void parseMessage(Text message, boolean overlay) {
-        if (!TaratonConfig.getHandler().general.skyblockXpAlert || !overlay) {
+        if (!TaratonConfig.getInstance().general.skyblockXpAlert || !overlay) {
             return;
         }
 

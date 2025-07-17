@@ -132,7 +132,7 @@ public class ProtectItem {
      *         otherwise.
      */
     private boolean cancelStack(ItemStack stack) {
-        if (!TaratonConfig.getHandler().qol.protectItem || stack == null || stack.isEmpty()) {
+        if (!TaratonConfig.getInstance().qol.protectItem || stack == null || stack.isEmpty()) {
             return false;
         }
 

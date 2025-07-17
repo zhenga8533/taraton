@@ -44,7 +44,7 @@ public class JoinMessage {
      * @param text The text of the join message.
      */
     private void handlePartyJoin(String text) {
-        String joinMessage = TaratonConfig.getHandler().chat.partyJoinMessage;
+        String joinMessage = TaratonConfig.getInstance().chat.partyJoinMessage;
         MinecraftClient client = MinecraftClient.getInstance();
         if (joinMessage.isEmpty() || client == null || client.getSession() == null) {
             return;
@@ -52,7 +52,7 @@ public class JoinMessage {
 
         // Check if the player is the party leader
         String clientUsername = client.getSession().getUsername();
-        if (TaratonConfig.getHandler().chat.partyLeaderOnly
+        if (TaratonConfig.getInstance().chat.partyLeaderOnly
                 && !PartyUtil.getLeader().equals(clientUsername)) {
             return;
         }
@@ -72,7 +72,7 @@ public class JoinMessage {
      * @param text The text of the join message.
      */
     private void handleGuildJoin(String text) {
-        String joinMessage = TaratonConfig.getHandler().chat.guildJoinMessage;
+        String joinMessage = TaratonConfig.getInstance().chat.guildJoinMessage;
         MinecraftClient client = MinecraftClient.getInstance();
         if (joinMessage.isEmpty() || client == null || client.getSession() == null) {
             return;

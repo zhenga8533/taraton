@@ -52,7 +52,7 @@ public class NoMouseReset {
      */
     private void onScreen(MinecraftClient client, Screen screen, int scaledWidth,
             int scaledHeight) {
-        if (!TaratonConfig.getHandler().qol.noMouseReset
+        if (!TaratonConfig.getInstance().qol.noMouseReset
                 || !(screen instanceof GenericContainerScreen
                         || screen instanceof InventoryScreen)) {
             return;

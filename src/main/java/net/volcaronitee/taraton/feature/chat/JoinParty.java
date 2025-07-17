@@ -64,7 +64,7 @@ public class JoinParty {
      * @param player The name of the player who sent the invite.
      */
     private void handleJoinWhitelist(String player) {
-        if (!TaratonConfig.getHandler().chat.joinWhitelist) {
+        if (!TaratonConfig.getInstance().chat.joinWhitelist) {
             return;
         }
 
@@ -79,7 +79,7 @@ public class JoinParty {
      * @param player The name of the player who sent the invite.
      */
     private void handleJoinReparty(String player) {
-        if (!TaratonConfig.getHandler().chat.joinReparty) {
+        if (!TaratonConfig.getInstance().chat.joinReparty) {
             return;
         }
 

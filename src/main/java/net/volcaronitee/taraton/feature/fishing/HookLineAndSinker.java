@@ -32,7 +32,7 @@ public class HookLineAndSinker {
 
     static {
         OverlayUtil.createOverlay("hook_line_and_sinker",
-                () -> TaratonConfig.getHandler().fishing.hookLineAndSinker, LINES);
+                () -> TaratonConfig.getInstance().fishing.hookLineAndSinker, LINES);
         LINES.clear();
     }
 
@@ -79,7 +79,7 @@ public class HookLineAndSinker {
         }
 
         // Check if the feature is enabled and the player is in a valid state
-        if (!TaratonConfig.getHandler().fishing.hookLineAndSinker || client.player == null
+        if (!TaratonConfig.getInstance().fishing.hookLineAndSinker || client.player == null
                 || client.world == null || INSTANCE.hooked) {
             return;
         }

@@ -38,7 +38,7 @@ public class CustomEmote {
      * @return The modified chat message with custom emotes replaced.
      */
     private String handleCustomEmote(String message) {
-        if (!TaratonConfig.getHandler().chat.customEmotes) {
+        if (!TaratonConfig.getInstance().chat.customEmotes) {
             return message;
         }
 

@@ -33,7 +33,7 @@ public class DragShiftClick {
      */
     private static void onClientTick(MinecraftClient client) {
         // Ensure the feature is enabled and we have a valid window and screen.
-        if (!TaratonConfig.getHandler().qol.dragShiftClick || client.getWindow() == null
+        if (!TaratonConfig.getInstance().qol.dragShiftClick || client.getWindow() == null
                 || client.currentScreen == null) {
             if (isDragging) {
                 isDragging = false;

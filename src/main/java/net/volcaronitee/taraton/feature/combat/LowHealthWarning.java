@@ -30,7 +30,7 @@ public class LowHealthWarning {
      * @param client
      */
     private void onTick(MinecraftClient client) {
-        int healthThreshold = TaratonConfig.getHandler().combat.lowHealthWarning;
+        int healthThreshold = TaratonConfig.getInstance().combat.lowHealthWarning;
         if (healthThreshold == 0) {
             return;
         }

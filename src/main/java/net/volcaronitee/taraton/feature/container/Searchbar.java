@@ -13,7 +13,7 @@ import net.volcaronitee.taraton.util.OverlayUtil.Overlay;
  */
 public class Searchbar {
     private static final Overlay OVERLAY = OverlayUtil.createOverlay("searchbar",
-            () -> TaratonConfig.getHandler().container.searchbar, List.of());
+            () -> TaratonConfig.getInstance().container.searchbar, List.of());
 
     private static TextFieldWidget searchbar;
 

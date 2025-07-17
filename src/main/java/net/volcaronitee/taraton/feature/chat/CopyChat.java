@@ -46,7 +46,7 @@ public class CopyChat {
     public void onMouseClicked(double mouseX, double mouseY, int button,
             CallbackInfoReturnable<Boolean> cir) {
         if (!Screen.hasShiftDown() || button != GLFW.GLFW_MOUSE_BUTTON_LEFT
-                || !TaratonConfig.getHandler().chat.copyChat) {
+                || !TaratonConfig.getInstance().chat.copyChat) {
             return;
         }
 

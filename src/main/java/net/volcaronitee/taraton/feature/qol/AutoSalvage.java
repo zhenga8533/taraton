@@ -87,7 +87,7 @@ public class AutoSalvage {
      * @param button The mouse button that was clicked.
      */
     private void onMouseClick(int button) {
-        if (TaratonConfig.getHandler().qol.autoSalvage == QolConfig.AutoSalvage.OFF || button != 0
+        if (TaratonConfig.getInstance().qol.autoSalvage == QolConfig.AutoSalvage.OFF || button != 0
                 || !isValidScreen()) {
             return;
         }
@@ -168,7 +168,7 @@ public class AutoSalvage {
         }
 
         // Schedule picking up next input after 5 ticks (0.25 seconds)
-        if (TaratonConfig.getHandler().qol.autoSalvage == QolConfig.AutoSalvage.INVENTORY) {
+        if (TaratonConfig.getInstance().qol.autoSalvage == QolConfig.AutoSalvage.INVENTORY) {
             ScheduleUtil.schedule(INSTANCE::pickupInput, 5);
         }
     }

@@ -37,7 +37,7 @@ public class AutoKick {
      * @param overlay Whether the message is an overlay message.
      */
     private void handleAutoKick(Text message, boolean overlay) {
-        if (overlay || !TaratonConfig.getHandler().chat.autoKick) {
+        if (overlay || !TaratonConfig.getInstance().chat.autoKick) {
             return;
         }
 

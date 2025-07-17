@@ -54,7 +54,7 @@ public class TaratonConfig {
      * 
      * @return The ConfigClassHandler for Taraton.
      */
-    public static TaratonConfig getHandler() {
+    public static TaratonConfig getInstance() {
         return HANDLER.instance();
     }
 

@@ -31,7 +31,7 @@ public class RemoveSelfieMode {
      */
     private void onTick(MinecraftClient client) {
         GameOptions options = client.options;
-        if (!TaratonConfig.getHandler().qol.removeSelfieMode || options == null)
+        if (!TaratonConfig.getInstance().qol.removeSelfieMode || options == null)
             return;
 
         if (options.togglePerspectiveKey.isPressed()) {

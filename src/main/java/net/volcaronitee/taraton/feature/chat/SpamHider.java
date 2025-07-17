@@ -49,7 +49,7 @@ public class SpamHider {
      * @return True if the message is not spam, false if it is spam.
      */
     private boolean allowMessage(Text message, boolean overlay) {
-        if (!TaratonConfig.getHandler().chat.spamHider || overlay) {
+        if (!TaratonConfig.getInstance().chat.spamHider || overlay) {
             return true;
         }
 

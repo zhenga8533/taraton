@@ -63,7 +63,7 @@ public class PlaytimeWarning {
      */
     private void increment(MinecraftClient client) {
         if (client.world == null || client.player == null
-                || !TaratonConfig.getHandler().chat.playtimeWarning) {
+                || !TaratonConfig.getInstance().chat.playtimeWarning) {
             return;
         }
 

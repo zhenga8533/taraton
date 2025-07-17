@@ -195,19 +195,19 @@ public class ChatCommands {
         String chatMessage;
         CommandType commandType;
 
-        if (TaratonToggle.getHandler().chat.allChat && allMatcher.matches()) {
+        if (TaratonToggle.getInstance().chat.allChat && allMatcher.matches()) {
             username = allMatcher.group(1);
             chatMessage = allMatcher.group(2);
             commandType = CommandType.ALL;
-        } else if (TaratonToggle.getHandler().chat.guildChat && guildMatcher.matches()) {
+        } else if (TaratonToggle.getInstance().chat.guildChat && guildMatcher.matches()) {
             username = guildMatcher.group(1);
             chatMessage = guildMatcher.group(2);
             commandType = CommandType.GUILD;
-        } else if (TaratonToggle.getHandler().chat.partyChat && partyMatcher.matches()) {
+        } else if (TaratonToggle.getInstance().chat.partyChat && partyMatcher.matches()) {
             username = partyMatcher.group(1);
             chatMessage = partyMatcher.group(2);
             commandType = CommandType.PARTY;
-        } else if (TaratonToggle.getHandler().chat.privateChat && privateMatcher.matches()) {
+        } else if (TaratonToggle.getInstance().chat.privateChat && privateMatcher.matches()) {
             username = privateMatcher.group(1);
             chatMessage = privateMatcher.group(2);
             commandType = CommandType.PRIVATE;
@@ -216,7 +216,7 @@ public class ChatCommands {
         }
 
         // Check if username is blacklisted
-        if (TaratonToggle.getHandler().chat.blacklistLock
+        if (TaratonToggle.getInstance().chat.blacklistLock
                 && AutoKick.BLACK_LIST.list.contains(username)) {
             return;
         }
@@ -285,15 +285,15 @@ public class ChatCommands {
      */
     private boolean handleLeaderCommand(ClientPlayerEntity player, String username, String[] args) {
         // Check if username is whitelisted
-        if (TaratonToggle.getHandler().chat.whitelistLock
+        if (TaratonToggle.getInstance().chat.whitelistLock
                 && !JoinParty.WHITE_LIST.list.contains(username)) {
             return false;
         }
 
         String partyLeader = PartyUtil.getLeader();
         String clientUsername = MinecraftClient.getInstance().getSession().getUsername();
-        if (!TaratonConfig.getHandler().chat.leaderCommands
-                || (TaratonToggle.getHandler().chat.leaderLock && partyLeader == clientUsername)
+        if (!TaratonConfig.getInstance().chat.leaderCommands
+                || (TaratonToggle.getInstance().chat.leaderLock && partyLeader == clientUsername)
                 || !PartyUtil.isInParty() || !PartyUtil.getLeader().equals(clientUsername)) {
             return false;
         }
@@ -305,7 +305,7 @@ public class ChatCommands {
             // All invite commands
             case "allinvite":
             case "allinv":
-                if (!TaratonToggle.getHandler().chat.allInvite) {
+                if (!TaratonToggle.getInstance().chat.allInvite) {
                     return false;
                 }
 
@@ -313,7 +313,7 @@ public class ChatCommands {
                 return true;
             // Party mute commands
             case "mute":
-                if (!TaratonToggle.getHandler().chat.mute) {
+                if (!TaratonToggle.getInstance().chat.mute) {
                     return false;
                 }
 
@@ -322,7 +322,7 @@ public class ChatCommands {
             // Stream open commands
             case "streamopen":
             case "stream":
-                if (!TaratonToggle.getHandler().chat.stream) {
+                if (!TaratonToggle.getInstance().chat.stream) {
                     return false;
                 }
 
@@ -331,7 +331,7 @@ public class ChatCommands {
                 return true;
             // Party warp commands
             case "warp":
-                if (!TaratonToggle.getHandler().chat.warp) {
+                if (!TaratonToggle.getInstance().chat.warp) {
                     return false;
                 }
 
@@ -340,7 +340,7 @@ public class ChatCommands {
             // Join instance commands
             case "instance":
             case "join":
-                if (!TaratonToggle.getHandler().chat.instance) {
+                if (!TaratonToggle.getInstance().chat.instance) {
                     return false;
                 }
 
@@ -370,7 +370,7 @@ public class ChatCommands {
             // Party invite commands
             case "invite":
             case "inv":
-                if (!TaratonToggle.getHandler().chat.invite || arg1.isEmpty()) {
+                if (!TaratonToggle.getInstance().chat.invite || arg1.isEmpty()) {
                     return false;
                 }
 
@@ -378,7 +378,7 @@ public class ChatCommands {
                 return true;
             // Party kick commands
             case "kick":
-                if (!TaratonToggle.getHandler().chat.kick) {
+                if (!TaratonToggle.getInstance().chat.kick) {
                     return false;
                 }
 
@@ -389,7 +389,7 @@ public class ChatCommands {
             case "transfer":
             case "ptme":
             case "pm":
-                if (!TaratonToggle.getHandler().chat.transfer) {
+                if (!TaratonToggle.getInstance().chat.transfer) {
                     return false;
                 }
 
@@ -398,7 +398,7 @@ public class ChatCommands {
                 return true;
             // Party promote commands
             case "promote":
-                if (!TaratonToggle.getHandler().chat.promote) {
+                if (!TaratonToggle.getInstance().chat.promote) {
                     return false;
                 }
 
@@ -407,7 +407,7 @@ public class ChatCommands {
                 return true;
             // Party demote commands
             case "demote":
-                if (!TaratonToggle.getHandler().chat.demote) {
+                if (!TaratonToggle.getInstance().chat.demote) {
                     return false;
                 }
 
@@ -418,28 +418,28 @@ public class ChatCommands {
             case "help":
             case "leaderhelp":
             case "lhelp":
-                if (!TaratonToggle.getHandler().chat.leaderHelp) {
+                if (!TaratonToggle.getInstance().chat.leaderHelp) {
                     return false;
                 }
 
                 // Build the help message with available leader commands
                 StringBuilder helpMessage = new StringBuilder("Leader Commands: ");
-                appendCommand(helpMessage, "allinv", TaratonToggle.getHandler().chat.allInvite);
-                appendCommand(helpMessage, "mute", TaratonToggle.getHandler().chat.mute);
-                appendCommand(helpMessage, "stream [max]", TaratonToggle.getHandler().chat.stream);
-                appendCommand(helpMessage, "warp", TaratonToggle.getHandler().chat.warp);
+                appendCommand(helpMessage, "allinv", TaratonToggle.getInstance().chat.allInvite);
+                appendCommand(helpMessage, "mute", TaratonToggle.getInstance().chat.mute);
+                appendCommand(helpMessage, "stream [max]", TaratonToggle.getInstance().chat.stream);
+                appendCommand(helpMessage, "warp", TaratonToggle.getInstance().chat.warp);
                 appendCommand(helpMessage, "instance [name]",
-                        TaratonToggle.getHandler().chat.instance);
+                        TaratonToggle.getInstance().chat.instance);
                 appendCommand(helpMessage, "invite <player>",
-                        TaratonToggle.getHandler().chat.invite);
-                appendCommand(helpMessage, "kick [player]", TaratonToggle.getHandler().chat.kick);
+                        TaratonToggle.getInstance().chat.invite);
+                appendCommand(helpMessage, "kick [player]", TaratonToggle.getInstance().chat.kick);
                 appendCommand(helpMessage, "transfer [player]",
-                        TaratonToggle.getHandler().chat.transfer);
+                        TaratonToggle.getInstance().chat.transfer);
                 appendCommand(helpMessage, "promote [player]",
-                        TaratonToggle.getHandler().chat.promote);
+                        TaratonToggle.getInstance().chat.promote);
                 appendCommand(helpMessage, "demote [player]",
-                        TaratonToggle.getHandler().chat.demote);
-                appendCommand(helpMessage, "lhelp", TaratonToggle.getHandler().chat.leaderHelp);
+                        TaratonToggle.getInstance().chat.demote);
+                appendCommand(helpMessage, "lhelp", TaratonToggle.getInstance().chat.leaderHelp);
                 helpMessage.setLength(helpMessage.length() - 2);
                 ScheduleUtil.scheduleCommand("pc " + helpMessage);
                 return true;
@@ -459,7 +459,7 @@ public class ChatCommands {
      */
     private boolean handlePartyCommand(ClientPlayerEntity player, String username, String head,
             String[] args) {
-        if (!TaratonConfig.getHandler().chat.partyCommands) {
+        if (!TaratonConfig.getInstance().chat.partyCommands) {
             return false;
         }
 
@@ -469,7 +469,7 @@ public class ChatCommands {
         switch (command) {
             // 8ball commands
             case "8ball":
-                if (!TaratonToggle.getHandler().chat.eightBall) {
+                if (!TaratonToggle.getInstance().chat.eightBall) {
                     return false;
                 }
 
@@ -481,7 +481,7 @@ public class ChatCommands {
             case "flip":
             case "coinflip":
             case "cf":
-                if (!TaratonToggle.getHandler().chat.coinFlip) {
+                if (!TaratonToggle.getInstance().chat.coinFlip) {
                     return false;
                 }
 
@@ -492,7 +492,7 @@ public class ChatCommands {
             // Dice roll commands
             case "dice":
             case "roll":
-                if (!TaratonToggle.getHandler().chat.diceRoll) {
+                if (!TaratonToggle.getInstance().chat.diceRoll) {
                     return false;
                 }
 
@@ -504,7 +504,7 @@ public class ChatCommands {
             case "waifu":
             case "women":
             case "w":
-                if (!TaratonToggle.getHandler().chat.waifu) {
+                if (!TaratonToggle.getInstance().chat.waifu) {
                     return false;
                 }
 
@@ -522,18 +522,18 @@ public class ChatCommands {
             case "help":
             case "partyhelp":
             case "phelp":
-                if (!TaratonToggle.getHandler().chat.partyHelp) {
+                if (!TaratonToggle.getInstance().chat.partyHelp) {
                     return false;
                 }
 
                 // Build the help message with available party commands
                 StringBuilder helpMessage = new StringBuilder("Party Commands: ");
-                appendCommand(helpMessage, "8ball", TaratonToggle.getHandler().chat.eightBall);
-                appendCommand(helpMessage, "cf", TaratonToggle.getHandler().chat.coinFlip);
+                appendCommand(helpMessage, "8ball", TaratonToggle.getInstance().chat.eightBall);
+                appendCommand(helpMessage, "cf", TaratonToggle.getInstance().chat.coinFlip);
                 appendCommand(helpMessage, "dice [sides]",
-                        TaratonToggle.getHandler().chat.diceRoll);
-                appendCommand(helpMessage, "waifu", TaratonToggle.getHandler().chat.waifu);
-                appendCommand(helpMessage, "phelp", TaratonToggle.getHandler().chat.partyHelp);
+                        TaratonToggle.getInstance().chat.diceRoll);
+                appendCommand(helpMessage, "waifu", TaratonToggle.getInstance().chat.waifu);
+                appendCommand(helpMessage, "phelp", TaratonToggle.getInstance().chat.partyHelp);
                 ScheduleUtil.scheduleCommand(head + " " + helpMessage);
                 return true;
 
@@ -569,7 +569,7 @@ public class ChatCommands {
      */
     private boolean handleStatusCommand(ClientPlayerEntity player, String username, String head,
             String[] args) {
-        if (!TaratonConfig.getHandler().chat.statusCommands) {
+        if (!TaratonConfig.getInstance().chat.statusCommands) {
             return false;
         }
 
@@ -580,7 +580,7 @@ public class ChatCommands {
             case "coords":
             case "waypoint":
             case "xyz":
-                if (!TaratonToggle.getHandler().chat.coords) {
+                if (!TaratonToggle.getInstance().chat.coords) {
                     return false;
                 }
 
@@ -592,7 +592,7 @@ public class ChatCommands {
                 return true;
             // FPS commands
             case "fps":
-                if (!TaratonToggle.getHandler().chat.fps) {
+                if (!TaratonToggle.getInstance().chat.fps) {
                     return false;
                 }
 
@@ -601,7 +601,7 @@ public class ChatCommands {
                 return true;
             // TPS commands
             case "tps":
-                if (!TaratonToggle.getHandler().chat.tps) {
+                if (!TaratonToggle.getInstance().chat.tps) {
                     return false;
                 }
 
@@ -610,7 +610,7 @@ public class ChatCommands {
                 return true;
             // Leave party commands
             case "leave":
-                if (!TaratonToggle.getHandler().chat.leave) {
+                if (!TaratonToggle.getInstance().chat.leave) {
                     return false;
                 }
 
@@ -620,7 +620,7 @@ public class ChatCommands {
             case "limbo":
             case "lobby":
             case "l":
-                if (!TaratonToggle.getHandler().chat.limbo) {
+                if (!TaratonToggle.getInstance().chat.limbo) {
                     return false;
                 }
 
@@ -628,7 +628,7 @@ public class ChatCommands {
                 return true;
             // Ping commands
             case "ping":
-                if (!TaratonToggle.getHandler().chat.ping) {
+                if (!TaratonToggle.getInstance().chat.ping) {
                     return false;
                 }
 
@@ -638,7 +638,7 @@ public class ChatCommands {
             // Playtime commands
             case "playtime":
             case "pt":
-                if (!TaratonToggle.getHandler().chat.playtime) {
+                if (!TaratonToggle.getInstance().chat.playtime) {
                     return false;
                 }
 
@@ -648,7 +648,7 @@ public class ChatCommands {
             // Stats commands
             case "stats":
             case "stat":
-                if (!TaratonToggle.getHandler().chat.stats) {
+                if (!TaratonToggle.getInstance().chat.stats) {
                     return false;
                 }
 
@@ -674,7 +674,7 @@ public class ChatCommands {
                 return true;
             // Time commands
             case "time":
-                if (!TaratonToggle.getHandler().chat.time) {
+                if (!TaratonToggle.getInstance().chat.time) {
                     return false;
                 }
 
@@ -687,22 +687,22 @@ public class ChatCommands {
             case "help":
             case "statushelp":
             case "shelp":
-                if (!TaratonToggle.getHandler().chat.statusHelp) {
+                if (!TaratonToggle.getInstance().chat.statusHelp) {
                     return false;
                 }
 
                 // Build the help message with available status commands
                 StringBuilder helpMessage = new StringBuilder("Status Commands: ");
-                appendCommand(helpMessage, "coords", TaratonToggle.getHandler().chat.coords);
-                appendCommand(helpMessage, "fps", TaratonToggle.getHandler().chat.fps);
-                appendCommand(helpMessage, "tps", TaratonToggle.getHandler().chat.tps);
-                appendCommand(helpMessage, "leave", TaratonToggle.getHandler().chat.leave);
-                appendCommand(helpMessage, "limbo", TaratonToggle.getHandler().chat.limbo);
-                appendCommand(helpMessage, "ping", TaratonToggle.getHandler().chat.ping);
-                appendCommand(helpMessage, "playtime", TaratonToggle.getHandler().chat.playtime);
-                appendCommand(helpMessage, "stats", TaratonToggle.getHandler().chat.stats);
-                appendCommand(helpMessage, "time", TaratonToggle.getHandler().chat.time);
-                appendCommand(helpMessage, "shelp", TaratonToggle.getHandler().chat.statusHelp);
+                appendCommand(helpMessage, "coords", TaratonToggle.getInstance().chat.coords);
+                appendCommand(helpMessage, "fps", TaratonToggle.getInstance().chat.fps);
+                appendCommand(helpMessage, "tps", TaratonToggle.getInstance().chat.tps);
+                appendCommand(helpMessage, "leave", TaratonToggle.getInstance().chat.leave);
+                appendCommand(helpMessage, "limbo", TaratonToggle.getInstance().chat.limbo);
+                appendCommand(helpMessage, "ping", TaratonToggle.getInstance().chat.ping);
+                appendCommand(helpMessage, "playtime", TaratonToggle.getInstance().chat.playtime);
+                appendCommand(helpMessage, "stats", TaratonToggle.getInstance().chat.stats);
+                appendCommand(helpMessage, "time", TaratonToggle.getInstance().chat.time);
+                appendCommand(helpMessage, "shelp", TaratonToggle.getInstance().chat.statusHelp);
                 helpMessage.setLength(helpMessage.length() - 2);
                 ScheduleUtil.scheduleCommand(head + " " + helpMessage);
                 return true;

@@ -77,7 +77,7 @@ public class AutoCommand {
      * @param overlay Whether to display an overlay for the command correction.
      */
     private void correctCommand(Text message, boolean overlay) {
-        if (overlay || TaratonConfig.getHandler().chat.autocorrectCommand) {
+        if (overlay || TaratonConfig.getInstance().chat.autocorrectCommand) {
             return;
         }
 

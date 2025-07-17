@@ -49,7 +49,7 @@ public class VanquisherWarp {
      * @param overlay Whether the message is an overlay message.
      */
     private void handleVanqWarp(Text message, boolean overlay) {
-        if (overlay || !TaratonConfig.getHandler().crimsonIsle.vanquisherWarp
+        if (overlay || !TaratonConfig.getInstance().crimsonIsle.vanquisherWarp
                 || VANQUISHER_LIST.list.isEmpty()) {
             return;
         }

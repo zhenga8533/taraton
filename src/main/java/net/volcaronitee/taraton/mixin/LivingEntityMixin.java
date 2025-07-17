@@ -20,7 +20,7 @@ public class LivingEntityMixin {
      */
     @Inject(method = "getHandSwingDuration", at = @At("RETURN"), cancellable = true)
     private void taraton$modifyHandSwingDuration(CallbackInfoReturnable<Integer> cir) {
-        double speedMultiplier = TaratonConfig.getHandler().general.heldItemSwingSpeed;
+        double speedMultiplier = TaratonConfig.getInstance().general.heldItemSwingSpeed;
         LivingEntity entity = (LivingEntity) (Object) this;
 
         // Only apply to the main player to avoid affecting other entities

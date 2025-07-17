@@ -73,7 +73,7 @@ public class PlayerScale {
     private void onSave() {
         PLAYER_SCALES.clear();
         List<KeyValuePair<String, KeyValuePair<Float, Boolean>>> typedList =
-                getTypedList(PLAYER_SCALE_MAP.getHandler(), TYPE);
+                getTypedList(PLAYER_SCALE_MAP.getInstance(), TYPE);
 
         for (KeyValuePair<String, KeyValuePair<Float, Boolean>> hotkey : typedList) {
             if (hotkey.getValue().getValue()) {

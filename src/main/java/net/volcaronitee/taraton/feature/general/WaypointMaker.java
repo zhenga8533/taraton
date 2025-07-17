@@ -46,7 +46,7 @@ public class WaypointMaker {
      * @param overlay Whether the message is an overlay message.
      */
     private void parseWaypoint(Text message, boolean overlay) {
-        int renderWaypoints = TaratonConfig.getHandler().general.renderWaypoints;
+        int renderWaypoints = TaratonConfig.getInstance().general.renderWaypoints;
         if (renderWaypoints == 0 || overlay || message == null) {
             return;
         }
