@@ -28,6 +28,7 @@ import net.minecraft.screen.slot.SlotActionType;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.volcaronitee.taraton.Taraton;
+import net.volcaronitee.taraton.config.TaratonConfig;
 import net.volcaronitee.taraton.config.TaratonJson;
 import net.volcaronitee.taraton.config.TaratonList;
 import net.volcaronitee.taraton.config.controller.KeyBindController;
@@ -82,7 +83,9 @@ public class WardrobeSwap {
             }
 
             // Register the key press event for wardrobe hotkeys
-            ScreenKeyboardEvents.beforeKeyPress(screen).register(INSTANCE::onWardrobeKey);
+            if (TaratonConfig.getInstance().container.wardrobeSwap) {
+                ScreenKeyboardEvents.beforeKeyPress(screen).register(INSTANCE::onWardrobeKey);
+            }
         });
     }
 
