@@ -214,10 +214,10 @@ public class WardrobeSwap {
      */
     private static class WardrobeScreen extends HandledScreen<ScreenHandler> {
         private final HandledScreen<?> parent;
-        private final Text instructions =
+        private static final Text INSTRUCTIONS =
                 Text.literal("Hover over a slot and press any key to bind it.")
                         .formatted(Formatting.YELLOW);
-        private Text tooltip = instructions.copy();
+        private Text tooltip = INSTRUCTIONS.copy();
 
         /**
          * Constructor for the WardrobeScreen.
@@ -255,43 +255,47 @@ public class WardrobeSwap {
         public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
             if (keyCode == 256) { // Escape key
                 this.close();
-            } else {
-                Slot hoveredSlot = ((HandledScreenAccessor) this.parent).getFocusedSlot();
-                int slotIndex = hoveredSlot != null ? hoveredSlot.id - WARDROBE_INDEX + 1 : -1;
-
-                // If hovered slot is in the wardrobe range, handle the hotkey swap
-                if (slotIndex >= 1 && slotIndex < WARDROBE_SLOTS) {
-                    TaratonList config = WARDROBE_SWAP_MAP.getInstance();
-                    List<KeyValuePair<Integer, KeyValuePair<Integer, Boolean>>> typedList =
-                            INSTANCE.getTypedList(config, TYPE);
-
-                    // Update the hotkey for the selected slot
-                    typedList.removeIf(item -> item.getKey() == slotIndex);
-                    typedList.add(new KeyValuePair<>(slotIndex, new KeyValuePair<>(keyCode, true)));
-                    config.customConfig = typedList;
-                    WARDROBE_SWAP_MAP.getHandler().save();
-                    INSTANCE.onSave();
-
-                    // Get the key name for display
-                    String keyName = GLFW.glfwGetKeyName(keyCode, scanCode);
-                    keyName = keyName != null ? keyName.toUpperCase() : "???";
-
-                    // Show confirmation tooltip
-                    Text confirmation = Text
-                            .literal("Set hotkey for slot " + slotIndex + " to " + keyName + "!")
-                            .formatted(Formatting.GREEN);
-                    tooltip = confirmation.copy();
-                    ScheduleUtil.schedule(() -> {
-                        if (tooltip.getString().equals(confirmation.getString())) {
-                            tooltip = instructions.copy();
-                        }
-                    }, 60);
-
-                    // Send confirmation message
-                    Taraton.sendMessage(tooltip);
-                }
+                return super.keyPressed(keyCode, scanCode, modifiers);
             }
 
+            Slot hoveredSlot = ((HandledScreenAccessor) this.parent).getFocusedSlot();
+            int slotIndex = hoveredSlot != null && hoveredSlot.id < WARDROBE_INDEX + WARDROBE_SLOTS
+                    ? hoveredSlot.id % WARDROBE_SLOTS + 1
+                    : -1;
+            if (slotIndex < 1 || slotIndex > WARDROBE_SLOTS) {
+                // If not in wardrobe range, do nothing
+                return super.keyPressed(keyCode, scanCode, modifiers);
+            }
+
+            // If hovered slot is in the wardrobe range, handle the hotkey swap
+            TaratonList config = WARDROBE_SWAP_MAP.getInstance();
+            List<KeyValuePair<Integer, KeyValuePair<Integer, Boolean>>> typedList =
+                    INSTANCE.getTypedList(config, TYPE);
+
+            // Update the hotkey for the selected slot
+            typedList.removeIf(item -> item.getKey() == slotIndex);
+            typedList.add(new KeyValuePair<>(slotIndex, new KeyValuePair<>(keyCode, true)));
+            config.customConfig = typedList;
+            WARDROBE_SWAP_MAP.getHandler().save();
+            INSTANCE.onSave();
+
+            // Get the key name for display
+            String keyName = GLFW.glfwGetKeyName(keyCode, scanCode);
+            keyName = keyName != null ? keyName.toUpperCase() : "???";
+
+            // Show confirmation tooltip
+            Text confirmation =
+                    Text.literal("Set hotkey for slot " + slotIndex + " to " + keyName + "!")
+                            .formatted(Formatting.GREEN);
+            tooltip = confirmation.copy();
+            ScheduleUtil.schedule(() -> {
+                if (tooltip.getString().equals(confirmation.getString())) {
+                    tooltip = INSTRUCTIONS.copy();
+                }
+            }, 60);
+
+            // Send confirmation
+            Taraton.sendMessage(tooltip);
             return super.keyPressed(keyCode, scanCode, modifiers);
         }
     }
