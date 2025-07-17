@@ -19,6 +19,7 @@ import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenKeyboardEvents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.screen.ScreenHandler;
@@ -81,25 +82,7 @@ public class WardrobeSwap {
             }
 
             // Register the key press event for wardrobe hotkeys
-            ScreenKeyboardEvents.beforeKeyPress(screen).register((s, key, scancode, modifiers) -> {
-                ScreenHandler handler = client.player.currentScreenHandler;
-                if (SWAP_HOTKEYS.containsKey(key)) {
-                    // Get the slot index from the hotkey mapping
-                    int slot = SWAP_HOTKEYS.get(key) + WARDROBE_INDEX - 1;
-                    if (slot < WARDROBE_INDEX || slot >= WARDROBE_INDEX + WARDROBE_SLOTS) {
-                        return;
-                    }
-
-                    // Perform the slot click action
-                    client.interactionManager.clickSlot(handler.syncId, slot, 0,
-                            SlotActionType.PICKUP, client.player);
-
-                    // Schedule escape input
-                    ScheduleUtil.schedule(() -> {
-                        s.close();
-                    }, 2);
-                }
-            });
+            ScreenKeyboardEvents.beforeKeyPress(screen).register(INSTANCE::onWardrobeKey);
         });
     }
 
@@ -147,6 +130,39 @@ public class WardrobeSwap {
             if (hotkey.getValue().getValue()) {
                 SWAP_HOTKEYS.put(hotkey.getValue().getKey(), hotkey.getKey());
             }
+        }
+    }
+
+    /**
+     * Handles key presses in the wardrobe screen to swap items based on hotkeys.
+     * 
+     * @param screen The current screen where the key press occurred.
+     * @param keyCode The key code of the pressed key.
+     * @param scanCode The scan code of the pressed key.
+     * @param modifiers The modifiers applied to the key press.
+     */
+    private void onWardrobeKey(Screen screen, int keyCode, int scanCode, int modifiers) {
+        MinecraftClient client = MinecraftClient.getInstance();
+        if (client.player == null || client.currentScreen != screen) {
+            return;
+        }
+
+        ScreenHandler handler = client.player.currentScreenHandler;
+        if (SWAP_HOTKEYS.containsKey(keyCode)) {
+            // Get the slot index from the hotkey mapping
+            int slot = SWAP_HOTKEYS.get(keyCode) + WARDROBE_INDEX - 1;
+            if (slot < WARDROBE_INDEX || slot >= WARDROBE_INDEX + WARDROBE_SLOTS) {
+                return;
+            }
+
+            // Perform the slot click action
+            client.interactionManager.clickSlot(handler.syncId, slot, 0, SlotActionType.PICKUP,
+                    client.player);
+
+            // Schedule escape input
+            ScheduleUtil.schedule(() -> {
+                screen.close();
+            }, 2);
         }
     }
 
