@@ -1,5 +1,5 @@
 {
-  "mapConfig": [
+  "customConfig": [
     { "key": 1, "value": { "key": 49, "value": true } },
     { "key": 2, "value": { "key": 50, "value": true } },
     { "key": 3, "value": { "key": 51, "value": true } },

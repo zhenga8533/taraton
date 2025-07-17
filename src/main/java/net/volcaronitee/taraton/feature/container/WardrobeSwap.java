@@ -15,6 +15,8 @@ import dev.isxander.yacl3.api.OptionDescription;
 import dev.isxander.yacl3.api.controller.IntegerSliderControllerBuilder;
 import dev.isxander.yacl3.api.controller.TickBoxControllerBuilder;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
+import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
+import net.fabricmc.fabric.api.client.screen.v1.ScreenKeyboardEvents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
@@ -22,7 +24,10 @@ import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
+import net.minecraft.screen.slot.SlotActionType;
 import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
+import net.volcaronitee.taraton.Taraton;
 import net.volcaronitee.taraton.config.TaratonJson;
 import net.volcaronitee.taraton.config.TaratonList;
 import net.volcaronitee.taraton.config.controller.KeyBindController;
@@ -56,6 +61,39 @@ public class WardrobeSwap {
      * Private constructor to prevent instantiation.
      */
     private WardrobeSwap() {}
+
+    /**
+     * Registers the event listeners for the WardrobeSwap feature.
+     */
+    public static void register() {
+        ScreenEvents.AFTER_INIT.register((client, screen, scaledWidth, scaledHeight) -> {
+            if (!screen.getTitle().getString().startsWith("Wardrobe")) {
+                return;
+            }
+
+            ScreenKeyboardEvents.beforeKeyPress(screen).register((s, key, scancode, modifiers) -> {
+                ScreenHandler handler = client.player.currentScreenHandler;
+                if (SWAP_HOTKEYS.containsKey(key)) {
+                    // Get the slot index from the hotkey mapping
+                    int slot = SWAP_HOTKEYS.get(key) + WARDROBE_INDEX - 1;
+                    if (slot < WARDROBE_INDEX || slot >= WARDROBE_INDEX + WARDROBE_SLOTS) {
+                        return;
+                    }
+
+                    // Perform the slot click action
+                    client.interactionManager.clickSlot(handler.syncId, slot, 0,
+                            SlotActionType.PICKUP, client.player);
+
+                    // Schedule escape input
+                    ScheduleUtil.schedule(() -> {
+                        long handle = client.getWindow().getHandle();
+                        client.keyboard.onKey(handle, GLFW.GLFW_KEY_ESCAPE, 0, 1, 0);
+                        client.keyboard.onKey(handle, GLFW.GLFW_KEY_ESCAPE, 0, 0, 0);
+                    }, 2);
+                }
+            });
+        });
+    }
 
     /**
      * Returns the singleton instance of WardrobeSwap.
@@ -161,7 +199,7 @@ public class WardrobeSwap {
                                                         TickBoxControllerBuilder::create)))
                         .initial(new KeyValuePair<>(1,
                                 new KeyValuePair<>(GLFW.GLFW_KEY_UNKNOWN, true)))
-                        .build())
+                        .minimumNumberOfEntries(WARDROBE_SLOTS).build())
                 .build();
     }
 
@@ -219,6 +257,11 @@ public class WardrobeSwap {
                 typedList.add(new KeyValuePair<>(slotIndex, new KeyValuePair<>(keyCode, true)));
                 config.customConfig = typedList;
                 config.onSave(config);
+
+                Taraton.sendMessage(Text
+                        .literal("Set hotkey for slot " + (slotIndex - WARDROBE_INDEX + 1) + " to "
+                                + GLFW.glfwGetKeyName(keyCode, scanCode))
+                        .formatted(Formatting.GREEN));
             }
 
             return super.keyPressed(keyCode, scanCode, modifiers);

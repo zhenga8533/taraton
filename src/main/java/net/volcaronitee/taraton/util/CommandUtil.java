@@ -112,6 +112,9 @@ public class CommandUtil {
                                 .then(ProtectItem.PROTECT_MAP.createCommand("pm"))
                                 .then(TextSubstitution.SUBSTITUTION_MAP.createCommand("submap"))
                                 .then(TextSubstitution.SUBSTITUTION_MAP.createCommand("sm"))
+                                .then(WardrobeSwap.WARDROBE_SWAP_MAP
+                                        .createCommand("wardrobeswapmap"))
+                                .then(WardrobeSwap.WARDROBE_SWAP_MAP.createCommand("wsm"))
 
                                 // Chat/client commands
                                 .then(argument("default", StringArgumentType.greedyString())
