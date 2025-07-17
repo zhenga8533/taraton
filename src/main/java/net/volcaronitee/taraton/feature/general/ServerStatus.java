@@ -163,16 +163,22 @@ public class ServerStatus {
      * @return The estimated TPS.
      */
     public double estimateTps() {
-        // Return 20.0 immediately if the list is empty
-        if (tickDurations.isEmpty()) {
+        List<Long> durationsCopy;
+
+        // Create a thread-safe copy of the list to iterate over
+        synchronized (tickDurations) {
+            durationsCopy = new ArrayList<>(tickDurations);
+        }
+
+        if (durationsCopy.isEmpty()) {
             return 20.0;
         }
 
         long totalDuration = 0;
         int validTickCount = 0;
 
-        // Sum up the durations and count valid ticks
-        for (Long duration : tickDurations) {
+        // Iterate over the copy, not the original list
+        for (Long duration : durationsCopy) {
             if (duration != null) {
                 totalDuration += duration;
                 validTickCount++;
@@ -183,7 +189,6 @@ public class ServerStatus {
             return 20.0;
         }
 
-        // Calculate average duration and estimate TPS
         double averageDuration = totalDuration / (double) validTickCount;
         return Math.min(20.0, 20.0 * (550 / averageDuration));
     }
