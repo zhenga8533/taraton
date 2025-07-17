@@ -25,6 +25,7 @@ import net.volcaronitee.taraton.feature.chat.JoinParty;
 import net.volcaronitee.taraton.feature.chat.SpamHider;
 import net.volcaronitee.taraton.feature.chat.TextSubstitution;
 import net.volcaronitee.taraton.feature.combat.EntityHighlight;
+import net.volcaronitee.taraton.feature.container.SlotBinding;
 import net.volcaronitee.taraton.feature.container.WardrobeSwap;
 import net.volcaronitee.taraton.feature.crimson_isle.VanquisherWarp;
 import net.volcaronitee.taraton.feature.general.ImagePreview;
@@ -63,10 +64,6 @@ public class CommandUtil {
                                 // GUI command
                                 .then(literal("gui").executes(OverlayUtil::moveGui))
 
-                                // Wardrobe Swap command
-                                .then(literal("wardrobe")
-                                        .executes(WardrobeSwap.getInstance()::setWardrobe))
-
                                 // Save command
                                 .then(literal("save").executes(CommandUtil::save))
 
@@ -78,6 +75,14 @@ public class CommandUtil {
                                         .executes(ProtectItem.getInstance()::protect))
                                 .then(literal("protectitem")
                                         .executes(ProtectItem.getInstance()::protect))
+
+                                // Wardrobe Swap command
+                                .then(literal("wardrobe")
+                                        .executes(WardrobeSwap.getInstance()::setWardrobe))
+
+                                // Slot Binding command
+                                .then(literal("slotbinding")
+                                        .executes(SlotBinding.getInstance()::setSlotBinding))
 
                                 // Lists commands
                                 .then(ChatCommands.AVENGER_LIST.createCommand("avengerlist"))

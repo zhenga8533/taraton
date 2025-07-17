@@ -73,7 +73,7 @@ public class ContainerConfig {
                                         newVal -> config.container.containerButtons = newVal)
                                 .controller(TaratonConfig::createBooleanController).build())
 
-                        // TODO: Slot Binding
+                        // Slot Binding
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Slot Binding"))
                                 .description(OptionDescription.createBuilder()
                                         .webpImage(Identifier.of(Taraton.MOD_ID,
