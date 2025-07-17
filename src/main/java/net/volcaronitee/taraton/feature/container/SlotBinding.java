@@ -18,17 +18,32 @@ import dev.isxander.yacl3.api.controller.TickBoxControllerBuilder;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenMouseEvents;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.gui.screen.ingame.InventoryScreen;
+import net.minecraft.client.render.RenderLayer;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.screen.ScreenHandler;
+import net.minecraft.screen.slot.Slot;
 import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
+import net.volcaronitee.taraton.Taraton;
 import net.volcaronitee.taraton.config.TaratonJson;
 import net.volcaronitee.taraton.config.TaratonList;
 import net.volcaronitee.taraton.config.controller.KeyValueController;
 import net.volcaronitee.taraton.config.controller.KeyValueController.KeyValuePair;
+import net.volcaronitee.taraton.interfaces.TooltipSuppressor;
+import net.volcaronitee.taraton.mixin.accessor.HandledScreenAccessor;
+import net.volcaronitee.taraton.util.ScheduleUtil;
 
 public class SlotBinding {
     private static final SlotBinding INSTANCE = new SlotBinding();
+
+    private static final int INVENTORY_INDEX = 5;
+    private static final int INVENTORY_SLOTS = 39;
 
     private static final String TITLE = "Slot Binding Map";
     private static final Text DESCRIPTION = Text.literal("A list of slot bindings.");
@@ -63,8 +78,8 @@ public class SlotBinding {
             // Check for edit mode toggle
             if (INSTANCE.editBindings && screen instanceof HandledScreen<?>) {
                 INSTANCE.editBindings = false;
-                // MinecraftClient.getInstance()
-                // .submit(() -> INSTANCE.createScreen((HandledScreen<?>) screen));
+                MinecraftClient.getInstance()
+                        .submit(() -> INSTANCE.createScreen((HandledScreen<?>) screen));
             }
 
             // Register the key press event for slot swapping
@@ -81,9 +96,34 @@ public class SlotBinding {
         return INSTANCE;
     }
 
+    /**
+     * Sets the slot binding mode to edit mode, allowing users to modify slot bindings.
+     * 
+     * @param context The command context for the Fabric client command source.
+     * @return 1 if the command was successful, 0 otherwise.
+     */
     public int setSlotBinding(CommandContext<FabricClientCommandSource> context) {
-        editBindings = true;
+        final FabricClientCommandSource source = context.getSource();
+        final MinecraftClient client = source.getClient();
+        final PlayerEntity player = source.getPlayer();
+
+        client.execute(() -> {
+            editBindings = true;
+            client.setScreen(new InventoryScreen(player));
+        });
         return 1;
+    }
+
+    /**
+     * Creates a screen for editing slot bindings.
+     * 
+     * @param screen The screen to be edited, typically a HandledScreen.
+     */
+    private void createScreen(HandledScreen<?> screen) {
+        MinecraftClient client = MinecraftClient.getInstance();
+        BindingScreen customScreen = new BindingScreen(screen.getScreenHandler(),
+                client.player.getInventory(), Text.literal("Edit Slot Bindings"), screen);
+        client.setScreen(customScreen);
     }
 
     /**
@@ -142,7 +182,8 @@ public class SlotBinding {
      * @return A ControllerBuilder for the slot binding configuration.
      */
     private IntegerFieldControllerBuilder createSlotController(Option<Integer> opt) {
-        return IntegerFieldControllerBuilder.create(opt).min(5).max(44);
+        return IntegerFieldControllerBuilder.create(opt).min(INVENTORY_INDEX)
+                .max(INVENTORY_INDEX + INVENTORY_SLOTS);
     }
 
     /**
@@ -179,5 +220,195 @@ public class SlotBinding {
                                 new KeyValuePair<>(GLFW.GLFW_KEY_UNKNOWN, true)))
                         .build())
                 .build();
+    }
+
+    /**
+     * Custom screen for the wardrobe swap functionality.
+     */
+    private static class BindingScreen extends HandledScreen<ScreenHandler> {
+        private final HandledScreen<?> parent;
+
+        private static final Text INSTRUCTIONS =
+                Text.literal("Hover over a slot and press any key to bind it.")
+                        .formatted(Formatting.YELLOW);
+        private Text tooltip = INSTRUCTIONS.copy();
+
+        private int currentBind = -1;
+
+        /**
+         * Constructor for the BindingScreen.
+         * 
+         * @param handler The screen handler for the wardrobe.
+         * @param inventory The player's inventory.
+         * @param title The title of the screen.
+         * @param parent The parent screen to return to when closing this screen.
+         */
+        public BindingScreen(ScreenHandler handler, PlayerInventory inventory, Text title,
+                HandledScreen<?> parent) {
+            super(handler, inventory, title);
+            this.parent = parent;
+        }
+
+        /**
+         * Confirms the tooltip to be displayed, allowing it to persist for a short time.
+         * 
+         * @param tooltip The tooltip text to confirm.
+         */
+        private void confirmTooltip(Text tooltip) {
+            this.tooltip = tooltip.copy();
+            Taraton.sendMessage(this.tooltip);
+
+            ScheduleUtil.schedule(() -> {
+                if (tooltip.getString().equals(tooltip.getString())) {
+                    this.tooltip = INSTRUCTIONS.copy();
+                }
+            }, 60);
+        }
+
+        @Override
+        protected void drawBackground(DrawContext context, float delta, int mouseX, int mouseY) {}
+
+        @Override
+        public void render(DrawContext context, int mouseX, int mouseY, float delta) {
+            // Suppress the parent's tooltip rendering and render the parent screen
+            TooltipSuppressor parentSuppressor = (TooltipSuppressor) this.parent;
+            parentSuppressor.setSuppressTooltip(true);
+            this.parent.render(context, mouseX, mouseY, delta);
+            parentSuppressor.setSuppressTooltip(false);
+
+            // Handle slot highlighting
+            if (currentBind != -1) {
+                HandledScreenAccessor parentAccessor = (HandledScreenAccessor) this.parent;
+                int parentX = parentAccessor.getX();
+                int parentY = parentAccessor.getY();
+
+                // Get the slot to highlight from the parent handler
+                Slot slot = this.parent.getScreenHandler().getSlot(currentBind);
+
+                if (slot != null) {
+                    // Manually apply the parent's coordinate system
+                    context.getMatrices().push();
+                    context.getMatrices().translate(parentX, parentY, 0);
+
+                    // Draw the highlight at the slot's relative position
+                    int color = 0x80FFD700; // 50% transparent gold
+                    context.fill(RenderLayer.getGuiOverlay(), slot.x, slot.y, slot.x + 16,
+                            slot.y + 16, color);
+
+                    // Restore the original matrix to not affect other rendering
+                    context.getMatrices().pop();
+                }
+            }
+
+            context.drawTooltip(this.textRenderer, tooltip, mouseX, mouseY);
+        }
+
+        @Override
+        public void close() {
+            super.close();
+        }
+
+        @Override
+        public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+            if (keyCode == 256) { // Escape key
+                this.close();
+                return super.keyPressed(keyCode, scanCode, modifiers);
+            }
+
+            Slot hoveredSlot = ((HandledScreenAccessor) this.parent).getFocusedSlot();
+            int slotIndex = hoveredSlot != null ? hoveredSlot.id : -1;
+            if (slotIndex < INVENTORY_INDEX || slotIndex >= INVENTORY_INDEX + INVENTORY_SLOTS) {
+                // If not in inventory range, do nothing
+                return super.keyPressed(keyCode, scanCode, modifiers);
+            }
+
+            // Handle slot binding logic
+            if (currentBind == -1) {
+                if (!deleteBinding(slotIndex)) {
+                    setBind(slotIndex);
+                }
+            } else if (currentBind == slotIndex) {
+                resetBind();
+            } else {
+                createBinding(slotIndex);
+            }
+
+            return super.keyPressed(keyCode, scanCode, modifiers);
+        }
+
+        /**
+         * Sets the current bind index to the specified slot.
+         * 
+         * @param slot The slot index to bind.
+         */
+        private void setBind(int slot) {
+            currentBind = slot;
+            tooltip = Text.literal(
+                    "Hover over a slot and press any key to bind it to slot " + (slot + 1) + ".")
+                    .formatted(Formatting.YELLOW);
+        }
+
+        /**
+         * Resets the current binding state, clearing the current bind index and
+         */
+        private void resetBind() {
+            currentBind = -1;
+            tooltip = INSTRUCTIONS.copy();
+        }
+
+        /**
+         * Creates a binding for the specified slot.
+         * 
+         * @param slot The slot index to bind.
+         */
+        private void createBinding(int slot) {
+            // If binding a different slot, update the current bind
+            TaratonList config = SLOT_BINDING_MAP.getInstance();
+            List<KeyValuePair<Integer, KeyValuePair<Integer, Boolean>>> typedList =
+                    INSTANCE.getTypedList(config, TYPE);
+
+            // Update the hotkey for the selected slot
+            typedList.add(new KeyValuePair<>(slot, new KeyValuePair<>(slot, true)));
+            config.customConfig = typedList;
+            SLOT_BINDING_MAP.getHandler().save();
+            INSTANCE.onSave();
+
+            // Show confirmation message
+            Text confirmation =
+                    Text.literal("Bound slot " + (slot + 1) + " to slot " + (currentBind + 1) + "!")
+                            .formatted(Formatting.GREEN);
+            confirmTooltip(confirmation);
+
+            currentBind = -1;
+        }
+
+        /**
+         * Deletes the binding for the specified slot.
+         * 
+         * @param slot The slot index to unbind.
+         * @return True if a binding was removed, false otherwise.
+         */
+        private boolean deleteBinding(int slot) {
+            // Delete all bindings for the specified slot
+            TaratonList config = SLOT_BINDING_MAP.getInstance();
+            List<KeyValuePair<Integer, KeyValuePair<Integer, Boolean>>> typedList =
+                    INSTANCE.getTypedList(config, TYPE);
+
+            boolean removed = typedList.removeIf(
+                    pair -> pair.getValue().getKey() == slot && pair.getValue().getValue());
+            if (removed) {
+                config.customConfig = typedList;
+                SLOT_BINDING_MAP.getHandler().save();
+                INSTANCE.onSave();
+
+                // Show confirmation message
+                Text confirmation =
+                        Text.literal("Unbound slot " + (slot + 1) + " from all bindings!")
+                                .formatted(Formatting.RED);
+                confirmTooltip(confirmation);
+            }
+
+            return removed;
+        }
     }
 }

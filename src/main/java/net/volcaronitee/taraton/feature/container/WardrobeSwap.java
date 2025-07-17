@@ -278,7 +278,7 @@ public class WardrobeSwap {
             int slotIndex = hoveredSlot != null && hoveredSlot.id < WARDROBE_INDEX + WARDROBE_SLOTS
                     ? hoveredSlot.id % WARDROBE_SLOTS + 1
                     : -1;
-            if (slotIndex < 1 || slotIndex > WARDROBE_SLOTS) {
+            if (slotIndex == -1) {
                 // If not in wardrobe range, do nothing
                 return super.keyPressed(keyCode, scanCode, modifiers);
             }
