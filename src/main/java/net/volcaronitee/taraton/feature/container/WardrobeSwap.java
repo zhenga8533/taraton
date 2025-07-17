@@ -19,7 +19,6 @@ import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenKeyboardEvents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.screen.ScreenHandler;
@@ -33,6 +32,8 @@ import net.volcaronitee.taraton.config.TaratonList;
 import net.volcaronitee.taraton.config.controller.KeyBindController;
 import net.volcaronitee.taraton.config.controller.KeyValueController;
 import net.volcaronitee.taraton.config.controller.KeyValueController.KeyValuePair;
+import net.volcaronitee.taraton.interfaces.TooltipSuppressor;
+import net.volcaronitee.taraton.mixin.accessor.HandledScreenAccessor;
 import net.volcaronitee.taraton.util.ScheduleUtil;
 
 /**
@@ -57,6 +58,8 @@ public class WardrobeSwap {
 
     private static final Map<Integer, Integer> SWAP_HOTKEYS = new HashMap<>();
 
+    private boolean editWardrobe = false;
+
     /**
      * Private constructor to prevent instantiation.
      */
@@ -71,6 +74,13 @@ public class WardrobeSwap {
                 return;
             }
 
+            if (INSTANCE.editWardrobe && screen instanceof HandledScreen<?>) {
+                INSTANCE.editWardrobe = false;
+                MinecraftClient.getInstance()
+                        .submit(() -> INSTANCE.createScreen((HandledScreen<?>) screen));
+            }
+
+            // Register the key press event for wardrobe hotkeys
             ScreenKeyboardEvents.beforeKeyPress(screen).register((s, key, scancode, modifiers) -> {
                 ScreenHandler handler = client.player.currentScreenHandler;
                 if (SWAP_HOTKEYS.containsKey(key)) {
@@ -86,9 +96,7 @@ public class WardrobeSwap {
 
                     // Schedule escape input
                     ScheduleUtil.schedule(() -> {
-                        long handle = client.getWindow().getHandle();
-                        client.keyboard.onKey(handle, GLFW.GLFW_KEY_ESCAPE, 0, 1, 0);
-                        client.keyboard.onKey(handle, GLFW.GLFW_KEY_ESCAPE, 0, 0, 0);
+                        s.close();
                     }, 2);
                 }
             });
@@ -111,22 +119,20 @@ public class WardrobeSwap {
      */
     public int setWardrobe(CommandContext<FabricClientCommandSource> context) {
         ScheduleUtil.scheduleCommand("wardrobe", 0);
-        ScheduleUtil.schedule(() -> {
-            MinecraftClient client = MinecraftClient.getInstance();
-            Screen currentScreen = client.currentScreen;
-
-            // Check if the base wardrobe screen is open
-            if (currentScreen instanceof HandledScreen<?>) {
-                HandledScreen<?> parentScreen = (HandledScreen<?>) currentScreen;
-
-                // Create and set the custom wardrobe screen
-                WardrobeScreen customScreen = new WardrobeScreen(parentScreen.getScreenHandler(),
-                        client.player.getInventory(), Text.literal("Wardrobe Swap"), parentScreen);
-                client.setScreen(customScreen);
-            }
-        }, 1);
-
+        editWardrobe = true;
         return 1;
+    }
+
+    /**
+     * Creates a custom wardrobe screen based on the provided parent screen.
+     * 
+     * @param parentScreen The parent screen to base the custom wardrobe screen on.
+     */
+    private void createScreen(HandledScreen<?> screen) {
+        MinecraftClient client = MinecraftClient.getInstance();
+        WardrobeScreen customScreen = new WardrobeScreen(screen.getScreenHandler(),
+                client.player.getInventory(), Text.literal("Edit Wardrobe Swap"), screen);
+        client.setScreen(customScreen);
     }
 
     /**
@@ -135,7 +141,7 @@ public class WardrobeSwap {
     private void onSave() {
         SWAP_HOTKEYS.clear();
         List<KeyValuePair<Integer, KeyValuePair<Integer, Boolean>>> typedList =
-                getTypedList(WARDROBE_SWAP_MAP.getHandler(), TYPE);
+                getTypedList(WARDROBE_SWAP_MAP.getInstance(), TYPE);
 
         for (KeyValuePair<Integer, KeyValuePair<Integer, Boolean>> hotkey : typedList) {
             if (hotkey.getValue().getValue()) {
@@ -207,7 +213,7 @@ public class WardrobeSwap {
      * Custom screen for the wardrobe swap functionality.
      */
     private static class WardrobeScreen extends HandledScreen<ScreenHandler> {
-        private final Screen parent;
+        private final HandledScreen<?> parent;
 
         /**
          * Constructor for the WardrobeScreen.
@@ -218,50 +224,57 @@ public class WardrobeSwap {
          * @param parent The parent screen to return to when closing this screen.
          */
         public WardrobeScreen(ScreenHandler handler, PlayerInventory inventory, Text title,
-                Screen parent) {
+                HandledScreen<?> parent) {
             super(handler, inventory, title);
             this.parent = parent;
-        }
-
-        @Override
-        public void renderBackground(DrawContext context, int mouseX, int mouseY, float delta) {
-            context.fillGradient(0, 0, this.width, this.height, -1072689136, -804253680);
         }
 
         @Override
         protected void drawBackground(DrawContext context, float delta, int mouseX, int mouseY) {}
 
         @Override
+        public void render(DrawContext context, int mouseX, int mouseY, float delta) {
+            TooltipSuppressor parentSuppressor = (TooltipSuppressor) this.parent;
+            parentSuppressor.setSuppressTooltip(true);
+            this.parent.render(context, mouseX, mouseY, delta);
+            parentSuppressor.setSuppressTooltip(false);
+
+            context.drawTooltip(this.textRenderer,
+                    Text.literal("Hover over a slot and press any key to bind it."), mouseX,
+                    mouseY);
+        }
+
+        @Override
         public void close() {
-            this.client.setScreen(this.parent);
+            super.close();
         }
 
         @Override
         public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
             if (keyCode == 256) { // Escape key
                 this.close();
-                return true;
-            }
+            } else {
+                Slot hoveredSlot = ((HandledScreenAccessor) this.parent).getFocusedSlot();
+                int slotIndex = hoveredSlot != null ? hoveredSlot.id - WARDROBE_INDEX + 1 : -1;
 
-            Slot hoveredSlot = this.focusedSlot;
-            int slotIndex = hoveredSlot != null ? hoveredSlot.id : -1;
+                // If hovered slot is in the wardrobe range, handle the hotkey swap
+                if (slotIndex >= 1 && slotIndex < WARDROBE_SLOTS) {
+                    TaratonList config = WARDROBE_SWAP_MAP.getInstance();
+                    List<KeyValuePair<Integer, KeyValuePair<Integer, Boolean>>> typedList =
+                            INSTANCE.getTypedList(config, TYPE);
 
-            // If hovered slot is in the wardrobe range, handle the hotkey swap
-            if (slotIndex >= WARDROBE_INDEX && slotIndex < WARDROBE_INDEX + WARDROBE_SLOTS) {
-                TaratonList config = WARDROBE_SWAP_MAP.getHandler();
-                List<KeyValuePair<Integer, KeyValuePair<Integer, Boolean>>> typedList =
-                        INSTANCE.getTypedList(config, TYPE);
+                    // Update the hotkey for the selected slot
+                    typedList.removeIf(item -> item.getKey() == slotIndex);
+                    typedList.add(new KeyValuePair<>(slotIndex, new KeyValuePair<>(keyCode, true)));
+                    config.customConfig = typedList;
+                    WARDROBE_SWAP_MAP.getHandler().save();
+                    INSTANCE.onSave();
 
-                // Update the hotkey for the selected slot
-                typedList.removeIf(item -> item.getKey() == slotIndex);
-                typedList.add(new KeyValuePair<>(slotIndex, new KeyValuePair<>(keyCode, true)));
-                config.customConfig = typedList;
-                config.onSave(config);
-
-                Taraton.sendMessage(Text
-                        .literal("Set hotkey for slot " + (slotIndex - WARDROBE_INDEX + 1) + " to "
-                                + GLFW.glfwGetKeyName(keyCode, scanCode))
-                        .formatted(Formatting.GREEN));
+                    Taraton.sendMessage(Text
+                            .literal("Set hotkey for slot " + slotIndex + " to "
+                                    + GLFW.glfwGetKeyName(keyCode, scanCode).toUpperCase() + "!")
+                            .formatted(Formatting.GREEN));
+                }
             }
 
             return super.keyPressed(keyCode, scanCode, modifiers);
