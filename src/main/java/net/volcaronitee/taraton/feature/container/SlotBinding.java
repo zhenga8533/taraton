@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import org.lwjgl.glfw.GLFW;
 import com.google.common.reflect.TypeToken;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.brigadier.context.CommandContext;
 import dev.isxander.yacl3.api.ConfigCategory;
 import dev.isxander.yacl3.api.ListOption;
@@ -38,6 +39,7 @@ import net.volcaronitee.taraton.config.controller.KeyValueController.KeyValuePai
 import net.volcaronitee.taraton.interfaces.TooltipSuppressor;
 import net.volcaronitee.taraton.mixin.accessor.HandledScreenAccessor;
 import net.volcaronitee.taraton.util.ScheduleUtil;
+import net.volcaronitee.taraton.util.ScreenUtil;
 
 public class SlotBinding {
     private static final SlotBinding INSTANCE = new SlotBinding();
@@ -82,7 +84,8 @@ public class SlotBinding {
                         .submit(() -> INSTANCE.createScreen((HandledScreen<?>) screen));
             }
 
-            // Register the key press event for slot swapping
+            // Register event listeners for the screen
+            ScreenEvents.afterRender(screen).register(INSTANCE::afterRender);
             ScreenMouseEvents.allowMouseClick(screen).register(INSTANCE::allowMouseClick);
         });
     }
@@ -161,6 +164,59 @@ public class SlotBinding {
      */
     private boolean allowMouseClick(Screen screen, double mouseX, double mouseY, int button) {
         return true;
+    }
+
+    /**
+     * Handles rendering after the screen has been drawn, highlighting the currently bound slots and
+     * rendering lines between hovered slots and their bindings.
+     * 
+     * @param screen The screen being rendered.
+     * @param context The draw context for rendering.
+     * @param mouseX The x-coordinate of the mouse cursor.
+     * @param mouseY The y-coordinate of the mouse cursor.
+     * @param delta The delta time since the last frame.
+     */
+    private void afterRender(Screen screen, DrawContext context, int mouseX, int mouseY,
+            float delta) {
+        if (!(screen instanceof HandledScreen<?> handledScreen) || SLOT_BINDINGS.isEmpty()) {
+            return;
+        }
+
+        HandledScreenAccessor accessor = (HandledScreenAccessor) handledScreen;
+        int parentX = accessor.getX();
+        int parentY = accessor.getY();
+
+        // Highlight slots
+        context.getMatrices().push();
+        context.getMatrices().translate(parentX, parentY, 0);
+        for (Integer slotIndex : SLOT_BINDINGS.keySet()) {
+            Slot slot = handledScreen.getScreenHandler().getSlot(slotIndex);
+            ScreenUtil.highlightSlot(context, slot, 0x4000FF00, 200);
+        }
+        context.getMatrices().pop();
+
+        // Draw lines from hovered slot
+        Slot hoveredSlot = accessor.getFocusedSlot();
+        if (hoveredSlot != null && SLOT_BINDINGS.containsKey(hoveredSlot.id)) {
+            List<Integer> boundSlots = SLOT_BINDINGS.get(hoveredSlot.id);
+            if (boundSlots != null && !boundSlots.isEmpty()) {
+
+                RenderSystem.lineWidth(2.0f);
+
+                context.getMatrices().push();
+                context.getMatrices().translate(parentX, parentY, 0);
+
+                int lineColor = 0xFFFFFF00;
+                for (Integer targetSlotIndex : boundSlots) {
+                    Slot targetSlot = handledScreen.getScreenHandler().getSlot(targetSlotIndex);
+                    ScreenUtil.drawLine(context, hoveredSlot, targetSlot, 401, lineColor);
+                }
+
+                context.getMatrices().pop();
+
+                RenderSystem.lineWidth(1.0f);
+            }
+        }
     }
 
     /**
