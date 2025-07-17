@@ -56,7 +56,7 @@ public class SlotBinding {
         SLOT_BINDING_MAP.setSaveCallback(INSTANCE::onSave);
     }
 
-    private static final Map<Integer, Integer> SLOT_BINDINGS = new HashMap<>();
+    private static final Map<Integer, List<Integer>> SLOT_BINDINGS = new HashMap<>();
 
     private boolean editBindings = false;
 
@@ -134,10 +134,19 @@ public class SlotBinding {
         List<KeyValuePair<Integer, KeyValuePair<Integer, Boolean>>> typedList =
                 getTypedList(SLOT_BINDING_MAP.getInstance(), TYPE);
 
-        for (KeyValuePair<Integer, KeyValuePair<Integer, Boolean>> hotkey : typedList) {
-            if (hotkey.getValue().getValue()) {
-                SLOT_BINDINGS.put(hotkey.getValue().getKey(), hotkey.getKey());
+        for (KeyValuePair<Integer, KeyValuePair<Integer, Boolean>> binding : typedList) {
+            if (!binding.getValue().getValue()) {
+                continue;
             }
+
+            int source = binding.getKey();
+            int target = binding.getValue().getKey();
+
+            // Add forward binding (Source -> Target)
+            SLOT_BINDINGS.computeIfAbsent(source, k -> new ArrayList<>()).add(target);
+
+            // Add reverse binding (Target -> Source)
+            SLOT_BINDINGS.computeIfAbsent(target, k -> new ArrayList<>()).add(source);
         }
     }
 
@@ -233,7 +242,7 @@ public class SlotBinding {
                         .formatted(Formatting.YELLOW);
         private Text tooltip = INSTRUCTIONS.copy();
 
-        private int currentBind = -1;
+        private int currentSlot = -1;
 
         /**
          * Constructor for the BindingScreen.
@@ -277,13 +286,13 @@ public class SlotBinding {
             parentSuppressor.setSuppressTooltip(false);
 
             // Handle slot highlighting
-            if (currentBind != -1) {
+            if (currentSlot != -1) {
                 HandledScreenAccessor parentAccessor = (HandledScreenAccessor) this.parent;
                 int parentX = parentAccessor.getX();
                 int parentY = parentAccessor.getY();
 
                 // Get the slot to highlight from the parent handler
-                Slot slot = this.parent.getScreenHandler().getSlot(currentBind);
+                Slot slot = this.parent.getScreenHandler().getSlot(currentSlot);
 
                 if (slot != null) {
                     // Manually apply the parent's coordinate system
@@ -323,11 +332,11 @@ public class SlotBinding {
             }
 
             // Handle slot binding logic
-            if (currentBind == -1) {
+            if (currentSlot == -1) {
                 if (!deleteBinding(slotIndex)) {
                     setBind(slotIndex);
                 }
-            } else if (currentBind == slotIndex) {
+            } else if (currentSlot == slotIndex) {
                 resetBind();
             } else {
                 createBinding(slotIndex);
@@ -342,7 +351,7 @@ public class SlotBinding {
          * @param slot The slot index to bind.
          */
         private void setBind(int slot) {
-            currentBind = slot;
+            currentSlot = slot;
             tooltip = Text.literal(
                     "Hover over a slot and press any key to bind it to slot " + (slot + 1) + ".")
                     .formatted(Formatting.YELLOW);
@@ -352,7 +361,7 @@ public class SlotBinding {
          * Resets the current binding state, clearing the current bind index and
          */
         private void resetBind() {
-            currentBind = -1;
+            currentSlot = -1;
             tooltip = INSTRUCTIONS.copy();
         }
 
@@ -368,18 +377,18 @@ public class SlotBinding {
                     INSTANCE.getTypedList(config, TYPE);
 
             // Update the hotkey for the selected slot
-            typedList.add(new KeyValuePair<>(slot, new KeyValuePair<>(slot, true)));
+            typedList.add(new KeyValuePair<>(currentSlot, new KeyValuePair<>(slot, true)));
             config.customConfig = typedList;
             SLOT_BINDING_MAP.getHandler().save();
             INSTANCE.onSave();
 
             // Show confirmation message
             Text confirmation =
-                    Text.literal("Bound slot " + (slot + 1) + " to slot " + (currentBind + 1) + "!")
+                    Text.literal("Bound slot " + (slot + 1) + " to slot " + (currentSlot + 1) + "!")
                             .formatted(Formatting.GREEN);
             confirmTooltip(confirmation);
 
-            currentBind = -1;
+            currentSlot = -1;
         }
 
         /**
@@ -394,8 +403,7 @@ public class SlotBinding {
             List<KeyValuePair<Integer, KeyValuePair<Integer, Boolean>>> typedList =
                     INSTANCE.getTypedList(config, TYPE);
 
-            boolean removed = typedList.removeIf(
-                    pair -> pair.getValue().getKey() == slot && pair.getValue().getValue());
+            boolean removed = typedList.removeIf(pair -> pair.getValue().getKey() == slot);
             if (removed) {
                 config.customConfig = typedList;
                 SLOT_BINDING_MAP.getHandler().save();
