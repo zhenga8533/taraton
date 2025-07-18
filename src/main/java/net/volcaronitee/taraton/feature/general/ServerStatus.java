@@ -126,7 +126,7 @@ public class ServerStatus {
 
         fps = client.getCurrentFps();
         tps = estimateTps();
-        day = MinecraftClient.getInstance().world.getTime() / 24000.0f;
+        day = MinecraftClient.getInstance().world.getTimeOfDay() / 24000.0f;
 
         updateOverlay();
     }
