@@ -46,10 +46,10 @@ public class SlotBinding {
     private static final SlotBinding INSTANCE = new SlotBinding();
 
     private static final int INVENTORY_INDEX = 5;
-    private static final int INVENTORY_SLOTS = 39;
+    private static final int INVENTORY_SLOTS = 40;
 
     private static final int HOTBAR_START_INDEX = 36;
-    private static final int HOTBAR_END_INDEX = 44;
+    private static final int HOTBAR_END_INDEX = 45;
 
     private static final String TITLE = "Slot Binding Map";
     private static final Text DESCRIPTION = Text.literal("A list of slot bindings.");
@@ -160,15 +160,6 @@ public class SlotBinding {
         updateSlotColors();
     }
 
-    /**
-     * Overrides mouse clicks if targeting a slot binding.
-     * 
-     * @param screen The screen where the mouse click occurred.
-     * @param mouseX The x-coordinate of the mouse click.
-     * @param mouseY The y-coordinate of the mouse click.
-     * @param button The mouse button that was clicked.
-     * @return True if the mouse click should be allowed, false otherwise.
-     */
     /**
      * Overrides mouse clicks if targeting a slot binding. If a user Shift-clicks a slot with a
      * single binding, it will swap the items with its bound hotbar/inventory slot.
@@ -289,8 +280,8 @@ public class SlotBinding {
     }
 
     /**
-     * Updates the slot colors based on the current bindings. The color for each slot is generated
-     * based on a canonical pair of itself and its first bound neighbor.
+     * Updates the slot colors based on the current bindings, generating a unique color for each
+     * binding pair.
      */
     private void updateSlotColors() {
         SLOT_COLORS.clear();
@@ -303,38 +294,31 @@ public class SlotBinding {
                 continue;
             }
 
-            // The color is determined only by this slot and its first listed binding.
             int slot2 = boundSlots.get(0);
-            int color = generateColorFromPair(slot1, slot2);
+
+            // Create a canonical representation by ordering the pair.
+            int small = Math.min(slot1, slot2);
+            int large = Math.max(slot1, slot2);
+
+            // Create a unique 64-bit seed from the pair of slot IDs.
+            long seed = (long) small << 32 | large;
+            java.util.Random random = new java.util.Random(seed);
+
+            // Generate a well-distributed color using the seeded random generator.
+            float r = 0.4f + random.nextFloat() * 0.6f;
+            float g = 0.4f + random.nextFloat() * 0.6f;
+            float b = 0.4f + random.nextFloat() * 0.6f;
+
+            // Convert float components to integer components
+            int red = (int) (r * 255);
+            int green = (int) (g * 255);
+            int blue = (int) (b * 255);
+
+            // Combine into a final ARGB color with 25% alpha
+            int color = 0x40000000 | (red << 16) | (green << 8) | blue;
+
             SLOT_COLORS.put(slot1, color);
         }
-    }
-
-    /**
-     * Generates a consistent and visually distinct color from a pair of slot IDs.
-     *
-     * @param slot1 The first slot ID in the pair.
-     * @param slot2 The second slot ID in the pair.
-     * @return An integer representing the generated ARGB color.
-     */
-    private int generateColorFromPair(int slot1, int slot2) {
-        // Create a canonical representation by always ordering the pair.
-        // This ensures that the color for (A, B) is the same as for (B, A).
-        int small = Math.min(slot1, slot2);
-        int large = Math.max(slot1, slot2);
-
-        // Combine the two integers into a single stable hash.
-        int hash = 31 + small;
-        hash = 31 * hash + large;
-
-        // Use the HSB color model to generate a vibrant, unique color from the hash.
-        float hue = (hash & 0xFFFF) / (float) 0xFFFF;
-        float saturation = 0.7f + ((hash >> 16) & 0xFF) / (255f * 2f);
-        float brightness = 0.9f;
-
-        int rgb = java.awt.Color.HSBtoRGB(hue, saturation, brightness);
-
-        return 0x40000000 | (rgb & 0x00FFFFFF);
     }
 
     /**
@@ -411,9 +395,8 @@ public class SlotBinding {
     private static class BindingScreen extends HandledScreen<ScreenHandler> {
         private final HandledScreen<?> parent;
 
-        private static final Text INSTRUCTIONS =
-                Text.literal("Hover over a slot and press any key to bind it.")
-                        .formatted(Formatting.YELLOW);
+        private static final Text INSTRUCTIONS = Text
+                .literal("Hover over a slot and press B to bind it.").formatted(Formatting.YELLOW);
         private Text tooltip = INSTRUCTIONS.copy();
 
         private int currentSlot = -1;
@@ -497,6 +480,8 @@ public class SlotBinding {
             if (keyCode == 256) { // Escape key
                 this.close();
                 return super.keyPressed(keyCode, scanCode, modifiers);
+            } else if (keyCode != 66) { // Not 'B' key
+                return super.keyPressed(keyCode, scanCode, modifiers);
             }
 
             Slot hoveredSlot = ((HandledScreenAccessor) this.parent).getFocusedSlot();
@@ -527,8 +512,8 @@ public class SlotBinding {
          */
         private void setBind(int slot) {
             currentSlot = slot;
-            tooltip = Text.literal(
-                    "Hover over a slot and press any key to bind it to slot " + (slot + 1) + ".")
+            tooltip = Text
+                    .literal("Hover over a slot and press B to bind it to slot " + (slot + 1) + ".")
                     .formatted(Formatting.YELLOW);
         }
 
