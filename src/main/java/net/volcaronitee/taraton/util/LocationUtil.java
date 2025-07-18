@@ -6,6 +6,8 @@ import net.hypixel.data.type.LobbyType;
 import net.hypixel.data.type.ServerType;
 import net.hypixel.modapi.HypixelModAPI;
 import net.hypixel.modapi.packet.impl.clientbound.event.ClientboundLocationPacket;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.network.PlayerListEntry;
 
 /**
  * Utility class for detecting world and location information.
@@ -17,6 +19,7 @@ public class LocationUtil {
     private static String mode = "";
     private static ServerType serverType = LobbyType.MAIN;
     private static World world = World.UNKNOWN;
+    private static String zone = "";
 
     private static final List<Runnable> CALLBACKS = new ArrayList<>();
 
@@ -85,6 +88,7 @@ public class LocationUtil {
      * Initializes the LocationUtil by subscribing to the ClientboundLocationPacket
      */
     public static void init() {
+        TickUtil.register(LocationUtil::updateZone, 20);
         HypixelModAPI.getInstance().subscribeToEventPacket(ClientboundLocationPacket.class);
         HypixelModAPI.getInstance().createHandler(ClientboundLocationPacket.class,
                 LocationUtil::handleLocationPacket);
@@ -97,6 +101,24 @@ public class LocationUtil {
      */
     public static void registerCallback(Runnable callback) {
         CALLBACKS.add(callback);
+    }
+
+    /**
+     * Updates the zone information based on the current server type and world.
+     * 
+     * @param client The Minecraft client instance used to access the world and server information.
+     */
+    private static void updateZone(MinecraftClient client) {
+        List<PlayerListEntry> tablist = TablistUtil.getTablist();
+        String zone = tablist.stream()
+                .map(entry -> entry.getDisplayName() != null ? entry.getDisplayName().getString()
+                        : "")
+                .filter(name -> name.startsWith(" ⏣ ") || name.startsWith(" ф "))
+                .map(name -> name.substring(3).trim()).findFirst().orElse("");
+
+        if (!zone.isEmpty()) {
+            LocationUtil.zone = zone;
+        }
     }
 
     /**
@@ -174,14 +196,23 @@ public class LocationUtil {
     }
 
     /**
+     * Returns the zone of the server.
+     * 
+     * @return The zone of the server, or an empty string if not available.
+     */
+    public static String getZone() {
+        return zone;
+    }
+
+    /**
      * Returns a debug message containing the current location information.
      * 
      * @return A formatted string with the server, lobby, map, mode, type, and version.
      */
     public static String debugLocation() {
         String debugMessage = String.format(
-                "Location Info:\nServer: %s\nLobby: %s\nMap: %s\nMode: %s\nType: %s\nWorld: %s",
-                serverName, lobbyName, map, mode, serverType.name(), world.name());
+                "Location Info:\nServer: %s\nLobby: %s\nMap: %s\nMode: %s\nType: %s\nWorld: %s\nZone: %s",
+                serverName, lobbyName, map, mode, serverType.name(), world.name(), zone);
         return debugMessage;
     }
 }

@@ -25,6 +25,10 @@ public class TablistUtil {
      */
     private TablistUtil() {}
 
+    /**
+     * Initializes the TablistUtil by registering a tick handler to update the tab list
+     * periodically.
+     */
     public static void init() {
         TickUtil.register(TablistUtil::updateTablist, 5);
     }
