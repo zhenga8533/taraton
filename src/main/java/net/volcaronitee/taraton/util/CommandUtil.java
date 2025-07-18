@@ -115,6 +115,8 @@ public class CommandUtil {
                                 .then(PlayerScale.PLAYER_SCALE_MAP.createCommand("psm"))
                                 .then(ProtectItem.PROTECT_MAP.createCommand("protectmap"))
                                 .then(ProtectItem.PROTECT_MAP.createCommand("pm"))
+                                .then(SlotBinding.SLOT_BINDING_MAP.createCommand("slotbindingmap"))
+                                .then(SlotBinding.SLOT_BINDING_MAP.createCommand("sbm"))
                                 .then(TextSubstitution.SUBSTITUTION_MAP.createCommand("submap"))
                                 .then(TextSubstitution.SUBSTITUTION_MAP.createCommand("sm"))
                                 .then(WardrobeSwap.WARDROBE_SWAP_MAP

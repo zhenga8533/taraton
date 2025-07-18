@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import org.lwjgl.glfw.GLFW;
 import com.google.common.reflect.TypeToken;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.brigadier.context.CommandContext;
@@ -26,7 +25,6 @@ import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.gui.screen.ingame.InventoryScreen;
 import net.minecraft.client.network.ClientPlayerInteractionManager;
 import net.minecraft.client.render.RenderLayer;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
@@ -114,14 +112,12 @@ public class SlotBinding {
      * @return 1 if the command was successful, 0 otherwise.
      */
     public int setSlotBinding(CommandContext<FabricClientCommandSource> context) {
-        final FabricClientCommandSource source = context.getSource();
-        final MinecraftClient client = source.getClient();
-        final PlayerEntity player = source.getPlayer();
+        ScheduleUtil.schedule(() -> {
+            MinecraftClient client = MinecraftClient.getInstance();
+            client.setScreen(new InventoryScreen(client.player));
+        }, 0);
 
-        client.execute(() -> {
-            editBindings = true;
-            client.setScreen(new InventoryScreen(player));
-        });
+        editBindings = true;
         return 1;
     }
 
@@ -350,8 +346,8 @@ public class SlotBinding {
                                                         INSTANCE::createSlotController)
                                                 .valueController("Enabled",
                                                         TickBoxControllerBuilder::create)))
-                        .initial(new KeyValuePair<>(1,
-                                new KeyValuePair<>(GLFW.GLFW_KEY_UNKNOWN, true)))
+                        .initial(new KeyValuePair<>(INVENTORY_INDEX,
+                                new KeyValuePair<>(HOTBAR_START_INDEX, true)))
                         .build())
                 .build();
     }
@@ -434,6 +430,7 @@ public class SlotBinding {
                 }
             }
 
+            INSTANCE.afterRender(this.parent, context, mouseX, mouseY, delta);
             context.drawTooltip(this.textRenderer, tooltip, mouseX, mouseY);
         }
 
