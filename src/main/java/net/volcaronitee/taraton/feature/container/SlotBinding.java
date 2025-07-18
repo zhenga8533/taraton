@@ -2,9 +2,14 @@ package net.volcaronitee.taraton.feature.container;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Queue;
+import java.util.Set;
 import java.util.stream.Collectors;
 import com.google.common.reflect.TypeToken;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -63,6 +68,7 @@ public class SlotBinding {
     }
 
     private static final Map<Integer, List<Integer>> SLOT_BINDINGS = new HashMap<>();
+    private static final Map<Integer, Integer> SLOT_COLORS = new HashMap<>();
 
     private boolean editBindings = false;
 
@@ -155,6 +161,8 @@ public class SlotBinding {
             // Add reverse binding (Target -> Source)
             SLOT_BINDINGS.computeIfAbsent(target, k -> new ArrayList<>()).add(source);
         }
+
+        updateSlotColors();
     }
 
     /**
@@ -255,8 +263,9 @@ public class SlotBinding {
         context.getMatrices().push();
         context.getMatrices().translate(parentX, parentY, 0);
         for (Integer slotIndex : SLOT_BINDINGS.keySet()) {
+            int color = SLOT_COLORS.getOrDefault(slotIndex, 0x40FFFFFF);
             Slot slot = handledScreen.getScreenHandler().getSlot(slotIndex);
-            ScreenUtil.highlightSlot(context, slot, 0x4000FF00, 200);
+            ScreenUtil.highlightSlot(context, slot, color, 200);
         }
         context.getMatrices().pop();
 
@@ -282,6 +291,62 @@ public class SlotBinding {
                 RenderSystem.lineWidth(1.0f);
             }
         }
+    }
+
+    /**
+     * Updates the slot colors based on the current bindings, assigning a unique color to each
+     * connected component of bound slots.
+     */
+    private void updateSlotColors() {
+        SLOT_COLORS.clear();
+        Set<Integer> visitedSlots = new HashSet<>();
+
+        for (Integer startSlot : SLOT_BINDINGS.keySet()) {
+            if (!visitedSlots.contains(startSlot)) {
+                List<Integer> currentComponent = new ArrayList<>();
+                Queue<Integer> queue = new LinkedList<>();
+
+                queue.add(startSlot);
+                visitedSlots.add(startSlot);
+
+                while (!queue.isEmpty()) {
+                    int currentSlot = queue.poll();
+                    currentComponent.add(currentSlot);
+
+                    for (int neighbor : SLOT_BINDINGS.getOrDefault(currentSlot,
+                            Collections.emptyList())) {
+                        if (!visitedSlots.contains(neighbor)) {
+                            visitedSlots.add(neighbor);
+                            queue.add(neighbor);
+                        }
+                    }
+                }
+
+                int componentColor = generateColorFromComponent(currentComponent);
+                for (Integer slotId : currentComponent) {
+                    SLOT_COLORS.put(slotId, componentColor);
+                }
+            }
+        }
+    }
+
+    /**
+     * Generates a consistent color from a list of slot IDs in a component.
+     * 
+     * @param component The list of slot IDs forming a binding group.
+     * @return An integer representing the generated color.
+     */
+    private int generateColorFromComponent(List<Integer> component) {
+        Collections.sort(component);
+        int hash = component.hashCode();
+
+        // Use the hash to generate RGB values, ensuring they are not too dark.
+        int r = Math.max((hash & 0xFF0000) >> 16, 60);
+        int g = Math.max((hash & 0x00FF00) >> 8, 60);
+        int b = Math.max((hash & 0x0000FF), 60);
+
+        // Combine with a 25% alpha for highlighting (0x40 = 64/255)
+        return 0x40000000 | (r << 16) | (g << 8) | b;
     }
 
     /**
