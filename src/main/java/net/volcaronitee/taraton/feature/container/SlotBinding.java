@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import com.google.common.reflect.TypeToken;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.brigadier.context.CommandContext;
 import dev.isxander.yacl3.api.ConfigCategory;
 import dev.isxander.yacl3.api.ListOption;
@@ -262,21 +261,20 @@ public class SlotBinding {
         if (hoveredSlot != null && SLOT_BINDINGS.containsKey(hoveredSlot.id)) {
             List<Integer> boundSlots = SLOT_BINDINGS.get(hoveredSlot.id);
             if (boundSlots != null && !boundSlots.isEmpty()) {
-
-                RenderSystem.lineWidth(2.0f);
-
                 context.getMatrices().push();
                 context.getMatrices().translate(parentX, parentY, 0);
 
                 int lineColor = Colors.YELLOW;
+                float lineThickness = 2.0f;
+
+                // Draw lines from the hovered slot to all bound slots
                 for (Integer targetSlotIndex : boundSlots) {
                     Slot targetSlot = handledScreen.getScreenHandler().getSlot(targetSlotIndex);
-                    ScreenUtil.drawLine(context, hoveredSlot, targetSlot, 401, lineColor);
+                    ScreenUtil.drawLine(context, hoveredSlot, targetSlot, 401, lineColor,
+                            lineThickness);
                 }
 
                 context.getMatrices().pop();
-
-                RenderSystem.lineWidth(1.0f);
             }
         }
     }

@@ -33,46 +33,66 @@ public final class ScreenUtil {
     }
 
     /**
-     * Draws a single line between two slots, handling all rendering setup and flushing internally.
-     *
+     * Draws a line between two slots with a specified color and thickness.
+     * 
      * @param context The current DrawContext.
-     * @param slot1 The starting slot.
-     * @param slot2 The ending slot.
-     * @param z The z-level for rendering.
+     * @param slot1 The first slot to draw the line from.
+     * @param slot2 The second slot to draw the line to.
+     * @param z The z-level for rendering, determining the draw order.
      * @param color The ARGB color of the line.
+     * @param thickness The thickness of the line to be drawn.
      */
-    public static void drawLine(DrawContext context, Slot slot1, Slot slot2, float z, int color) {
-        if (context == null || slot1 == null || slot2 == null) {
+    public static void drawLine(DrawContext context, Slot slot1, Slot slot2, float z, int color,
+            float thickness) {
+        if (context == null || slot1 == null || slot2 == null || thickness <= 0) {
             return;
         }
 
-        // Get center coordinates of the slots
         float x1 = slot1.x + 8f;
         float y1 = slot1.y + 8f;
         float x2 = slot2.x + 8f;
         float y2 = slot2.y + 8f;
 
-        // If the line is perfectly vertical or horizontal, use fill for better performance
-        if (x1 == x2) { // Vertical line
-            context.fill((int) x1, (int) Math.min(y1, y2), (int) x1 + 1, (int) Math.max(y1, y2),
-                    (int) z, color);
-            return;
-        }
-        if (y1 == y2) { // Horizontal line
-            context.fill((int) Math.min(x1, x2), (int) y1, (int) Math.max(x1, x2), (int) y1 + 1,
-                    (int) z, color);
-            return;
-        }
-
-        // Logic for diagonal lines remains unchanged
+        // Get the immediate vertex consumer for rendering
         VertexConsumerProvider.Immediate immediate =
                 MinecraftClient.getInstance().getBufferBuilders().getEntityVertexConsumers();
-        VertexConsumer vertexConsumer = immediate.getBuffer(RenderLayer.getLines());
+        VertexConsumer vertexConsumer = immediate.getBuffer(RenderLayer.getGui());
         Matrix4f matrix = context.getMatrices().peek().getPositionMatrix();
 
-        drawLine(vertexConsumer, matrix, x1, y1, x2, y2, z, color);
+        float dx = x2 - x1;
+        float dy = y2 - y1;
+        float length = (float) Math.sqrt(dx * dx + dy * dy);
+
+        if (length == 0) {
+            return;
+        }
+
+        // Calculate the perpendicular vector for the line's thickness
+        float px = -dy / length * (thickness / 2f);
+        float py = dx / length * (thickness / 2f);
+
+        // Define the four corners of the rectangle (quad) representing the line
+        float p1x = x1 + px;
+        float p1y = y1 + py;
+        float p2x = x2 + px;
+        float p2y = y2 + py;
+        float p3x = x2 - px;
+        float p3y = y2 - py;
+        float p4x = x1 - px;
+        float p4y = y1 - py;
+
+        // Draw the first triangle of the quad
+        vertexConsumer.vertex(matrix, p1x, p1y, z).color(color);
+        vertexConsumer.vertex(matrix, p2x, p2y, z).color(color);
+        vertexConsumer.vertex(matrix, p3x, p3y, z).color(color);
+        vertexConsumer.vertex(matrix, p4x, p4y, z).color(color);
+
+        // Draw the second triangle to complete the quad
+        vertexConsumer.vertex(matrix, p1x, p1y, z).color(color);
+        vertexConsumer.vertex(matrix, p3x, p3y, z).color(color);
         immediate.draw();
     }
+
 
     /**
      * Draws a line between two points in 3D space using the provided vertex consumer and matrix.
