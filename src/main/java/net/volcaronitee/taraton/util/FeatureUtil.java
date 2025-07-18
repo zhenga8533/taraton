@@ -12,6 +12,7 @@ import net.volcaronitee.taraton.feature.chat.PlaytimeWarning;
 import net.volcaronitee.taraton.feature.chat.SpamHider;
 import net.volcaronitee.taraton.feature.combat.EntityHighlight;
 import net.volcaronitee.taraton.feature.combat.LowHealthWarning;
+import net.volcaronitee.taraton.feature.container.ArmorDisplay;
 import net.volcaronitee.taraton.feature.container.ContainerPreview;
 import net.volcaronitee.taraton.feature.container.SlotBinding;
 import net.volcaronitee.taraton.feature.container.WardrobeSwap;
@@ -67,6 +68,7 @@ public class FeatureUtil {
         SkyBlockXpAlert.register();
 
         // Container Features
+        ArmorDisplay.register();
         ContainerPreview.register();
         // Searchbar.register();
         SlotBinding.register();

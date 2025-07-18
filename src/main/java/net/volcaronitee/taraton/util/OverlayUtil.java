@@ -284,6 +284,17 @@ public class OverlayUtil {
         }
 
         /**
+         * Creates a new LineContent instance with the specified item stack.
+         * 
+         * @param item The item stack to display in the line.
+         * @param shouldRender A supplier that determines if the line should be rendered.
+         */
+        public LineContent(ItemStack item, Supplier<Boolean> shouldRender) {
+            this.items.add(item);
+            this.shouldRender = shouldRender;
+        }
+
+        /**
          * Creates a new LineContent instance with no initial text.
          * 
          * @param shouldRender A supplier that determines if the line should be rendered.
@@ -312,6 +323,16 @@ public class OverlayUtil {
          */
         public String getText() {
             return startText + text;
+        }
+
+        /**
+         * Sets the text component for the line content.
+         * 
+         * @param item The text component to set for the line content.
+         */
+        public void setItemStack(ItemStack item) {
+            this.items.clear();
+            this.items.add(item);
         }
     }
 
@@ -431,7 +452,9 @@ public class OverlayUtil {
                 float drawY = y + (i * lineHeight);
 
                 for (ItemStack stack : line.items) {
-                    context.drawItem(stack, (int) (x + offsetX), (int) drawY);
+                    if (stack != null && !stack.isEmpty()) {
+                        context.drawItem(stack, (int) (x + offsetX), (int) drawY);
+                    }
                     offsetX += FONT_SIZE * scale;
                 }
 
