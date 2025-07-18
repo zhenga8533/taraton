@@ -30,6 +30,7 @@ import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.screen.slot.SlotActionType;
 import net.minecraft.text.Text;
+import net.minecraft.util.Colors;
 import net.minecraft.util.Formatting;
 import net.volcaronitee.taraton.Taraton;
 import net.volcaronitee.taraton.config.TaratonConfig;
@@ -42,6 +43,9 @@ import net.volcaronitee.taraton.mixin.accessor.HandledScreenAccessor;
 import net.volcaronitee.taraton.util.ScheduleUtil;
 import net.volcaronitee.taraton.util.ScreenUtil;
 
+/**
+ * Feature for managing slot bindings in the player's inventory.
+ */
 public class SlotBinding {
     private static final SlotBinding INSTANCE = new SlotBinding();
 
@@ -264,7 +268,7 @@ public class SlotBinding {
                 context.getMatrices().push();
                 context.getMatrices().translate(parentX, parentY, 0);
 
-                int lineColor = 0xFFFFFF00;
+                int lineColor = Colors.YELLOW;
                 for (Integer targetSlotIndex : boundSlots) {
                     Slot targetSlot = handledScreen.getScreenHandler().getSlot(targetSlotIndex);
                     ScreenUtil.drawLine(context, hoveredSlot, targetSlot, 401, lineColor);
@@ -455,7 +459,7 @@ public class SlotBinding {
                     context.getMatrices().translate(parentX, parentY, 0);
 
                     // Draw the highlight at the slot's relative position
-                    int color = 0x80FFD700; // 50% transparent gold
+                    int color = Colors.WHITE | 0x80000000; // 50% alpha
                     context.fill(RenderLayer.getGuiOverlay(), slot.x, slot.y, slot.x + 16,
                             slot.y + 16, color);
 

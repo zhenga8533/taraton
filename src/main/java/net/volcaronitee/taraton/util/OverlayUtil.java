@@ -451,8 +451,8 @@ public class OverlayUtil {
                 MinecraftClient client = MinecraftClient.getInstance();
                 int screenWidth = client.getWindow().getScaledWidth();
                 int screenHeight = client.getWindow().getScaledHeight();
-                context.fill(0, y - 1, screenWidth, y, 0xFFFFFFFF);
-                context.fill(x - 1, 0, x, screenHeight, 0xFFFFFFFF);
+                context.fill(0, y - 1, screenWidth, y, Colors.WHITE);
+                context.fill(x - 1, 0, x, screenHeight, Colors.WHITE);
 
                 // Draw position text
                 String positionText = String.format("X: %d, Y: %d", x, y);

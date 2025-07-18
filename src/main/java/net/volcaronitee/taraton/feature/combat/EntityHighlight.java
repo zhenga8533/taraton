@@ -19,6 +19,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.registry.Registries;
 import net.minecraft.text.Text;
+import net.minecraft.util.Colors;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Box;
 import net.volcaronitee.taraton.config.TaratonConfig;
@@ -308,7 +309,7 @@ public class EntityHighlight {
         if (HIGHLIGHTED_ENTITIES.containsKey(entity)) {
             return HIGHLIGHTED_ENTITIES.get(entity).color;
         }
-        return 0xFFFFFF;
+        return Colors.WHITE;
     }
 
     /**
@@ -334,7 +335,7 @@ public class EntityHighlight {
             String truncatedHex = hashText.substring(0, 6);
             return Integer.parseInt(truncatedHex, 16);
         } catch (NoSuchAlgorithmException e) {
-            return 0xFFFFFF;
+            return Colors.WHITE;
         }
     }
 

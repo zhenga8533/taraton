@@ -19,6 +19,7 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
 import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
+import net.minecraft.util.Colors;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
@@ -246,9 +247,6 @@ public class RenderUtil {
                 (float) (pos.getY() - cameraPos.getY()), (float) (pos.getZ() - cameraPos.getZ()))
                 .rotate(camera.getRotation()).scale(distanceScale, -distanceScale, distanceScale);
 
-        int textColor = 0xFFFFFFFF;
-        int backgroundColor = 0x90000000;
-
         Immediate consumers = VertexConsumerProvider.immediate(ALLOCATOR);
 
         // Calculate the total height of the text block to vertically center it
@@ -261,7 +259,9 @@ public class RenderUtil {
             float xOffset = -textRenderer.getWidth(line) / 2f;
 
             // Draw the current line
-            textRenderer.draw(line, xOffset, currentY, textColor, false, positionMatrix, consumers,
+            int backgroundColor = Colors.BLACK | 0x80000000;
+            textRenderer.draw(line, xOffset, currentY, Colors.WHITE, false, positionMatrix,
+                    consumers,
                     throughWalls ? TextRenderer.TextLayerType.SEE_THROUGH
                             : TextRenderer.TextLayerType.NORMAL,
                     backgroundColor, LightmapTextureManager.MAX_LIGHT_COORDINATE);
