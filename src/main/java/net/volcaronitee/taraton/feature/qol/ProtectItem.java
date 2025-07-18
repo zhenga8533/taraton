@@ -8,9 +8,6 @@ import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.NbtComponent;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.packet.c2s.play.ClickSlotC2SPacket;
-import net.minecraft.network.packet.c2s.play.PlayerActionC2SPacket;
-import net.minecraft.screen.slot.SlotActionType;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.volcaronitee.taraton.Taraton;
@@ -92,46 +89,13 @@ public class ProtectItem {
     }
 
     /**
-     * Checks if the item throw action should be canceled based on the player's click packet.
-     * 
-     * @param clickPacket The ClickSlotC2SPacket containing the click action to be checked.
-     * @return True if the throw action should be canceled, false otherwise.
-     */
-    public boolean shouldCancelThrow(ClickSlotC2SPacket clickPacket) {
-        if (clickPacket.actionType() == SlotActionType.THROW && clickPacket.slot() == -999) {
-            ItemStack cursorStack =
-                    MinecraftClient.getInstance().player.currentScreenHandler.getCursorStack();
-            return cancelStack(cursorStack);
-        }
-
-        return false;
-    }
-
-    /**
-     * Checks if the item drop action should be canceled based on the player's action packet.
-     * 
-     * @param actionPacket The PlayerActionC2SPacket containing the action to be checked.
-     * @return True if the drop action should be canceled, false otherwise.
-     */
-    public boolean shouldCancelDrop(PlayerActionC2SPacket actionPacket) {
-        PlayerActionC2SPacket.Action action = actionPacket.getAction();
-        if (action == PlayerActionC2SPacket.Action.DROP_ITEM
-                || action == PlayerActionC2SPacket.Action.DROP_ALL_ITEMS) {
-            ItemStack handStack = MinecraftClient.getInstance().player.getMainHandStack();
-            return cancelStack(handStack);
-        }
-
-        return false;
-    }
-
-    /**
      * Checks if the item stack should be canceled from being dropped or thrown.
      * 
      * @param stack The ItemStack to check for protection.
      * @return True if the item stack is protected and should not be dropped or thrown, false
      *         otherwise.
      */
-    private boolean cancelStack(ItemStack stack) {
+    public boolean shouldCancelStack(ItemStack stack) {
         if (!TaratonConfig.getInstance().qol.protectItem || stack == null || stack.isEmpty()) {
             return false;
         }

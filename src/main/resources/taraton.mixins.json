@@ -10,7 +10,6 @@
     "accessor.InGameHudAccessor",
     "accessor.WorldRendererAccessor",
     "ChatScreenMixin",
-    "ClientCommonNetworkHandlerMixin",
     "ClientPlayerEntityMixin",
     "ClientPlayNetworkHandlerMixin",
     "EntityMixin",
@@ -25,6 +24,7 @@
     "LivingEntityMixin",
     "MouseMixin",
     "ParticleManagerMixin",
+    "PlayerEntityMixin",
     "StatusEffectsDisplayMixin",
     "TextRendererMixin"
   ],
