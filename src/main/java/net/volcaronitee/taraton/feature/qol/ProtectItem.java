@@ -13,6 +13,7 @@ import net.minecraft.util.Formatting;
 import net.volcaronitee.taraton.Taraton;
 import net.volcaronitee.taraton.config.TaratonConfig;
 import net.volcaronitee.taraton.config.TaratonList;
+import net.volcaronitee.taraton.util.FeatureUtil;
 
 /**
  * Feature to protect specific items from being dropped or thrown in the game.
@@ -96,7 +97,8 @@ public class ProtectItem {
      *         otherwise.
      */
     public boolean shouldCancelStack(ItemStack stack) {
-        if (!TaratonConfig.getInstance().qol.protectItem || stack == null || stack.isEmpty()) {
+        if (!FeatureUtil.isEnabled(TaratonConfig.getInstance().qol.protectItem) || stack == null
+                || stack.isEmpty()) {
             return false;
         }
 

@@ -5,6 +5,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
 import net.minecraft.client.render.GameRenderer;
 import net.volcaronitee.taraton.config.TaratonConfig;
+import net.volcaronitee.taraton.util.FeatureUtil;
 
 /**
  * Mixin for modifying the GameRenderer class to change the bobbing effect when the player is hurt.
@@ -21,6 +22,10 @@ public class GameRendererMixin {
             target = "Lnet/minecraft/util/math/RotationAxis;rotationDegrees(F)Lorg/joml/Quaternionf;"),
             method = "tiltViewWhenHurt", require = 4)
     public float taraton$changeBobIntensity(float value) {
+        if (!FeatureUtil.isEnabled(true)) {
+            return value;
+        }
+
         return TaratonConfig.getInstance().qol.hurtCamIntensity * value;
     }
 }

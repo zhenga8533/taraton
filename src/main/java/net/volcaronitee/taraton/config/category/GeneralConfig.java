@@ -30,7 +30,7 @@ public class GeneralConfig {
                 // Essential Option Group
                 .group(OptionGroup.createBuilder().name(Text.literal("Essential"))
 
-                        // TODO: Mod Enabled
+                        // Mod Enabled
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Mod Enabled"))
                                 .description(OptionDescription.createBuilder()
                                         .webpImage(Identifier.of(Taraton.MOD_ID,
@@ -41,7 +41,7 @@ public class GeneralConfig {
                                         newVal -> config.general.modEnabled = newVal)
                                 .controller(TaratonConfig::createBooleanController).build())
 
-                        // TODO: SkyBlock Only
+                        // SkyBlock Only
                         .option(Option.<Boolean>createBuilder().name(Text.literal("SkyBlock Only"))
                                 .description(OptionDescription.createBuilder()
                                         .webpImage(Identifier.of(Taraton.MOD_ID,
@@ -51,20 +51,6 @@ public class GeneralConfig {
                                 .binding(defaults.general.skyblockOnly,
                                         () -> config.general.skyblockOnly,
                                         newVal -> config.general.skyblockOnly = newVal)
-                                .controller(TaratonConfig::createBooleanController).build())
-
-                        // TODO: Performance Mode
-                        .option(Option.<Boolean>createBuilder()
-                                .name(Text.literal("Performance Mode"))
-                                .description(OptionDescription.createBuilder()
-                                        .webpImage(Identifier.of(Taraton.MOD_ID,
-                                                "config/general/performance_mode.webp"))
-                                        .text(Text.literal(
-                                                "Enables performance optimizations for better FPS. This causes all feature enabling/disabling to require a restart, including this one."))
-                                        .build())
-                                .binding(defaults.general.performanceMode,
-                                        () -> config.general.performanceMode,
-                                        newVal -> config.general.performanceMode = newVal)
                                 .controller(TaratonConfig::createBooleanController).build())
 
                         // Update Notification
@@ -384,9 +370,6 @@ public class GeneralConfig {
 
     @SerialEntry
     public boolean skyblockOnly = true;
-
-    @SerialEntry
-    public boolean performanceMode = false;
 
     @SerialEntry
     public boolean updateNotification = true;

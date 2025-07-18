@@ -12,6 +12,7 @@ import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.SlotActionType;
 import net.volcaronitee.taraton.config.TaratonConfig;
 import net.volcaronitee.taraton.config.category.QolConfig;
+import net.volcaronitee.taraton.util.FeatureUtil;
 import net.volcaronitee.taraton.util.ScheduleUtil;
 
 /**
@@ -87,8 +88,9 @@ public class AutoSalvage {
      * @param button The mouse button that was clicked.
      */
     private void onMouseClick(int button) {
-        if (TaratonConfig.getInstance().qol.autoSalvage == QolConfig.AutoSalvage.OFF || button != 0
-                || !isValidScreen()) {
+        if (!FeatureUtil
+                .isEnabled(TaratonConfig.getInstance().qol.autoSalvage != QolConfig.AutoSalvage.OFF)
+                || button != 0 || !isValidScreen()) {
             return;
         }
 

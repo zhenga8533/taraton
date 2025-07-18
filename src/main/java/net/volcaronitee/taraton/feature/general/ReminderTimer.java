@@ -13,6 +13,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.Text;
 import net.volcaronitee.taraton.config.TaratonConfig;
 import net.volcaronitee.taraton.config.TaratonList;
+import net.volcaronitee.taraton.util.FeatureUtil;
 import net.volcaronitee.taraton.util.TickUtil;
 import net.volcaronitee.taraton.util.TitleUtil;
 
@@ -57,8 +58,8 @@ public class ReminderTimer {
      * @param client The Minecraft client instance.
      */
     private void onTick(MinecraftClient client) {
-        if (!TaratonConfig.getInstance().general.reminderTimer || client == null
-                || client.world == null) {
+        if (!FeatureUtil.isEnabled(TaratonConfig.getInstance().general.reminderTimer)
+                || client == null || client.world == null) {
             return;
         }
 

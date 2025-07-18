@@ -3,6 +3,8 @@ package net.volcaronitee.taraton.feature.general;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.toast.SystemToast;
 import net.minecraft.text.Text;
+import net.volcaronitee.taraton.config.TaratonConfig;
+import net.volcaronitee.taraton.util.FeatureUtil;
 import net.volcaronitee.taraton.util.LocationUtil;
 import net.volcaronitee.taraton.util.TickUtil;
 
@@ -46,7 +48,8 @@ public class ZoneToast {
      */
     private void showToast(String zone) {
         MinecraftClient client = MinecraftClient.getInstance();
-        if (client == null || client.getToastManager() == null) {
+        if (client == null || client.getToastManager() == null
+                || !FeatureUtil.isEnabled(TaratonConfig.getInstance().general.zoneToast)) {
             return;
         }
 

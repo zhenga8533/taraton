@@ -21,6 +21,7 @@ import net.volcaronitee.taraton.config.TaratonList;
 import net.volcaronitee.taraton.config.controller.KeyBindController;
 import net.volcaronitee.taraton.config.controller.KeyValueController;
 import net.volcaronitee.taraton.config.controller.KeyValueController.KeyValuePair;
+import net.volcaronitee.taraton.util.FeatureUtil;
 import net.volcaronitee.taraton.util.ScheduleUtil;
 
 public class CommandHotkey {
@@ -60,7 +61,8 @@ public class CommandHotkey {
      * @param action The action of the key event (press, release, repeat).
      */
     public void onKeyPress(int key, int action) {
-        if (!TaratonConfig.getInstance().qol.commandHotkeys || action != GLFW.GLFW_PRESS) {
+        if (!FeatureUtil.isEnabled(TaratonConfig.getInstance().qol.commandHotkeys)
+                || action != GLFW.GLFW_PRESS) {
             return;
         }
 

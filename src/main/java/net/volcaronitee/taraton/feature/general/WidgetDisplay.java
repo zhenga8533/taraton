@@ -5,7 +5,9 @@ import java.util.List;
 import java.util.function.Supplier;
 import net.minecraft.client.network.PlayerListEntry;
 import net.minecraft.text.Text;
+import net.volcaronitee.taraton.config.TaratonConfig;
 import net.volcaronitee.taraton.config.TaratonList;
+import net.volcaronitee.taraton.util.FeatureUtil;
 import net.volcaronitee.taraton.util.OverlayUtil;
 import net.volcaronitee.taraton.util.OverlayUtil.LineContent;
 import net.volcaronitee.taraton.util.TablistUtil;
@@ -113,7 +115,10 @@ public class WidgetDisplay {
                     new LineContent(" Handsome: §9☣100", active)));
 
             if (active.get()) {
-                OverlayUtil.createOverlay(name, active, lines);
+                OverlayUtil.createOverlay(name,
+                        () -> FeatureUtil
+                                .isEnabled(TaratonConfig.getInstance().general.widgetDisplay),
+                        lines);
             }
         }
 

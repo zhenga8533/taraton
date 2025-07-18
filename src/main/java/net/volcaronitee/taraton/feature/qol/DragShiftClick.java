@@ -11,6 +11,7 @@ import net.minecraft.screen.slot.Slot;
 import net.minecraft.screen.slot.SlotActionType;
 import net.volcaronitee.taraton.config.TaratonConfig;
 import net.volcaronitee.taraton.mixin.accessor.HandledScreenAccessor;
+import net.volcaronitee.taraton.util.FeatureUtil;
 
 /**
  * Feature that allows players to drag the mouse while holding Shift to quickly
@@ -33,8 +34,8 @@ public class DragShiftClick {
      */
     private static void onClientTick(MinecraftClient client) {
         // Ensure the feature is enabled and we have a valid window and screen.
-        if (!TaratonConfig.getInstance().qol.dragShiftClick || client.getWindow() == null
-                || client.currentScreen == null) {
+        if (!FeatureUtil.isEnabled(TaratonConfig.getInstance().qol.dragShiftClick)
+                || client.getWindow() == null || client.currentScreen == null) {
             if (isDragging) {
                 isDragging = false;
                 draggedSlots.clear();

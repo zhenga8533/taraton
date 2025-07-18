@@ -7,6 +7,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.Text;
 import net.volcaronitee.taraton.config.TaratonConfig;
 import net.volcaronitee.taraton.config.TaratonList;
+import net.volcaronitee.taraton.util.FeatureUtil;
 import net.volcaronitee.taraton.util.LocationUtil;
 
 /**
@@ -55,7 +56,7 @@ public class HideEntity {
      */
     public boolean isFarEntity(Entity entity) {
         int maxDistance = TaratonConfig.getInstance().qol.hideFarEntities;
-        if (maxDistance == 0) {
+        if (!FeatureUtil.isEnabled(maxDistance != 0)) {
             return false;
         }
 
@@ -77,7 +78,7 @@ public class HideEntity {
      */
     public boolean isClosePlayer(Entity entity) {
         int minDistance = TaratonConfig.getInstance().qol.hideClosePlayers;
-        if (minDistance == 0 || !(entity instanceof PlayerEntity)) {
+        if (!FeatureUtil.isEnabled(minDistance != 0) || !(entity instanceof PlayerEntity)) {
             return false;
         }
 

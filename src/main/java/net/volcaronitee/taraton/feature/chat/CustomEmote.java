@@ -5,6 +5,7 @@ import net.fabricmc.fabric.api.client.message.v1.ClientSendMessageEvents;
 import net.minecraft.text.Text;
 import net.volcaronitee.taraton.config.TaratonConfig;
 import net.volcaronitee.taraton.config.TaratonList;
+import net.volcaronitee.taraton.util.FeatureUtil;
 
 /**
  * Handles custom emote mappings for chat messages.
@@ -38,7 +39,7 @@ public class CustomEmote {
      * @return The modified chat message with custom emotes replaced.
      */
     private String handleCustomEmote(String message) {
-        if (!TaratonConfig.getInstance().chat.customEmotes) {
+        if (!FeatureUtil.isEnabled(TaratonConfig.getInstance().chat.customEmotes)) {
             return message;
         }
 

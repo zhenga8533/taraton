@@ -6,6 +6,7 @@ import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
 import net.minecraft.text.Text;
 import net.volcaronitee.taraton.config.TaratonConfig;
 import net.volcaronitee.taraton.config.TaratonList;
+import net.volcaronitee.taraton.util.FeatureUtil;
 import net.volcaronitee.taraton.util.FormatUtil;
 
 /**
@@ -49,7 +50,7 @@ public class SpamHider {
      * @return True if the message is not spam, false if it is spam.
      */
     private boolean allowMessage(Text message, boolean overlay) {
-        if (!TaratonConfig.getInstance().chat.spamHider || overlay) {
+        if (!FeatureUtil.isEnabled(TaratonConfig.getInstance().chat.spamHider) || overlay) {
             return true;
         }
 

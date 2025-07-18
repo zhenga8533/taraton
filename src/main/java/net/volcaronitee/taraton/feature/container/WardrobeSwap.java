@@ -36,6 +36,7 @@ import net.volcaronitee.taraton.config.controller.KeyValueController;
 import net.volcaronitee.taraton.config.controller.KeyValueController.KeyValuePair;
 import net.volcaronitee.taraton.interfaces.TooltipSuppressor;
 import net.volcaronitee.taraton.mixin.accessor.HandledScreenAccessor;
+import net.volcaronitee.taraton.util.FeatureUtil;
 import net.volcaronitee.taraton.util.ScheduleUtil;
 
 /**
@@ -83,7 +84,7 @@ public class WardrobeSwap {
             }
 
             // Register the key press event for wardrobe hotkeys
-            if (TaratonConfig.getInstance().container.wardrobeSwap) {
+            if (FeatureUtil.isEnabled(TaratonConfig.getInstance().container.wardrobeSwap)) {
                 ScreenKeyboardEvents.beforeKeyPress(screen).register(INSTANCE::onWardrobeKey);
             }
         });

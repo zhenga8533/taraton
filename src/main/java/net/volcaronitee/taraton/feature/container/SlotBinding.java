@@ -38,6 +38,7 @@ import net.volcaronitee.taraton.config.controller.KeyValueController;
 import net.volcaronitee.taraton.config.controller.KeyValueController.KeyValuePair;
 import net.volcaronitee.taraton.interfaces.TooltipSuppressor;
 import net.volcaronitee.taraton.mixin.accessor.HandledScreenAccessor;
+import net.volcaronitee.taraton.util.FeatureUtil;
 import net.volcaronitee.taraton.util.ScheduleUtil;
 import net.volcaronitee.taraton.util.ScreenUtil;
 
@@ -92,7 +93,7 @@ public class SlotBinding {
             }
 
             // Register event listeners for the screen
-            if (TaratonConfig.getInstance().container.slotBinding) {
+            if (FeatureUtil.isEnabled(TaratonConfig.getInstance().container.slotBinding)) {
                 ScreenEvents.afterRender(screen).register(INSTANCE::afterRender);
                 ScreenMouseEvents.allowMouseClick(screen).register(INSTANCE::allowMouseClick);
             }

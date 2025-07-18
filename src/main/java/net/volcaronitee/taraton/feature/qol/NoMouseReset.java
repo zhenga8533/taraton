@@ -7,6 +7,7 @@ import net.minecraft.client.gui.screen.ingame.GenericContainerScreen;
 import net.minecraft.client.gui.screen.ingame.InventoryScreen;
 import net.minecraft.client.util.InputUtil;
 import net.volcaronitee.taraton.config.TaratonConfig;
+import net.volcaronitee.taraton.util.FeatureUtil;
 
 /**
  * Feature to prevent Minecraft from resetting the mouse cursor position when opening or closing
@@ -52,7 +53,7 @@ public class NoMouseReset {
      */
     private void onScreen(MinecraftClient client, Screen screen, int scaledWidth,
             int scaledHeight) {
-        if (!TaratonConfig.getInstance().qol.noMouseReset
+        if (!FeatureUtil.isEnabled(TaratonConfig.getInstance().qol.noMouseReset)
                 || !(screen instanceof GenericContainerScreen
                         || screen instanceof InventoryScreen)) {
             return;

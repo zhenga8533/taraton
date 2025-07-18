@@ -5,6 +5,7 @@ import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.Text;
 import net.volcaronitee.taraton.config.TaratonConfig;
+import net.volcaronitee.taraton.util.FeatureUtil;
 import net.volcaronitee.taraton.util.ParseUtil;
 import net.volcaronitee.taraton.util.PartyUtil;
 import net.volcaronitee.taraton.util.ScheduleUtil;
@@ -46,7 +47,8 @@ public class JoinMessage {
     private void handlePartyJoin(String text) {
         String joinMessage = TaratonConfig.getInstance().chat.partyJoinMessage;
         MinecraftClient client = MinecraftClient.getInstance();
-        if (joinMessage.isEmpty() || client == null || client.getSession() == null) {
+        if (!FeatureUtil.isEnabled(!joinMessage.isEmpty()) || client == null
+                || client.getSession() == null) {
             return;
         }
 
@@ -74,7 +76,8 @@ public class JoinMessage {
     private void handleGuildJoin(String text) {
         String joinMessage = TaratonConfig.getInstance().chat.guildJoinMessage;
         MinecraftClient client = MinecraftClient.getInstance();
-        if (joinMessage.isEmpty() || client == null || client.getSession() == null) {
+        if (!FeatureUtil.isEnabled(!joinMessage.isEmpty()) || client == null
+                || client.getSession() == null) {
             return;
         }
 

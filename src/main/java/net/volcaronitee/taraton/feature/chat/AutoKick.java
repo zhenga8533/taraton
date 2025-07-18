@@ -5,6 +5,7 @@ import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
 import net.minecraft.text.Text;
 import net.volcaronitee.taraton.config.TaratonConfig;
 import net.volcaronitee.taraton.config.TaratonList;
+import net.volcaronitee.taraton.util.FeatureUtil;
 import net.volcaronitee.taraton.util.ParseUtil;
 import net.volcaronitee.taraton.util.ScheduleUtil;
 
@@ -37,7 +38,7 @@ public class AutoKick {
      * @param overlay Whether the message is an overlay message.
      */
     private void handleAutoKick(Text message, boolean overlay) {
-        if (overlay || !TaratonConfig.getInstance().chat.autoKick) {
+        if (overlay || !FeatureUtil.isEnabled(TaratonConfig.getInstance().chat.autoKick)) {
             return;
         }
 

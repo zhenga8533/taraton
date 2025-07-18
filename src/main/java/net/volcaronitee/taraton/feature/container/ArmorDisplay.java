@@ -7,6 +7,7 @@ import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.volcaronitee.taraton.config.TaratonConfig;
+import net.volcaronitee.taraton.util.FeatureUtil;
 import net.volcaronitee.taraton.util.OverlayUtil;
 import net.volcaronitee.taraton.util.OverlayUtil.LineContent;
 import net.volcaronitee.taraton.util.TickUtil;
@@ -24,7 +25,8 @@ public class ArmorDisplay {
                     new LineContent(Items.IRON_BOOTS.getDefaultStack(), () -> true)));
     static {
         OverlayUtil.createOverlay("armor_display",
-                () -> TaratonConfig.getInstance().container.armorDisplay, LINES);
+                () -> FeatureUtil.isEnabled(TaratonConfig.getInstance().container.armorDisplay),
+                LINES);
     }
 
     /**
@@ -40,6 +42,11 @@ public class ArmorDisplay {
      * @param client The Minecraft client instance.
      */
     private void updateArmor(MinecraftClient client) {
+        if (!FeatureUtil.isEnabled(TaratonConfig.getInstance().container.armorDisplay)
+                || client.world == null || client.player == null) {
+            return;
+        }
+
         // Get the player's equipped armor items
         ItemStack helmet = client.player.getEquippedStack(EquipmentSlot.HEAD);
         ItemStack chestplate = client.player.getEquippedStack(EquipmentSlot.CHEST);

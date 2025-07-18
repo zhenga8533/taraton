@@ -8,6 +8,7 @@ import net.minecraft.item.Items;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.SlotActionType;
 import net.volcaronitee.taraton.config.TaratonConfig;
+import net.volcaronitee.taraton.util.FeatureUtil;
 import net.volcaronitee.taraton.util.ScheduleUtil;
 
 /**
@@ -41,7 +42,7 @@ public class AutoFusion {
      * @param height The height of the screen.
      */
     private void onScreenOpen(MinecraftClient client, Screen screen, int width, int height) {
-        if (!TaratonConfig.getInstance().qol.autoFusion
+        if (!FeatureUtil.isEnabled(TaratonConfig.getInstance().qol.autoFusion)
                 || !screen.getTitle().getString().equals(SCREEN_TITLE)) {
             return;
         }

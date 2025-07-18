@@ -25,6 +25,7 @@ import net.minecraft.util.math.Box;
 import net.volcaronitee.taraton.config.TaratonConfig;
 import net.volcaronitee.taraton.config.TaratonData;
 import net.volcaronitee.taraton.config.TaratonList;
+import net.volcaronitee.taraton.util.FeatureUtil;
 import net.volcaronitee.taraton.util.FormatUtil;
 import net.volcaronitee.taraton.util.LocationUtil;
 import net.volcaronitee.taraton.util.LocationUtil.World;
@@ -84,7 +85,8 @@ public class EntityHighlight {
 
     static {
         OverlayUtil.createOverlay("entity_counter",
-                () -> TaratonConfig.getInstance().combat.entityCounter, LINES);
+                () -> FeatureUtil.isEnabled(TaratonConfig.getInstance().combat.entityCounter),
+                LINES);
     }
 
     /**
@@ -117,7 +119,8 @@ public class EntityHighlight {
      */
     private void scanWorld(MinecraftClient client) {
         HIGHLIGHTED_ENTITIES.clear();
-        if (!TaratonConfig.getInstance().combat.entityHighlight || client.world == null) {
+        if (!FeatureUtil.isEnabled(TaratonConfig.getInstance().combat.entityHighlight)
+                || client.world == null) {
             return;
         }
 

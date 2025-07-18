@@ -10,6 +10,7 @@ import net.minecraft.network.packet.c2s.play.ClientStatusC2SPacket;
 import net.minecraft.network.packet.c2s.play.ClientStatusC2SPacket.Mode;
 import net.volcaronitee.taraton.config.TaratonConfig;
 import net.volcaronitee.taraton.config.TaratonToggle;
+import net.volcaronitee.taraton.util.FeatureUtil;
 import net.volcaronitee.taraton.util.OverlayUtil;
 import net.volcaronitee.taraton.util.OverlayUtil.LineContent;
 import net.volcaronitee.taraton.util.OverlayUtil.Overlay;
@@ -40,7 +41,7 @@ public class ServerStatus {
             new LineContent("§8[§6DAY§8]§r ", "§a0.75",
                     () -> TaratonToggle.getInstance().general.day));
     private static final Overlay OVERLAY = OverlayUtil.createOverlay("server_status",
-            () -> TaratonConfig.getInstance().general.serverStatus, LINES);
+            () -> FeatureUtil.isEnabled(TaratonConfig.getInstance().general.serverStatus), LINES);
 
     // Fields to store server status information
     private int x = 0;
@@ -212,7 +213,7 @@ public class ServerStatus {
      * Updates the overlay with the current server status information.
      */
     private void updateOverlay() {
-        if (!TaratonConfig.getInstance().general.serverStatus)
+        if (!FeatureUtil.isEnabled(TaratonConfig.getInstance().general.serverStatus))
             return;
 
         // Update the overlay lines with the current values

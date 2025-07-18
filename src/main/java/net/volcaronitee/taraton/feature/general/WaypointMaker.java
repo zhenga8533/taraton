@@ -11,6 +11,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.math.BlockPos;
 import net.volcaronitee.taraton.config.TaratonConfig;
+import net.volcaronitee.taraton.util.FeatureUtil;
 import net.volcaronitee.taraton.util.ParseUtil;
 import net.volcaronitee.taraton.util.RenderUtil;
 import net.volcaronitee.taraton.util.ScheduleUtil;
@@ -47,7 +48,7 @@ public class WaypointMaker {
      */
     private void parseWaypoint(Text message, boolean overlay) {
         int renderWaypoints = TaratonConfig.getInstance().general.renderWaypoints;
-        if (renderWaypoints == 0 || overlay || message == null) {
+        if (!FeatureUtil.isEnabled(renderWaypoints != 0) || overlay || message == null) {
             return;
         }
 

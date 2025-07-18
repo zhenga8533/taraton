@@ -6,6 +6,7 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.Text;
 import net.volcaronitee.taraton.config.TaratonConfig;
 import net.volcaronitee.taraton.config.TaratonList;
+import net.volcaronitee.taraton.util.FeatureUtil;
 import net.volcaronitee.taraton.util.FormatUtil;
 
 /**
@@ -80,7 +81,7 @@ public class TextSubstitution {
         }
 
         // Loop through the substitution map and replace text
-        if (TaratonConfig.getInstance().chat.textSubstitution) {
+        if (FeatureUtil.isEnabled(TaratonConfig.getInstance().chat.textSubstitution)) {
             for (Map.Entry<String, String> entry : SUBSTITUTION_MAP.map.entrySet()) {
                 String find = entry.getKey();
                 String replace = entry.getValue();

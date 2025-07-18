@@ -6,6 +6,7 @@ import net.minecraft.util.Formatting;
 import net.volcaronitee.taraton.Taraton;
 import net.volcaronitee.taraton.config.TaratonConfig;
 import net.volcaronitee.taraton.config.TaratonData;
+import net.volcaronitee.taraton.util.FeatureUtil;
 import net.volcaronitee.taraton.util.TickUtil;
 
 /**
@@ -63,7 +64,7 @@ public class PlaytimeWarning {
      */
     private void increment(MinecraftClient client) {
         if (client.world == null || client.player == null
-                || !TaratonConfig.getInstance().chat.playtimeWarning) {
+                || !FeatureUtil.isEnabled(TaratonConfig.getInstance().chat.playtimeWarning)) {
             return;
         }
 

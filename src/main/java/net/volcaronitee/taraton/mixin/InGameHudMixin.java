@@ -8,6 +8,7 @@ import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.hud.InGameHud;
 import net.minecraft.client.render.RenderTickCounter;
 import net.volcaronitee.taraton.config.TaratonConfig;
+import net.volcaronitee.taraton.util.FeatureUtil;
 
 /**
  * Mixin to hide potion effects from the HUD.
@@ -25,7 +26,7 @@ public abstract class InGameHudMixin {
     @Inject(method = "renderStatusEffectOverlay", at = @At("HEAD"), cancellable = true)
     private void taraton$hideStatusEffectsOnHud(DrawContext context, RenderTickCounter tickCounter,
             CallbackInfo ci) {
-        if (TaratonConfig.getInstance().qol.hidePotionEffects) {
+        if (FeatureUtil.isEnabled(TaratonConfig.getInstance().qol.hidePotionEffects)) {
             ci.cancel();
         }
     }

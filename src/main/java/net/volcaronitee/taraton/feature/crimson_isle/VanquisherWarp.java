@@ -7,6 +7,7 @@ import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
 import net.minecraft.text.Text;
 import net.volcaronitee.taraton.config.TaratonConfig;
 import net.volcaronitee.taraton.config.TaratonList;
+import net.volcaronitee.taraton.util.FeatureUtil;
 import net.volcaronitee.taraton.util.ScheduleUtil;
 
 /**
@@ -49,7 +50,8 @@ public class VanquisherWarp {
      * @param overlay Whether the message is an overlay message.
      */
     private void handleVanqWarp(Text message, boolean overlay) {
-        if (overlay || !TaratonConfig.getInstance().crimsonIsle.vanquisherWarp
+        if (overlay
+                || !FeatureUtil.isEnabled(TaratonConfig.getInstance().crimsonIsle.vanquisherWarp)
                 || VANQUISHER_LIST.list.isEmpty()) {
             return;
         }

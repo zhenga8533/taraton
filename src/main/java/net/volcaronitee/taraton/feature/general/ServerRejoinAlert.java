@@ -7,6 +7,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.volcaronitee.taraton.Taraton;
 import net.volcaronitee.taraton.config.TaratonConfig;
+import net.volcaronitee.taraton.util.FeatureUtil;
 import net.volcaronitee.taraton.util.LocationUtil;
 
 /**
@@ -34,7 +35,7 @@ public class ServerRejoinAlert {
      * Handles the location update event. This method checks if the server rejoin alert
      */
     private void onLocationUpdate() {
-        if (!TaratonConfig.getInstance().general.serverRejoinAlert) {
+        if (!FeatureUtil.isEnabled(TaratonConfig.getInstance().general.serverRejoinAlert)) {
             return;
         }
 

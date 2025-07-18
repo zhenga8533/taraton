@@ -7,6 +7,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.Text;
 import net.volcaronitee.taraton.config.TaratonConfig;
 import net.volcaronitee.taraton.config.category.ChatConfig;
+import net.volcaronitee.taraton.util.FeatureUtil;
 import net.volcaronitee.taraton.util.PartyUtil;
 import net.volcaronitee.taraton.util.ScheduleUtil;
 
@@ -42,7 +43,7 @@ public class AutoTransfer {
      */
     private void handleAutoTransfer(Text message, boolean overlay) {
         ChatConfig.AutoTransfer autoTransfer = TaratonConfig.getInstance().chat.autoTransfer;
-        if (autoTransfer == ChatConfig.AutoTransfer.OFF || overlay) {
+        if (!FeatureUtil.isEnabled(autoTransfer != ChatConfig.AutoTransfer.OFF) || overlay) {
             return;
         }
 
@@ -67,10 +68,6 @@ public class AutoTransfer {
      * @param text The message text to check for transfer patterns.
      */
     private void handleOnTransfer(String text) {
-        if (TaratonConfig.getInstance().chat.autoTransfer != ChatConfig.AutoTransfer.ON_TRANSFER) {
-            return;
-        }
-
         // Check if the message matches the auto transfer pattern
         Matcher matcher = AUTO_TRANSFER_PATTERN.matcher(text);
         if (!matcher.matches()) {
@@ -94,11 +91,6 @@ public class AutoTransfer {
      * @param text The message text to check for kick patterns.
      */
     private void handleOnKick(String text) {
-        if (TaratonConfig.getInstance().chat.autoTransfer != ChatConfig.AutoTransfer.ON_KICK
-                || !PartyUtil.isInParty()) {
-            return;
-        }
-
         // Check if the message matches any of the kick patterns
         for (Pattern pattern : KICK_PATTERNS) {
             Matcher matcher = pattern.matcher(text);

@@ -8,6 +8,7 @@ import net.minecraft.client.gui.hud.InGameOverlayRenderer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.util.math.MatrixStack;
 import net.volcaronitee.taraton.config.TaratonConfig;
+import net.volcaronitee.taraton.util.FeatureUtil;
 
 /**
  * Mixin to adjust the fire overlay rendering position based on the low fire setting.
@@ -26,6 +27,10 @@ public class InGameOverlayRendererMixin {
             target = "Lnet/minecraft/client/util/math/MatrixStack;translate(FFF)V"))
     private static void taraton$renderFireOverlay(MatrixStack matrices,
             VertexConsumerProvider vertexConsumers, CallbackInfo ci) {
+        if (!FeatureUtil.isEnabled(true)) {
+            return;
+        }
+
         matrices.translate(0.0, TaratonConfig.getInstance().qol.lowFire, 0.0);
     }
 }

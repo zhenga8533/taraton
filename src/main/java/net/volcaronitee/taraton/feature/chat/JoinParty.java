@@ -6,6 +6,7 @@ import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
 import net.minecraft.text.Text;
 import net.volcaronitee.taraton.config.TaratonConfig;
 import net.volcaronitee.taraton.config.TaratonList;
+import net.volcaronitee.taraton.util.FeatureUtil;
 import net.volcaronitee.taraton.util.PartyUtil;
 import net.volcaronitee.taraton.util.ScheduleUtil;
 
@@ -64,7 +65,7 @@ public class JoinParty {
      * @param player The name of the player who sent the invite.
      */
     private void handleJoinWhitelist(String player) {
-        if (!TaratonConfig.getInstance().chat.joinWhitelist) {
+        if (!FeatureUtil.isEnabled(TaratonConfig.getInstance().chat.joinWhitelist)) {
             return;
         }
 
@@ -79,7 +80,7 @@ public class JoinParty {
      * @param player The name of the player who sent the invite.
      */
     private void handleJoinReparty(String player) {
-        if (!TaratonConfig.getInstance().chat.joinReparty) {
+        if (!FeatureUtil.isEnabled(TaratonConfig.getInstance().chat.joinReparty)) {
             return;
         }
 

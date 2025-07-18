@@ -4,6 +4,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.GameOptions;
 import net.minecraft.client.option.Perspective;
 import net.volcaronitee.taraton.config.TaratonConfig;
+import net.volcaronitee.taraton.util.FeatureUtil;
 import net.volcaronitee.taraton.util.TickUtil;
 
 /**
@@ -31,7 +32,8 @@ public class RemoveSelfieMode {
      */
     private void onTick(MinecraftClient client) {
         GameOptions options = client.options;
-        if (!TaratonConfig.getInstance().qol.removeSelfieMode || options == null)
+        if (!FeatureUtil.isEnabled(TaratonConfig.getInstance().qol.removeSelfieMode)
+                || options == null)
             return;
 
         if (options.togglePerspectiveKey.isPressed()) {

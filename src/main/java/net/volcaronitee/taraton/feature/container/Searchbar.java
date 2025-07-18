@@ -5,6 +5,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.text.Text;
 import net.volcaronitee.taraton.config.TaratonConfig;
+import net.volcaronitee.taraton.util.FeatureUtil;
 import net.volcaronitee.taraton.util.OverlayUtil;
 import net.volcaronitee.taraton.util.OverlayUtil.Overlay;
 
@@ -13,7 +14,8 @@ import net.volcaronitee.taraton.util.OverlayUtil.Overlay;
  */
 public class Searchbar {
     private static final Overlay OVERLAY = OverlayUtil.createOverlay("searchbar",
-            () -> TaratonConfig.getInstance().container.searchbar, List.of());
+            () -> FeatureUtil.isEnabled(TaratonConfig.getInstance().container.searchbar),
+            List.of());
 
     private static TextFieldWidget searchbar;
 

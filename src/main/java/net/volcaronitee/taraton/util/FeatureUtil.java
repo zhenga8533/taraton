@@ -1,5 +1,6 @@
 package net.volcaronitee.taraton.util;
 
+import net.volcaronitee.taraton.config.TaratonConfig;
 import net.volcaronitee.taraton.feature.chat.AutoCommand;
 import net.volcaronitee.taraton.feature.chat.AutoKick;
 import net.volcaronitee.taraton.feature.chat.AutoTransfer;
@@ -83,5 +84,31 @@ public class FeatureUtil {
 
         // Crimson Isle Features
         VanquisherWarp.register();
+    }
+
+    /**
+     * Checks if a feature is enabled based on the configuration and global settings.
+     * 
+     * @param base The base condition to check if the feature should be enabled.
+     * @return True if the feature is enabled, false otherwise.
+     */
+    public static boolean isEnabled(boolean base) {
+        // Check if the base condition is true
+        if (!base) {
+            return false;
+        }
+
+        // Check if the mod is enabled globally
+        if (!TaratonConfig.getInstance().general.modEnabled) {
+            return false;
+        }
+
+        // Check for SkyBlock only mode
+        if (TaratonConfig.getInstance().general.skyblockOnly
+                && !LocationUtil.getMode().equals("SkyBlock")) {
+            return false;
+        }
+
+        return true;
     }
 }

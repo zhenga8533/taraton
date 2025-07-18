@@ -11,6 +11,7 @@ import net.minecraft.client.particle.ParticleTextureSheet;
 import net.minecraft.client.render.Camera;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.volcaronitee.taraton.config.TaratonConfig;
+import net.volcaronitee.taraton.util.FeatureUtil;
 
 /**
  * Mixin for the ParticleManager to hide all particles based on configuration.
@@ -33,7 +34,7 @@ public class ParticleManagerMixin {
     private static void taraton$renderParticles(Camera camera, float tickProgress,
             VertexConsumerProvider.Immediate vertexConsumers, ParticleTextureSheet sheet,
             Queue<Particle> particles, CallbackInfo ci) {
-        if (!TaratonConfig.getInstance().qol.hideAllParticles) {
+        if (!FeatureUtil.isEnabled(TaratonConfig.getInstance().qol.hideAllParticles)) {
             return;
         }
 

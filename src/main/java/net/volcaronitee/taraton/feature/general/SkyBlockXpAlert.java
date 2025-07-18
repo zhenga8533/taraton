@@ -8,6 +8,7 @@ import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
 import net.minecraft.text.Text;
 import net.volcaronitee.taraton.Taraton;
 import net.volcaronitee.taraton.config.TaratonConfig;
+import net.volcaronitee.taraton.util.FeatureUtil;
 import net.volcaronitee.taraton.util.ScheduleUtil;
 import net.volcaronitee.taraton.util.TitleUtil;
 
@@ -36,7 +37,8 @@ public class SkyBlockXpAlert {
      * @param overlay Whether the message is an overlay message.
      */
     private void parseMessage(Text message, boolean overlay) {
-        if (!TaratonConfig.getInstance().general.skyblockXpAlert || !overlay) {
+        if (!FeatureUtil.isEnabled(TaratonConfig.getInstance().general.skyblockXpAlert)
+                || !overlay) {
             return;
         }
 

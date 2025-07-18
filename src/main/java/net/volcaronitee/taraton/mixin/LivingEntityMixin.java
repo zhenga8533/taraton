@@ -7,6 +7,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.LivingEntity;
 import net.volcaronitee.taraton.config.TaratonConfig;
+import net.volcaronitee.taraton.util.FeatureUtil;
 
 /**
  * Mixin for LivingEntity to modify the hand swing duration based on configuration settings.
@@ -20,6 +21,10 @@ public class LivingEntityMixin {
      */
     @Inject(method = "getHandSwingDuration", at = @At("RETURN"), cancellable = true)
     private void taraton$modifyHandSwingDuration(CallbackInfoReturnable<Integer> cir) {
+        if (!FeatureUtil.isEnabled(true)) {
+            return;
+        }
+
         double speedMultiplier = TaratonConfig.getInstance().general.heldItemSwingSpeed;
         LivingEntity entity = (LivingEntity) (Object) this;
 

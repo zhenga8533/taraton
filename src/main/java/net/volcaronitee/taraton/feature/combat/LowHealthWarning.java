@@ -3,6 +3,7 @@ package net.volcaronitee.taraton.feature.combat;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.volcaronitee.taraton.config.TaratonConfig;
+import net.volcaronitee.taraton.util.FeatureUtil;
 import net.volcaronitee.taraton.util.TickUtil;
 import net.volcaronitee.taraton.util.TitleUtil;
 
@@ -31,7 +32,7 @@ public class LowHealthWarning {
      */
     private void onTick(MinecraftClient client) {
         int healthThreshold = TaratonConfig.getInstance().combat.lowHealthWarning;
-        if (healthThreshold == 0) {
+        if (!FeatureUtil.isEnabled(healthThreshold != 0)) {
             return;
         }
 

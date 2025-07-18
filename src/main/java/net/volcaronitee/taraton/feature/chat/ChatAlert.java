@@ -7,6 +7,7 @@ import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
 import net.minecraft.text.Text;
 import net.volcaronitee.taraton.config.TaratonConfig;
 import net.volcaronitee.taraton.config.TaratonList;
+import net.volcaronitee.taraton.util.FeatureUtil;
 import net.volcaronitee.taraton.util.FormatUtil;
 import net.volcaronitee.taraton.util.ParseUtil;
 import net.volcaronitee.taraton.util.ScheduleUtil;
@@ -54,7 +55,7 @@ public class ChatAlert {
      * @param overlay Whether the message is an overlay message.
      */
     private void handleChatAlert(Text message, boolean overlay) {
-        if (!TaratonConfig.getInstance().chat.chatAlert) {
+        if (!FeatureUtil.isEnabled(TaratonConfig.getInstance().chat.chatAlert)) {
             return;
         }
 

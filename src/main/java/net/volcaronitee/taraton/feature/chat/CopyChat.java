@@ -13,6 +13,7 @@ import net.minecraft.util.Formatting;
 import net.volcaronitee.taraton.Taraton;
 import net.volcaronitee.taraton.config.TaratonConfig;
 import net.volcaronitee.taraton.mixin.accessor.ChatHudAccessor;
+import net.volcaronitee.taraton.util.FeatureUtil;
 import net.volcaronitee.taraton.util.FormatUtil;
 
 /**
@@ -46,7 +47,7 @@ public class CopyChat {
     public void onMouseClicked(double mouseX, double mouseY, int button,
             CallbackInfoReturnable<Boolean> cir) {
         if (!Screen.hasShiftDown() || button != GLFW.GLFW_MOUSE_BUTTON_LEFT
-                || !TaratonConfig.getInstance().chat.copyChat) {
+                || !FeatureUtil.isEnabled(TaratonConfig.getInstance().chat.copyChat)) {
             return;
         }
 

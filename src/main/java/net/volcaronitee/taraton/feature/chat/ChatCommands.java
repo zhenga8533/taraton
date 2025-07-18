@@ -23,6 +23,7 @@ import net.volcaronitee.taraton.config.TaratonToggle;
 import net.volcaronitee.taraton.feature.general.ServerStatus;
 import net.volcaronitee.taraton.feature.general.WidgetDisplay;
 import net.volcaronitee.taraton.feature.general.WidgetDisplay.Widget;
+import net.volcaronitee.taraton.util.FeatureUtil;
 import net.volcaronitee.taraton.util.OverlayUtil.LineContent;
 import net.volcaronitee.taraton.util.ParseUtil;
 import net.volcaronitee.taraton.util.PartyUtil;
@@ -292,7 +293,7 @@ public class ChatCommands {
 
         String partyLeader = PartyUtil.getLeader();
         String clientUsername = MinecraftClient.getInstance().getSession().getUsername();
-        if (!TaratonConfig.getInstance().chat.leaderCommands
+        if (!FeatureUtil.isEnabled(TaratonConfig.getInstance().chat.leaderCommands)
                 || (TaratonToggle.getInstance().chat.leaderLock && partyLeader == clientUsername)
                 || !PartyUtil.isInParty() || !PartyUtil.getLeader().equals(clientUsername)) {
             return false;
@@ -459,7 +460,7 @@ public class ChatCommands {
      */
     private boolean handlePartyCommand(ClientPlayerEntity player, String username, String head,
             String[] args) {
-        if (!TaratonConfig.getInstance().chat.partyCommands) {
+        if (!FeatureUtil.isEnabled(TaratonConfig.getInstance().chat.partyCommands)) {
             return false;
         }
 
@@ -569,7 +570,7 @@ public class ChatCommands {
      */
     private boolean handleStatusCommand(ClientPlayerEntity player, String username, String head,
             String[] args) {
-        if (!TaratonConfig.getInstance().chat.statusCommands) {
+        if (!FeatureUtil.isEnabled(TaratonConfig.getInstance().chat.statusCommands)) {
             return false;
         }
 

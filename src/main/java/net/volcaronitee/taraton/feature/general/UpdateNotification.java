@@ -9,6 +9,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.volcaronitee.taraton.Taraton;
 import net.volcaronitee.taraton.config.TaratonConfig;
+import net.volcaronitee.taraton.util.FeatureUtil;
 import net.volcaronitee.taraton.util.RequestUtil;
 import net.volcaronitee.taraton.util.ScheduleUtil;
 
@@ -57,7 +58,8 @@ public class UpdateNotification {
      * If an update is available, sends a clickable chat message to the player.
      */
     private static void notifyPlayer() {
-        if (!TaratonConfig.getInstance().general.updateNotification || !updateAvailable) {
+        if (!FeatureUtil.isEnabled(TaratonConfig.getInstance().general.updateNotification)
+                || !updateAvailable) {
             return;
         }
 

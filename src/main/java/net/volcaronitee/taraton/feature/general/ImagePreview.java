@@ -24,6 +24,7 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.volcaronitee.taraton.Taraton;
 import net.volcaronitee.taraton.config.TaratonConfig;
+import net.volcaronitee.taraton.util.FeatureUtil;
 import net.volcaronitee.taraton.util.ParseUtil;
 import net.volcaronitee.taraton.util.RequestUtil;
 import net.volcaronitee.taraton.util.helper.Contract;
@@ -86,7 +87,8 @@ public class ImagePreview {
     private void renderImagePreview(DrawContext context, RenderTickCounter tickCounter) {
         MinecraftClient client = MinecraftClient.getInstance();
         Window window = client.getWindow();
-        if (!TaratonConfig.getInstance().general.imagePreview || window.isMinimized()) {
+        if (!FeatureUtil.isEnabled(TaratonConfig.getInstance().general.imagePreview)
+                || window.isMinimized()) {
             return;
         }
 
@@ -146,8 +148,8 @@ public class ImagePreview {
      * @return The modified chat message with image URLs encrypted.
      */
     private String handleImageBypass(String message) {
-        if (!TaratonConfig.getInstance().general.imagePreview || message == null
-                || message.isEmpty()) {
+        if (!FeatureUtil.isEnabled(TaratonConfig.getInstance().general.imagePreview)
+                || message == null || message.isEmpty()) {
             return message;
         }
 
@@ -184,7 +186,8 @@ public class ImagePreview {
      * @return The modified chat message with decrypted image URLs.
      */
     private Text handleImagePreview(Text message, boolean overlay) {
-        if (!TaratonConfig.getInstance().general.imagePreview || overlay || message == null) {
+        if (!FeatureUtil.isEnabled(TaratonConfig.getInstance().general.imagePreview) || overlay
+                || message == null) {
             return message;
         }
 
@@ -210,7 +213,8 @@ public class ImagePreview {
 
                 // Add the decrypted URL with a clickable style
                 boolean showPreview =
-                        TaratonConfig.getInstance().general.imagePreview && !blockNsfw;
+                        FeatureUtil.isEnabled(TaratonConfig.getInstance().general.imagePreview)
+                                && !blockNsfw;
                 try {
                     ClickEvent clickEvent = showPreview
                             ? new ClickEvent.RunCommand("taraton showImage " + decryptedUrl)
@@ -259,8 +263,8 @@ public class ImagePreview {
      */
     public boolean handleCommand(String command) {
         String[] args = command.split(" ", 2);
-        if (isLoading || !TaratonConfig.getInstance().general.imagePreview || args.length != 2
-                || !args[0].equalsIgnoreCase("showImage")) {
+        if (isLoading || !FeatureUtil.isEnabled(TaratonConfig.getInstance().general.imagePreview)
+                || args.length != 2 || !args[0].equalsIgnoreCase("showImage")) {
             return false;
         }
 

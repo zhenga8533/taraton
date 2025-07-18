@@ -16,6 +16,7 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Box;
 import net.volcaronitee.taraton.config.TaratonConfig;
+import net.volcaronitee.taraton.util.FeatureUtil;
 import net.volcaronitee.taraton.util.OverlayUtil;
 import net.volcaronitee.taraton.util.OverlayUtil.LineContent;
 import net.volcaronitee.taraton.util.ScheduleUtil;
@@ -32,7 +33,8 @@ public class HookLineAndSinker {
 
     static {
         OverlayUtil.createOverlay("hook_line_and_sinker",
-                () -> TaratonConfig.getInstance().fishing.hookLineAndSinker, LINES);
+                () -> FeatureUtil.isEnabled(TaratonConfig.getInstance().fishing.hookLineAndSinker),
+                LINES);
         LINES.clear();
     }
 
@@ -79,8 +81,8 @@ public class HookLineAndSinker {
         }
 
         // Check if the feature is enabled and the player is in a valid state
-        if (!TaratonConfig.getInstance().fishing.hookLineAndSinker || client.player == null
-                || client.world == null || INSTANCE.hooked) {
+        if (!FeatureUtil.isEnabled(TaratonConfig.getInstance().fishing.hookLineAndSinker)
+                || client.player == null || client.world == null || INSTANCE.hooked) {
             return;
         }
 

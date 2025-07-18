@@ -7,6 +7,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.ingame.StatusEffectsDisplay;
 import net.volcaronitee.taraton.config.TaratonConfig;
+import net.volcaronitee.taraton.util.FeatureUtil;
 
 /**
  * Mixin to hide the status effects display in the inventory.
@@ -25,7 +26,7 @@ public abstract class StatusEffectsDisplayMixin {
     @Inject(method = "drawStatusEffects", at = @At("HEAD"), cancellable = true)
     private void taraton$hideStatusEffects(DrawContext context, int mouseX, int mouseY,
             float deltaTicks, CallbackInfo ci) {
-        if (TaratonConfig.getInstance().qol.hidePotionEffects) {
+        if (FeatureUtil.isEnabled(TaratonConfig.getInstance().qol.hidePotionEffects)) {
             ci.cancel();
         }
     }

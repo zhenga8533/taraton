@@ -14,6 +14,7 @@ import net.minecraft.util.Formatting;
 import net.volcaronitee.taraton.Taraton;
 import net.volcaronitee.taraton.config.TaratonConfig;
 import net.volcaronitee.taraton.config.TaratonJson;
+import net.volcaronitee.taraton.util.FeatureUtil;
 import net.volcaronitee.taraton.util.ScheduleUtil;
 
 public class AutoCommand {
@@ -36,6 +37,10 @@ public class AutoCommand {
      */
     private AutoCommand() {}
 
+    /**
+     * Registers the AutoCommand feature, loading the command dictionary and setting up event
+     * listeners.
+     */
     public static void register() {
         INSTANCE.dictionary = TaratonJson.registerJson(FILE_DIR, FILE_NAME).getJsonObject();
         INSTANCE.initializeCommands();
@@ -43,6 +48,9 @@ public class AutoCommand {
         ClientReceiveMessageEvents.GAME.register(INSTANCE::correctCommand);
     }
 
+    /**
+     * Initializes the command dictionary by grouping commands by their lengths.
+     */
     public void initializeCommands() {
         commandsByLength = new HashMap<>();
         for (String command : dictionary.keySet()) {
@@ -77,7 +85,8 @@ public class AutoCommand {
      * @param overlay Whether to display an overlay for the command correction.
      */
     private void correctCommand(Text message, boolean overlay) {
-        if (overlay || TaratonConfig.getInstance().chat.autocorrectCommand) {
+        if (overlay
+                || !FeatureUtil.isEnabled(TaratonConfig.getInstance().chat.autocorrectCommand)) {
             return;
         }
 
