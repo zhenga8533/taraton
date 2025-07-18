@@ -92,7 +92,7 @@ public class SlotBinding {
             // Register event listeners for the screen
             if (TaratonConfig.getInstance().container.slotBinding) {
                 ScreenEvents.afterRender(screen).register(INSTANCE::afterRender);
-                ScreenMouseEvents.beforeMouseClick(screen).register(INSTANCE::onMouseClick);
+                ScreenMouseEvents.allowMouseClick(screen).register(INSTANCE::allowMouseClick);
             }
         });
     }
@@ -170,7 +170,7 @@ public class SlotBinding {
      * @param button The mouse button that was clicked.
      * @return False if the click was handled and should be cancelled, true otherwise.
      */
-    private boolean onMouseClick(Screen screen, double mouseX, double mouseY, int button) {
+    private boolean allowMouseClick(Screen screen, double mouseX, double mouseY, int button) {
         // We only care about Shift + Left Click on a container screen
         if (!Screen.hasShiftDown() || button != 0
                 || !(screen instanceof HandledScreen<?> handledScreen)) {
@@ -180,14 +180,12 @@ public class SlotBinding {
         // Check if the screen has slot bindings
         HandledScreenAccessor accessor = (HandledScreenAccessor) handledScreen;
         Slot hoveredSlot = accessor.getFocusedSlot();
-
         if (hoveredSlot == null || !SLOT_BINDINGS.containsKey(hoveredSlot.id)) {
             return true;
         }
 
-        List<Integer> targets = SLOT_BINDINGS.get(hoveredSlot.id);
-
         // Check that there is exactly one binding. Do nothing if there are multiple.
+        List<Integer> targets = SLOT_BINDINGS.get(hoveredSlot.id);
         if (targets == null || targets.size() != 1) {
             Taraton.sendMessage(Text.literal("You can only swap items with a single binding!")
                     .formatted(Formatting.RED));
