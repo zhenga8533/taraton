@@ -329,6 +329,18 @@ public class GeneralConfig {
                                         newVal -> config.general.serverStatus = newVal)
                                 .controller(TaratonConfig::createBooleanController).build())
 
+                        // Zone Toast
+                        .option(Option.<Boolean>createBuilder().name(Text.literal("Zone Toast"))
+                                .description(OptionDescription.createBuilder()
+                                        .webpImage(Identifier.of(Taraton.MOD_ID,
+                                                "config/general/zone_toast.webp"))
+                                        .text(Text.literal(
+                                                "Displays a toast notification when you enter a new zone."))
+                                        .build())
+                                .binding(defaults.general.zoneToast, () -> config.general.zoneToast,
+                                        newVal -> config.general.zoneToast = newVal)
+                                .controller(TaratonConfig::createBooleanController).build())
+
                         .build())
 
                 // Timer Option Group
@@ -426,6 +438,9 @@ public class GeneralConfig {
 
     @SerialEntry
     public boolean serverStatus = false;
+
+    @SerialEntry
+    public boolean zoneToast = false;
 
     // Timer Option Group
     @SerialEntry
