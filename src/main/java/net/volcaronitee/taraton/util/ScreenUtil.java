@@ -23,13 +23,12 @@ public final class ScreenUtil {
      * @param context The current DrawContext.
      * @param slot The slot to highlight.
      * @param color The ARGB color to use for highlighting.
-     * @param z The z-level for rendering, determining the draw order.
      */
-    public static void highlightSlot(DrawContext context, Slot slot, int color, int z) {
+    public static void highlightSlot(DrawContext context, Slot slot, int color) {
         if (slot == null) {
             return;
         }
-        context.fill(slot.x, slot.y, slot.x + 16, slot.y + 16, z, color);
+        context.fill(slot.x, slot.y, slot.x + 16, slot.y + 16, 200, color);
     }
 
     /**

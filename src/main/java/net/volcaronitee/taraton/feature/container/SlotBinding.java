@@ -23,7 +23,6 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.gui.screen.ingame.InventoryScreen;
 import net.minecraft.client.network.ClientPlayerInteractionManager;
-import net.minecraft.client.render.RenderLayer;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
@@ -252,7 +251,7 @@ public class SlotBinding {
         for (Integer slotIndex : SLOT_BINDINGS.keySet()) {
             int color = SLOT_COLORS.getOrDefault(slotIndex, 0x40FFFFFF);
             Slot slot = handledScreen.getScreenHandler().getSlot(slotIndex);
-            ScreenUtil.highlightSlot(context, slot, color, 200);
+            ScreenUtil.highlightSlot(context, slot, color);
         }
         context.getMatrices().pop();
 
@@ -458,8 +457,7 @@ public class SlotBinding {
 
                     // Draw the highlight at the slot's relative position
                     int color = Colors.WHITE | 0x80000000; // 50% alpha
-                    context.fill(RenderLayer.getGuiOverlay(), slot.x, slot.y, slot.x + 16,
-                            slot.y + 16, color);
+                    ScreenUtil.highlightSlot(context, slot, color);
 
                     // Restore the original matrix to not affect other rendering
                     context.getMatrices().pop();
