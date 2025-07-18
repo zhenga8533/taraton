@@ -231,7 +231,7 @@ public class GeneralConfig {
                                         () -> config.general.heldItemSwingSpeed,
                                         newVal -> config.general.heldItemSwingSpeed = newVal)
                                 .controller(opt -> DoubleSliderControllerBuilder.create(opt)
-                                        .range(0.1, 1.01).step(0.01))
+                                        .range(0.1, 2.0).step(0.01))
                                 .build())
 
                         // Held Item Rotation X
