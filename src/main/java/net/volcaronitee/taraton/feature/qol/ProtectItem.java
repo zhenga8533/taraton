@@ -58,7 +58,7 @@ public class ProtectItem {
         } else if (PROTECT_MAP.map.containsKey(itemUuid)) {
             PROTECT_MAP.removeMap(itemUuid);
             Taraton.sendMessage(Text.literal("Item removed from protect list: ")
-                    .formatted(Formatting.YELLOW).append(itemName));
+                    .formatted(Formatting.RED).append(itemName));
         } else {
             PROTECT_MAP.addMap(itemUuid, itemName.getString(), true);
             Taraton.sendMessage(Text.literal("Item added to protect list: ")
@@ -108,7 +108,7 @@ public class ProtectItem {
         // Check if the item UUID is in the protect list
         if (itemUuid != null && PROTECT_MAP.map.containsKey(itemUuid)) {
             Taraton.sendMessage(
-                    Text.literal("Prevented dropping: ").formatted(Formatting.YELLOW).append(name));
+                    Text.literal("Protected: ").formatted(Formatting.YELLOW).append(name));
             return true;
         }
 
