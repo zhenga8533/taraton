@@ -265,7 +265,7 @@ public class SlotBinding {
                 context.getMatrices().translate(parentX, parentY, 0);
 
                 int lineColor = Colors.YELLOW;
-                float lineThickness = 2.0f;
+                float lineThickness = 1.0f;
 
                 // Draw lines from the hovered slot to all bound slots
                 for (Integer targetSlotIndex : boundSlots) {
@@ -315,7 +315,7 @@ public class SlotBinding {
             int blue = (int) (b * 255);
 
             // Combine into a final ARGB color with 25% alpha
-            int color = 0x40000000 | (red << 16) | (green << 8) | blue;
+            int color = 0x80000000 | (red << 16) | (green << 8) | blue;
 
             SLOT_COLORS.put(slot1, color);
         }
