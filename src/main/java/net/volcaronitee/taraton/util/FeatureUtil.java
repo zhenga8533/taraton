@@ -1,5 +1,6 @@
 package net.volcaronitee.taraton.util;
 
+import net.hypixel.data.type.ServerType;
 import net.volcaronitee.taraton.config.TaratonConfig;
 import net.volcaronitee.taraton.feature.chat.AutoCommand;
 import net.volcaronitee.taraton.feature.chat.AutoKick;
@@ -35,6 +36,9 @@ import net.volcaronitee.taraton.feature.qol.DragShiftClick;
 import net.volcaronitee.taraton.feature.qol.NoMouseReset;
 import net.volcaronitee.taraton.feature.qol.RemoveSelfieMode;
 
+/**
+ * Utility class for initializing and checking the status of various features.
+ */
 public class FeatureUtil {
     public static void init() {
         // General Features
@@ -105,7 +109,7 @@ public class FeatureUtil {
 
         // Check for SkyBlock only mode
         if (TaratonConfig.getInstance().general.skyblockOnly
-                && !LocationUtil.getMode().equals("SkyBlock")) {
+                && !(LocationUtil.getServerType() == ServerType.valueOf("SKYBLOCK").orElse(null))) {
             return false;
         }
 
