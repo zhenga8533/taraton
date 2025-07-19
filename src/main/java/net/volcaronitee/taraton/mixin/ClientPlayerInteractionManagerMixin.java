@@ -31,10 +31,9 @@ public class ClientPlayerInteractionManagerMixin {
             at = @At("HEAD"), cancellable = true)
     private void taraton$onGuiDrop(int syncId, int slotId, int button, SlotActionType actionType,
             PlayerEntity player, CallbackInfo ci) {
-        ItemStack clickedStack = player.currentScreenHandler.getSlot(slotId).getStack();
-
         if (actionType == SlotActionType.THROW) {
             // This action is a drop from a specific slot
+            ItemStack clickedStack = player.currentScreenHandler.getSlot(slotId).getStack();
             if (ProtectItem.getInstance().shouldCancelStack(clickedStack)) {
                 ci.cancel();
             }
@@ -50,6 +49,7 @@ public class ClientPlayerInteractionManagerMixin {
             String title = MinecraftClient.getInstance().currentScreen.getTitle().getString();
             if (title.startsWith("Salvage")) {
                 // If the screen title starts with "Salvage", we check for cancel
+                ItemStack clickedStack = player.currentScreenHandler.getSlot(slotId).getStack();
                 if (ProtectItem.getInstance().shouldCancelStack(clickedStack)) {
                     ci.cancel();
                 }
