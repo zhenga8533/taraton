@@ -14,7 +14,7 @@ import net.volcaronitee.taraton.util.TickUtil;
 public class ZoneToast {
     private static final ZoneToast INSTANCE = new ZoneToast();
 
-    private String currentZone = "";
+    private String currentZone = "None";
 
     /**
      * Private constructor to prevent instantiation.
@@ -34,9 +34,11 @@ public class ZoneToast {
      * @param client The Minecraft client instance.
      */
     private void checkZone(MinecraftClient client) {
-        String newZone = LocationUtil.getZone();
-        if (!newZone.equals(currentZone)) {
-            currentZone = newZone;
+        Text newZone = LocationUtil.getZone();
+        String newZoneStr = newZone.getString();
+
+        if (!newZoneStr.equals(currentZone)) {
+            currentZone = newZoneStr;
             showToast(newZone);
         }
     }
@@ -46,7 +48,7 @@ public class ZoneToast {
      * 
      * @param zone The name of the zone to display in the toast notification.
      */
-    private void showToast(String zone) {
+    private void showToast(Text zone) {
         MinecraftClient client = MinecraftClient.getInstance();
         if (client == null || client.getToastManager() == null
                 || !FeatureUtil.isEnabled(TaratonConfig.getInstance().general.zoneToast)) {
@@ -55,11 +57,9 @@ public class ZoneToast {
 
         // Create the title and description for the toast
         Text title = Text.literal("Entered Zone");
-        Text description = Text.literal(zone);
 
         // Create and add the toast to the toast manager
-        SystemToast toast =
-                new SystemToast(SystemToast.Type.PERIODIC_NOTIFICATION, title, description);
+        SystemToast toast = new SystemToast(SystemToast.Type.WORLD_BACKUP, title, zone);
         client.getToastManager().add(toast);
     }
 }

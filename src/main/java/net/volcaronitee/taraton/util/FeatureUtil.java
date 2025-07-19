@@ -30,6 +30,7 @@ import net.volcaronitee.taraton.feature.general.SkyBlockXpAlert;
 import net.volcaronitee.taraton.feature.general.UpdateNotification;
 import net.volcaronitee.taraton.feature.general.WaypointMaker;
 import net.volcaronitee.taraton.feature.general.WidgetDisplay;
+import net.volcaronitee.taraton.feature.general.ZoneToast;
 import net.volcaronitee.taraton.feature.qol.AutoFusion;
 import net.volcaronitee.taraton.feature.qol.AutoSalvage;
 import net.volcaronitee.taraton.feature.qol.DragShiftClick;
@@ -50,6 +51,7 @@ public class FeatureUtil {
         UpdateNotification.register();
         WaypointMaker.register();
         WidgetDisplay.register();
+        ZoneToast.register();
 
         // QOL Features
         AutoFusion.register();

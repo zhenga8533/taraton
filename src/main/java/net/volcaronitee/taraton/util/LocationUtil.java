@@ -19,7 +19,7 @@ public class LocationUtil {
     private static String mode = "";
     private static ServerType serverType = LobbyType.MAIN;
     private static World world = World.UNKNOWN;
-    private static String zone = "";
+    private static Text zone = Text.empty();
 
     private static final List<Runnable> CALLBACKS = new ArrayList<>();
 
@@ -114,13 +114,10 @@ public class LocationUtil {
             return;
         }
 
-        String zone = sidebarLines.stream().map(Text::getString)
-                .filter(line -> line.startsWith(" ⏣ ") || line.startsWith(" ф "))
-                .map(line -> line.substring(3).trim()).findFirst().orElse("");
-
-        if (!zone.isEmpty()) {
-            LocationUtil.zone = zone;
-        }
+        zone = sidebarLines.stream().filter(line -> {
+            String plainText = line.getString().trim();
+            return plainText.startsWith("⏣") || plainText.startsWith("ф");
+        }).findFirst().orElse(Text.empty());
     }
 
     /**
@@ -200,9 +197,9 @@ public class LocationUtil {
     /**
      * Returns the zone of the server.
      * 
-     * @return The zone of the server, or an empty string if not available.
+     * @return The zone of the server as a Text object, or an empty Text if not available.
      */
-    public static String getZone() {
+    public static Text getZone() {
         return zone;
     }
 
