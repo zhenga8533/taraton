@@ -29,7 +29,7 @@ public class ScoreboardUtil {
      * ticks.
      */
     public static void init() {
-        TickUtil.register(ScoreboardUtil::updateScoreboard, 5);
+        TickUtil.register(ScoreboardUtil::updateScoreboard, 1);
     }
 
     /**
