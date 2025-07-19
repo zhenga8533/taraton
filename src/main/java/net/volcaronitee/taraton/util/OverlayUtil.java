@@ -68,6 +68,19 @@ public class OverlayUtil {
     }
 
     /**
+     * Removes the overlay with the specified name.
+     * 
+     * @param name The name of the overlay to remove.
+     */
+    public static void removeOverlay(String name) {
+        if (name == null || name.isEmpty() || !OVERLAYS.containsKey(name.toLowerCase())) {
+            return;
+        }
+
+        OVERLAYS.remove(name.toLowerCase());
+    }
+
+    /**
      * Updates the mouse position and state for all overlays.
      * 
      * @param mx The mouse X position.

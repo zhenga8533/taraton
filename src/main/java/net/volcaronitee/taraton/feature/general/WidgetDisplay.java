@@ -64,7 +64,12 @@ public class WidgetDisplay {
             }
 
             String name = displayName.getString();
+
             if (addToWidget == null) {
+                if (!name.endsWith(":") || name.startsWith(" ")) {
+                    continue;
+                }
+
                 // Find the first active widget that matches the name
                 for (Widget widget : widgets) {
                     if (name.startsWith(widget.name)) {
@@ -90,6 +95,11 @@ public class WidgetDisplay {
      * Callback to save the spam patterns when the list is modified.
      */
     private void onSave() {
+        for (Widget widget : WIDGETS) {
+            OverlayUtil.removeOverlay(widget.name);
+        }
+        WIDGETS.clear();
+
         for (String widget : WIDGET_LIST.list) {
             WIDGETS.add(new Widget(widget));
         }
@@ -116,7 +126,7 @@ public class WidgetDisplay {
 
             if (active.get()) {
                 OverlayUtil.createOverlay(name,
-                        () -> FeatureUtil
+                        () -> active.get() && FeatureUtil
                                 .isEnabled(TaratonConfig.getInstance().general.widgetDisplay),
                         lines);
             }
