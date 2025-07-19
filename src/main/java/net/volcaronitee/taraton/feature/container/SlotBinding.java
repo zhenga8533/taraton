@@ -16,13 +16,13 @@ import dev.isxander.yacl3.api.controller.IntegerFieldControllerBuilder;
 import dev.isxander.yacl3.api.controller.TickBoxControllerBuilder;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
-import net.fabricmc.fabric.api.client.screen.v1.ScreenMouseEvents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.gui.screen.ingame.InventoryScreen;
 import net.minecraft.client.network.ClientPlayerInteractionManager;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
@@ -70,6 +70,8 @@ public class SlotBinding {
 
     private boolean editBindings = false;
 
+    private boolean swapped = false;
+
     /**
      * Private constructor to prevent instantiation.
      */
@@ -95,7 +97,6 @@ public class SlotBinding {
             // Register event listeners for the screen
             if (FeatureUtil.isEnabled(TaratonConfig.getInstance().container.slotBinding)) {
                 ScreenEvents.afterRender(screen).register(INSTANCE::afterRender);
-                ScreenMouseEvents.allowMouseClick(screen).register(INSTANCE::allowMouseClick);
             }
         });
     }
@@ -164,66 +165,59 @@ public class SlotBinding {
     }
 
     /**
-     * Overrides mouse clicks if targeting a slot binding. If a user Shift-clicks a slot with a
-     * single binding, it will swap the items with its bound hotbar/inventory slot.
-     *
-     * @param screen The screen where the mouse click occurred.
-     * @param mouseX The x-coordinate of the mouse click.
-     * @param mouseY The y-coordinate of the mouse click.
-     * @param button The mouse button that was clicked.
-     * @return False if the click was handled and should be cancelled, true otherwise.
+     * Handles shift-click actions to swap items between bound slots.
+     * 
+     * @param syncId The sync ID of the current screen handler.
+     * @param slotId The ID of the slot being shift-clicked.
+     * @param player The player performing the action.
+     * @return True if a swap was performed, false otherwise.
      */
-    private boolean allowMouseClick(Screen screen, double mouseX, double mouseY, int button) {
-        // We only care about Shift + Left Click on a container screen
-        if (!Screen.hasShiftDown() || button != 0
-                || !(screen instanceof HandledScreen<?> handledScreen)) {
+    public boolean onShiftClick(int syncId, int slotId, PlayerEntity player) {
+        // Prevent recursive swapping
+        if (swapped) {
+            swapped = false;
             return true;
         }
 
-        // Check if the screen has slot bindings
-        HandledScreenAccessor accessor = (HandledScreenAccessor) handledScreen;
-        Slot hoveredSlot = accessor.getFocusedSlot();
-        if (hoveredSlot == null || !SLOT_BINDINGS.containsKey(hoveredSlot.id)) {
-            return true;
+        // Validate slot ID
+        if (!SLOT_BINDINGS.containsKey(slotId)) {
+            return false;
         }
 
-        // Check that there is exactly one binding. Do nothing if there are multiple.
-        List<Integer> targets = SLOT_BINDINGS.get(hoveredSlot.id);
+        // Ensure exactly one binding exists for the slot
+        List<Integer> targets = SLOT_BINDINGS.get(slotId);
         if (targets == null || targets.size() != 1) {
             Taraton.sendMessage(Text.literal("You can only swap items with a single binding!")
                     .formatted(Formatting.RED));
-            return true;
+            return false;
         }
 
-        // Swap logic
-        int sourceSlotId = hoveredSlot.id;
+        // Determine hottbar and inventory indices
         int targetSlotId = targets.get(0);
+        int inventoryIndex;
+        int hotbarIndex;
 
-        // Standard player inventory slot IDs
-        int inventorySlotId;
-        int hotbarSlotIndex;
-
-        // Determine which slot is in the hotbar and which is in the main inventory.
-        if (sourceSlotId >= HOTBAR_START_INDEX && sourceSlotId <= HOTBAR_END_INDEX) {
-            hotbarSlotIndex = sourceSlotId - HOTBAR_START_INDEX;
-            inventorySlotId = targetSlotId;
+        if (slotId >= HOTBAR_START_INDEX && slotId <= HOTBAR_END_INDEX) {
+            hotbarIndex = slotId - HOTBAR_START_INDEX;
+            inventoryIndex = targetSlotId;
         } else if (targetSlotId >= HOTBAR_START_INDEX && targetSlotId <= HOTBAR_END_INDEX) {
-            hotbarSlotIndex = targetSlotId - HOTBAR_START_INDEX;
-            inventorySlotId = sourceSlotId;
+            hotbarIndex = targetSlotId - HOTBAR_START_INDEX;
+            inventoryIndex = slotId;
         } else {
-            return true;
+            return false;
         }
 
-        // Get objects needed for the interaction.
-        MinecraftClient client = MinecraftClient.getInstance();
-        ClientPlayerInteractionManager interactionManager = client.interactionManager;
-        int syncId = handledScreen.getScreenHandler().syncId;
+        // Perform the swap action
+        ClientPlayerInteractionManager interactionManager =
+                MinecraftClient.getInstance().interactionManager;
+        if (interactionManager == null) {
+            return false;
+        }
 
-        // Perform the swap
-        interactionManager.clickSlot(syncId, inventorySlotId, hotbarSlotIndex, SlotActionType.SWAP,
-                client.player);
-
-        return false;
+        interactionManager.clickSlot(syncId, inventoryIndex, hotbarIndex, SlotActionType.SWAP,
+                player);
+        swapped = true;
+        return true;
     }
 
     /**
@@ -457,7 +451,7 @@ public class SlotBinding {
                     context.getMatrices().translate(parentX, parentY, 0);
 
                     // Draw the highlight at the slot's relative position
-                    int color = Colors.WHITE | 0x80000000; // 50% alpha
+                    int color = Colors.WHITE | 0x40000000; // 25% alpha
                     ScreenUtil.highlightSlot(context, slot, color);
 
                     // Restore the original matrix to not affect other rendering
