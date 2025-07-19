@@ -7,7 +7,7 @@ import net.hypixel.data.type.ServerType;
 import net.hypixel.modapi.HypixelModAPI;
 import net.hypixel.modapi.packet.impl.clientbound.event.ClientboundLocationPacket;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.PlayerListEntry;
+import net.minecraft.text.Text;
 
 /**
  * Utility class for detecting world and location information.
@@ -109,12 +109,14 @@ public class LocationUtil {
      * @param client The Minecraft client instance used to access the world and server information.
      */
     private static void updateZone(MinecraftClient client) {
-        List<PlayerListEntry> tablist = TablistUtil.getTablist();
-        String zone = tablist.stream()
-                .map(entry -> entry.getDisplayName() != null ? entry.getDisplayName().getString()
-                        : "")
-                .filter(name -> name.startsWith(" ⏣ ") || name.startsWith(" ф "))
-                .map(name -> name.substring(3).trim()).findFirst().orElse("");
+        List<Text> sidebarLines = ScoreboardUtil.getScoreboard();
+        if (sidebarLines.isEmpty()) {
+            return;
+        }
+
+        String zone = sidebarLines.stream().map(Text::getString)
+                .filter(line -> line.startsWith(" ⏣ ") || line.startsWith(" ф "))
+                .map(line -> line.substring(3).trim()).findFirst().orElse("");
 
         if (!zone.isEmpty()) {
             LocationUtil.zone = zone;

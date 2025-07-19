@@ -17,6 +17,7 @@ import net.volcaronitee.taraton.util.OverlayUtil;
 import net.volcaronitee.taraton.util.PartyUtil;
 import net.volcaronitee.taraton.util.PlayerUtil;
 import net.volcaronitee.taraton.util.ScheduleUtil;
+import net.volcaronitee.taraton.util.ScoreboardUtil;
 import net.volcaronitee.taraton.util.TablistUtil;
 import net.volcaronitee.taraton.util.TickUtil;
 import net.volcaronitee.taraton.util.TitleUtil;
@@ -47,6 +48,7 @@ public class Taraton implements ClientModInitializer {
         PartyUtil.init();
         PlayerUtil.init();
         ScheduleUtil.init();
+        ScoreboardUtil.init();
         TablistUtil.init();
         TickUtil.init();
         TitleUtil.init();
