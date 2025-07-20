@@ -4,6 +4,7 @@ import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.arg
 import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.literal;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
+import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
@@ -46,91 +47,75 @@ public class CommandUtil {
      * Initializes the client command registration for Taraton.
      */
     public static void init() {
-        ClientCommandRegistrationCallback.EVENT
-                .register((CommandDispatcher<FabricClientCommandSource> dispatcher,
-                        CommandRegistryAccess access) -> {
-                    for (String alias : ALIASES) {
-                        dispatcher.register(literal(alias).executes(CommandUtil::settings)
+        ClientCommandRegistrationCallback.EVENT.register(CommandUtil::register);
+    }
 
-                                // Help command
-                                .then(literal("help").executes(CommandUtil::help))
+    private static void register(CommandDispatcher<FabricClientCommandSource> dispatcher,
+            CommandRegistryAccess access) {
+        for (String alias : ALIASES) {
+            LiteralArgumentBuilder<FabricClientCommandSource> command = literal(alias)
+                    .executes(CommandUtil::settingsCommand)
+                    .then(literal("help").executes(CommandUtil::helpCommand))
+                    .then(literal("settings").executes(CommandUtil::settingsCommand))
+                    .then(literal("toggles").executes(CommandUtil::togglesCommand))
+                    .then(literal("gui").executes(OverlayUtil::moveGui))
+                    .then(literal("save").executes(CommandUtil::saveCommand))
+                    .then(literal("debug").executes(CommandUtil::debugCommand))
+                    .then(literal("protect").executes(ProtectItem.getInstance()::protect))
+                    .then(literal("protectitem").executes(ProtectItem.getInstance()::protect))
+                    .then(literal("wardrobe").executes(WardrobeSwap.getInstance()::setWardrobe))
+                    .then(literal("slotbinding")
+                            .executes(SlotBinding.getInstance()::setSlotBinding))
+                    .then(argument("dynamic_command", StringArgumentType.greedyString())
+                            .executes(CommandUtil::dynamicCommandHandler));
 
-                                // Settings command
-                                .then(literal("settings").executes(CommandUtil::settings))
+            registerListCommands(command);
+            registerMapCommands(command);
 
-                                // Toggles command
-                                .then(literal("toggles").executes(CommandUtil::toggles))
+            dispatcher.register(command);
+        }
+    }
 
-                                // GUI command
-                                .then(literal("gui").executes(OverlayUtil::moveGui))
+    private static void registerListCommands(
+            LiteralArgumentBuilder<FabricClientCommandSource> command) {
+        command.then(ChatCommands.AVENGER_LIST.createCommand("avengerlist"));
+        command.then(ChatCommands.AVENGER_LIST.createCommand("al"));
+        command.then(AutoKick.BLACK_LIST.createCommand("blacklist"));
+        command.then(AutoKick.BLACK_LIST.createCommand("bl"));
+        command.then(EntityHighlight.ENTITY_LIST.createCommand("entitylist"));
+        command.then(EntityHighlight.ENTITY_LIST.createCommand("el"));
+        command.then(HideEntity.HOW_LIST.createCommand("hideonworldlist"));
+        command.then(HideEntity.HOW_LIST.createCommand("howl"));
+        command.then(ChatCommands.PREFIX_LIST.createCommand("prefixlist"));
+        command.then(ChatCommands.PREFIX_LIST.createCommand("pl"));
+        command.then(SpamHider.SPAM_LIST.createCommand("spamlist"));
+        command.then(SpamHider.SPAM_LIST.createCommand("sl"));
+        command.then(JoinParty.WHITE_LIST.createCommand("whitelist"));
+        command.then(JoinParty.WHITE_LIST.createCommand("wl"));
+        command.then(WidgetDisplay.WIDGET_LIST.createCommand("widgetlist"));
+        command.then(WidgetDisplay.WIDGET_LIST.createCommand("wgl"));
+        command.then(VanquisherWarp.VANQUISHER_LIST.createCommand("vanqlist"));
+        command.then(VanquisherWarp.VANQUISHER_LIST.createCommand("vl"));
+    }
 
-                                // Save command
-                                .then(literal("save").executes(CommandUtil::save))
-
-                                // Debug command
-                                .then(literal("debug").executes(CommandUtil::debug))
-
-                                // Protect command
-                                .then(literal("protect")
-                                        .executes(ProtectItem.getInstance()::protect))
-                                .then(literal("protectitem")
-                                        .executes(ProtectItem.getInstance()::protect))
-
-                                // Wardrobe Swap command
-                                .then(literal("wardrobe")
-                                        .executes(WardrobeSwap.getInstance()::setWardrobe))
-
-                                // Slot Binding command
-                                .then(literal("slotbinding")
-                                        .executes(SlotBinding.getInstance()::setSlotBinding))
-
-                                // Lists commands
-                                .then(ChatCommands.AVENGER_LIST.createCommand("avengerlist"))
-                                .then(ChatCommands.AVENGER_LIST.createCommand("al"))
-                                .then(AutoKick.BLACK_LIST.createCommand("blacklist"))
-                                .then(AutoKick.BLACK_LIST.createCommand("bl"))
-                                .then(EntityHighlight.ENTITY_LIST.createCommand("entitylist"))
-                                .then(EntityHighlight.ENTITY_LIST.createCommand("el"))
-                                .then(HideEntity.HOW_LIST.createCommand("hideonworldlist"))
-                                .then(HideEntity.HOW_LIST.createCommand("howl"))
-                                .then(ChatCommands.PREFIX_LIST.createCommand("prefixlist"))
-                                .then(ChatCommands.PREFIX_LIST.createCommand("pl"))
-                                .then(SpamHider.SPAM_LIST.createCommand("spamlist"))
-                                .then(SpamHider.SPAM_LIST.createCommand("sl"))
-                                .then(JoinParty.WHITE_LIST.createCommand("whitelist"))
-                                .then(JoinParty.WHITE_LIST.createCommand("wl"))
-                                .then(WidgetDisplay.WIDGET_LIST.createCommand("widgetlist"))
-                                .then(WidgetDisplay.WIDGET_LIST.createCommand("wgl"))
-                                .then(VanquisherWarp.VANQUISHER_LIST.createCommand("vanqlist"))
-                                .then(VanquisherWarp.VANQUISHER_LIST.createCommand("vl"))
-
-                                // Maps commands
-                                .then(ChatAlert.CHAT_ALERT_MAP.createCommand("chatalertmap"))
-                                .then(ChatAlert.CHAT_ALERT_MAP.createCommand("cam"))
-                                .then(CustomEmote.EMOTE_MAP.createCommand("emotemap"))
-                                .then(CustomEmote.EMOTE_MAP.createCommand("em"))
-                                .then(CommandHotkey.HOTKEY_MAP.createCommand("hotkeymap"))
-                                .then(CommandHotkey.HOTKEY_MAP.createCommand("hkm"))
-                                .then(PlayerScale.PLAYER_SCALE_MAP.createCommand("playerscalemap"))
-                                .then(PlayerScale.PLAYER_SCALE_MAP.createCommand("psm"))
-                                .then(ProtectItem.PROTECT_MAP.createCommand("protectmap"))
-                                .then(ProtectItem.PROTECT_MAP.createCommand("pm"))
-                                .then(SlotBinding.SLOT_BINDING_MAP.createCommand("slotbindingmap"))
-                                .then(SlotBinding.SLOT_BINDING_MAP.createCommand("sbm"))
-                                .then(TextSubstitution.SUBSTITUTION_MAP.createCommand("submap"))
-                                .then(TextSubstitution.SUBSTITUTION_MAP.createCommand("sm"))
-                                .then(WardrobeSwap.WARDROBE_SWAP_MAP
-                                        .createCommand("wardrobeswapmap"))
-                                .then(WardrobeSwap.WARDROBE_SWAP_MAP.createCommand("wsm"))
-
-                                // Chat/client commands
-                                .then(argument("default", StringArgumentType.greedyString())
-                                        .executes(CommandUtil::defaultCommand))
-
-                        // Command End
-                        );
-                    }
-                });
+    private static void registerMapCommands(
+            LiteralArgumentBuilder<FabricClientCommandSource> command) {
+        command.then(ChatAlert.CHAT_ALERT_MAP.createCommand("chatalertmap"));
+        command.then(ChatAlert.CHAT_ALERT_MAP.createCommand("cam"));
+        command.then(CustomEmote.EMOTE_MAP.createCommand("emotemap"));
+        command.then(CustomEmote.EMOTE_MAP.createCommand("em"));
+        command.then(CommandHotkey.HOTKEY_MAP.createCommand("hotkeymap"));
+        command.then(CommandHotkey.HOTKEY_MAP.createCommand("hkm"));
+        command.then(PlayerScale.PLAYER_SCALE_MAP.createCommand("playerscalemap"));
+        command.then(PlayerScale.PLAYER_SCALE_MAP.createCommand("psm"));
+        command.then(ProtectItem.PROTECT_MAP.createCommand("protectmap"));
+        command.then(ProtectItem.PROTECT_MAP.createCommand("pm"));
+        command.then(SlotBinding.SLOT_BINDING_MAP.createCommand("slotbindingmap"));
+        command.then(SlotBinding.SLOT_BINDING_MAP.createCommand("sbm"));
+        command.then(TextSubstitution.SUBSTITUTION_MAP.createCommand("submap"));
+        command.then(TextSubstitution.SUBSTITUTION_MAP.createCommand("sm"));
+        command.then(WardrobeSwap.WARDROBE_SWAP_MAP.createCommand("wardrobeswapmap"));
+        command.then(WardrobeSwap.WARDROBE_SWAP_MAP.createCommand("wsm"));
     }
 
     /**
@@ -139,7 +124,7 @@ public class CommandUtil {
      * @param context The command context containing the source and arguments.
      * @return 1 if the command was executed successfully, 0 otherwise.
      */
-    private static int help(CommandContext<FabricClientCommandSource> context) {
+    private static int helpCommand(CommandContext<FabricClientCommandSource> context) {
         context.getSource().sendFeedback(Text.literal("Taraton WIP"));
         return 1;
     }
@@ -150,7 +135,7 @@ public class CommandUtil {
      * @param context The command context containing the source and arguments.
      * @return 1 if the command was executed successfully, 0 otherwise.
      */
-    private static int settings(CommandContext<FabricClientCommandSource> context) {
+    private static int settingsCommand(CommandContext<FabricClientCommandSource> context) {
         // Defer the screen opening to the main client thread
         MinecraftClient client = MinecraftClient.getInstance();
         client.send(() -> {
@@ -166,7 +151,7 @@ public class CommandUtil {
      * @param context The command context containing the source and arguments.
      * @return 1 if the command was executed successfully, 0 otherwise.
      */
-    private static int toggles(CommandContext<FabricClientCommandSource> context) {
+    private static int togglesCommand(CommandContext<FabricClientCommandSource> context) {
         // Defer the screen opening to the main client thread
         MinecraftClient client = MinecraftClient.getInstance();
         client.send(() -> {
@@ -183,7 +168,8 @@ public class CommandUtil {
      * @param message The message to echo back to the player.
      * @return 1 if the command was executed successfully, 0 otherwise.
      */
-    private static int echo(CommandContext<FabricClientCommandSource> context, String message) {
+    private static int echoCommand(CommandContext<FabricClientCommandSource> context,
+            String message) {
         Taraton.sendMessage(message);
         return 1;
     }
@@ -194,7 +180,7 @@ public class CommandUtil {
      * @param context The command context containing the source and arguments.
      * @return 1 if the command was executed successfully, 0 otherwise.
      */
-    private static int save(CommandContext<FabricClientCommandSource> context) {
+    private static int saveCommand(CommandContext<FabricClientCommandSource> context) {
         TaratonJson.saveInstances(MinecraftClient.getInstance());
         Taraton.sendMessage(Text.literal("Successfully saved data!").formatted(Formatting.GREEN));
         return 1;
@@ -206,7 +192,7 @@ public class CommandUtil {
      * @param context The command context containing the source and arguments.
      * @return 1 if the command was executed successfully, 0 otherwise.
      */
-    private static int debug(CommandContext<FabricClientCommandSource> context) {
+    private static int debugCommand(CommandContext<FabricClientCommandSource> context) {
         String debugMessage = String.format("Taraton Debug:\n%s\n\n%s\n\n%s",
                 PlayerUtil.debugPlayer(), LocationUtil.debugLocation(), PartyUtil.debugParty());
         Taraton.sendMessage(Text.literal(debugMessage).formatted(Formatting.YELLOW));
@@ -219,7 +205,7 @@ public class CommandUtil {
      * @param context The command context containing the source and arguments.
      * @return 1 if the command was executed successfully, 0 otherwise.
      */
-    private static int contract(CommandContext<FabricClientCommandSource> context) {
+    private static int contractCommand(CommandContext<FabricClientCommandSource> context) {
         if (Contract.openContract()) {
             return 1;
         } else {
@@ -233,7 +219,7 @@ public class CommandUtil {
      * @param context The command context containing the source and arguments.
      * @return 1 if the command was executed successfully, 0 otherwise.
      */
-    private static int domainExpansion(CommandContext<FabricClientCommandSource> context) {
+    private static int domainExpansionCommand(CommandContext<FabricClientCommandSource> context) {
         if (!Contract.isSigned()) {
             Taraton.sendMessage(Text.literal(
                     "Binding Vows are essentially contracts that an individual can make with one's self or another person. The act of abiding by the rules and restrictions agreed upon in these contracts can result in a greater power or the achievement of a goal, but breaking a binding vow has uncanny repercussions.")
@@ -254,7 +240,13 @@ public class CommandUtil {
         return 1;
     }
 
-    public static int hehehe(CommandContext<FabricClientCommandSource> context) {
+    /**
+     * Handles the hehehe command, which toggles the NSFW state.
+     * 
+     * @param context The command context containing the source and arguments.
+     * @return 1 if the command was executed successfully, 0 otherwise.
+     */
+    private static int heheheCommand(CommandContext<FabricClientCommandSource> context) {
         if (!Contract.isSigned()) {
             Taraton.sendMessage(Text.literal("2 months.").formatted(Formatting.RED));
             return 0;
@@ -279,20 +271,20 @@ public class CommandUtil {
      * @param context The command context containing the source and arguments.
      * @return 1 if the command was executed successfully, 0 otherwise.
      */
-    private static int defaultCommand(CommandContext<FabricClientCommandSource> context) {
+    private static int dynamicCommandHandler(CommandContext<FabricClientCommandSource> context) {
         ClientPlayerEntity clientPlayer = context.getSource().getPlayer();
         String command = StringArgumentType.getString(context, "default").trim();
         String[] args = command.split(" ");
         String core = args[0];
 
         if (core.equals("contract") || core.equals("bindingvow")) {
-            return contract(context);
+            return contractCommand(context);
         } else if (core.equals("domainexpansion") || core.equals("ryoikitenkai")) {
-            return domainExpansion(context);
+            return domainExpansionCommand(context);
         } else if (core.equals("echo")) {
-            return echo(context, command.substring(5).trim());
+            return echoCommand(context, command.substring(5).trim());
         } else if (core.equals("hehehe") || core.equals("nsfw")) {
-            return hehehe(context);
+            return heheheCommand(context);
         } else if (ChatCommands.getInstance().handleCommand(clientPlayer, command)) {
             return 1;
         } else if (ImagePreview.getInstance().handleCommand(command)) {
