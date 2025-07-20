@@ -111,10 +111,10 @@ public class ContainerPreview {
                     + parts.get(parts.size() - 1);
         }
 
-        if (!containerJson.containsKey(key) || key.equals(currentPreview)) {
+        if (!containerJson.containsKey(key) || name.equals(currentPreview)) {
             return;
         }
-        currentPreview = key;
+        currentPreview = name;
 
         previewItems.clear();
         previewItems.addAll(containerData.get(key));
@@ -127,15 +127,27 @@ public class ContainerPreview {
      * @param delta The time delta since the last render.
      */
     public void render(DrawContext context, float delta) {
+        Screen screen = MinecraftClient.getInstance().currentScreen;
+        if (screen == null || !(screen instanceof GenericContainerScreen)
+                || previewItems.isEmpty()) {
+            return;
+        }
+
         int originalX = OVERLAY.getX();
         int originalY = OVERLAY.getY();
 
         context.getMatrices().push();
         context.getMatrices().translate(0, 0, 200);
 
+        // Draw the container background texture
         context.drawTexture(RenderLayer::getGuiTextured, CONTAINER_TEXTURE, originalX, originalY, 0,
                 0, TEXTURE_WIDTH, TEXTURE_HEIGHT, TEXTURE_DIMENSION, TEXTURE_DIMENSION);
 
+        // Draw the container title
+        context.drawText(MinecraftClient.getInstance().textRenderer, currentPreview, originalX + 8,
+                originalY + 6, 0x000000, false);
+
+        // Draw the container items in a grid layout
         for (int i = 0; i < previewItems.size(); i++) {
             ItemStack itemStack = previewItems.get(i);
             if (!itemStack.isEmpty()) {
