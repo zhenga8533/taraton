@@ -16,6 +16,7 @@ import net.volcaronitee.taraton.feature.combat.EntityHighlight;
 import net.volcaronitee.taraton.feature.combat.LowHealthWarning;
 import net.volcaronitee.taraton.feature.container.ArmorDisplay;
 import net.volcaronitee.taraton.feature.container.ContainerPreview;
+import net.volcaronitee.taraton.feature.container.Searchbar;
 import net.volcaronitee.taraton.feature.container.SlotBinding;
 import net.volcaronitee.taraton.feature.container.WardrobeSwap;
 import net.volcaronitee.taraton.feature.crimson_isle.VanquisherWarp;
@@ -77,7 +78,7 @@ public class FeatureUtil {
         // Container Features
         ArmorDisplay.register();
         ContainerPreview.register();
-        // Searchbar.register();
+        Searchbar.register();
         SlotBinding.register();
         WardrobeSwap.register();
 
