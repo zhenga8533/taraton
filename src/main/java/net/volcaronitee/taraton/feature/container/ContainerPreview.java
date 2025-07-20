@@ -1,6 +1,8 @@
 package net.volcaronitee.taraton.feature.container;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -8,14 +10,18 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.JsonOps;
+import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.GenericContainerScreen;
 import net.minecraft.component.ComponentChanges;
 import net.minecraft.item.Item;
+import net.minecraft.item.Item.TooltipContext;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.registry.Registries;
 import net.minecraft.screen.GenericContainerScreenHandler;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.collection.DefaultedList;
 import net.volcaronitee.taraton.config.TaratonJson;
@@ -29,7 +35,10 @@ public class ContainerPreview {
     private static final int CONTAINER_SIZE = 54;
 
     private final Map<String, JsonObject> containerJson = new HashMap<>();
-    private final Map<String, DefaultedList<ItemStack>> containerData = new HashMap<>();
+    private final Map<String, List<ItemStack>> containerData = new HashMap<>();
+
+    private final List<ItemStack> containerPreview = new ArrayList<>();
+    private String currentPreview = "";
 
     private final static Pattern ENDER_CHEST_PATTERN =
             Pattern.compile("^Ender Chest \\((\\d+)/9\\)$");
@@ -48,9 +57,36 @@ public class ContainerPreview {
         ScreenEvents.AFTER_INIT.register((client, screen, width, height) -> {
             ScreenEvents.remove(screen).register(INSTANCE::onScreenClose);
         });
+        ItemTooltipCallback.EVENT.register(INSTANCE::onItemTooltip);
         INSTANCE.registerContainer("ender_chest", 9);
         INSTANCE.registerContainer("backpack", 18);
         INSTANCE.deserializeContainers();
+    }
+
+    /**
+     * Handles the item tooltip event to show container previews.
+     * 
+     * @param stack The item stack.
+     * @param context The tooltip context.
+     * @param type The tooltip type.
+     * @param lines The list of tooltip lines.
+     */
+    private void onItemTooltip(ItemStack stack, TooltipContext context, TooltipType type,
+            List<Text> lines) {
+        String name = stack.getName().getString();
+        String key = "";
+        if (name.startsWith("Ender Chest") || name.contains("Backpack")) {
+            List<String> parts = List.of(name.toLowerCase().split(" "));
+            key = String.join("_", parts.subList(0, parts.size() - 2)) + "_"
+                    + parts.get(parts.size() - 1);
+        }
+
+        if (!containerJson.containsKey(key) || key.equals(currentPreview)) {
+            return;
+        }
+        currentPreview = key;
+
+        containerPreview.addAll(containerData.get(key));
     }
 
     /**
@@ -114,7 +150,9 @@ public class ContainerPreview {
      * @param screen The screen that was closed.
      */
     private void onScreenClose(Screen screen) {
-        System.out.println("G");
+        containerPreview.clear();
+        currentPreview = "";
+
         // Match EC or Backpack screen title
         String title = screen.getTitle().getString();
         String key = "";
@@ -130,19 +168,20 @@ public class ContainerPreview {
             }
         }
 
-        System.out.println("F");
         if (!(screen instanceof GenericContainerScreen) || !containerJson.containsKey(key)) {
             return;
         }
-        System.out.println("E");
 
         GenericContainerScreen containerScreen = (GenericContainerScreen) screen;
         GenericContainerScreenHandler handler = containerScreen.getScreenHandler();
         JsonObject itemsObject = new JsonObject();
+        List<ItemStack> containerItems = containerData.get(key);
+        containerItems.clear();
 
         for (int i = 0; i < CONTAINER_SIZE; i++) {
             ItemStack itemStack = handler.getSlot(i).getStack();
-            System.out.println(itemStack.getName());
+            containerItems.add(itemStack);
+
             if (!itemStack.isEmpty()) {
                 JsonObject itemJson = new JsonObject();
                 itemJson.addProperty("id", Registries.ITEM.getId(itemStack.getItem()).toString());
