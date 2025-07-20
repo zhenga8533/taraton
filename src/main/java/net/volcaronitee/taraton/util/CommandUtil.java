@@ -38,7 +38,8 @@ import net.volcaronitee.taraton.feature.qol.ProtectItem;
 import net.volcaronitee.taraton.util.helper.Contract;
 
 /**
- * Utility class for handling client commands.
+ * Utility class for handling client commands. Register commands and their associated
+ * functionalities here to keep the commands centralized.
  */
 public class CommandUtil {
     private static final String[] ALIASES = {"nar", "notarat", "taraton", "tar", "rat"};
@@ -50,25 +51,28 @@ public class CommandUtil {
         ClientCommandRegistrationCallback.EVENT.register(CommandUtil::register);
     }
 
+    /**
+     * Registers the Taraton commands with the command dispatcher.
+     * 
+     * @param dispatcher The command dispatcher to register commands with.
+     * @param access The command registry access.
+     */
     private static void register(CommandDispatcher<FabricClientCommandSource> dispatcher,
             CommandRegistryAccess access) {
         for (String alias : ALIASES) {
-            LiteralArgumentBuilder<FabricClientCommandSource> command = literal(alias)
-                    .executes(CommandUtil::settingsCommand)
-                    .then(literal("help").executes(CommandUtil::helpCommand))
-                    .then(literal("settings").executes(CommandUtil::settingsCommand))
-                    .then(literal("toggles").executes(CommandUtil::togglesCommand))
-                    .then(literal("gui").executes(OverlayUtil::moveGui))
-                    .then(literal("save").executes(CommandUtil::saveCommand))
-                    .then(literal("debug").executes(CommandUtil::debugCommand))
-                    .then(literal("protect").executes(ProtectItem.getInstance()::protect))
-                    .then(literal("protectitem").executes(ProtectItem.getInstance()::protect))
-                    .then(literal("wardrobe").executes(WardrobeSwap.getInstance()::setWardrobe))
-                    .then(literal("slotbinding")
-                            .executes(SlotBinding.getInstance()::setSlotBinding))
-                    .then(argument("dynamic_command", StringArgumentType.greedyString())
-                            .executes(CommandUtil::dynamicCommandHandler));
+            LiteralArgumentBuilder<FabricClientCommandSource> command =
+                    literal(alias).executes(CommandUtil::settingsCommand)
+                            .then(literal("help").executes(CommandUtil::helpCommand))
+                            .then(literal("settings").executes(CommandUtil::settingsCommand))
+                            .then(literal("toggles").executes(CommandUtil::togglesCommand))
+                            .then(literal("gui").executes(OverlayUtil::moveGui))
+                            .then(literal("save").executes(CommandUtil::saveCommand))
+                            .then(literal("debug").executes(CommandUtil::debugCommand))
 
+                            .then(argument("dynamic_command", StringArgumentType.greedyString())
+                                    .executes(CommandUtil::dynamicCommandHandler));
+
+            registerFeatureCommands(command);
             registerListCommands(command);
             registerMapCommands(command);
 
@@ -76,6 +80,24 @@ public class CommandUtil {
         }
     }
 
+    /**
+     * Registers feature-specific commands under the main Taraton command.
+     * 
+     * @param command
+     */
+    private static void registerFeatureCommands(
+            LiteralArgumentBuilder<FabricClientCommandSource> command) {
+        command.then(literal("protect").executes(ProtectItem.getInstance()::protect));
+        command.then(literal("protectitem").executes(ProtectItem.getInstance()::protect));
+        command.then(literal("wardrobe").executes(WardrobeSwap.getInstance()::setWardrobe));
+        command.then(literal("slotbinding").executes(SlotBinding.getInstance()::setSlotBinding));
+    }
+
+    /**
+     * Registers list-related commands under the main Taraton command.
+     * 
+     * @param command The root command builder to attach list commands to.
+     */
     private static void registerListCommands(
             LiteralArgumentBuilder<FabricClientCommandSource> command) {
         command.then(ChatCommands.AVENGER_LIST.createCommand("avengerlist"));
@@ -98,6 +120,11 @@ public class CommandUtil {
         command.then(VanquisherWarp.VANQUISHER_LIST.createCommand("vl"));
     }
 
+    /**
+     * Registers map-related commands under the main Taraton command.
+     * 
+     * @param command The root command builder to attach map commands to.
+     */
     private static void registerMapCommands(
             LiteralArgumentBuilder<FabricClientCommandSource> command) {
         command.then(ChatAlert.CHAT_ALERT_MAP.createCommand("chatalertmap"));
