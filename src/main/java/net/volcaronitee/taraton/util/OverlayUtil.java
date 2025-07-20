@@ -9,10 +9,12 @@ import com.mojang.brigadier.context.CommandContext;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.fabricmc.fabric.api.client.rendering.v1.HudLayerRegistrationCallback;
 import net.fabricmc.fabric.api.client.rendering.v1.IdentifiedLayer;
+import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.screen.ingame.GenericContainerScreen;
 import net.minecraft.client.render.RenderTickCounter;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
@@ -40,11 +42,22 @@ public class OverlayUtil {
     private OverlayUtil() {}
 
     /**
-     * Initializes the OverlayUtil by registering the overlay rendering callback.
+     * Initializes the OverlayUtil by registering the overlay rendering callbacks.
      */
     public static void init() {
         HudLayerRegistrationCallback.EVENT.register(layeredDrawer -> layeredDrawer
-                .attachLayerBefore(IdentifiedLayer.CHAT, LAYER, OverlayUtil::renderOverlays));
+                .attachLayerBefore(IdentifiedLayer.CHAT, LAYER, (context, tickCounter) -> {
+                    renderOverlays(context, tickCounter, false);
+                }));
+
+        ScreenEvents.AFTER_INIT.register((client, screen, scaledWidth, scaledHeight) -> {
+            if (screen instanceof GenericContainerScreen) {
+                ScreenEvents.afterRender(screen)
+                        .register((renderedScreen, context, mouseX, mouseY, tickDelta) -> {
+                            renderOverlays(context, tickDelta, true);
+                        });
+            }
+        });
     }
 
     /**
@@ -129,16 +142,29 @@ public class OverlayUtil {
      * Renders all overlays using the provided context.
      * 
      * @param context The context to use for rendering overlays.
+     * @param delta The time delta since the last render.
+     * @param inContainer Whether the player is currently in a container screen.
      */
-    public static void renderOverlays(DrawContext context, RenderTickCounter tickCounter) {
+    public static void renderOverlays(DrawContext context, float delta, boolean inContainer) {
         if (globalMoveMode) {
             return;
         }
 
         for (Overlay overlay : OVERLAYS.values()) {
-            float delta = tickCounter.getDynamicDeltaTicks();
-            overlay.render(context, delta);
+            overlay.render(context, delta, inContainer);
         }
+    }
+
+    /**
+     * Renders all overlays using the provided context.
+     * 
+     * @param context The context to use for rendering overlays.
+     * @param tickCounter The render tick counter.
+     * @param inContainer Whether the player is currently in a container screen.
+     */
+    public static void renderOverlays(DrawContext context, RenderTickCounter tickCounter,
+            boolean inContainer) {
+        renderOverlays(context, tickCounter.getDynamicDeltaTicks(), inContainer);
     }
 
     /**
@@ -184,7 +210,7 @@ public class OverlayUtil {
         public void render(DrawContext context, int mouseX, int mouseY, float delta) {
             context.fill(0, 0, this.width, this.height, 0x40007BFF);
             for (Overlay overlay : OVERLAYS.values()) {
-                overlay.render(context, delta);
+                overlay.render(context, delta, true);
             }
             super.render(context, mouseX, mouseY, delta);
         }
@@ -369,6 +395,7 @@ public class OverlayUtil {
         private int x, y;
         private float scale;
 
+        private boolean onContainer = false;
         private final Supplier<Boolean> shouldRender;
         private final List<LineContent> lines;
         private final List<LineContent> templateLines = new ArrayList<>();
@@ -414,14 +441,25 @@ public class OverlayUtil {
         }
 
         /**
+         * Sets whether the overlay is currently being displayed on a container screen.
+         * 
+         * @param onContainer True if the overlay is on a container screen, false otherwise.
+         */
+        public void setOnContainer(boolean onContainer) {
+            this.onContainer = onContainer;
+        }
+
+        /**
          * Renders the overlay using the provided context.
          * 
          * @param context The context to use for rendering the overlay.
          * @param delta The time delta since the last render.
+         * @param inContainer Whether the player is currently in a container screen.
          */
-        private void render(DrawContext context, float delta) {
-            if (!shouldRender.get())
+        private void render(DrawContext context, float delta, boolean inContainer) {
+            if (!shouldRender.get() || (onContainer && !inContainer)) {
                 return;
+            }
             List<LineContent> lines =
                     globalMoveMode && this.lines.isEmpty() ? templateLines : this.lines;
 

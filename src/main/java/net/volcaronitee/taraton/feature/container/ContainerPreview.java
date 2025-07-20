@@ -24,7 +24,12 @@ import net.minecraft.screen.GenericContainerScreenHandler;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.collection.DefaultedList;
+import net.volcaronitee.taraton.config.TaratonConfig;
 import net.volcaronitee.taraton.config.TaratonJson;
+import net.volcaronitee.taraton.util.FeatureUtil;
+import net.volcaronitee.taraton.util.OverlayUtil;
+import net.volcaronitee.taraton.util.OverlayUtil.LineContent;
+import net.volcaronitee.taraton.util.OverlayUtil.Overlay;
 
 /**
  * Feature to preview and save Ender Chest and Backpack data.
@@ -33,6 +38,16 @@ public class ContainerPreview {
     private static final ContainerPreview INSTANCE = new ContainerPreview();
     private static final String FILE_DIR = "data/container";
     private static final int CONTAINER_SIZE = 54;
+
+    private static final List<LineContent> LINES =
+            new ArrayList<>(List.of(new LineContent("Container Preview Placeholder", () -> true)));
+    private static final Overlay OVERLAY = OverlayUtil.createOverlay("container_preview",
+            () -> FeatureUtil.isEnabled(TaratonConfig.getInstance().container.containerPreview),
+            LINES);
+    static {
+        OVERLAY.setOnContainer(true);
+        OVERLAY.setSpecialRender(null);
+    }
 
     private final Map<String, JsonObject> containerJson = new HashMap<>();
     private final Map<String, List<ItemStack>> containerData = new HashMap<>();
