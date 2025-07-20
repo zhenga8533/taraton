@@ -8,6 +8,7 @@
     "accessor.FrustumInvoker",
     "accessor.HandledScreenAccessor",
     "accessor.InGameHudAccessor",
+    "accessor.ScreenAccessor",
     "accessor.WorldRendererAccessor",
     "ChatScreenMixin",
     "ClientPlayerEntityMixin",
