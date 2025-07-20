@@ -69,8 +69,8 @@ public class Taraton implements ClientModInitializer {
             return false;
         }
 
-        client.inGameHud.getChatHud()
-                .addMessage(MOD_TITLE.copy().append(Text.literal(" ")).append(message));
+        client.getMessageHandler()
+                .onGameMessage(MOD_TITLE.copy().append(Text.literal(" ")).append(message), false);
         return true;
     }
 
