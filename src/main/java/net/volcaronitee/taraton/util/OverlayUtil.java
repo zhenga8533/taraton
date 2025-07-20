@@ -34,6 +34,7 @@ public class OverlayUtil {
     private static Overlay currentOverlay = null;
 
     private static final int FONT_SIZE = 9;
+    private static final int ITEM_SIZE = 16;
     private static final int MARGIN = 4;
 
     /**
@@ -518,36 +519,40 @@ public class OverlayUtil {
             context.fill(boxX1, boxY1, boxX2, boxY2, fillColor);
             context.drawBorder(boxX1, boxY1, boxX2 - boxX1, boxY2 - boxY1, borderColor);
 
-            float lineHeight = FONT_SIZE * scale;
-
             // Render each line of content
-            for (int i = 0; i < lines.size(); i++) {
-                LineContent line = lines.get(i);
-
-                // Skip lines that should not be rendered
+            float currentY = y;
+            for (LineContent line : lines) {
                 if (!line.shouldRender.get()) {
                     continue;
                 }
 
-                // Calculate the position and render the items and text
-                float offsetX = 0;
-                float drawY = y + (i * lineHeight);
+                // Determine the height of THIS specific line
+                boolean hasItem = line.items.size() > 0;
+                float lineHeight = (hasItem ? 16 : FONT_SIZE) * scale;
 
+                float offsetX = 0;
                 for (ItemStack stack : line.items) {
                     if (stack != null && !stack.isEmpty()) {
-                        context.drawItem(stack, (int) (x + offsetX), (int) drawY);
+                        // Vertically center the item within its line height
+                        float itemY = currentY + (lineHeight - 16 * scale) / 2;
+                        context.drawItem(stack, (int) (x + offsetX), (int) itemY);
+                        offsetX += 16 * scale;
                     }
-                    offsetX += FONT_SIZE * scale;
                 }
 
-                // Render the start text and main text
+                // Vertically center the text within its line height
+                float textY = currentY + (lineHeight - FONT_SIZE * scale) / 2;
+
                 if (line.textComponent != null) {
                     context.drawTextWithShadow(tr, line.textComponent, (int) (x + offsetX),
-                            (int) drawY, Colors.WHITE);
+                            (int) textY, Colors.WHITE);
                 } else {
                     context.drawTextWithShadow(tr, line.startText + line.text, (int) (x + offsetX),
-                            (int) drawY, Colors.WHITE);
+                            (int) textY, Colors.WHITE);
                 }
+
+                // Move down by the height of the line we just rendered
+                currentY += lineHeight;
             }
         }
 
@@ -568,7 +573,6 @@ public class OverlayUtil {
 
             float maxWidth = 0;
             float totalHeight = 0;
-            float lineHeight = FONT_SIZE * scale;
 
             for (LineContent line : lines) {
                 // Skip lines that should not be rendered
@@ -576,16 +580,19 @@ public class OverlayUtil {
                     continue;
                 }
 
-                // Calculate the width of the line based on items and text
-                float lineWidth = line.items.size() * FONT_SIZE;
+                // Determine the height of THIS specific line
+                boolean hasItem = line.items.size() > 0;
+                float lineHeight = (hasItem ? ITEM_SIZE : FONT_SIZE) * scale;
+                totalHeight += lineHeight;
+
+                // Calculate the width of the line
+                float lineWidth = line.items.size() * ITEM_SIZE;
                 if (line.textComponent != null) {
                     lineWidth += tr.getWidth(line.textComponent);
                 } else {
                     lineWidth += tr.getWidth(line.text) + tr.getWidth(line.startText);
                 }
-
                 maxWidth = Math.max(maxWidth, lineWidth * scale);
-                totalHeight += lineHeight;
             }
 
             this.width = maxWidth;
