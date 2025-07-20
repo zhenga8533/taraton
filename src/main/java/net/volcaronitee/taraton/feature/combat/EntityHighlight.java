@@ -70,6 +70,9 @@ public class EntityHighlight {
             "entity_list.json", new String[] {"Entity"});
     static {
         ENTITY_LIST.setSaveCallback(INSTANCE::onSave);
+        OverlayUtil.createOverlay("entity_counter",
+                () -> FeatureUtil.isEnabled(TaratonConfig.getInstance().combat.entityCounter),
+                LINES);
     }
 
     private static final Map<Entity, Highlight> HIGHLIGHTED_ENTITIES = new HashMap<>();
@@ -82,12 +85,6 @@ public class EntityHighlight {
 
     private static final EntityType<?> ARMOR_STAND =
             Registries.ENTITY_TYPE.get(Identifier.of("minecraft:armor_stand"));
-
-    static {
-        OverlayUtil.createOverlay("entity_counter",
-                () -> FeatureUtil.isEnabled(TaratonConfig.getInstance().combat.entityCounter),
-                LINES);
-    }
 
     /**
      * Private constructor to prevent instantiation.
