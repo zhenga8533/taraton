@@ -291,7 +291,7 @@ public class CommandUtil {
             return domainExpansion(context);
         } else if (core.equals("echo")) {
             return echo(context, command.substring(5).trim());
-        } else if (core.equals("hehehe")) {
+        } else if (core.equals("hehehe") || core.equals("nsfw")) {
             return hehehe(context);
         } else if (ChatCommands.getInstance().handleCommand(clientPlayer, command)) {
             return 1;
