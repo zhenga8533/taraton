@@ -2,6 +2,8 @@ package net.volcaronitee.taraton.feature.container;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.mojang.serialization.DataResult;
@@ -29,6 +31,11 @@ public class ContainerPreview {
     private final Map<String, JsonObject> containerJson = new HashMap<>();
     private final Map<String, DefaultedList<ItemStack>> containerData = new HashMap<>();
 
+    private final static Pattern ENDER_CHEST_PATTERN =
+            Pattern.compile("^Ender Chest \\((\\d+)/9\\)$");
+    private final static Pattern BACKPACK_PATTERN =
+            Pattern.compile("^.*Backpack.*\\(Slot #(\\d+)\\)$");
+
     /**
      * Private constructor to prevent instantiation.
      */
@@ -41,8 +48,8 @@ public class ContainerPreview {
         ScreenEvents.AFTER_INIT.register((client, screen, width, height) -> {
             ScreenEvents.remove(screen).register(INSTANCE::onScreenClose);
         });
-        INSTANCE.registerContainer("Ender Chest", 9);
-        INSTANCE.registerContainer("Backpack", 18);
+        INSTANCE.registerContainer("ender_chest", 9);
+        INSTANCE.registerContainer("backpack", 18);
         INSTANCE.deserializeContainers();
     }
 
@@ -55,8 +62,8 @@ public class ContainerPreview {
      */
     private void registerContainer(String name, int quantity) {
         for (int i = 1; i <= quantity; i++) {
-            String key = String.format("%s %d", name, i);
-            String fileName = key.toLowerCase().replace(" ", "_") + ".json";
+            String key = String.format("%s_%d", name, i);
+            String fileName = key + ".json";
             JsonObject data = TaratonJson.registerJson(FILE_DIR, fileName).getJsonObject();
             containerJson.put(key, data);
         }
@@ -107,10 +114,27 @@ public class ContainerPreview {
      * @param screen The screen that was closed.
      */
     private void onScreenClose(Screen screen) {
+        System.out.println("G");
+        // Match EC or Backpack screen title
         String title = screen.getTitle().getString();
-        if (!(screen instanceof GenericContainerScreen) || !containerJson.containsKey(title)) {
+        String key = "";
+        Matcher matcher = ENDER_CHEST_PATTERN.matcher(title);
+        if (matcher.matches()) {
+            key = "ender_chest_" + matcher.group(1);
+        } else {
+            matcher = BACKPACK_PATTERN.matcher(title);
+            if (matcher.matches()) {
+                key = "backpack_" + matcher.group(1);
+            } else {
+                return;
+            }
+        }
+
+        System.out.println("F");
+        if (!(screen instanceof GenericContainerScreen) || !containerJson.containsKey(key)) {
             return;
         }
+        System.out.println("E");
 
         GenericContainerScreen containerScreen = (GenericContainerScreen) screen;
         GenericContainerScreenHandler handler = containerScreen.getScreenHandler();
@@ -118,6 +142,7 @@ public class ContainerPreview {
 
         for (int i = 0; i < CONTAINER_SIZE; i++) {
             ItemStack itemStack = handler.getSlot(i).getStack();
+            System.out.println(itemStack.getName());
             if (!itemStack.isEmpty()) {
                 JsonObject itemJson = new JsonObject();
                 itemJson.addProperty("id", Registries.ITEM.getId(itemStack.getItem()).toString());
@@ -133,10 +158,8 @@ public class ContainerPreview {
             }
         }
 
-        JsonObject containerJsonObject = containerJson.get(title);
+        JsonObject containerJsonObject = containerJson.get(key);
         containerJsonObject.add("items", itemsObject);
-
-        String fileName = title.toLowerCase().replace(" ", "_") + ".json";
-        TaratonJson.saveJson(FILE_DIR, fileName, containerJsonObject);
+        TaratonJson.saveJson(FILE_DIR, key + ".json", containerJsonObject);
     }
 }
