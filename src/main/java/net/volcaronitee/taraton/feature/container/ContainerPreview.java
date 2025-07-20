@@ -12,8 +12,11 @@ import com.mojang.serialization.DataResult;
 import com.mojang.serialization.JsonOps;
 import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.GenericContainerScreen;
+import net.minecraft.client.render.RenderLayer;
 import net.minecraft.component.ComponentChanges;
 import net.minecraft.item.Item;
 import net.minecraft.item.Item.TooltipContext;
@@ -24,6 +27,7 @@ import net.minecraft.screen.GenericContainerScreenHandler;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.collection.DefaultedList;
+import net.volcaronitee.taraton.Taraton;
 import net.volcaronitee.taraton.config.TaratonConfig;
 import net.volcaronitee.taraton.config.TaratonJson;
 import net.volcaronitee.taraton.util.FeatureUtil;
@@ -39,6 +43,12 @@ public class ContainerPreview {
     private static final String FILE_DIR = "data/container";
     private static final int CONTAINER_SIZE = 54;
 
+    private static final Identifier CONTAINER_TEXTURE =
+            Identifier.of(Taraton.MOD_ID, "texture/gui/container.png");
+    private static final int TEXTURE_WIDTH = 176;
+    private static final int TEXTURE_HEIGHT = 132;
+    private static final int TEXTURE_DIMENSION = 256;
+
     private static final List<LineContent> LINES =
             new ArrayList<>(List.of(new LineContent("Container Preview Placeholder", () -> true)));
     private static final Overlay OVERLAY = OverlayUtil.createOverlay("container_preview",
@@ -46,13 +56,14 @@ public class ContainerPreview {
             LINES);
     static {
         OVERLAY.setOnContainer(true);
-        OVERLAY.setSpecialRender(null);
+        OVERLAY.setSpecialRender(INSTANCE::render);
+        OVERLAY.setFixedSize(TEXTURE_WIDTH, TEXTURE_HEIGHT);
     }
 
     private final Map<String, JsonObject> containerJson = new HashMap<>();
     private final Map<String, List<ItemStack>> containerData = new HashMap<>();
 
-    private final List<ItemStack> containerPreview = new ArrayList<>();
+    private final List<ItemStack> previewItems = new ArrayList<>();
     private String currentPreview = "";
 
     private final static Pattern ENDER_CHEST_PATTERN =
@@ -92,6 +103,10 @@ public class ContainerPreview {
         String key = "";
         if (name.startsWith("Ender Chest") || name.contains("Backpack")) {
             List<String> parts = List.of(name.toLowerCase().split(" "));
+            if (parts.size() < 3) {
+                return;
+            }
+
             key = String.join("_", parts.subList(0, parts.size() - 2)) + "_"
                     + parts.get(parts.size() - 1);
         }
@@ -101,7 +116,39 @@ public class ContainerPreview {
         }
         currentPreview = key;
 
-        containerPreview.addAll(containerData.get(key));
+        previewItems.clear();
+        previewItems.addAll(containerData.get(key));
+    }
+
+    /**
+     * Renders the container preview overlay.
+     * 
+     * @param context The draw context.
+     * @param delta The time delta since the last render.
+     */
+    public void render(DrawContext context, float delta) {
+        int originalX = OVERLAY.getX();
+        int originalY = OVERLAY.getY();
+
+        context.getMatrices().push();
+        context.getMatrices().translate(0, 0, 200);
+
+        context.drawTexture(RenderLayer::getGuiTextured, CONTAINER_TEXTURE, originalX, originalY, 0,
+                0, TEXTURE_WIDTH, TEXTURE_HEIGHT, TEXTURE_DIMENSION, TEXTURE_DIMENSION);
+
+        for (int i = 0; i < previewItems.size(); i++) {
+            ItemStack itemStack = previewItems.get(i);
+            if (!itemStack.isEmpty()) {
+                int slotX = originalX + 8 + (i % 9) * 18;
+                int slotY = originalY + 18 + (i / 9) * 18;
+
+                context.drawItem(itemStack, slotX, slotY);
+                context.drawStackOverlay(MinecraftClient.getInstance().textRenderer, itemStack,
+                        slotX, slotY);
+            }
+        }
+
+        context.getMatrices().pop();
     }
 
     /**
@@ -165,7 +212,7 @@ public class ContainerPreview {
      * @param screen The screen that was closed.
      */
     private void onScreenClose(Screen screen) {
-        containerPreview.clear();
+        previewItems.clear();
         currentPreview = "";
 
         // Match EC or Backpack screen title
@@ -191,11 +238,10 @@ public class ContainerPreview {
         GenericContainerScreenHandler handler = containerScreen.getScreenHandler();
         JsonObject itemsObject = new JsonObject();
         List<ItemStack> containerItems = containerData.get(key);
-        containerItems.clear();
 
         for (int i = 0; i < CONTAINER_SIZE; i++) {
             ItemStack itemStack = handler.getSlot(i).getStack();
-            containerItems.add(itemStack);
+            containerItems.set(i, itemStack);
 
             if (!itemStack.isEmpty()) {
                 JsonObject itemJson = new JsonObject();

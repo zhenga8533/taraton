@@ -400,6 +400,8 @@ public class OverlayUtil {
         private final List<LineContent> lines;
         private final List<LineContent> templateLines = new ArrayList<>();
 
+        private float fixedWidth = -1;
+        private float fixedHeight = -1;
         private float width = -1;
         private float height = -1;
 
@@ -450,6 +452,19 @@ public class OverlayUtil {
         }
 
         /**
+         * Sets a fixed size for the overlay, overriding its calculated size.
+         * 
+         * @param width The fixed width of the overlay.
+         * @param height The fixed height of the overlay.
+         */
+        public void setFixedSize(float width, float height) {
+            this.fixedWidth = width;
+            this.fixedHeight = height;
+            this.width = width;
+            this.height = height;
+        }
+
+        /**
          * Renders the overlay using the provided context.
          * 
          * @param context The context to use for rendering the overlay.
@@ -460,8 +475,25 @@ public class OverlayUtil {
             if (!shouldRender.get() || (onContainer && !inContainer)) {
                 return;
             }
+
             List<LineContent> lines =
                     globalMoveMode && this.lines.isEmpty() ? templateLines : this.lines;
+            TextRenderer tr = MinecraftClient.getInstance().textRenderer;
+
+            // Render alignment lines if this is the current overlay
+            if (this == currentOverlay) {
+                // Draw vertical and horizontal lines
+                MinecraftClient client = MinecraftClient.getInstance();
+                int screenWidth = client.getWindow().getScaledWidth();
+                int screenHeight = client.getWindow().getScaledHeight();
+                context.fill(0, y - 1, screenWidth, y, Colors.WHITE);
+                context.fill(x - 1, 0, x, screenHeight, Colors.WHITE);
+
+                // Draw position text
+                String positionText = String.format("X: %d, Y: %d", x, y);
+                context.drawTextWithShadow(tr, Text.literal(positionText), x + 2, y - 2 - FONT_SIZE,
+                        Colors.WHITE);
+            }
 
             // If special render is set, use it
             if (specialRender != null) {
@@ -486,7 +518,6 @@ public class OverlayUtil {
             context.fill(boxX1, boxY1, boxX2, boxY2, fillColor);
             context.drawBorder(boxX1, boxY1, boxX2 - boxX1, boxY2 - boxY1, borderColor);
 
-            TextRenderer tr = MinecraftClient.getInstance().textRenderer;
             float lineHeight = FONT_SIZE * scale;
 
             // Render each line of content
@@ -518,30 +549,21 @@ public class OverlayUtil {
                             (int) drawY, Colors.WHITE);
                 }
             }
-
-            // Render alignment lines if this is the current overlay
-            if (this == currentOverlay) {
-                // Draw vertical and horizontal lines
-                MinecraftClient client = MinecraftClient.getInstance();
-                int screenWidth = client.getWindow().getScaledWidth();
-                int screenHeight = client.getWindow().getScaledHeight();
-                context.fill(0, y - 1, screenWidth, y, Colors.WHITE);
-                context.fill(x - 1, 0, x, screenHeight, Colors.WHITE);
-
-                // Draw position text
-                String positionText = String.format("X: %d, Y: %d", x, y);
-                context.drawTextWithShadow(tr, Text.literal(positionText), x + 2, y - 2 - FONT_SIZE,
-                        Colors.WHITE);
-            }
         }
 
         /**
          * Recalculates the size of the overlay based on its content.
          */
         private void calcSize() {
+            // Check if fixed width and height are set
+            if (fixedWidth > 0 && fixedHeight > 0) {
+                this.width = fixedWidth;
+                this.height = fixedHeight;
+                return;
+            }
+
             List<LineContent> lines =
                     globalMoveMode && this.lines.isEmpty() ? templateLines : this.lines;
-
             TextRenderer tr = MinecraftClient.getInstance().textRenderer;
 
             float maxWidth = 0;
