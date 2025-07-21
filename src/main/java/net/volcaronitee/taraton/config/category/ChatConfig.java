@@ -49,7 +49,7 @@ public class ChatConfig {
                 .binding(defaults.chat.partyJoinMessage, () -> config.chat.partyJoinMessage,
                         newVal -> config.chat.partyJoinMessage = newVal)
                 .addListener((opt, val) -> partyLeaderOnlyOption
-                        .setAvailable(!config.chat.partyJoinMessage.isEmpty()))
+                        .setAvailable(!opt.pendingValue().isEmpty()))
                 .controller(opt -> StringControllerBuilder.create(opt)).build();
 
         return ConfigCategory.createBuilder().name(Text.literal("Chat"))
