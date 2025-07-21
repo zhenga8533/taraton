@@ -27,7 +27,7 @@ public class ContainerConfig {
                 // Container Option Group
                 .group(OptionGroup.createBuilder().name(Text.literal("Container"))
 
-                        // TODO: Container Preview
+                        // Container Preview
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Container Preview"))
                                 .description(OptionDescription.createBuilder()
@@ -41,7 +41,7 @@ public class ContainerConfig {
                                         newVal -> config.container.containerPreview = newVal)
                                 .controller(TaratonConfig::createBooleanController).build())
 
-                        // TODO: Searchbar
+                        // Searchbar
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Searchbar"))
                                 .description(OptionDescription.createBuilder()
                                         .webpImage(Identifier.of(Taraton.MOD_ID,
@@ -118,7 +118,7 @@ public class ContainerConfig {
                                         newVal -> config.container.attributeAbbreviation = newVal)
                                 .controller(TaratonConfig::createBooleanController).build())
 
-                        // TODO: Armor Display
+                        // Armor Display
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Armor Display"))
                                 .description(OptionDescription.createBuilder()
                                         .webpImage(Identifier.of(Taraton.MOD_ID,
