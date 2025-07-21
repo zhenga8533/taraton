@@ -145,7 +145,7 @@ public class Searchbar {
         ScreenHandler handler = handledScreen.getScreenHandler();
         for (Slot slot : handler.slots) {
             if (searchMatches.contains(slot.id)) {
-                ScreenUtil.highlightSlot(context, slot, 0x80FFFF00); // Semi-transparent yellow
+                ScreenUtil.highlightSlot(context, slot, ScreenUtil.HIGHLIGHT_COLOR);
             }
         }
 

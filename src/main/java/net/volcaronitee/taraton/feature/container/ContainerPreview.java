@@ -216,14 +216,16 @@ public class ContainerPreview {
 
         // Draw the container title
         context.drawText(MinecraftClient.getInstance().textRenderer, currentPreview, originalX + 8,
-                originalY + 6, 0x404040, false);
+                originalY + 6, ScreenUtil.TEXT_COLOR, false);
 
         // Draw the highlighted slots
         containerMatches.forEach(i -> {
-            ScreenUtil.highlightSlot(context, originalX, originalY, handler.getSlot(i), 0x80FFFF00);
+            ScreenUtil.highlightSlot(context, originalX, originalY, handler.getSlot(i),
+                    ScreenUtil.HIGHLIGHT_COLOR);
         });
         previewMatches.forEach(i -> {
-            ScreenUtil.highlightSlot(context, parentX, parentY, handler.getSlot(i), 0x80FF00FF);
+            ScreenUtil.highlightSlot(context, parentX, parentY, handler.getSlot(i),
+                    ScreenUtil.HIGHLIGHT_COLOR);
         });
 
         // Draw the container items in a grid layout

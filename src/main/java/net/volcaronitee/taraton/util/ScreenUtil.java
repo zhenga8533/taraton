@@ -12,6 +12,10 @@ import net.minecraft.screen.slot.Slot;
  * Utility class for screen-related operations, particularly for rendering
  */
 public final class ScreenUtil {
+    public static final int HIGHLIGHT_COLOR = 0x80FFFF00; // 50% transparent yellow
+
+    public static final int TEXT_COLOR = 0x404040; // Dark gray color for text
+
     /**
      * Private constructor to prevent instantiation of this utility class.
      */

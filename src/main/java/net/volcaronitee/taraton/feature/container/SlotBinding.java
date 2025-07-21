@@ -6,10 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
 import com.google.common.reflect.TypeToken;
 import com.mojang.brigadier.context.CommandContext;
-
 import dev.isxander.yacl3.api.ConfigCategory;
 import dev.isxander.yacl3.api.ListOption;
 import dev.isxander.yacl3.api.Option;
@@ -58,10 +56,10 @@ public class SlotBinding {
 
     private static final String TITLE = "Slot Binding Map";
     private static final Text DESCRIPTION = Text.literal("A list of slot bindings.");
-    private static final Type TYPE = new TypeToken<KeyValuePair<Integer, KeyValuePair<Integer, Boolean>>>() {
-    }.getType();
+    private static final Type TYPE =
+            new TypeToken<KeyValuePair<Integer, KeyValuePair<Integer, Boolean>>>() {}.getType();
     public static final TaratonList SLOT_BINDING_MAP = new TaratonList(TITLE, DESCRIPTION,
-            "slot_binding_map.json", new String[] { "Slot", "Slot" });
+            "slot_binding_map.json", new String[] {"Slot", "Slot"});
     static {
         SLOT_BINDING_MAP.setCustomCategory(INSTANCE::createCustomCategory);
         SLOT_BINDING_MAP.setSaveCallback(INSTANCE::onSave);
@@ -77,8 +75,7 @@ public class SlotBinding {
     /**
      * Private constructor to prevent instantiation.
      */
-    private SlotBinding() {
-    }
+    private SlotBinding() {}
 
     /**
      * Registers the event listeners for the SlotBinding feature.
@@ -114,8 +111,7 @@ public class SlotBinding {
     }
 
     /**
-     * Sets the slot binding mode to edit mode, allowing users to modify slot
-     * bindings.
+     * Sets the slot binding mode to edit mode, allowing users to modify slot bindings.
      * 
      * @param context The command context for the Fabric client command source.
      * @return 1 if the command was successful, 0 otherwise.
@@ -147,8 +143,8 @@ public class SlotBinding {
      */
     private void onSave() {
         SLOT_BINDINGS.clear();
-        List<KeyValuePair<Integer, KeyValuePair<Integer, Boolean>>> typedList = getTypedList(
-                SLOT_BINDING_MAP.getInstance(), TYPE);
+        List<KeyValuePair<Integer, KeyValuePair<Integer, Boolean>>> typedList =
+                getTypedList(SLOT_BINDING_MAP.getInstance(), TYPE);
 
         for (KeyValuePair<Integer, KeyValuePair<Integer, Boolean>> binding : typedList) {
             if (!binding.getValue().getValue()) {
@@ -212,7 +208,8 @@ public class SlotBinding {
         }
 
         // Perform the swap action
-        ClientPlayerInteractionManager interactionManager = MinecraftClient.getInstance().interactionManager;
+        ClientPlayerInteractionManager interactionManager =
+                MinecraftClient.getInstance().interactionManager;
         if (interactionManager == null) {
             return false;
         }
@@ -224,15 +221,14 @@ public class SlotBinding {
     }
 
     /**
-     * Handles rendering after the screen has been drawn, highlighting the currently
-     * bound slots and
+     * Handles rendering after the screen has been drawn, highlighting the currently bound slots and
      * rendering lines between hovered slots and their bindings.
      * 
-     * @param screen  The screen being rendered.
+     * @param screen The screen being rendered.
      * @param context The draw context for rendering.
-     * @param mouseX  The x-coordinate of the mouse cursor.
-     * @param mouseY  The y-coordinate of the mouse cursor.
-     * @param delta   The delta time since the last frame.
+     * @param mouseX The x-coordinate of the mouse cursor.
+     * @param mouseY The y-coordinate of the mouse cursor.
+     * @param delta The delta time since the last frame.
      */
     private void afterRender(Screen screen, DrawContext context, int mouseX, int mouseY,
             float delta) {
@@ -248,7 +244,7 @@ public class SlotBinding {
         context.getMatrices().push();
         context.getMatrices().translate(parentX, parentY, 0);
         for (Integer slotIndex : SLOT_BINDINGS.keySet()) {
-            int color = SLOT_COLORS.getOrDefault(slotIndex, 0x40FFFFFF);
+            int color = SLOT_COLORS.getOrDefault(slotIndex, ScreenUtil.HIGHLIGHT_COLOR);
             Slot slot = handledScreen.getScreenHandler().getSlot(slotIndex);
             ScreenUtil.highlightSlot(context, slot, color);
         }
@@ -278,8 +274,7 @@ public class SlotBinding {
     }
 
     /**
-     * Updates the slot colors based on the current bindings, generating a unique
-     * color for each
+     * Updates the slot colors based on the current bindings, generating a unique color for each
      * binding pair.
      */
     private void updateSlotColors() {
@@ -313,7 +308,7 @@ public class SlotBinding {
             int green = (int) (g * 255);
             int blue = (int) (b * 255);
 
-            // Combine into a final ARGB color with 25% alpha
+            // Combine into a final ARGB color with 50% alpha
             int color = 0x80000000 | (red << 16) | (green << 8) | blue;
 
             SLOT_COLORS.put(slot1, color);
@@ -321,12 +316,11 @@ public class SlotBinding {
     }
 
     /**
-     * Retrieves a typed list from the configuration, converting JSON elements to
-     * the specified
+     * Retrieves a typed list from the configuration, converting JSON elements to the specified
      * type.
      * 
      * @param config The configuration list to retrieve the typed list from.
-     * @param type   The type to which the JSON elements should be converted.
+     * @param type The type to which the JSON elements should be converted.
      * @return A list of KeyValuePair objects representing the typed list.
      */
     private List<KeyValuePair<Integer, KeyValuePair<Integer, Boolean>>> getTypedList(
@@ -357,11 +351,12 @@ public class SlotBinding {
      * Creates a custom category for the wardrobe swap map configuration.
      * 
      * @param defaults The default configuration for the wardrobe swap map.
-     * @param config   The current configuration for the wardrobe swap map.
+     * @param config The current configuration for the wardrobe swap map.
      * @return A ConfigCategory representing the wardrobe swap map configuration.
      */
     public ConfigCategory createCustomCategory(TaratonList defaults, TaratonList config) {
-        List<KeyValuePair<Integer, KeyValuePair<Integer, Boolean>>> typedList = getTypedList(config, TYPE);
+        List<KeyValuePair<Integer, KeyValuePair<Integer, Boolean>>> typedList =
+                getTypedList(config, TYPE);
 
         return ConfigCategory.createBuilder().name(Text.literal(TITLE))
                 .option(ListOption
@@ -403,10 +398,10 @@ public class SlotBinding {
         /**
          * Constructor for the BindingScreen.
          * 
-         * @param handler   The screen handler for the wardrobe.
+         * @param handler The screen handler for the wardrobe.
          * @param inventory The player's inventory.
-         * @param title     The title of the screen.
-         * @param parent    The parent screen to return to when closing this screen.
+         * @param title The title of the screen.
+         * @param parent The parent screen to return to when closing this screen.
          */
         public BindingScreen(ScreenHandler handler, PlayerInventory inventory, Text title,
                 HandledScreen<?> parent) {
@@ -415,8 +410,7 @@ public class SlotBinding {
         }
 
         /**
-         * Confirms the tooltip to be displayed, allowing it to persist for a short
-         * time.
+         * Confirms the tooltip to be displayed, allowing it to persist for a short time.
          * 
          * @param tooltip The tooltip text to confirm.
          */
@@ -432,8 +426,7 @@ public class SlotBinding {
         }
 
         @Override
-        protected void drawBackground(DrawContext context, float delta, int mouseX, int mouseY) {
-        }
+        protected void drawBackground(DrawContext context, float delta, int mouseX, int mouseY) {}
 
         @Override
         public void render(DrawContext context, int mouseX, int mouseY, float delta) {
@@ -458,7 +451,7 @@ public class SlotBinding {
                     context.getMatrices().translate(parentX, parentY, 0);
 
                     // Draw the highlight at the slot's relative position
-                    int color = Colors.WHITE | 0x40000000; // 25% alpha
+                    int color = 0x80FFFFFF; // 50% transparent white
                     ScreenUtil.highlightSlot(context, slot, color);
 
                     // Restore the original matrix to not affect other rendering
@@ -534,15 +527,17 @@ public class SlotBinding {
             // Check that one slot is a hotbar slot and the other is an inventory slot
             if (!(currentSlot >= HOTBAR_START_INDEX && currentSlot <= HOTBAR_END_INDEX)
                     && !(slot >= HOTBAR_START_INDEX && slot <= HOTBAR_END_INDEX)) {
-                Text confirmation = Text.literal("You can only bind a hotbar slot to an inventory slot!")
-                        .formatted(Formatting.RED);
+                Text confirmation =
+                        Text.literal("You can only bind a hotbar slot to an inventory slot!")
+                                .formatted(Formatting.RED);
                 confirmTooltip(confirmation);
                 return;
             }
 
             // If binding a different slot, update the current bind
             TaratonList config = SLOT_BINDING_MAP.getInstance();
-            List<KeyValuePair<Integer, KeyValuePair<Integer, Boolean>>> typedList = INSTANCE.getTypedList(config, TYPE);
+            List<KeyValuePair<Integer, KeyValuePair<Integer, Boolean>>> typedList =
+                    INSTANCE.getTypedList(config, TYPE);
 
             // Update the hotkey for the selected slot
             typedList.add(new KeyValuePair<>(currentSlot, new KeyValuePair<>(slot, true)));
@@ -551,8 +546,9 @@ public class SlotBinding {
             INSTANCE.onSave();
 
             // Show confirmation message
-            Text confirmation = Text.literal("Bound slot " + (slot + 1) + " to slot " + (currentSlot + 1) + "!")
-                    .formatted(Formatting.GREEN);
+            Text confirmation =
+                    Text.literal("Bound slot " + (slot + 1) + " to slot " + (currentSlot + 1) + "!")
+                            .formatted(Formatting.GREEN);
             confirmTooltip(confirmation);
 
             currentSlot = -1;
@@ -567,7 +563,8 @@ public class SlotBinding {
         private boolean deleteBinding(int slot) {
             // Delete all bindings for the specified slot
             TaratonList config = SLOT_BINDING_MAP.getInstance();
-            List<KeyValuePair<Integer, KeyValuePair<Integer, Boolean>>> typedList = INSTANCE.getTypedList(config, TYPE);
+            List<KeyValuePair<Integer, KeyValuePair<Integer, Boolean>>> typedList =
+                    INSTANCE.getTypedList(config, TYPE);
 
             boolean removed = typedList
                     .removeIf(pair -> pair.getValue().getKey() == slot || pair.getKey() == slot);
@@ -577,8 +574,9 @@ public class SlotBinding {
                 INSTANCE.onSave();
 
                 // Show confirmation message
-                Text confirmation = Text.literal("Unbound slot " + (slot + 1) + " from all bindings!")
-                        .formatted(Formatting.RED);
+                Text confirmation =
+                        Text.literal("Unbound slot " + (slot + 1) + " from all bindings!")
+                                .formatted(Formatting.RED);
                 confirmTooltip(confirmation);
             }
 
