@@ -81,6 +81,7 @@ public class ParseUtil {
         }
 
         try {
+            str = removeFormatting(str).replace(",", "");
             return Integer.parseInt(str);
         } catch (NumberFormatException e) {
             return 0;
