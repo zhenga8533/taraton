@@ -2,9 +2,7 @@ package net.volcaronitee.taraton.feature.container;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.lwjgl.glfw.GLFW;
-
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenKeyboardEvents;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenMouseEvents;
@@ -54,8 +52,7 @@ public class Searchbar {
     /**
      * Private constructor to prevent instantiation.
      */
-    private Searchbar() {
-    }
+    private Searchbar() {}
 
     /**
      * Registers the searchbar feature.
@@ -77,7 +74,8 @@ public class Searchbar {
 
                 ScreenMouseEvents.afterMouseClick(screen).register((s, mouseX, mouseY, button) -> {
                     // Unfocus the searchbar if clicking outside of it
-                    if (searchbar != null && searchbar.isFocused() && !searchbar.isMouseOver(mouseX, mouseY)) {
+                    if (searchbar != null && searchbar.isFocused()
+                            && !searchbar.isMouseOver(mouseX, mouseY)) {
                         searchbar.setFocused(false);
                     }
 
@@ -113,11 +111,12 @@ public class Searchbar {
      * Highlights the matching slots in the container.
      * 
      * @param context The current DrawContext.
-     * @param delta   The delta time since the last frame.
+     * @param delta The delta time since the last frame.
      */
     private void highlightMatches(DrawContext context, float delta) {
         MinecraftClient client = MinecraftClient.getInstance();
-        if (!(client.currentScreen instanceof HandledScreen<?> handledScreen) || searchMatches.isEmpty()) {
+        if (!(client.currentScreen instanceof HandledScreen<?> handledScreen)
+                || searchMatches.isEmpty()) {
             return;
         }
 
@@ -172,7 +171,7 @@ public class Searchbar {
     /**
      * Checks if an item matches the search text.
      * 
-     * @param stack           The item stack to check.
+     * @param stack The item stack to check.
      * @param lowerCaseSearch The search text in lowercase.
      * @return True if the item matches the search text, false otherwise.
      */
@@ -192,10 +191,12 @@ public class Searchbar {
         }
 
         // Check enchantments
-        return EnchantmentHelper.getEnchantments(stack).getEnchantments().stream()
-                .anyMatch(entry -> entry.getKey()
-                        .map(key -> key.getValue().getPath().replace('_', ' ').toLowerCase().contains(lowerCaseSearch))
-                        .orElse(false));
+        return EnchantmentHelper
+                .getEnchantments(
+                        stack)
+                .getEnchantments().stream()
+                .anyMatch(entry -> entry.getKey().map(key -> key.getValue().getPath()
+                        .replace('_', ' ').toLowerCase().contains(lowerCaseSearch)).orElse(false));
     }
 
     /**
@@ -204,12 +205,11 @@ public class Searchbar {
      * @param screen The screen that was closed.
      */
     private void onScreenClose(Screen screen) {
-        if (searchbar == null) {
-            return;
+        if (searchbar != null && screen instanceof ScreenAccessor) {
+            ((ScreenAccessor) screen).getSelectables().remove(searchbar);
+            searchbar.setFocused(false);
+            searchbar.setText("");
+            searchMatches.clear();
         }
-
-        searchbar.setFocused(false);
-        searchbar.setText("");
-        searchMatches.clear();
     }
 }
