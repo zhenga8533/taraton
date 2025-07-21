@@ -18,17 +18,34 @@ public final class ScreenUtil {
     private ScreenUtil() {}
 
     /**
-     * Highlights a slot with a specified color and z-level.
+     * Highlights a slot with a specified color at a given parent position.
+     * 
+     * @param context The current DrawContext.
+     * @param parentX The x-coordinate of the parent container.
+     * @param parentY The y-coordinate of the parent container.
+     * @param slot The slot to highlight.
+     * @param color The ARGB color to use for highlighting.
+     */
+    public static void highlightSlot(DrawContext context, int parentX, int parentY, Slot slot,
+            int color) {
+        if (slot == null) {
+            return;
+        }
+
+        int x = slot.x + parentX;
+        int y = slot.y + parentY;
+        context.fill(x, y, x + 16, y + 16, 200, color);
+    }
+
+    /**
+     * Highlights a slot with a specified color at the default position (0, 0).
      * 
      * @param context The current DrawContext.
      * @param slot The slot to highlight.
      * @param color The ARGB color to use for highlighting.
      */
     public static void highlightSlot(DrawContext context, Slot slot, int color) {
-        if (slot == null) {
-            return;
-        }
-        context.fill(slot.x, slot.y, slot.x + 16, slot.y + 16, 200, color);
+        highlightSlot(context, 0, 0, slot, color);
     }
 
     /**
