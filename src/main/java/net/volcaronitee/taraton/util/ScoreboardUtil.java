@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.scoreboard.Scoreboard;
 import net.minecraft.scoreboard.ScoreboardDisplaySlot;
@@ -12,6 +13,8 @@ import net.minecraft.scoreboard.ScoreboardObjective;
 import net.minecraft.scoreboard.Team;
 import net.minecraft.scoreboard.number.NumberFormat;
 import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
+import net.volcaronitee.taraton.Taraton;
 
 /**
  * Utility class for managing and updating the in-game scoreboard.
@@ -22,10 +25,12 @@ public class ScoreboardUtil {
     /**
      * Private constructor to prevent instantiation.
      */
-    private ScoreboardUtil() {}
+    private ScoreboardUtil() {
+    }
 
     /**
-     * Initializes the scoreboard utility by registering the update method to be called every 5
+     * Initializes the scoreboard utility by registering the update method to be
+     * called every 5
      * ticks.
      */
     public static void init() {
@@ -42,6 +47,20 @@ public class ScoreboardUtil {
     }
 
     /**
+     * Copies the current scoreboard lines to the system clipboard.
+     */
+    public static void copyScoreboard() {
+        StringBuilder sb = new StringBuilder();
+
+        for (Text line : scoreboard) {
+            sb.append(line.getString()).append("\n");
+        }
+
+        MinecraftClient.getInstance().keyboard.setClipboard(sb.toString().trim());
+        Taraton.sendMessage(Text.literal("Copied scoreboard to clipboard!").formatted(Formatting.GREEN));
+    }
+
+    /**
      * Updates the scoreboard by fetching the latest data from the Minecraft client.
      * 
      * @param client The Minecraft client instance.
@@ -54,8 +73,7 @@ public class ScoreboardUtil {
 
         // Fetch the current scoreboard and sidebar objective
         Scoreboard clientScoreboard = client.world.getScoreboard();
-        ScoreboardObjective sidebarObjective =
-                clientScoreboard.getObjectiveForSlot(ScoreboardDisplaySlot.SIDEBAR);
+        ScoreboardObjective sidebarObjective = clientScoreboard.getObjectiveForSlot(ScoreboardDisplaySlot.SIDEBAR);
 
         if (sidebarObjective == null) {
             scoreboard = Collections.emptyList();
@@ -63,8 +81,7 @@ public class ScoreboardUtil {
         }
 
         // Retrieve and order the scoreboard entries
-        Collection<ScoreboardEntry> scores =
-                clientScoreboard.getScoreboardEntries(sidebarObjective);
+        Collection<ScoreboardEntry> scores = clientScoreboard.getScoreboardEntries(sidebarObjective);
         List<ScoreboardEntry> orderedScores = new ArrayList<>(scores);
         Collections.reverse(orderedScores);
 
@@ -87,9 +104,8 @@ public class ScoreboardUtil {
             } else {
                 // Format the score value
                 Text scoreText;
-                NumberFormat format =
-                        entry.numberFormatOverride() != null ? entry.numberFormatOverride()
-                                : sidebarObjective.getNumberFormat();
+                NumberFormat format = entry.numberFormatOverride() != null ? entry.numberFormatOverride()
+                        : sidebarObjective.getNumberFormat();
 
                 if (entry.display() != null) {
                     // Use custom display text if available

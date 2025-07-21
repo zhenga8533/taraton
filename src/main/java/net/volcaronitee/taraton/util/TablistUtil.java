@@ -3,30 +3,36 @@ package net.volcaronitee.taraton.util;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+
 import com.google.common.collect.ComparisonChain;
 import com.google.common.collect.Ordering;
+
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.network.PlayerListEntry;
 import net.minecraft.scoreboard.Team;
+import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 import net.minecraft.world.GameMode;
+import net.volcaronitee.taraton.Taraton;
 
 /**
  * Utility class for managing the tab list of players in Minecraft.
  */
 public class TablistUtil {
-    private static final Ordering<PlayerListEntry> PLAYER_COMPARATOR =
-            Ordering.from(new PlayerComparator());
+    private static final Ordering<PlayerListEntry> PLAYER_COMPARATOR = Ordering.from(new PlayerComparator());
 
     private static List<PlayerListEntry> tablist = new ArrayList<>();
 
     /**
      * Private constructor to prevent instantiation.
      */
-    private TablistUtil() {}
+    private TablistUtil() {
+    }
 
     /**
-     * Initializes the TablistUtil by registering a tick handler to update the tab list
+     * Initializes the TablistUtil by registering a tick handler to update the tab
+     * list
      * periodically.
      */
     public static void init() {
@@ -36,14 +42,33 @@ public class TablistUtil {
     /**
      * Gets the current tab list of players.
      *
-     * @return A list of PlayerListEntry objects representing the players in the tab list.
+     * @return A list of PlayerListEntry objects representing the players in the tab
+     *         list.
      */
     public static List<PlayerListEntry> getTablist() {
         return tablist;
     }
 
     /**
-     * Updates the tab list of players by fetching the current player list from the network handler.
+     * Copies the names of all players in the tab list to the system clipboard.
+     */
+    public static void copyTablist() {
+        StringBuilder sb = new StringBuilder();
+
+        for (PlayerListEntry entry : tablist) {
+            Text displayName = entry.getDisplayName();
+            if (displayName != null) {
+                sb.append(displayName.getString()).append("\n");
+            }
+        }
+
+        MinecraftClient.getInstance().keyboard.setClipboard(sb.toString().trim());
+        Taraton.sendMessage(Text.literal("Copied tablist to clipboard!").formatted(Formatting.GREEN));
+    }
+
+    /**
+     * Updates the tab list of players by fetching the current player list from the
+     * network handler.
      * 
      * @param client The Minecraft client instance.
      */
