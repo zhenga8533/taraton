@@ -12,6 +12,7 @@ import net.volcaronitee.taraton.util.OverlayUtil;
 import net.volcaronitee.taraton.util.OverlayUtil.LineContent;
 import net.volcaronitee.taraton.util.OverlayUtil.Overlay;
 import net.volcaronitee.taraton.util.TickUtil;
+import net.volcaronitee.taraton.util.TrackerUtil;
 import net.volcaronitee.taraton.util.TrackerUtil.RateTracker;
 
 /**
@@ -22,18 +23,18 @@ public class SkillTracker {
 
     private static final Map<String, RateTracker> SKILL_TRACKER = new HashMap<>();
     static {
-        SKILL_TRACKER.put("None", new RateTracker());
-        SKILL_TRACKER.put("Combat", new RateTracker());
-        SKILL_TRACKER.put("Mining", new RateTracker());
-        SKILL_TRACKER.put("Foraging", new RateTracker());
-        SKILL_TRACKER.put("Fishing", new RateTracker());
-        SKILL_TRACKER.put("Enchanting", new RateTracker());
-        SKILL_TRACKER.put("Alchemy", new RateTracker());
-        SKILL_TRACKER.put("Taming", new RateTracker());
-        SKILL_TRACKER.put("Carpentry", new RateTracker());
-        SKILL_TRACKER.put("Runecrafting", new RateTracker());
-        SKILL_TRACKER.put("Social", new RateTracker());
-        SKILL_TRACKER.put("Hunting", new RateTracker());
+        SKILL_TRACKER.put("None", TrackerUtil.createRateTracker());
+        SKILL_TRACKER.put("Combat", TrackerUtil.createRateTracker());
+        SKILL_TRACKER.put("Mining", TrackerUtil.createRateTracker());
+        SKILL_TRACKER.put("Foraging", TrackerUtil.createRateTracker());
+        SKILL_TRACKER.put("Fishing", TrackerUtil.createRateTracker());
+        SKILL_TRACKER.put("Enchanting", TrackerUtil.createRateTracker());
+        SKILL_TRACKER.put("Alchemy", TrackerUtil.createRateTracker());
+        SKILL_TRACKER.put("Taming", TrackerUtil.createRateTracker());
+        SKILL_TRACKER.put("Carpentry", TrackerUtil.createRateTracker());
+        SKILL_TRACKER.put("Runecrafting", TrackerUtil.createRateTracker());
+        SKILL_TRACKER.put("Social", TrackerUtil.createRateTracker());
+        SKILL_TRACKER.put("Hunting", TrackerUtil.createRateTracker());
     }
 
     private String currentSkill = "None";
