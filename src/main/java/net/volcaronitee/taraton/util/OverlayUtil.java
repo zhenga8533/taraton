@@ -14,7 +14,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.screen.ingame.GenericContainerScreen;
+import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.render.RenderTickCounter;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
@@ -52,12 +52,12 @@ public class OverlayUtil {
                 }));
 
         ScreenEvents.AFTER_INIT.register((client, screen, scaledWidth, scaledHeight) -> {
-            if (screen instanceof GenericContainerScreen) {
-                ScreenEvents.afterRender(screen)
-                        .register((renderedScreen, context, mouseX, mouseY, tickDelta) -> {
+            ScreenEvents.afterRender(screen)
+                    .register((renderedScreen, context, mouseX, mouseY, tickDelta) -> {
+                        if (renderedScreen instanceof HandledScreen) {
                             renderOverlays(context, tickDelta, true);
-                        });
-            }
+                        }
+                    });
         });
     }
 
@@ -477,9 +477,15 @@ public class OverlayUtil {
                 return;
             }
 
+            // Prepare lines to render
             List<LineContent> lines =
                     globalMoveMode && this.lines.isEmpty() ? templateLines : this.lines;
             TextRenderer tr = MinecraftClient.getInstance().textRenderer;
+
+            // Recalculate size if changed
+            if (changed) {
+                calcSize();
+            }
 
             // Render alignment lines if this is the current overlay
             if (this == currentOverlay) {
@@ -496,63 +502,56 @@ public class OverlayUtil {
                         Colors.WHITE);
             }
 
-            // If special render is set, use it
-            if (specialRender != null) {
+            if (specialRender == null || globalMoveMode) {
+                // Render each line of content
+                float currentY = y;
+                for (LineContent line : lines) {
+                    if (!line.shouldRender.get()) {
+                        continue;
+                    }
+
+                    // Determine the height of THIS specific line
+                    boolean hasItem = line.items.size() > 0;
+                    float lineHeight = (hasItem ? 16 : FONT_SIZE) * scale;
+
+                    float offsetX = 0;
+                    for (ItemStack stack : line.items) {
+                        if (stack != null && !stack.isEmpty()) {
+                            // Vertically center the item within its line height
+                            float itemY = currentY + (lineHeight - 16 * scale) / 2;
+                            context.drawItem(stack, (int) (x + offsetX), (int) itemY);
+                            offsetX += 16 * scale;
+                        }
+                    }
+
+                    // Vertically center the text within its line height
+                    float textY = currentY + (lineHeight - FONT_SIZE * scale) / 2;
+
+                    if (line.textComponent != null) {
+                        context.drawTextWithShadow(tr, line.textComponent, (int) (x + offsetX),
+                                (int) textY, Colors.WHITE);
+                    } else {
+                        context.drawTextWithShadow(tr, line.startText + line.text,
+                                (int) (x + offsetX), (int) textY, Colors.WHITE);
+                    }
+
+                    // Move down by the height of the line we just rendered
+                    currentY += lineHeight;
+                }
+
+                // Draw the overlay box
+                int boxX1 = (int) x - MARGIN;
+                int boxY1 = (int) y - MARGIN;
+                int boxX2 = (int) (x + width + MARGIN);
+                int boxY2 = (int) (y + height + MARGIN);
+                int fillColor = hovering ? 0x8000FF00 : 0x80000000;
+                int borderColor = hovering ? 0xFF00FF00 : 0xFFDDDDDD;
+                context.fill(boxX1, boxY1, boxX2, boxY2, fillColor);
+                context.drawBorder(boxX1, boxY1, boxX2 - boxX1, boxY2 - boxY1, borderColor);
+            } else if (specialRender != null) {
+                // If special render is set, use it
                 specialRender.render(context, delta);
                 return;
-            } else if (lines.isEmpty()) {
-                return;
-            }
-
-            // Recalculate size if changed
-            if (changed) {
-                calcSize();
-            }
-
-            // Draw the overlay box
-            int boxX1 = (int) x - MARGIN;
-            int boxY1 = (int) y - MARGIN;
-            int boxX2 = (int) (x + width + MARGIN);
-            int boxY2 = (int) (y + height + MARGIN);
-            int fillColor = hovering ? 0x8000FF00 : 0x80000000;
-            int borderColor = hovering ? 0xFF00FF00 : 0xFFDDDDDD;
-            context.fill(boxX1, boxY1, boxX2, boxY2, fillColor);
-            context.drawBorder(boxX1, boxY1, boxX2 - boxX1, boxY2 - boxY1, borderColor);
-
-            // Render each line of content
-            float currentY = y;
-            for (LineContent line : lines) {
-                if (!line.shouldRender.get()) {
-                    continue;
-                }
-
-                // Determine the height of THIS specific line
-                boolean hasItem = line.items.size() > 0;
-                float lineHeight = (hasItem ? 16 : FONT_SIZE) * scale;
-
-                float offsetX = 0;
-                for (ItemStack stack : line.items) {
-                    if (stack != null && !stack.isEmpty()) {
-                        // Vertically center the item within its line height
-                        float itemY = currentY + (lineHeight - 16 * scale) / 2;
-                        context.drawItem(stack, (int) (x + offsetX), (int) itemY);
-                        offsetX += 16 * scale;
-                    }
-                }
-
-                // Vertically center the text within its line height
-                float textY = currentY + (lineHeight - FONT_SIZE * scale) / 2;
-
-                if (line.textComponent != null) {
-                    context.drawTextWithShadow(tr, line.textComponent, (int) (x + offsetX),
-                            (int) textY, Colors.WHITE);
-                } else {
-                    context.drawTextWithShadow(tr, line.startText + line.text, (int) (x + offsetX),
-                            (int) textY, Colors.WHITE);
-                }
-
-                // Move down by the height of the line we just rendered
-                currentY += lineHeight;
             }
         }
 

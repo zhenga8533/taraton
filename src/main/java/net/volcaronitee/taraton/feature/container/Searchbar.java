@@ -1,9 +1,10 @@
 package net.volcaronitee.taraton.feature.container;
 
 import java.util.List;
+
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.screen.ingame.GenericContainerScreen;
+import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.text.Text;
 import net.volcaronitee.taraton.config.TaratonConfig;
@@ -33,7 +34,7 @@ public class Searchbar {
 
     public static void register() {
         ScreenEvents.AFTER_INIT.register((client, screen, scaledWidth, scaledHeight) -> {
-            if (screen instanceof GenericContainerScreen) {
+            if (screen instanceof HandledScreen) {
                 if (searchbar == null) {
                     searchbar = new TextFieldWidget(client.textRenderer, 0, 0, SEARCHBAR_WIDTH,
                             SEARCHBAR_HEIGHT, Text.literal("Search..."));
@@ -43,9 +44,9 @@ public class Searchbar {
                 searchbar.setY(OVERLAY.getY());
 
                 ((ScreenAccessor) screen).invokeAddDrawableChild(searchbar);
-            }
 
-            ScreenEvents.remove(screen).register(INSTANCE::onScreenClose);
+                ScreenEvents.remove(screen).register(INSTANCE::onScreenClose);
+            }
         });
     }
 
@@ -54,6 +55,10 @@ public class Searchbar {
     }
 
     private void onScreenClose(Screen screen) {
+        if (searchbar == null) {
+            return;
+        }
+
         searchbar.setFocused(false);
     }
 }
