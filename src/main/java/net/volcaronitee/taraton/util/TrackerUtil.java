@@ -85,8 +85,17 @@ public class TrackerUtil {
          * @param newValue The new value of the stat.
          */
         public void update(double newValue) {
-            if (nextValue != 0 && newValue < startValue) {
+            long currentTime = System.currentTimeMillis();
 
+            if (this.startTime == 0) {
+                // Initialize the tracker if it hasn't been started yet
+                this.startTime = currentTime;
+                this.startValue = newValue;
+                this.currentValue = newValue;
+            } else if (newValue != this.currentValue) {
+                // Update the current value and last update time
+                this.currentValue = newValue;
+                this.lastUpdateTime = currentTime;
             }
         }
 
