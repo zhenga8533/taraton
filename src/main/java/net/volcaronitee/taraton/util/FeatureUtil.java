@@ -20,6 +20,7 @@ import net.volcaronitee.taraton.feature.container.Searchbar;
 import net.volcaronitee.taraton.feature.container.SlotBinding;
 import net.volcaronitee.taraton.feature.container.WardrobeSwap;
 import net.volcaronitee.taraton.feature.crimson_isle.VanquisherWarp;
+import net.volcaronitee.taraton.feature.economy.CoinTracker;
 import net.volcaronitee.taraton.feature.fishing.HookLineAndSinker;
 import net.volcaronitee.taraton.feature.general.DeveloperKey;
 import net.volcaronitee.taraton.feature.general.ImagePreview;
@@ -81,6 +82,9 @@ public class FeatureUtil {
         Searchbar.register();
         SlotBinding.register();
         WardrobeSwap.register();
+
+        // Economy Features
+        CoinTracker.register();
 
         // Combat Features
         EntityHighlight.register();
