@@ -474,7 +474,7 @@ public class OverlayUtil {
          */
         private void render(DrawContext context, float delta, boolean inContainer) {
             if (!shouldRender.get() || (onContainer && !inContainer)
-                    || (!onContainer && inContainer)) {
+                    || (!onContainer && inContainer && !globalMoveMode)) {
                 return;
             }
 
