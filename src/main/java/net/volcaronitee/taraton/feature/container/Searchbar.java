@@ -38,7 +38,7 @@ public class Searchbar {
 
     private static final Overlay OVERLAY = OverlayUtil.createOverlay("searchbar",
             () -> FeatureUtil.isEnabled(TaratonConfig.getInstance().container.searchbar),
-            List.of(new LineContent("Searchbar Placeholder", () -> true)));
+            List.of(LineContent.of("Searchbar Placeholder", () -> true)));
     static {
         OVERLAY.setFixedSize(SEARCHBAR_WIDTH, SEARCHBAR_HEIGHT);
         OVERLAY.setSpecialRender(INSTANCE::highlightMatches);

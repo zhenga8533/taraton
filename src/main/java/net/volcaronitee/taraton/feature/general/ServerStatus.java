@@ -24,21 +24,21 @@ public class ServerStatus {
     private static final ServerStatus INSTANCE = new ServerStatus();
 
     private static final List<LineContent> LINES = List.of(
-            new LineContent("§8[§6XYZ§8]§r ", "§7-195, 88, 58",
+            LineContent.ofColumns(List.of("§8[§6XYZ§8]", "§7-195, 88, 58"),
                     () -> TaratonToggle.getInstance().general.xyz),
-            new LineContent("§8[§6Y/P§8]§r ", "§7-89.15 / 30.89",
+            LineContent.ofColumns(List.of("§8[§6Y/P§8]", "§7-89.15 / 30.89"),
                     () -> TaratonToggle.getInstance().general.yawPitch),
-            new LineContent("§8[§6ANG§8]§r ", "§7East",
+            LineContent.ofColumns(List.of("§8[§6ANG§8]", "§7East"),
                     () -> TaratonToggle.getInstance().general.direction),
-            new LineContent("§8[§6PNG§8]§r ", "§a58 §7ms",
+            LineContent.ofColumns(List.of("§8[§6PNG§8]", "§a58 §7ms"),
                     () -> TaratonToggle.getInstance().general.ping),
-            new LineContent("§8[§6FPS§8]§r ", "§a60 §7fps",
+            LineContent.ofColumns(List.of("§8[§6FPS§8]", "§a60 §7fps"),
                     () -> TaratonToggle.getInstance().general.fps),
-            new LineContent("§8[§6TPS§8]§r ", "§a19.8 §7tps",
+            LineContent.ofColumns(List.of("§8[§6TPS§8]", "§a19.8 §7tps"),
                     () -> TaratonToggle.getInstance().general.tps),
-            new LineContent("§8[§6CPS§8]§r ", "§a0 §7: §a0",
+            LineContent.ofColumns(List.of("§8[§6CPS§8]", "§a0 §7: §a0"),
                     () -> TaratonToggle.getInstance().general.cps),
-            new LineContent("§8[§6DAY§8]§r ", "§a0.75",
+            LineContent.ofColumns(List.of("§8[§6DAY§8]", "§a0.75"),
                     () -> TaratonToggle.getInstance().general.day));
     private static final Overlay OVERLAY = OverlayUtil.createOverlay("server_status",
             () -> FeatureUtil.isEnabled(TaratonConfig.getInstance().general.serverStatus), LINES);
@@ -217,39 +217,39 @@ public class ServerStatus {
             return;
 
         // Update the overlay lines with the current values
-        LINES.get(0).setText("§7" + x + ", " + y + ", " + z);
-        LINES.get(1)
-                .setText("§7" + String.format("%.2f", yaw) + " / " + String.format("%.2f", pitch));
-        LINES.get(2).setText("§7" + direction);
+        LINES.get(0).setColumn("§7" + x + ", " + y + ", " + z, 1);
+        LINES.get(1).setColumn(
+                "§7" + String.format("%.2f", yaw) + " / " + String.format("%.2f", pitch), 1);
+        LINES.get(2).setColumn("§7" + direction, 1);
 
         // Update ping line with color coding
         String pingColor =
                 ping < 50 ? "§a" : ping < 100 ? "§2" : ping < 200 ? "§e" : ping < 400 ? "§c" : "§4";
-        LINES.get(3).setText(pingColor + ping + " §7ms");
+        LINES.get(3).setColumn(pingColor + ping + " §7ms", 1);
 
         // Update FPS with color coding
         int maxFps = MinecraftClient.getInstance().options.getMaxFps().getValue();
         String fpsColor = fps >= maxFps * 0.9 ? "§a"
                 : fps >= maxFps * 0.7 ? "§2"
                         : fps >= maxFps * 0.6 ? "§e" : fps >= maxFps * 0.5 ? "§c" : "§4";
-        LINES.get(4).setText(fpsColor + fps + " §7fps");
+        LINES.get(4).setColumn(fpsColor + fps + " §7fps", 1);
 
         // Update TPS with color coding
         String tpsColor = tps >= 19.0 ? "§a"
                 : tps >= 15.0 ? "§2" : tps >= 10.0 ? "§e" : tps >= 5.0 ? "§c" : "§4";
-        LINES.get(5).setText(tpsColor + String.format("%.2f", tps) + " §7tps");
+        LINES.get(5).setColumn(tpsColor + String.format("%.2f", tps) + " §7tps", 1);
 
         // Update CPS with color coding
         String leftCpsColor = leftCps < 3 ? "§a"
                 : leftCps < 6 ? "§2" : leftCps < 10 ? "§e" : leftCps < 16 ? "§c" : "§4";
         String rightCpsColor = rightCps < 3 ? "§a"
                 : rightCps < 6 ? "§2" : rightCps < 10 ? "§e" : rightCps < 16 ? "§c" : "§4";
-        LINES.get(6).setText(leftCpsColor + leftCps + " §7: " + rightCpsColor + rightCps);
+        LINES.get(6).setColumn(leftCpsColor + leftCps + " §7: " + rightCpsColor + rightCps, 1);
 
         // Update day with color coding
         String dayColor =
                 day < 0.25 ? "§a" : day < 3 ? "§2" : day < 7 ? "§e" : day < 14 ? "§c" : "§4";
-        LINES.get(7).setText(dayColor + String.format("%.2f", day));
+        LINES.get(7).setColumn(dayColor + String.format("%.2f", day), 1);
 
         // Update the overlay with the new lines
         OVERLAY.setChanged();

@@ -75,14 +75,14 @@ public class WidgetDisplay {
                     if (name.startsWith(widget.name)) {
                         addToWidget = widget;
                         addToWidget.lines.clear();
-                        addToWidget.lines.add(new LineContent(displayName, () -> true));
+                        addToWidget.lines.add(LineContent.of(displayName, () -> true));
                         break;
                     }
                 }
             } else {
                 // If we already have a widget, add widget details to it
                 if (name.length() > 1 && name.charAt(0) == ' ' && name.charAt(1) != ' ') {
-                    addToWidget.lines.add(new LineContent(displayName, () -> true));
+                    addToWidget.lines.add(LineContent.of(displayName, () -> true));
                 } else {
                     addToWidget = null;
                 }
@@ -120,9 +120,9 @@ public class WidgetDisplay {
          */
         public Widget(String name, Supplier<Boolean> active) {
             this.name = name;
-            this.lines = new ArrayList<>(List.of(new LineContent("§e§l" + name + ":", active),
-                    new LineContent(" Tall: §c❁100", active),
-                    new LineContent(" Handsome: §9☣100", active)));
+            this.lines = new ArrayList<>(List.of(LineContent.of("§e§l" + name + ":", active),
+                    LineContent.of(" Tall: §c❁100", active),
+                    LineContent.of(" Handsome: §9☣100", active)));
 
             if (active.get()) {
                 OverlayUtil.createOverlay(name,

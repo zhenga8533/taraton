@@ -53,7 +53,7 @@ public class ContainerPreview {
     private static final int TEXTURE_DIMENSION = 256;
 
     private static final List<LineContent> LINES =
-            new ArrayList<>(List.of(new LineContent("Container Preview Placeholder", () -> true)));
+            new ArrayList<>(List.of(LineContent.of("Container Preview Placeholder", () -> true)));
     private static final Overlay OVERLAY = OverlayUtil.createOverlay("container_preview",
             () -> FeatureUtil.isEnabled(TaratonConfig.getInstance().container.containerPreview),
             LINES);

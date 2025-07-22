@@ -31,6 +31,7 @@ import net.volcaronitee.taraton.util.LocationUtil;
 import net.volcaronitee.taraton.util.LocationUtil.World;
 import net.volcaronitee.taraton.util.OverlayUtil;
 import net.volcaronitee.taraton.util.OverlayUtil.LineContent;
+import net.volcaronitee.taraton.util.OverlayUtil.Overlay;
 import net.volcaronitee.taraton.util.RenderUtil;
 import net.volcaronitee.taraton.util.TickUtil;
 import net.volcaronitee.taraton.util.TitleUtil;
@@ -43,10 +44,12 @@ import net.volcaronitee.taraton.util.helper.RelationalValue.Operator;
 public class EntityHighlight {
     private static final EntityHighlight INSTANCE = new EntityHighlight();
 
-    private static final List<LineContent> LINES =
-            new ArrayList<>(List.of(new LineContent("§e§lEntity Counter:", "", () -> true),
-                    new LineContent(" §fLion: §6", "1", () -> true),
-                    new LineContent(" §7Total: §e", "1", () -> true)));
+    private static final List<LineContent> LINES = new ArrayList<>(
+            List.of(LineContent.ofColumns(List.of("§e§lEntity Counter:", ""), () -> true),
+                    LineContent.ofColumns(List.of(" §fLion:", "§61"), () -> true),
+                    LineContent.ofColumns(List.of(" §7Total:", "§e1"), () -> true)));
+    private static final Overlay OVERLAY = OverlayUtil.createOverlay("entity_counter",
+            () -> FeatureUtil.isEnabled(TaratonConfig.getInstance().combat.entityCounter), LINES);
 
     public static final TaratonList ENTITY_LIST = new TaratonList("Entity List", Text
             .literal("A list of entities to highlight in the game.\n\nUse ")
@@ -70,9 +73,6 @@ public class EntityHighlight {
             "entity_list.json", new String[] {"Entity"});
     static {
         ENTITY_LIST.setSaveCallback(INSTANCE::onSave);
-        OverlayUtil.createOverlay("entity_counter",
-                () -> FeatureUtil.isEnabled(TaratonConfig.getInstance().combat.entityCounter),
-                LINES);
     }
 
     private static final Map<Entity, Highlight> HIGHLIGHTED_ENTITIES = new HashMap<>();
@@ -200,10 +200,11 @@ public class EntityHighlight {
             String entityName = entry.getKey();
             int count = entry.getValue();
 
-            LINES.add(LINES.size() - 1, new LineContent(" §f" + entityName + ": §6",
-                    String.valueOf(count), () -> true));
+            LINES.add(LINES.size() - 1, LineContent.ofColumns(
+                    List.of(" §f" + entityName + ": ", "§6" + String.valueOf(count)), () -> true));
         }
-        LINES.getLast().setText(String.valueOf(totalCount.get()));
+        LINES.get(LINES.size() - 1).setColumn("§e" + String.valueOf(totalCount.get()), 1);
+        OVERLAY.setChanged();
     }
 
     /**

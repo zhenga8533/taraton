@@ -40,11 +40,11 @@ public class SkillTracker {
     private String currentSkill = "None";
 
     private static final List<LineContent> LINES =
-            List.of(new LineContent("§3Skill: ", "§fAura", () -> true),
-                    new LineContent("§3Gain: ", "§f0", () -> true),
-                    new LineContent("§3Time: ", "§cInactive", () -> true),
-                    new LineContent("§3Rate: ", "§f0 xp/hr", () -> true),
-                    new LineContent("§3Level Up: ", "§aMaxed", () -> true));
+            List.of(LineContent.ofColumns(List.of("§3Skill:", "§fAura"), () -> true),
+                    LineContent.ofColumns(List.of("§3Gain:", "§f0"), () -> true),
+                    LineContent.ofColumns(List.of("§3Time:", "§cInactive"), () -> true),
+                    LineContent.ofColumns(List.of("§3Rate:", "§f0 xp/hr"), () -> true),
+                    LineContent.ofColumns(List.of("§3Level Up:", "§aMaxed"), () -> true));
     private static final Overlay OVERLAY = OverlayUtil.createOverlay("skill_tracker",
             () -> FeatureUtil.isEnabled(TaratonConfig.getInstance().general.skillTracker != 0),
             LINES);

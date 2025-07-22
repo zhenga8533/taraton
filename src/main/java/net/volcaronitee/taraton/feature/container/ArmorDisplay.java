@@ -18,11 +18,11 @@ import net.volcaronitee.taraton.util.TickUtil;
 public class ArmorDisplay {
     private static final ArmorDisplay INSTANCE = new ArmorDisplay();
 
-    private static final List<LineContent> LINES = new ArrayList<>(
-            List.of(new LineContent(Items.IRON_HELMET.getDefaultStack(), () -> true),
-                    new LineContent(Items.IRON_CHESTPLATE.getDefaultStack(), () -> true),
-                    new LineContent(Items.IRON_LEGGINGS.getDefaultStack(), () -> true),
-                    new LineContent(Items.IRON_BOOTS.getDefaultStack(), () -> true)));
+    private static final List<LineContent> LINES =
+            new ArrayList<>(List.of(LineContent.of(Items.IRON_HELMET.getDefaultStack(), () -> true),
+                    LineContent.of(Items.IRON_CHESTPLATE.getDefaultStack(), () -> true),
+                    LineContent.of(Items.IRON_LEGGINGS.getDefaultStack(), () -> true),
+                    LineContent.of(Items.IRON_BOOTS.getDefaultStack(), () -> true)));
     static {
         OverlayUtil.createOverlay("armor_display",
                 () -> FeatureUtil.isEnabled(TaratonConfig.getInstance().container.armorDisplay),
@@ -54,9 +54,10 @@ public class ArmorDisplay {
         ItemStack boots = client.player.getEquippedStack(EquipmentSlot.FEET);
 
         // Add the equipped armor items to the list
-        LINES.get(0).setItemStack(helmet);
-        LINES.get(1).setItemStack(chestplate);
-        LINES.get(2).setItemStack(leggings);
-        LINES.get(3).setItemStack(boots);
+        LINES.clear();
+        LINES.add(LineContent.of(helmet, () -> true));
+        LINES.add(LineContent.of(chestplate, () -> true));
+        LINES.add(LineContent.of(leggings, () -> true));
+        LINES.add(LineContent.of(boots, () -> true));
     }
 }

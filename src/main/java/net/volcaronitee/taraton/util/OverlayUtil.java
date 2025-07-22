@@ -74,8 +74,9 @@ public class OverlayUtil {
         int x = overlayJson.has("x") ? overlayJson.get("x").getAsInt() : 100;
         int y = overlayJson.has("y") ? overlayJson.get("y").getAsInt() : 100;
         float scale = overlayJson.has("scale") ? overlayJson.get("scale").getAsFloat() : 1.0f;
+        int align = overlayJson.has("align") ? overlayJson.get("align").getAsInt() : 0;
 
-        Overlay overlay = new Overlay(x, y, scale, shouldRender, templateLines);
+        Overlay overlay = new Overlay(x, y, scale, align, shouldRender, templateLines);
         OVERLAYS.put(name.toLowerCase(), overlay);
 
         return overlay;
@@ -135,7 +136,7 @@ public class OverlayUtil {
             overlay.x = x;
             overlay.y = y;
             overlay.scale = scale;
-            overlay.calcSize();
+            overlay.calculateSize();
         }
     }
 
@@ -179,7 +180,7 @@ public class OverlayUtil {
         // Recalculate the size of all overlays and reset dragging state
         for (Map.Entry<String, Overlay> entry : OVERLAYS.entrySet()) {
             Overlay overlay = entry.getValue();
-            overlay.calcSize();
+            overlay.calculateSize();
         }
 
         // Create a new screen for managing overlays
@@ -239,8 +240,8 @@ public class OverlayUtil {
             for (Overlay overlay : OVERLAYS.values()) {
                 if (overlay.isMouseOver(mouseX, mouseY)) {
                     currentOverlay = overlay;
-                    currentOverlay.dx = (float) mouseX - overlay.x;
-                    currentOverlay.dy = (float) mouseY - overlay.y;
+                    currentOverlay.dx = (int) mouseX - overlay.x;
+                    currentOverlay.dy = (int) mouseY - overlay.y;
                     break;
                 }
             }
@@ -279,100 +280,144 @@ public class OverlayUtil {
     };
 
     /**
-     * Represents the content of a line in an overlay, containing a list of item stacks and text.
+     * Represents the content of a line in an overlay, which can consist of multiple columns.
      */
     public static class LineContent {
-        private List<ItemStack> items = new ArrayList<>();
-        private String startText = "";
-        private String text = "";
-        private Text textComponent = null;
+        private List<List<Object>> content = new ArrayList<>();
         private Supplier<Boolean> shouldRender;
 
-        /**
-         * Creates a new LineContent instance with the specified start text and text.
-         * 
-         * @param startText The text to display at the start of the line.
-         * @param text The text to display in the line.
-         * @param shouldRender A supplier that determines if the line should be rendered.
-         */
-        public LineContent(String startText, String text, Supplier<Boolean> shouldRender) {
-            this.startText = startText;
-            this.text = text;
+        private List<Integer> columnWidths = new ArrayList<>();
+        private int width = 0;
+        private int height = 0;
+
+        private LineContent(List<List<Object>> content, Supplier<Boolean> shouldRender) {
+            this.content.addAll(content);
             this.shouldRender = shouldRender;
+            this.calculateSize();
         }
 
-        /**
-         * Creates a new LineContent instance with the specified text and a default
-         * 
-         * @param text The text to display in the line.
-         * @param shouldRender A supplier that determines if the line should be rendered.
-         */
-        public LineContent(String text, Supplier<Boolean> shouldRender) {
-            this.text = text;
-            this.shouldRender = shouldRender;
+        public static LineContent ofColumns(List<Object> content, Supplier<Boolean> shouldRender) {
+            List<List<Object>> columns = new ArrayList<>();
+
+            for (Object item : content) {
+                if (item instanceof List<?> list) {
+                    columns.add(new ArrayList<>(list));
+                } else {
+                    columns.add(List.of(item));
+                }
+            }
+
+            return new LineContent(columns, shouldRender);
         }
 
-        /**
-         * Creates a new LineContent instance with the specified text component.
-         * 
-         * @param textComponent The text component to display in the line.
-         * @param shouldRender A supplier that determines if the line should be rendered.
-         */
-        public LineContent(Text textComponent, Supplier<Boolean> shouldRender) {
-            this.textComponent = textComponent;
-            this.shouldRender = shouldRender;
+        public static LineContent of(List<Object> content, Supplier<Boolean> shouldRender) {
+            return new LineContent(List.of(new ArrayList<>(content)), shouldRender);
         }
 
-        /**
-         * Creates a new LineContent instance with the specified item stack.
-         * 
-         * @param item The item stack to display in the line.
-         * @param shouldRender A supplier that determines if the line should be rendered.
-         */
-        public LineContent(ItemStack item, Supplier<Boolean> shouldRender) {
-            this.items.add(item);
-            this.shouldRender = shouldRender;
+        public static LineContent of(Text text, Supplier<Boolean> shouldRender) {
+            return of(List.of(text), shouldRender);
         }
 
-        /**
-         * Creates a new LineContent instance with no initial text.
-         * 
-         * @param shouldRender A supplier that determines if the line should be rendered.
-         */
+        public static LineContent of(ItemStack stack, Supplier<Boolean> shouldRender) {
+            return of(List.of(stack), shouldRender);
+        }
+
+        public static LineContent of(String text, Supplier<Boolean> shouldRender) {
+            return of(List.of(text), shouldRender);
+        }
+
         public LineContent(LineContent other) {
-            this.items = new ArrayList<>(other.items);
-            this.startText = other.startText;
-            this.text = other.text;
-            this.textComponent = other.textComponent;
+            // Deep copy the content to ensure new pointers
+            for (List<Object> column : other.content) {
+                List<Object> newColumn = new ArrayList<>();
+                for (Object item : column) {
+                    newColumn.add(item);
+                }
+                this.content.add(newColumn);
+            }
+
             this.shouldRender = other.shouldRender;
+            this.calculateSize();
         }
 
-        /**
-         * Adds an item stack to the line content.
-         * 
-         * @param text The text to display for the item.
-         */
-        public void setText(String text) {
-            this.text = text;
+        public void setColumn(Object item, int columnIndex) {
+            if (columnIndex < 0 || columnIndex >= content.size()) {
+                throw new IndexOutOfBoundsException("Column index out of bounds: " + columnIndex);
+            }
+
+            List<Object> column = content.get(columnIndex);
+            column.clear();
+            if (item instanceof List<?> list) {
+                column.addAll(list);
+            } else {
+                column.add(item);
+            }
+
+            this.calculateSize();
         }
 
-        /**
-         * Gets the text of the line content, including the start text.
-         * 
-         * @return The full text of the line content.
-         */
-        public String getText() {
-            return startText + text;
+        private void calculateSize() {
+            width = MARGIN * (content.size() - 1);
+            height = 0;
+            TextRenderer tr = MinecraftClient.getInstance().textRenderer;
+
+            for (List<Object> column : content) {
+                for (Object item : column) {
+                    int cellWidth = 0;
+                    if (item instanceof ItemStack stack && !stack.isEmpty()) {
+                        height = Math.max(height, ITEM_SIZE);
+                        cellWidth = ITEM_SIZE;
+                    } else if (item instanceof String text) {
+                        height = Math.max(height, FONT_SIZE);
+                        cellWidth = tr.getWidth(text);
+                    } else if (item instanceof Text text) {
+                        height = Math.max(height, FONT_SIZE);
+                        cellWidth = tr.getWidth(text);
+                    }
+
+                    width += cellWidth;
+                    columnWidths.add(cellWidth);
+                }
+            }
         }
 
-        /**
-         * Sets the text component for the line content.
-         * 
-         * @param item The text component to set for the line content.
-         */
-        public void setItemStack(ItemStack item) {
-            this.items.clear();
-            this.items.add(item);
+        private void draw(DrawContext context, int x, int y, float scale, int align,
+                List<Integer> maxColumnWidths) {
+            TextRenderer tr = MinecraftClient.getInstance().textRenderer;
+            float currentX = x;
+
+            for (int i = 0; i < this.content.size(); i++) {
+                List<Object> column = this.content.get(i);
+                int columnMaxWidth = maxColumnWidths.get(i);
+                float actualColumnContentWidth = this.columnWidths.get(i) * scale;
+
+                float columnStartX = currentX;
+                if (align == 1) { // Center
+                    columnStartX += (columnMaxWidth - actualColumnContentWidth) / 2;
+                } else if (align == 2) { // Right
+                    columnStartX += columnMaxWidth - actualColumnContentWidth;
+                }
+
+                float offsetX = 0;
+                for (Object item : column) {
+                    float itemHeight = (item instanceof ItemStack ? ITEM_SIZE : FONT_SIZE) * scale;
+                    float itemY = y + (this.height * scale - itemHeight) / 2;
+
+                    if (item instanceof ItemStack stack && !stack.isEmpty()) {
+                        context.drawItem(stack, (int) (columnStartX + offsetX), (int) itemY);
+                        offsetX += ITEM_SIZE * scale;
+                    } else if (item instanceof String text) {
+                        context.drawTextWithShadow(tr, text, (int) (columnStartX + offsetX),
+                                (int) itemY, Colors.WHITE);
+                        offsetX += tr.getWidth(text) * scale;
+                    } else if (item instanceof Text text) {
+                        context.drawTextWithShadow(tr, text, (int) (columnStartX + offsetX),
+                                (int) itemY, Colors.WHITE);
+                        offsetX += tr.getWidth(text) * scale;
+                    }
+                }
+                currentX += columnMaxWidth + MARGIN * scale;
+            }
         }
     }
 
@@ -395,19 +440,21 @@ public class OverlayUtil {
     public static class Overlay {
         private int x, y;
         private float scale;
+        private int align;
 
         private boolean onContainer = false;
         private final Supplier<Boolean> shouldRender;
         private final List<LineContent> lines;
         private final List<LineContent> templateLines = new ArrayList<>();
 
-        private float fixedWidth = -1;
-        private float fixedHeight = -1;
-        private float width = -1;
-        private float height = -1;
+        private int fixedWidth = -1;
+        private int fixedHeight = -1;
+        private int width = -1;
+        private int height = -1;
+        private final List<Integer> maxColumnWidths = new ArrayList<>();
 
-        private float dx = 0;
-        private float dy = 0;
+        private int dx = 0;
+        private int dy = 0;
         private boolean hovering = false;
         private boolean changed = true;
 
@@ -422,11 +469,12 @@ public class OverlayUtil {
          * @param shouldRender A supplier that determines if the overlay should be rendered.
          * @param lines The template lines to be displayed in the overlay.
          */
-        public Overlay(int initialX, int initialY, float scale, Supplier<Boolean> shouldRender,
-                List<LineContent> lines) {
+        public Overlay(int initialX, int initialY, float scale, int align,
+                Supplier<Boolean> shouldRender, List<LineContent> lines) {
             this.x = initialX;
             this.y = initialY;
             this.scale = scale;
+            this.align = align;
             this.shouldRender = shouldRender;
             this.lines = lines;
             for (LineContent line : lines) {
@@ -458,7 +506,7 @@ public class OverlayUtil {
          * @param width The fixed width of the overlay.
          * @param height The fixed height of the overlay.
          */
-        public void setFixedSize(float width, float height) {
+        public void setFixedSize(int width, int height) {
             this.fixedWidth = width;
             this.fixedHeight = height;
             this.width = width;
@@ -485,7 +533,7 @@ public class OverlayUtil {
 
             // Recalculate size if changed
             if (changed) {
-                calcSize();
+                calculateSize();
             }
 
             // Render alignment lines if this is the current overlay
@@ -504,42 +552,6 @@ public class OverlayUtil {
             }
 
             if (specialRender == null || globalMoveMode) {
-                // Render each line of content
-                float currentY = y;
-                for (LineContent line : lines) {
-                    if (!line.shouldRender.get()) {
-                        continue;
-                    }
-
-                    // Determine the height of THIS specific line
-                    boolean hasItem = line.items.size() > 0;
-                    float lineHeight = (hasItem ? 16 : FONT_SIZE) * scale;
-
-                    float offsetX = 0;
-                    for (ItemStack stack : line.items) {
-                        if (stack != null && !stack.isEmpty()) {
-                            // Vertically center the item within its line height
-                            float itemY = currentY + (lineHeight - 16 * scale) / 2;
-                            context.drawItem(stack, (int) (x + offsetX), (int) itemY);
-                            offsetX += 16 * scale;
-                        }
-                    }
-
-                    // Vertically center the text within its line height
-                    float textY = currentY + (lineHeight - FONT_SIZE * scale) / 2;
-
-                    if (line.textComponent != null) {
-                        context.drawTextWithShadow(tr, line.textComponent, (int) (x + offsetX),
-                                (int) textY, Colors.WHITE);
-                    } else {
-                        context.drawTextWithShadow(tr, line.startText + line.text,
-                                (int) (x + offsetX), (int) textY, Colors.WHITE);
-                    }
-
-                    // Move down by the height of the line we just rendered
-                    currentY += lineHeight;
-                }
-
                 // Draw the overlay box
                 int boxX1 = (int) x - MARGIN;
                 int boxY1 = (int) y - MARGIN;
@@ -549,6 +561,15 @@ public class OverlayUtil {
                 int borderColor = hovering ? 0xFF00FF00 : 0xFFDDDDDD;
                 context.fill(boxX1, boxY1, boxX2, boxY2, fillColor);
                 context.drawBorder(boxX1, boxY1, boxX2 - boxX1, boxY2 - boxY1, borderColor);
+
+                // Render each line of content
+                float currentY = y;
+                for (LineContent line : lines) {
+                    if (line.shouldRender.get()) {
+                        line.draw(context, x, (int) currentY, scale, align, maxColumnWidths);
+                        currentY += line.height;
+                    }
+                }
             } else if (specialRender != null) {
                 // If special render is set, use it
                 specialRender.render(context, delta);
@@ -559,8 +580,7 @@ public class OverlayUtil {
         /**
          * Recalculates the size of the overlay based on its content.
          */
-        private void calcSize() {
-            // Check if fixed width and height are set
+        private void calculateSize() {
             if (fixedWidth > 0 && fixedHeight > 0) {
                 this.width = fixedWidth;
                 this.height = fixedHeight;
@@ -569,34 +589,37 @@ public class OverlayUtil {
 
             List<LineContent> lines =
                     globalMoveMode && this.lines.isEmpty() ? templateLines : this.lines;
-            TextRenderer tr = MinecraftClient.getInstance().textRenderer;
 
-            float maxWidth = 0;
-            float totalHeight = 0;
-
+            // Clear previous max column widths
+            maxColumnWidths.clear();
+            int maxColumns = 0;
             for (LineContent line : lines) {
-                // Skip lines that should not be rendered
-                if (!line.shouldRender.get()) {
-                    continue;
+                if (line.shouldRender.get()) {
+                    maxColumns = Math.max(maxColumns, line.content.size());
                 }
-
-                // Determine the height of THIS specific line
-                boolean hasItem = line.items.size() > 0;
-                float lineHeight = (hasItem ? ITEM_SIZE : FONT_SIZE) * scale;
-                totalHeight += lineHeight;
-
-                // Calculate the width of the line
-                float lineWidth = line.items.size() * ITEM_SIZE;
-                if (line.textComponent != null) {
-                    lineWidth += tr.getWidth(line.textComponent);
-                } else {
-                    lineWidth += tr.getWidth(line.text) + tr.getWidth(line.startText);
-                }
-                maxWidth = Math.max(maxWidth, lineWidth * scale);
             }
 
-            this.width = maxWidth;
-            this.height = totalHeight - (MARGIN / 2);
+            // Initialize maxColumnWidths with zeros for each column
+            for (int i = 0; i < maxColumns; i++) {
+                maxColumnWidths.add(0);
+            }
+
+            // Calculate the maximum column widths and total height
+            int totalHeight = 0;
+            for (LineContent line : lines) {
+                if (line.shouldRender.get()) {
+                    for (int i = 0; i < line.content.size(); i++) {
+                        int columnWidth = line.columnWidths.get(i);
+                        maxColumnWidths.set(i, Math.max(maxColumnWidths.get(i), columnWidth));
+                    }
+                    totalHeight += line.height;
+                }
+            }
+
+            // Update the overlay's size based on the calculated values
+            this.width = lines.stream().filter(line -> line.shouldRender.get())
+                    .mapToInt(line -> line.width).max().orElse(0);
+            this.height = totalHeight;
         }
 
         /**

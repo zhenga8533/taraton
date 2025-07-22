@@ -29,7 +29,7 @@ import net.volcaronitee.taraton.util.helper.Contract;
  */
 public class HookLineAndSinker {
     private static final List<LineContent> LINES =
-            new ArrayList<>(List.of(new LineContent("§c§l!!!", () -> true)));
+            new ArrayList<>(List.of(LineContent.of("§c§l!!!", () -> true)));
 
     static {
         OverlayUtil.createOverlay("hook_line_and_sinker",
@@ -126,13 +126,13 @@ public class HookLineAndSinker {
 
             // Check if the name matches the time pattern or is "!!!"
             if (TIME_PATTERN.matcher(name.getString()).matches()) {
-                LINES.add(new LineContent(name, () -> true));
+                LINES.add(LineContent.of(name, () -> true));
                 continue;
             }
             if (!name.getString().equals("!!!")) {
                 continue;
             }
-            LINES.add(new LineContent(name, () -> true));
+            LINES.add(LineContent.of(name, () -> true));
 
             // Check if the use key is pressed and if a contract is signed
             KeyBinding useKey = MinecraftClient.getInstance().options.useKey;

@@ -23,9 +23,9 @@ public class CoinTracker {
     private static final RateTracker COIN_TRACKER = TrackerUtil.createRateTracker();
 
     private static final List<LineContent> LINES =
-            List.of(new LineContent("§6Gain: ", "§f0", () -> true),
-                    new LineContent("§6Time: ", "§cInactive", () -> true),
-                    new LineContent("§6Rate: ", "§f0 §e¢/hr", () -> true));
+            List.of(LineContent.ofColumns(List.of("§6Gain:", "§f0"), () -> true),
+                    LineContent.ofColumns(List.of("§6Time:", "§cInactive"), () -> true),
+                    LineContent.ofColumns(List.of("§6Rate:", "§f0 §e¢/hr"), () -> true));
 
     /**
      * Registers the coin tracker feature to update periodically and listen for messages.
@@ -45,11 +45,12 @@ public class CoinTracker {
      */
     private void updateOverlay(MinecraftClient client) {
         updateTracker();
-        LINES.get(0).setText("§f" + FormatUtil.commafy(COIN_TRACKER.getTotalGained()));
+        LINES.get(0).setColumn("§f" + FormatUtil.commafy(COIN_TRACKER.getTotalGained()), 1);
         String timeText = COIN_TRACKER.getElapsedTime() == 0 ? "§cInactive"
                 : "§f" + FormatUtil.timeToString(COIN_TRACKER.getElapsedTime());
-        LINES.get(1).setText(timeText);
-        LINES.get(2).setText("§f" + FormatUtil.commafy(COIN_TRACKER.getRatePerHour()) + " §e¢/hr");
+        LINES.get(1).setColumn(timeText, 1);
+        LINES.get(2).setColumn("§f" + FormatUtil.commafy(COIN_TRACKER.getRatePerHour()) + " §e¢/hr",
+                1);
     }
 
     /**
