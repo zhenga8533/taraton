@@ -121,6 +121,31 @@ public class Searchbar {
     }
 
     /**
+     * Highlights the specified slots in the container.
+     * 
+     * @param context The current DrawContext.
+     * @param screen The current HandledScreen.
+     * @param size The total number of slots in the container.
+     * @param parentX The x-coordinate of the parent container.
+     * @param parentY The y-coordinate of the parent container.
+     * @param slots The list of slot IDs to highlight.
+     */
+    public void highlightSlots(DrawContext context, HandledScreen<?> screen, int size, int parentX,
+            int parentY, List<Integer> slots) {
+        ScreenHandler handler = screen.getScreenHandler();
+
+        // Highlight matching slots and dim non-matching slots
+        for (int i = 0; i < size; i++) {
+            if (slots.contains(i)) {
+                ScreenUtil.highlightSlot(context, parentX, parentY, handler.getSlot(i),
+                        ScreenUtil.HIGHLIGHT_COLOR);
+            } else {
+                ScreenUtil.highlightSlot(context, parentX, parentY, handler.getSlot(i), 0x80000000);
+            }
+        }
+    }
+
+    /**
      * Highlights the matching slots in the container.
      * 
      * @param context The current DrawContext.
@@ -133,24 +158,11 @@ public class Searchbar {
             return;
         }
 
-        // Translate to the parent screen's origin
         HandledScreenAccessor accessor = (HandledScreenAccessor) handledScreen;
+        int size = handledScreen.getScreenHandler().slots.size();
         int parentX = accessor.getX();
         int parentY = accessor.getY();
-
-        context.getMatrices().push();
-        context.getMatrices().translate(parentX, parentY, 0);
-
-        // Highlight matching slots
-        ScreenHandler handler = handledScreen.getScreenHandler();
-        for (Slot slot : handler.slots) {
-            if (searchMatches.contains(slot.id)) {
-                ScreenUtil.highlightSlot(context, slot, ScreenUtil.HIGHLIGHT_COLOR);
-            }
-        }
-
-        // Pop the matrix stack to restore previous state
-        context.getMatrices().pop();
+        highlightSlots(context, handledScreen, size, parentX, parentY, searchMatches);
     }
 
     /**

@@ -190,50 +190,46 @@ public class ContainerPreview {
      */
     public void render(DrawContext context, float delta) {
         Screen screen = MinecraftClient.getInstance().currentScreen;
-        if (screen == null
-                || !(screen instanceof HandledScreen<?> handledScreen
-                        && screen instanceof GenericContainerScreen genericContainerScreen)
+        if (screen == null || !(screen instanceof HandledScreen<?> handledScreen)
                 || previewItems.isEmpty()) {
             return;
         }
 
         // Get the screen handler and its position
         HandledScreenAccessor accessor = (HandledScreenAccessor) handledScreen;
-        GenericContainerScreenHandler handler = genericContainerScreen.getScreenHandler();
+        int size = handledScreen.getScreenHandler().slots.size();
         int parentX = accessor.getX();
         int parentY = accessor.getY();
 
         // Calculate the overlay position based on the screen handler
-        int originalX = OVERLAY.getX();
-        int originalY = OVERLAY.getY();
-
-        context.getMatrices().push();
-        context.getMatrices().translate(0, 0, 200);
+        int overlayX = OVERLAY.getX();
+        int overlayY = OVERLAY.getY();
 
         // Draw the container background texture
-        context.drawTexture(RenderLayer::getGuiTextured, CONTAINER_TEXTURE, originalX, originalY, 0,
+        context.drawTexture(RenderLayer::getGuiTextured, CONTAINER_TEXTURE, overlayX, overlayY, 0,
                 0, TEXTURE_WIDTH, TEXTURE_HEIGHT, TEXTURE_DIMENSION, TEXTURE_DIMENSION);
 
         // Draw the container title
-        context.drawText(MinecraftClient.getInstance().textRenderer, currentPreview, originalX + 8,
-                originalY + 6, ScreenUtil.TEXT_COLOR, false);
+        context.drawText(MinecraftClient.getInstance().textRenderer, currentPreview, overlayX + 8,
+                overlayY + 6, ScreenUtil.TEXT_COLOR, false);
 
         // Draw the highlighted slots
-        containerMatches.forEach(i -> {
-            ScreenUtil.highlightSlot(context, originalX, originalY, handler.getSlot(i),
-                    ScreenUtil.HIGHLIGHT_COLOR);
-        });
-        previewMatches.forEach(i -> {
-            ScreenUtil.highlightSlot(context, parentX, parentY, handler.getSlot(i),
-                    ScreenUtil.HIGHLIGHT_COLOR);
-        });
+        if (!Searchbar.getText().isEmpty()) {
+            Searchbar.getInstance().highlightSlots(context, handledScreen, size, parentX, parentY,
+                    containerMatches);
+            Searchbar.getInstance().highlightSlots(context, handledScreen, 54, overlayX, overlayY,
+                    previewMatches);
+        }
 
         // Draw the container items in a grid layout
+        context.getMatrices().push();
+        context.getMatrices().translate(0, 0, 200);
+
         for (int i = 0; i < previewItems.size(); i++) {
             ItemStack itemStack = previewItems.get(i);
             if (!itemStack.isEmpty()) {
-                int slotX = originalX + 8 + (i % 9) * 18;
-                int slotY = originalY + 18 + (i / 9) * 18;
+                int slotX = overlayX + 8 + (i % 9) * 18;
+                int slotY = overlayY + 18 + (i / 9) * 18;
 
                 context.drawItem(itemStack, slotX, slotY);
                 context.drawStackOverlay(MinecraftClient.getInstance().textRenderer, itemStack,
