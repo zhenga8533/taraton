@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
+import org.lwjgl.glfw.GLFW;
 import com.google.gson.JsonObject;
 import com.mojang.brigadier.context.CommandContext;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
@@ -265,6 +266,40 @@ public class OverlayUtil {
             }
 
             return super.mouseDragged(mouseX, mouseY, button, deltaX, deltaY);
+        }
+
+        @Override
+        public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+            if (currentOverlay != null) {
+                if (keyCode == GLFW.GLFW_KEY_UP) {
+                    currentOverlay.y--;
+                    return true;
+                }
+                if (keyCode == GLFW.GLFW_KEY_DOWN) {
+                    currentOverlay.y++;
+                    return true;
+                }
+                if (keyCode == GLFW.GLFW_KEY_LEFT) {
+                    currentOverlay.x--;
+                    return true;
+                }
+                if (keyCode == GLFW.GLFW_KEY_RIGHT) {
+                    currentOverlay.x++;
+                    return true;
+                }
+                if (keyCode == GLFW.GLFW_KEY_EQUAL) { // Plus key
+                    currentOverlay.scale += 0.1f;
+                    currentOverlay.setChanged();
+                    return true;
+                }
+                if (keyCode == GLFW.GLFW_KEY_MINUS) { // Minus key
+                    currentOverlay.scale = Math.max(0.1f, currentOverlay.scale - 0.1f);
+                    currentOverlay.setChanged();
+                    return true;
+                }
+            }
+
+            return super.keyPressed(keyCode, scanCode, modifiers);
         }
 
         @Override
