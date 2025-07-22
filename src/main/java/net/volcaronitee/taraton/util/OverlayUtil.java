@@ -47,7 +47,7 @@ public class OverlayUtil {
      */
     public static void init() {
         HudLayerRegistrationCallback.EVENT.register(layeredDrawer -> layeredDrawer
-                .attachLayerBefore(IdentifiedLayer.CHAT, LAYER, (context, tickCounter) -> {
+                .attachLayerBefore(IdentifiedLayer.SCOREBOARD, LAYER, (context, tickCounter) -> {
                     renderOverlays(context, tickCounter, false);
                 }));
 
@@ -473,7 +473,8 @@ public class OverlayUtil {
          * @param inContainer Whether the player is currently in a container screen.
          */
         private void render(DrawContext context, float delta, boolean inContainer) {
-            if (!shouldRender.get() || (onContainer && !inContainer)) {
+            if (!shouldRender.get() || (onContainer && !inContainer)
+                    || (!onContainer && inContainer)) {
                 return;
             }
 
