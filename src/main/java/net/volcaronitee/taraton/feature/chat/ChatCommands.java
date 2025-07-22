@@ -659,8 +659,9 @@ public class ChatCommands {
 
                 // Collect stats from the widget lines
                 for (LineContent line : STATS_WIDGET.getLines()) {
-                    String text = line.getText();
-                    if (text != null && !text.isEmpty()) {
+                    List<Object> column = line.getColumn(0);
+                    if (column != null && !column.isEmpty() && column.get(0) instanceof String text
+                            && !text.isEmpty()) {
                         stats.add(text);
                     }
                 }

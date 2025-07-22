@@ -325,6 +325,8 @@ public class OverlayUtil {
         private int width = 0;
         private int height = 0;
 
+        private boolean changed = true;
+
         /**
          * Creates a new LineContent instance with the specified content and rendering condition.
          * 
@@ -334,7 +336,6 @@ public class OverlayUtil {
         private LineContent(List<List<Object>> content, Supplier<Boolean> shouldRender) {
             this.content.addAll(content);
             this.shouldRender = shouldRender;
-            this.calculateSize();
         }
 
         /**
@@ -356,7 +357,7 @@ public class OverlayUtil {
                     columns.add(new ArrayList<>(list));
                 } else {
                     // Otherwise, add the item as a single column
-                    columns.add(List.of(item));
+                    columns.add(new ArrayList<>(List.of(item)));
                 }
             }
 
@@ -373,7 +374,8 @@ public class OverlayUtil {
          * @return A new LineContent instance containing the specified content.
          */
         public static LineContent of(List<Object> content, Supplier<Boolean> shouldRender) {
-            return new LineContent(List.of(new ArrayList<>(content)), shouldRender);
+            return new LineContent(new ArrayList<>(List.of(new ArrayList<>(content))),
+                    shouldRender);
         }
 
         /**
@@ -384,7 +386,7 @@ public class OverlayUtil {
          * @return A new LineContent instance containing the specified Text.
          */
         public static LineContent of(Text text, Supplier<Boolean> shouldRender) {
-            return of(List.of(text), shouldRender);
+            return of(new ArrayList<>(List.of(text)), shouldRender);
         }
 
         /**
@@ -395,7 +397,7 @@ public class OverlayUtil {
          * @return A new LineContent instance containing the specified ItemStack.
          */
         public static LineContent of(ItemStack stack, Supplier<Boolean> shouldRender) {
-            return of(List.of(stack), shouldRender);
+            return of(new ArrayList<>(List.of(stack)), shouldRender);
         }
 
         /**
@@ -406,7 +408,7 @@ public class OverlayUtil {
          * @return A new LineContent instance containing the specified String.
          */
         public static LineContent of(String text, Supplier<Boolean> shouldRender) {
-            return of(List.of(text), shouldRender);
+            return of(new ArrayList<>(List.of(text)), shouldRender);
         }
 
         /**
@@ -425,7 +427,20 @@ public class OverlayUtil {
             }
 
             this.shouldRender = other.shouldRender;
-            this.calculateSize();
+        }
+
+        /**
+         * Gets the content of a specific column in the line.
+         * 
+         * @param columnIndex The index of the column to retrieve.
+         */
+        public List<Object> getColumn(int columnIndex) {
+            if (columnIndex < 0 || columnIndex >= content.size()) {
+                return null;
+            }
+
+            content.get(columnIndex);
+            return content.get(columnIndex);
         }
 
         /**
@@ -449,7 +464,6 @@ public class OverlayUtil {
                 // Otherwise, add the single item to the column
                 column.add(item);
             }
-
             this.calculateSize();
         }
 
@@ -483,6 +497,8 @@ public class OverlayUtil {
                     columnWidths.add(columnWidth);
                 }
             }
+
+            changed = false;
         }
 
         /**
@@ -659,6 +675,11 @@ public class OverlayUtil {
 
             // Recalculate size if changed
             if (changed) {
+                for (LineContent line : lines) {
+                    if (line.changed) {
+                        line.calculateSize();
+                    }
+                }
                 calculateSize();
             }
 
