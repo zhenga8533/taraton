@@ -89,13 +89,13 @@ public class FormatUtil {
 
         StringBuilder builder = new StringBuilder();
         if (days > 0) {
-            builder.append(days).append("d ");
+            builder.append(days).append("d");
         }
         if (hours % 24 > 0) {
-            builder.append(hours % 24).append("h ");
+            builder.append(hours % 24).append("h");
         }
         if (minutes % 60 > 0) {
-            builder.append(minutes % 60).append("m ");
+            builder.append(minutes % 60).append("m");
         }
         if (seconds % 60 > 0) {
             builder.append(seconds % 60).append("s");
