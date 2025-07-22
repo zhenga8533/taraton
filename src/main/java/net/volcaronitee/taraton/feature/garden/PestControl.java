@@ -52,7 +52,7 @@ public class PestControl {
             String[] plots = plotsStr.split(": ")[1].split(", ");
 
             // Check if there are no pests left
-            if (plots.length == 0) {
+            if (!plotsStr.startsWith("Plots: ") || plots.length == 0) {
                 Taraton.sendMessage(
                         Text.literal("All pests exterminated!").formatted(Formatting.GREEN));
                 return 1;
