@@ -765,7 +765,7 @@ public class OverlayUtil {
             // The total width is now the sum of the widest columns.
             this.width = lines.stream().filter(line -> line.shouldRender.get())
                     .mapToInt(line -> line.width).max().orElse(0);
-            this.height = totalHeight;
+            this.height = totalHeight - MARGIN / 2;
         }
 
         /**
