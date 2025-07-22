@@ -70,7 +70,7 @@ public class TrackerUtil {
         public RateTracker() {
             this.startTime = 0;
             this.lastUpdateTime = 0;
-            this.startValue = 0;
+            this.startValue = -1;
             this.currentValue = 0;
             this.nextValue = 0;
 
@@ -87,12 +87,16 @@ public class TrackerUtil {
         public void update(double newValue) {
             long currentTime = System.currentTimeMillis();
 
-            if (this.startTime == 0) {
+            if (this.startValue == -1) {
                 // Initialize the tracker if it hasn't been started yet
-                this.startTime = currentTime;
                 this.startValue = newValue;
                 this.currentValue = newValue;
             } else if (newValue != this.currentValue) {
+                if (this.startTime == 0) {
+                    // Start the tracker on the first change
+                    this.startTime = currentTime;
+                }
+
                 // Update the current value and last update time
                 this.currentValue = newValue;
                 this.lastUpdateTime = currentTime;

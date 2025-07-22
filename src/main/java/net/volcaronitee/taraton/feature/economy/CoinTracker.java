@@ -46,7 +46,9 @@ public class CoinTracker {
     private void updateOverlay(MinecraftClient client) {
         updateTracker();
         LINES.get(0).setText("§f" + FormatUtil.commafy(COIN_TRACKER.getTotalGained()));
-        LINES.get(1).setText("§c" + FormatUtil.timeToString(COIN_TRACKER.getElapsedTime()));
+        String timeText = COIN_TRACKER.getElapsedTime() == 0 ? "§cInactive"
+                : "§f" + FormatUtil.timeToString(COIN_TRACKER.getElapsedTime());
+        LINES.get(1).setText(timeText);
         LINES.get(2).setText("§f" + FormatUtil.commafy(COIN_TRACKER.getRatePerHour()) + " §e¢/hr");
     }
 
