@@ -3,10 +3,8 @@ package net.volcaronitee.taraton.util;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-
 import com.google.common.collect.ComparisonChain;
 import com.google.common.collect.Ordering;
-
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.network.PlayerListEntry;
@@ -20,19 +18,18 @@ import net.volcaronitee.taraton.Taraton;
  * Utility class for managing the tab list of players in Minecraft.
  */
 public class TablistUtil {
-    private static final Ordering<PlayerListEntry> PLAYER_COMPARATOR = Ordering.from(new PlayerComparator());
+    private static final Ordering<PlayerListEntry> PLAYER_COMPARATOR =
+            Ordering.from(new PlayerComparator());
 
     private static List<PlayerListEntry> tablist = new ArrayList<>();
 
     /**
      * Private constructor to prevent instantiation.
      */
-    private TablistUtil() {
-    }
+    private TablistUtil() {}
 
     /**
-     * Initializes the TablistUtil by registering a tick handler to update the tab
-     * list
+     * Initializes the TablistUtil by registering a tick handler to update the tab list
      * periodically.
      */
     public static void init() {
@@ -41,12 +38,33 @@ public class TablistUtil {
 
     /**
      * Gets the current tab list of players.
-     *
-     * @return A list of PlayerListEntry objects representing the players in the tab
-     *         list.
+     * 
+     * @return A list of PlayerListEntry objects representing the players in the tab list.
      */
     public static List<PlayerListEntry> getTablist() {
         return tablist;
+    }
+
+    /**
+     * Finds the index of a player in the tab list by their display name.
+     * 
+     * @param text The display name of the player to find in the tab list.
+     * @return The index of the player in the tab list, or -1 if not found.
+     */
+    public static int findIndex(String text) {
+        MinecraftClient client = MinecraftClient.getInstance();
+        updateTablist(client);
+
+        // Iterate through the tab list and find the index of the player with the given name
+        for (int i = 0; i < tablist.size(); i++) {
+            PlayerListEntry entry = tablist.get(i);
+            Text displayName = entry.getDisplayName();
+            if (displayName != null && displayName.getString().equalsIgnoreCase(text)) {
+                return i;
+            }
+        }
+
+        return -1; // Not found
     }
 
     /**
@@ -63,12 +81,12 @@ public class TablistUtil {
         }
 
         MinecraftClient.getInstance().keyboard.setClipboard(sb.toString().trim());
-        Taraton.sendMessage(Text.literal("Copied tablist to clipboard!").formatted(Formatting.GREEN));
+        Taraton.sendMessage(
+                Text.literal("Copied tablist to clipboard!").formatted(Formatting.GREEN));
     }
 
     /**
-     * Updates the tab list of players by fetching the current player list from the
-     * network handler.
+     * Updates the tab list of players by fetching the current player list from the network handler.
      * 
      * @param client The Minecraft client instance.
      */
