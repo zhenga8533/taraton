@@ -19,6 +19,7 @@ import net.volcaronitee.taraton.config.TaratonConfig;
 import net.volcaronitee.taraton.util.FeatureUtil;
 import net.volcaronitee.taraton.util.OverlayUtil;
 import net.volcaronitee.taraton.util.OverlayUtil.LineContent;
+import net.volcaronitee.taraton.util.OverlayUtil.Overlay;
 import net.volcaronitee.taraton.util.ScheduleUtil;
 import net.volcaronitee.taraton.util.TickUtil;
 import net.volcaronitee.taraton.util.helper.Contract;
@@ -30,11 +31,10 @@ import net.volcaronitee.taraton.util.helper.Contract;
 public class HookLineAndSinker {
     private static final List<LineContent> LINES =
             new ArrayList<>(List.of(LineContent.of("§c§l!!!", () -> true)));
-
+    private static final Overlay OVERLAY = OverlayUtil.createOverlay("hook_line_and_sinker",
+            () -> FeatureUtil.isEnabled(TaratonConfig.getInstance().fishing.hookLineAndSinker),
+            LINES);
     static {
-        OverlayUtil.createOverlay("hook_line_and_sinker",
-                () -> FeatureUtil.isEnabled(TaratonConfig.getInstance().fishing.hookLineAndSinker),
-                LINES);
         LINES.clear();
     }
 
@@ -127,12 +127,15 @@ public class HookLineAndSinker {
             // Check if the name matches the time pattern or is "!!!"
             if (TIME_PATTERN.matcher(name.getString()).matches()) {
                 LINES.add(LineContent.of(name, () -> true));
+                OVERLAY.setChanged();
                 continue;
             }
             if (!name.getString().equals("!!!")) {
                 continue;
             }
+
             LINES.add(LineContent.of(name, () -> true));
+            OVERLAY.setChanged();
 
             // Check if the use key is pressed and if a contract is signed
             KeyBinding useKey = MinecraftClient.getInstance().options.useKey;

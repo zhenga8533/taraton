@@ -8,6 +8,7 @@ import net.volcaronitee.taraton.util.FeatureUtil;
 import net.volcaronitee.taraton.util.FormatUtil;
 import net.volcaronitee.taraton.util.OverlayUtil;
 import net.volcaronitee.taraton.util.OverlayUtil.LineContent;
+import net.volcaronitee.taraton.util.OverlayUtil.Overlay;
 import net.volcaronitee.taraton.util.ParseUtil;
 import net.volcaronitee.taraton.util.ScoreboardUtil;
 import net.volcaronitee.taraton.util.TickUtil;
@@ -26,14 +27,14 @@ public class CoinTracker {
             List.of(LineContent.ofColumns(List.of("§6Gain:", "§f0"), () -> true),
                     LineContent.ofColumns(List.of("§6Time:", "§cInactive"), () -> true),
                     LineContent.ofColumns(List.of("§6Rate:", "§f0 §e¢/hr"), () -> true));
+    private static final Overlay OVERLAY = OverlayUtil.createOverlay("coin_tracker",
+            () -> FeatureUtil.isEnabled(TaratonConfig.getInstance().economy.coinTracker != 0),
+            LINES);
 
     /**
      * Registers the coin tracker feature to update periodically and listen for messages.
      */
     public static void register() {
-        OverlayUtil.createOverlay("coin_tracker",
-                () -> FeatureUtil.isEnabled(TaratonConfig.getInstance().economy.coinTracker != 0),
-                LINES);
 
         TickUtil.register(INSTANCE::updateOverlay, 20);
     }
@@ -51,6 +52,7 @@ public class CoinTracker {
         LINES.get(1).setColumn(timeText, 1);
         LINES.get(2).setColumn("§f" + FormatUtil.commafy(COIN_TRACKER.getRatePerHour()) + " §e¢/hr",
                 1);
+        OVERLAY.setChanged();
     }
 
     /**
