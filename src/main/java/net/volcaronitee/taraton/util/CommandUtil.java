@@ -2,12 +2,10 @@ package net.volcaronitee.taraton.util;
 
 import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.argument;
 import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.literal;
-
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
-
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.client.MinecraftClient;
@@ -31,6 +29,7 @@ import net.volcaronitee.taraton.feature.combat.EntityHighlight;
 import net.volcaronitee.taraton.feature.container.SlotBinding;
 import net.volcaronitee.taraton.feature.container.WardrobeSwap;
 import net.volcaronitee.taraton.feature.crimson_isle.VanquisherWarp;
+import net.volcaronitee.taraton.feature.garden.PestControl;
 import net.volcaronitee.taraton.feature.general.ImagePreview;
 import net.volcaronitee.taraton.feature.general.PlayerScale;
 import net.volcaronitee.taraton.feature.general.WidgetDisplay;
@@ -40,12 +39,11 @@ import net.volcaronitee.taraton.feature.qol.ProtectItem;
 import net.volcaronitee.taraton.util.helper.Contract;
 
 /**
- * Utility class for handling client commands. Register commands and their
- * associated
+ * Utility class for handling client commands. Register commands and their associated
  * functionalities here to keep the commands centralized.
  */
 public class CommandUtil {
-    private static final String[] ALIASES = { "nar", "notarat", "taraton", "tar", "rat" };
+    private static final String[] ALIASES = {"nar", "notarat", "taraton", "tar", "rat"};
 
     /**
      * Initializes the client command registration for Taraton.
@@ -58,22 +56,22 @@ public class CommandUtil {
      * Registers the Taraton commands with the command dispatcher.
      * 
      * @param dispatcher The command dispatcher to register commands with.
-     * @param access     The command registry access.
+     * @param access The command registry access.
      */
     private static void register(CommandDispatcher<FabricClientCommandSource> dispatcher,
             CommandRegistryAccess access) {
         for (String alias : ALIASES) {
-            LiteralArgumentBuilder<FabricClientCommandSource> command = literal(alias)
-                    .executes(CommandUtil::settingsCommand)
-                    .then(literal("help").executes(CommandUtil::helpCommand))
-                    .then(literal("settings").executes(CommandUtil::settingsCommand))
-                    .then(literal("toggles").executes(CommandUtil::togglesCommand))
-                    .then(literal("gui").executes(OverlayUtil::moveGui))
-                    .then(literal("save").executes(CommandUtil::saveCommand))
-                    .then(literal("debug").executes(CommandUtil::debugCommand))
+            LiteralArgumentBuilder<FabricClientCommandSource> command =
+                    literal(alias).executes(CommandUtil::settingsCommand)
+                            .then(literal("help").executes(CommandUtil::helpCommand))
+                            .then(literal("settings").executes(CommandUtil::settingsCommand))
+                            .then(literal("toggles").executes(CommandUtil::togglesCommand))
+                            .then(literal("gui").executes(OverlayUtil::moveGui))
+                            .then(literal("save").executes(CommandUtil::saveCommand))
+                            .then(literal("debug").executes(CommandUtil::debugCommand))
 
-                    .then(argument("default", StringArgumentType.greedyString())
-                            .executes(CommandUtil::dynamicCommandHandler));
+                            .then(argument("default", StringArgumentType.greedyString())
+                                    .executes(CommandUtil::dynamicCommandHandler));
 
             registerFeatureCommands(command);
             registerListCommands(command);
@@ -94,6 +92,7 @@ public class CommandUtil {
         command.then(literal("protectitem").executes(ProtectItem.getInstance()::protect));
         command.then(literal("wardrobe").executes(WardrobeSwap.getInstance()::setWardrobe));
         command.then(literal("slotbinding").executes(SlotBinding.getInstance()::setSlotBinding));
+        command.then(literal("pesttp").executes(PestControl.getInstance()::pestTpCommand));
     }
 
     /**
@@ -295,8 +294,7 @@ public class CommandUtil {
     }
 
     /**
-     * Handles the default command for Taraton, which is a catch-all for commands
-     * not explicitly
+     * Handles the default command for Taraton, which is a catch-all for commands not explicitly
      * defined.
      * 
      * @param context The command context containing the source and arguments.

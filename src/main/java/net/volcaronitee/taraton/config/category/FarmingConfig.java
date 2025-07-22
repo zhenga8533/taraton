@@ -117,6 +117,20 @@ public class FarmingConfig {
                                         newVal -> config.farming.pestAlert = newVal)
                                 .controller(TaratonConfig::createBooleanController).build())
 
+                        // Pest Teleport
+
+                        .option(Option.<Boolean>createBuilder().name(Text.literal("Pest Teleport"))
+                                .description(OptionDescription.createBuilder()
+                                        .webpImage(Identifier.of(Taraton.MOD_ID,
+                                                "config/farming/pest_teleport.webp"))
+                                        .text(Text.literal(
+                                                "Allows you to teleport to the plot with pests using the /tar pesttp command."))
+                                        .build())
+                                .binding(defaults.farming.pestTeleport,
+                                        () -> config.farming.pestTeleport,
+                                        newVal -> config.farming.pestTeleport = newVal)
+                                .controller(TaratonConfig::createBooleanController).build())
+
                         // TODO: Spray Display
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Spray Display"))
                                 .description(OptionDescription.createBuilder()
@@ -167,6 +181,9 @@ public class FarmingConfig {
 
     @SerialEntry
     public boolean pestAlert = false;
+
+    @SerialEntry
+    public boolean pestTeleport = false;
 
     @SerialEntry
     public boolean sprayDisplay = false;
