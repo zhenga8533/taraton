@@ -1,7 +1,6 @@
 package net.volcaronitee.taraton.feature.economy;
 
 import java.util.List;
-import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.Text;
 import net.volcaronitee.taraton.config.TaratonConfig;
@@ -37,7 +36,6 @@ public class CoinTracker {
                 LINES);
 
         TickUtil.register(INSTANCE::updateOverlay, 20);
-        ClientReceiveMessageEvents.GAME.register(INSTANCE::updateTracker);
     }
 
     /**
@@ -46,27 +44,27 @@ public class CoinTracker {
      * @param client The Minecraft client instance.
      */
     private void updateOverlay(MinecraftClient client) {
+        updateTracker();
         LINES.get(0).setText("§f" + FormatUtil.commafy(COIN_TRACKER.getTotalGained()));
         LINES.get(1).setText("§c" + FormatUtil.timeToString(COIN_TRACKER.getElapsedTime()));
         LINES.get(2).setText("§f" + FormatUtil.commafy(COIN_TRACKER.getRatePerHour()) + " §e¢/hr");
     }
 
     /**
-     * Updates the coin tracker with the given message and overlay status.
-     * 
-     * @param message The message containing coin information.
-     * @param overlay Whether to update the overlay or not.
+     * Updates the coin tracker by extracting the purse value from the scoreboard.
      */
-    private void updateTracker(Text message, boolean overlay) {
-        if (!overlay
-                || !FeatureUtil.isEnabled(TaratonConfig.getInstance().general.skillTracker != 0)) {
+    private void updateTracker() {
+        if (!FeatureUtil.isEnabled(TaratonConfig.getInstance().economy.coinTracker != 0)) {
             return;
         }
 
         // Extract the purse value from the scoreboard
         List<Text> lines = ScoreboardUtil.getScoreboard();
         String purse = lines.stream().filter(line -> line.getString().startsWith("Purse"))
-                .findFirst().map(Text::getString).orElse("Purse: 0");
+                .findFirst().map(Text::getString).orElse(null);
+        if (purse == null) {
+            return;
+        }
         int coins = ParseUtil.parseInt(purse.split(" ")[1]);
 
         // Update the coin tracker with the new value
