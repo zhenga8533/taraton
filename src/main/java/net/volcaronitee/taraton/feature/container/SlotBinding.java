@@ -267,10 +267,10 @@ public class SlotBinding {
                     ScreenUtil.drawLine(context, hoveredSlot, targetSlot, 401, lineColor,
                             lineThickness);
                 }
+
+                context.getMatrices().pop();
             }
         }
-
-        context.getMatrices().pop();
     }
 
     /**
