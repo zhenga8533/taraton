@@ -33,6 +33,7 @@ import net.volcaronitee.taraton.feature.crimson_isle.VanquisherWarp;
 import net.volcaronitee.taraton.feature.farming.PestControl;
 import net.volcaronitee.taraton.feature.general.ImagePreview;
 import net.volcaronitee.taraton.feature.general.PlayerScale;
+import net.volcaronitee.taraton.feature.general.ReminderTimer;
 import net.volcaronitee.taraton.feature.general.WidgetDisplay;
 import net.volcaronitee.taraton.feature.qol.CommandHotkey;
 import net.volcaronitee.taraton.feature.qol.HideEntity;
@@ -146,6 +147,8 @@ public class CommandUtil {
         command.then(PlayerScale.PLAYER_SCALE_MAP.createCommand("psm"));
         command.then(ProtectItem.PROTECT_MAP.createCommand("protectmap"));
         command.then(ProtectItem.PROTECT_MAP.createCommand("pm"));
+        command.then(ReminderTimer.REMINDER_MAP.createCommand("remindermap"));
+        command.then(ReminderTimer.REMINDER_MAP.createCommand("rm"));
         command.then(SlotBinding.SLOT_BINDING_MAP.createCommand("slotbindingmap"));
         command.then(SlotBinding.SLOT_BINDING_MAP.createCommand("sbm"));
         command.then(TextSubstitution.SUBSTITUTION_MAP.createCommand("submap"));
