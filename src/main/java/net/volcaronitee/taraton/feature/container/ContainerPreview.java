@@ -34,9 +34,9 @@ import net.volcaronitee.taraton.config.TaratonJson;
 import net.volcaronitee.taraton.mixin.accessor.HandledScreenAccessor;
 import net.volcaronitee.taraton.util.FeatureUtil;
 import net.volcaronitee.taraton.util.OverlayUtil;
-import net.volcaronitee.taraton.util.OverlayUtil.LineContent;
 import net.volcaronitee.taraton.util.OverlayUtil.Overlay;
 import net.volcaronitee.taraton.util.ScreenUtil;
+import net.volcaronitee.taraton.util.helper.LineContent;
 
 /**
  * Feature to preview and save Ender Chest and Backpack data.

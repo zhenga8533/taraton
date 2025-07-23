@@ -23,9 +23,9 @@ import net.volcaronitee.taraton.mixin.accessor.HandledScreenAccessor;
 import net.volcaronitee.taraton.mixin.accessor.ScreenAccessor;
 import net.volcaronitee.taraton.util.FeatureUtil;
 import net.volcaronitee.taraton.util.OverlayUtil;
-import net.volcaronitee.taraton.util.OverlayUtil.LineContent;
 import net.volcaronitee.taraton.util.OverlayUtil.Overlay;
 import net.volcaronitee.taraton.util.ScreenUtil;
+import net.volcaronitee.taraton.util.helper.LineContent;
 
 /**
  * Feature to add a searchbar to container screens.
@@ -36,9 +36,10 @@ public class Searchbar {
     private static final int SEARCHBAR_WIDTH = 192;
     private static final int SEARCHBAR_HEIGHT = 16;
 
+    private static final List<LineContent> LINES =
+            new ArrayList<>(List.of(LineContent.of("Searchbar Placeholder", () -> true)));
     private static final Overlay OVERLAY = OverlayUtil.createOverlay("searchbar",
-            () -> FeatureUtil.isEnabled(TaratonConfig.getInstance().container.searchbar),
-            List.of(LineContent.of("Searchbar Placeholder", () -> true)));
+            () -> FeatureUtil.isEnabled(TaratonConfig.getInstance().container.searchbar), LINES);
     static {
         OVERLAY.setFixedSize(SEARCHBAR_WIDTH, SEARCHBAR_HEIGHT);
         OVERLAY.setSpecialRender(INSTANCE::highlightMatches);

@@ -30,11 +30,11 @@ import net.volcaronitee.taraton.util.FormatUtil;
 import net.volcaronitee.taraton.util.LocationUtil;
 import net.volcaronitee.taraton.util.LocationUtil.World;
 import net.volcaronitee.taraton.util.OverlayUtil;
-import net.volcaronitee.taraton.util.OverlayUtil.LineContent;
 import net.volcaronitee.taraton.util.OverlayUtil.Overlay;
 import net.volcaronitee.taraton.util.RenderUtil;
 import net.volcaronitee.taraton.util.TickUtil;
 import net.volcaronitee.taraton.util.TitleUtil;
+import net.volcaronitee.taraton.util.helper.LineContent;
 import net.volcaronitee.taraton.util.helper.RelationalValue;
 import net.volcaronitee.taraton.util.helper.RelationalValue.Operator;
 

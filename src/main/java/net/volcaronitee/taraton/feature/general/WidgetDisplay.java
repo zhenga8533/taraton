@@ -9,10 +9,10 @@ import net.volcaronitee.taraton.config.TaratonConfig;
 import net.volcaronitee.taraton.config.TaratonList;
 import net.volcaronitee.taraton.util.FeatureUtil;
 import net.volcaronitee.taraton.util.OverlayUtil;
-import net.volcaronitee.taraton.util.OverlayUtil.LineContent;
 import net.volcaronitee.taraton.util.OverlayUtil.Overlay;
 import net.volcaronitee.taraton.util.TablistUtil;
 import net.volcaronitee.taraton.util.TickUtil;
+import net.volcaronitee.taraton.util.helper.LineContent;
 
 /**
  * Feature to display widgets in the overlay based on player list entries.

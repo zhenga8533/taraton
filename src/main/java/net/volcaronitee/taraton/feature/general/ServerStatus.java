@@ -12,10 +12,10 @@ import net.volcaronitee.taraton.config.TaratonConfig;
 import net.volcaronitee.taraton.config.TaratonToggle;
 import net.volcaronitee.taraton.util.FeatureUtil;
 import net.volcaronitee.taraton.util.OverlayUtil;
-import net.volcaronitee.taraton.util.OverlayUtil.LineContent;
 import net.volcaronitee.taraton.util.OverlayUtil.Overlay;
 import net.volcaronitee.taraton.util.ScheduleUtil;
 import net.volcaronitee.taraton.util.TickUtil;
+import net.volcaronitee.taraton.util.helper.LineContent;
 
 /**
  * Feature that tracks server status such as ping, FPS, TPS, and player angles.

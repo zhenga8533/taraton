@@ -9,8 +9,8 @@ import net.minecraft.item.Items;
 import net.volcaronitee.taraton.config.TaratonConfig;
 import net.volcaronitee.taraton.util.FeatureUtil;
 import net.volcaronitee.taraton.util.OverlayUtil;
-import net.volcaronitee.taraton.util.OverlayUtil.LineContent;
 import net.volcaronitee.taraton.util.TickUtil;
+import net.volcaronitee.taraton.util.helper.LineContent;
 
 /**
  * Feature to display the player's equipped armor items in a custom overlay.

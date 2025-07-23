@@ -18,11 +18,11 @@ import net.minecraft.util.math.Box;
 import net.volcaronitee.taraton.config.TaratonConfig;
 import net.volcaronitee.taraton.util.FeatureUtil;
 import net.volcaronitee.taraton.util.OverlayUtil;
-import net.volcaronitee.taraton.util.OverlayUtil.LineContent;
 import net.volcaronitee.taraton.util.OverlayUtil.Overlay;
 import net.volcaronitee.taraton.util.ScheduleUtil;
 import net.volcaronitee.taraton.util.TickUtil;
 import net.volcaronitee.taraton.util.helper.Contract;
+import net.volcaronitee.taraton.util.helper.LineContent;
 
 /**
  * Feature that simulates fishing by automatically casting and recasting the fishing rod when the

@@ -24,11 +24,11 @@ import net.volcaronitee.taraton.feature.general.ServerStatus;
 import net.volcaronitee.taraton.feature.general.WidgetDisplay;
 import net.volcaronitee.taraton.feature.general.WidgetDisplay.Widget;
 import net.volcaronitee.taraton.util.FeatureUtil;
-import net.volcaronitee.taraton.util.OverlayUtil.LineContent;
 import net.volcaronitee.taraton.util.ParseUtil;
 import net.volcaronitee.taraton.util.PartyUtil;
 import net.volcaronitee.taraton.util.RequestUtil;
 import net.volcaronitee.taraton.util.ScheduleUtil;
+import net.volcaronitee.taraton.util.helper.LineContent;
 
 /**
  * Feature for handling chat commands in the game.

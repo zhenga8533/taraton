@@ -17,12 +17,13 @@ import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.render.RenderTickCounter;
-import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
 import net.minecraft.util.Colors;
 import net.minecraft.util.Identifier;
 import net.volcaronitee.taraton.Taraton;
 import net.volcaronitee.taraton.config.TaratonJson;
+import net.volcaronitee.taraton.interfaces.SpecialRender;
+import net.volcaronitee.taraton.util.helper.LineContent;
 
 /**
  * Utility class for handling overlays.
@@ -34,8 +35,6 @@ public class OverlayUtil {
     private static boolean globalMoveMode = false;
     private static Overlay currentOverlay = null;
 
-    private static final int FONT_SIZE = 9;
-    private static final int ITEM_SIZE = 16;
     private static final int MARGIN = 4;
 
     /**
@@ -137,7 +136,7 @@ public class OverlayUtil {
             overlay.x = x;
             overlay.y = y;
             overlay.scale = scale;
-            overlay.calculateSize();
+            overlay.changed = true;
         }
     }
 
@@ -178,10 +177,8 @@ public class OverlayUtil {
     public static int moveGui(CommandContext<FabricClientCommandSource> context) {
         globalMoveMode = true;
 
-        // Recalculate the size of all overlays and reset dragging state
         for (Map.Entry<String, Overlay> entry : OVERLAYS.entrySet()) {
-            Overlay overlay = entry.getValue();
-            overlay.calculateSize();
+            entry.getValue().setChanged();
         }
 
         // Create a new screen for managing overlays
@@ -289,12 +286,12 @@ public class OverlayUtil {
                 }
                 if (keyCode == GLFW.GLFW_KEY_EQUAL) { // Plus key
                     currentOverlay.scale += 0.1f;
-                    currentOverlay.setChanged();
+                    currentOverlay.changed = true;
                     return true;
                 }
                 if (keyCode == GLFW.GLFW_KEY_MINUS) { // Minus key
                     currentOverlay.scale = Math.max(0.1f, currentOverlay.scale - 0.1f);
-                    currentOverlay.setChanged();
+                    currentOverlay.changed = true;
                     return true;
                 }
             }
@@ -304,277 +301,17 @@ public class OverlayUtil {
 
         @Override
         public void close() {
+            globalMoveMode = false;
+
             for (Overlay overlay : OVERLAYS.values()) {
                 overlay.hovering = false;
+                overlay.changed = true;
             }
 
-            globalMoveMode = false;
             OverlayUtil.saveOverlays();
             super.close();
         }
     };
-
-    /**
-     * Represents the content of a line in an overlay, which can consist of multiple columns.
-     */
-    public static class LineContent {
-        private List<List<Object>> content = new ArrayList<>();
-        private Supplier<Boolean> shouldRender;
-
-        private List<Integer> columnWidths = new ArrayList<>();
-        private int width = 0;
-        private int height = 0;
-
-        private boolean changed = true;
-
-        /**
-         * Creates a new LineContent instance with the specified content and rendering condition.
-         * 
-         * @param content The content of the line, represented as a list of columns.
-         * @param shouldRender A supplier that determines if the line should be rendered.
-         */
-        private LineContent(List<List<Object>> content, Supplier<Boolean> shouldRender) {
-            this.content.addAll(content);
-            this.shouldRender = shouldRender;
-        }
-
-        /**
-         * Creates a LineContent instance from a list of columns, where each column can contain
-         * multiple items or a single item.
-         * 
-         * @param content The content of the line, represented as a list of objects, where each
-         *        object can be a List or a single item.
-         * @param shouldRender Supplier that determines if the line should be rendered.
-         * @return A new LineContent instance containing the specified columns.
-         */
-        public static LineContent ofColumns(List<Object> content, Supplier<Boolean> shouldRender) {
-            List<List<Object>> columns = new ArrayList<>();
-
-            // Iterate through the content and create columns
-            for (Object item : content) {
-                if (item instanceof List<?> list) {
-                    // If the item is a list, add it as a new column
-                    columns.add(new ArrayList<>(list));
-                } else {
-                    // Otherwise, add the item as a single column
-                    columns.add(new ArrayList<>(List.of(item)));
-                }
-            }
-
-            return new LineContent(columns, shouldRender);
-        }
-
-        /**
-         * Creates a LineContent instance from a list of objects, where each object can be a Text,
-         * ItemStack, or String.
-         * 
-         * @param content The content of the line, represented as a list of objects, where each
-         *        object can be a Text, ItemStack, or String.
-         * @param shouldRender Supplier that determines if the line should be rendered.
-         * @return A new LineContent instance containing the specified content.
-         */
-        public static LineContent of(List<Object> content, Supplier<Boolean> shouldRender) {
-            return new LineContent(new ArrayList<>(List.of(new ArrayList<>(content))),
-                    shouldRender);
-        }
-
-        /**
-         * Creates a LineContent instance from a Text object.
-         * 
-         * @param text The Text object to be included in the line content.
-         * @param shouldRender Supplier that determines if the line should be rendered.
-         * @return A new LineContent instance containing the specified Text.
-         */
-        public static LineContent of(Text text, Supplier<Boolean> shouldRender) {
-            return of(new ArrayList<>(List.of(text)), shouldRender);
-        }
-
-        /**
-         * Creates a LineContent instance from an ItemStack.
-         * 
-         * @param stack The ItemStack to be included in the line content.
-         * @param shouldRender Supplier that determines if the line should be rendered.
-         * @return A new LineContent instance containing the specified ItemStack.
-         */
-        public static LineContent of(ItemStack stack, Supplier<Boolean> shouldRender) {
-            return of(new ArrayList<>(List.of(stack)), shouldRender);
-        }
-
-        /**
-         * Creates a LineContent instance from a String.
-         * 
-         * @param text The String to be included in the line content.
-         * @param shouldRender Supplier that determines if the line should be rendered.
-         * @return A new LineContent instance containing the specified String.
-         */
-        public static LineContent of(String text, Supplier<Boolean> shouldRender) {
-            return of(new ArrayList<>(List.of(text)), shouldRender);
-        }
-
-        /**
-         * Creates a deep copy of the LineContent instance.
-         * 
-         * @param other The LineContent instance to copy.
-         */
-        public LineContent(LineContent other) {
-            // Deep copy the content to ensure new pointers
-            for (List<Object> column : other.content) {
-                List<Object> newColumn = new ArrayList<>();
-                for (Object item : column) {
-                    newColumn.add(item);
-                }
-                this.content.add(newColumn);
-            }
-
-            this.shouldRender = other.shouldRender;
-        }
-
-        /**
-         * Gets the content of a specific column in the line.
-         * 
-         * @param columnIndex The index of the column to retrieve.
-         */
-        public List<Object> getColumn(int columnIndex) {
-            if (columnIndex < 0 || columnIndex >= content.size()) {
-                return null;
-            }
-
-            content.get(columnIndex);
-            return content.get(columnIndex);
-        }
-
-        /**
-         * Sets the content of a specific column in the line.
-         * 
-         * @param item The item or list of items to set in the column.
-         * @param columnIndex The index of the column to set the content for.
-         */
-        public void setColumn(Object item, int columnIndex) {
-            if (columnIndex < 0 || columnIndex >= content.size()) {
-                return;
-            }
-
-            List<Object> column = content.get(columnIndex);
-            column.clear();
-
-            if (item instanceof List<?> list) {
-                // If the item is a list, add all items to the column
-                column.addAll(list);
-            } else {
-                // Otherwise, add the single item to the column
-                column.add(item);
-            }
-            this.calculateSize();
-        }
-
-        /**
-         * Calculates the size of the line content based on its items and columns.
-         */
-        private void calculateSize() {
-            columnWidths.clear();
-            width = MARGIN * (content.size() - 1);
-            height = 0;
-            TextRenderer tr = MinecraftClient.getInstance().textRenderer;
-
-            for (List<Object> column : content) {
-                for (Object item : column) {
-                    int columnWidth = 0;
-                    if (item instanceof ItemStack stack && !stack.isEmpty()) {
-                        // If the item is an ItemStack, use its size for height and width
-                        height = Math.max(height, ITEM_SIZE);
-                        columnWidth = ITEM_SIZE;
-                    } else if (item instanceof String text) {
-                        // If the item is a String, use the text renderer to get its width
-                        height = Math.max(height, FONT_SIZE);
-                        columnWidth = tr.getWidth(text);
-                    } else if (item instanceof Text text) {
-                        // If the item is a Text object, use the text renderer to get its width
-                        height = Math.max(height, FONT_SIZE);
-                        columnWidth = tr.getWidth(text);
-                    }
-
-                    width += columnWidth;
-                    columnWidths.add(columnWidth);
-                }
-            }
-
-            changed = false;
-        }
-
-        /**
-         * Draws the line content at the specified position with the given scale and alignment.
-         * 
-         * @param context The context to use for drawing the content.
-         * @param x The X position to start drawing the content.
-         * @param y The Y position to start drawing the content.
-         * @param scale The scale factor to apply to the content size.
-         * @param align The alignment of the content (0: left, 1: center, 2: right).
-         * @param maxColumnWidths The maximum widths of each column, used for alignment
-         *        calculations.
-         */
-        private void draw(DrawContext context, int x, int y, float scale, int align,
-                List<Integer> maxColumnWidths) {
-            TextRenderer tr = MinecraftClient.getInstance().textRenderer;
-            float currentX = x;
-
-            for (int i = 0; i < this.content.size(); i++) {
-                List<Object> column = this.content.get(i);
-                float columnWidth = this.columnWidths.get(i);
-                float maxColumnWidth = maxColumnWidths.get(i);
-
-                // Calculate the starting X position for the column based on alignment
-                float columnStartX = currentX;
-                if (align == 1) { // Center
-                    columnStartX += (maxColumnWidth - columnWidth) * scale / 2;
-                } else if (align == 2) { // Right
-                    columnStartX += (maxColumnWidth - columnWidth) * scale;
-                }
-
-                // Draw each item in the column
-                float offsetX = 0;
-                for (Object item : column) {
-                    float itemHeight = (item instanceof ItemStack ? ITEM_SIZE : FONT_SIZE);
-                    float drawX = columnStartX + offsetX;
-                    float drawY = y + (this.height * scale - itemHeight) / 2;
-
-                    // Push the current matrix state and apply transformations
-                    context.getMatrices().push();
-                    context.getMatrices().translate(drawX, drawY, 0);
-                    context.getMatrices().scale(scale, scale, 1.0f);
-
-                    if (item instanceof ItemStack stack && !stack.isEmpty()) {
-                        // If the item is an ItemStack, draw it
-                        context.drawItem(stack, 0, 0);
-                        offsetX += ITEM_SIZE * scale;
-                    } else if (item instanceof String text) {
-                        // If the item is a String, draw it as text
-                        context.drawTextWithShadow(tr, text, 0, 0, Colors.WHITE);
-                        offsetX += tr.getWidth(text) * scale;
-                    } else if (item instanceof Text text) {
-                        // If the item is a Text object, draw it as text
-                        context.drawTextWithShadow(tr, text, 0, 0, Colors.WHITE);
-                        offsetX += tr.getWidth(text) * scale;
-                    }
-
-                    context.getMatrices().pop();
-                }
-                currentX += (maxColumnWidth + MARGIN) * scale;
-            }
-        }
-    }
-
-    /**
-     * Represents a special render function that can be used to render custom content
-     */
-    public interface SpecialRender {
-        /**
-         * Renders custom content using the provided context and delta time.
-         * 
-         * @param context The context to use for rendering the custom content.
-         * @param delta The time delta since the last render.
-         */
-        void render(DrawContext context, float delta);
-    }
 
     /**
      * Represents an overlay that can be rendered on the screen, containing lines of content.
@@ -672,16 +409,10 @@ public class OverlayUtil {
             List<LineContent> lines =
                     globalMoveMode && this.lines.isEmpty() ? templateLines : this.lines;
             TextRenderer tr = MinecraftClient.getInstance().textRenderer;
-
-            // Recalculate size if changed
-            if (changed) {
-                for (LineContent line : lines) {
-                    if (line.changed) {
-                        line.calculateSize();
-                    }
-                }
-                calculateSize();
+            for (LineContent line : lines) {
+                line.calculateSize();
             }
+            calculateSize(lines);
 
             // Render alignment lines if this is the current overlay
             if (this == currentOverlay) {
@@ -694,7 +425,7 @@ public class OverlayUtil {
 
                 // Draw position text
                 String positionText = String.format("X: %d, Y: %d", x, y);
-                context.drawTextWithShadow(tr, Text.literal(positionText), x + 2, y - 2 - FONT_SIZE,
+                context.drawTextWithShadow(tr, Text.literal(positionText), x + 2, y - 11,
                         Colors.WHITE);
             }
 
@@ -712,9 +443,9 @@ public class OverlayUtil {
                 // Render each line of content
                 float currentY = y;
                 for (LineContent line : lines) {
-                    if (line.shouldRender.get()) {
+                    if (line.shouldRender()) {
                         line.draw(context, x, (int) currentY, scale, align, maxColumnWidths);
-                        currentY += line.height * scale;
+                        currentY += line.getHeight() * scale;
                     }
                 }
             } else if (specialRender != null) {
@@ -727,45 +458,45 @@ public class OverlayUtil {
         /**
          * Recalculates the size of the overlay based on its content.
          */
-        private void calculateSize() {
+        private void calculateSize(List<LineContent> lines) {
             if (fixedWidth > 0 && fixedHeight > 0) {
                 this.width = fixedWidth;
                 this.height = fixedHeight;
                 return;
             }
 
-            List<LineContent> lines =
-                    globalMoveMode && this.lines.isEmpty() ? templateLines : this.lines;
-
             // Clear previous max column widths
-            maxColumnWidths.clear();
             int maxColumns = 0;
             for (LineContent line : lines) {
-                if (line.shouldRender.get()) {
-                    maxColumns = Math.max(maxColumns, line.content.size());
+                if (line.shouldRender()) {
+                    maxColumns = Math.max(maxColumns, line.getColumns());
                 }
             }
 
+            // Initialize max column widths with zeros
             for (int i = 0; i < maxColumns; i++) {
                 maxColumnWidths.add(0);
             }
-
             int totalHeight = 0;
+
+            // Calculate the size of each line and find the maximum column widths
             for (LineContent line : lines) {
-                if (line.shouldRender.get()) {
+                if (line.shouldRender()) {
                     // This loop finds the widest that each column needs to be across all lines.
-                    for (int i = 0; i < line.content.size(); i++) {
-                        int columnWidth = line.columnWidths.get(i);
+                    for (int i = 0; i < line.getColumns(); i++) {
+                        int columnWidth = line.getColumnWidth(i);
                         maxColumnWidths.set(i, Math.max(maxColumnWidths.get(i), columnWidth));
                     }
-                    totalHeight += line.height * scale;
+                    totalHeight += line.getHeight() * scale;
                 }
             }
 
             // The total width is now the sum of the widest columns.
-            this.width = lines.stream().filter(line -> line.shouldRender.get())
-                    .mapToInt(line -> line.width).max().orElse(0);
+            this.width = lines.stream().filter(line -> line.shouldRender())
+                    .mapToInt(line -> line.getWidth()).max().orElse(0);
             this.height = totalHeight - MARGIN / 2;
+
+            changed = false;
         }
 
         /**

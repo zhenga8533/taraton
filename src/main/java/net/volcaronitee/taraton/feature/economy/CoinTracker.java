@@ -7,13 +7,13 @@ import net.volcaronitee.taraton.config.TaratonConfig;
 import net.volcaronitee.taraton.util.FeatureUtil;
 import net.volcaronitee.taraton.util.FormatUtil;
 import net.volcaronitee.taraton.util.OverlayUtil;
-import net.volcaronitee.taraton.util.OverlayUtil.LineContent;
 import net.volcaronitee.taraton.util.OverlayUtil.Overlay;
 import net.volcaronitee.taraton.util.ParseUtil;
 import net.volcaronitee.taraton.util.ScoreboardUtil;
 import net.volcaronitee.taraton.util.TickUtil;
 import net.volcaronitee.taraton.util.TrackerUtil;
 import net.volcaronitee.taraton.util.TrackerUtil.RateTracker;
+import net.volcaronitee.taraton.util.helper.LineContent;
 
 /**
  * Feature to track coin gain and rate in the game.
