@@ -11,6 +11,8 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.volcaronitee.taraton.Taraton;
 import net.volcaronitee.taraton.config.TaratonConfig;
+import net.volcaronitee.taraton.config.controller.KeyButtonController;
+import net.volcaronitee.taraton.feature.combat.EntityHighlight;
 
 /**
  * Configuration for the Combat features in Taraton.
@@ -81,7 +83,12 @@ public class CombatConfig {
                                 .binding(defaults.combat.entityHighlight,
                                         () -> config.combat.entityHighlight,
                                         newVal -> config.combat.entityHighlight = newVal)
-                                .controller(TaratonConfig::createBooleanController).build())
+                                .controller(option -> KeyButtonController.Builder.create(option)
+                                        .keyController(TaratonConfig::createBooleanController)
+                                        .button(Text.literal("Configure"),
+                                                EntityHighlight.ENTITY_LIST::createScreen)
+                                        .ratio(0.8))
+                                .build())
 
                         // TODO: Kill Tracker
                         .option(Option.<Integer>createBuilder().name(Text.literal("Kill Tracker"))

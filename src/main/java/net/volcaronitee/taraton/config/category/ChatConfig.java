@@ -11,6 +11,13 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.volcaronitee.taraton.Taraton;
 import net.volcaronitee.taraton.config.TaratonConfig;
+import net.volcaronitee.taraton.config.TaratonToggle;
+import net.volcaronitee.taraton.config.controller.KeyButtonController;
+import net.volcaronitee.taraton.feature.chat.AutoKick;
+import net.volcaronitee.taraton.feature.chat.ChatAlert;
+import net.volcaronitee.taraton.feature.chat.CustomEmote;
+import net.volcaronitee.taraton.feature.chat.JoinParty;
+import net.volcaronitee.taraton.feature.chat.SpamHider;
 
 /**
  * Configuration for the Chat features in Taraton.
@@ -67,7 +74,12 @@ public class ChatConfig {
                                         .build())
                                 .binding(defaults.chat.chatAlert, () -> config.chat.chatAlert,
                                         newVal -> config.chat.chatAlert = newVal)
-                                .controller(TaratonConfig::createBooleanController).build())
+                                .controller(option -> KeyButtonController.Builder.create(option)
+                                        .keyController(TaratonConfig::createBooleanController)
+                                        .button(Text.literal("Configure"),
+                                                ChatAlert.CHAT_ALERT_MAP::createScreen)
+                                        .ratio(0.8))
+                                .build())
 
                         // Copy Chat
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Copy Chat"))
@@ -91,7 +103,12 @@ public class ChatConfig {
                                         .build())
                                 .binding(defaults.chat.customEmotes, () -> config.chat.customEmotes,
                                         newVal -> config.chat.customEmotes = newVal)
-                                .controller(TaratonConfig::createBooleanController).build())
+                                .controller(option -> KeyButtonController.Builder.create(option)
+                                        .keyController(TaratonConfig::createBooleanController)
+                                        .button(Text.literal("Configure"),
+                                                CustomEmote.EMOTE_MAP::createScreen)
+                                        .ratio(0.8))
+                                .build())
 
                         // Spam Hider
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Spam Hider"))
@@ -103,7 +120,12 @@ public class ChatConfig {
                                         .build())
                                 .binding(defaults.chat.spamHider, () -> config.chat.spamHider,
                                         newVal -> config.chat.spamHider = newVal)
-                                .controller(TaratonConfig::createBooleanController).build())
+                                .controller(option -> KeyButtonController.Builder.create(option)
+                                        .keyController(TaratonConfig::createBooleanController)
+                                        .button(Text.literal("Configure"),
+                                                SpamHider.SPAM_LIST::createScreen)
+                                        .ratio(0.8))
+                                .build())
 
                         // Text Substitution
                         .option(Option.<Boolean>createBuilder()
@@ -183,7 +205,12 @@ public class ChatConfig {
                                 .binding(defaults.chat.leaderCommands,
                                         () -> config.chat.leaderCommands,
                                         newVal -> config.chat.leaderCommands = newVal)
-                                .controller(TaratonConfig::createBooleanController).build())
+                                .controller(option -> KeyButtonController.Builder.create(option)
+                                        .keyController(TaratonConfig::createBooleanController)
+                                        .button(Text.literal("Configure"),
+                                                TaratonToggle::createScreen)
+                                        .ratio(0.8))
+                                .build())
 
                         // Party Commands
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Party Commands"))
@@ -196,7 +223,12 @@ public class ChatConfig {
                                 .binding(defaults.chat.partyCommands,
                                         () -> config.chat.partyCommands,
                                         newVal -> config.chat.partyCommands = newVal)
-                                .controller(TaratonConfig::createBooleanController).build())
+                                .controller(option -> KeyButtonController.Builder.create(option)
+                                        .keyController(TaratonConfig::createBooleanController)
+                                        .button(Text.literal("Configure"),
+                                                TaratonToggle::createScreen)
+                                        .ratio(0.8))
+                                .build())
 
                         // Status Commands
                         .option(Option.<Boolean>createBuilder()
@@ -210,7 +242,12 @@ public class ChatConfig {
                                 .binding(defaults.chat.statusCommands,
                                         () -> config.chat.statusCommands,
                                         newVal -> config.chat.statusCommands = newVal)
-                                .controller(TaratonConfig::createBooleanController).build())
+                                .controller(option -> KeyButtonController.Builder.create(option)
+                                        .keyController(TaratonConfig::createBooleanController)
+                                        .button(Text.literal("Configure"),
+                                                TaratonToggle::createScreen)
+                                        .ratio(0.8))
+                                .build())
 
                         // Guild Join Message
                         .option(Option.<String>createBuilder()
@@ -260,7 +297,12 @@ public class ChatConfig {
                                         .build())
                                 .binding(defaults.chat.autoKick, () -> config.chat.autoKick,
                                         newVal -> config.chat.autoKick = newVal)
-                                .controller(TaratonConfig::createBooleanController).build())
+                                .controller(option -> KeyButtonController.Builder.create(option)
+                                        .keyController(TaratonConfig::createBooleanController)
+                                        .button(Text.literal("Configure"),
+                                                AutoKick.BLACK_LIST::createScreen)
+                                        .ratio(0.8))
+                                .build())
 
                         // Join Reparty
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Join Reparty"))
@@ -283,7 +325,12 @@ public class ChatConfig {
                                 .binding(defaults.chat.joinWhitelist,
                                         () -> config.chat.joinWhitelist,
                                         newVal -> config.chat.joinWhitelist = newVal)
-                                .controller(TaratonConfig::createBooleanController).build())
+                                .controller(option -> KeyButtonController.Builder.create(option)
+                                        .keyController(TaratonConfig::createBooleanController)
+                                        .button(Text.literal("Configure"),
+                                                JoinParty.WHITE_LIST::createScreen)
+                                        .ratio(0.8))
+                                .build())
 
                         .build())
 

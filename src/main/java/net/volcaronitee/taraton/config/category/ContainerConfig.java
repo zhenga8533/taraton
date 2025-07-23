@@ -9,6 +9,8 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.volcaronitee.taraton.Taraton;
 import net.volcaronitee.taraton.config.TaratonConfig;
+import net.volcaronitee.taraton.config.controller.KeyButtonController;
+import net.volcaronitee.taraton.util.ScheduleUtil;
 
 /**
  * Configuration for the Container features in Taraton.
@@ -84,7 +86,13 @@ public class ContainerConfig {
                                 .binding(defaults.container.slotBinding,
                                         () -> config.container.slotBinding,
                                         newVal -> config.container.slotBinding = newVal)
-                                .controller(TaratonConfig::createBooleanController).build())
+                                .controller(option -> KeyButtonController.Builder.create(option)
+                                        .keyController(TaratonConfig::createBooleanController)
+                                        .button(Text.literal("Configure"),
+                                                screen -> ScheduleUtil
+                                                        .scheduleCommand("tar slotbinding", 1))
+                                        .ratio(0.8))
+                                .build())
 
                         // Wardrobe Swap
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Wardrobe Swap"))
@@ -97,7 +105,13 @@ public class ContainerConfig {
                                 .binding(defaults.container.wardrobeSwap,
                                         () -> config.container.wardrobeSwap,
                                         newVal -> config.container.wardrobeSwap = newVal)
-                                .controller(TaratonConfig::createBooleanController).build())
+                                .controller(option -> KeyButtonController.Builder.create(option)
+                                        .keyController(TaratonConfig::createBooleanController)
+                                        .button(Text.literal("Configure"),
+                                                screen -> ScheduleUtil
+                                                        .scheduleCommand("tar wardrobe", 1))
+                                        .ratio(0.8))
+                                .build())
 
                         .build())
 

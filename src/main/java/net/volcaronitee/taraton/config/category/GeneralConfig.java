@@ -12,6 +12,8 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.volcaronitee.taraton.Taraton;
 import net.volcaronitee.taraton.config.TaratonConfig;
+import net.volcaronitee.taraton.config.controller.KeyButtonController;
+import net.volcaronitee.taraton.feature.general.WidgetDisplay;
 
 /**
  * Configuration for the general features in Taraton.
@@ -182,7 +184,12 @@ public class GeneralConfig {
                                 .binding(defaults.general.widgetDisplay,
                                         () -> config.general.widgetDisplay,
                                         newVal -> config.general.widgetDisplay = newVal)
-                                .controller(TaratonConfig::createBooleanController).build())
+                                .controller(option -> KeyButtonController.Builder.create(option)
+                                        .keyController(TaratonConfig::createBooleanController)
+                                        .button(Text.literal("Configure"),
+                                                WidgetDisplay.WIDGET_LIST::createScreen)
+                                        .ratio(0.8))
+                                .build())
 
                         .build())
 

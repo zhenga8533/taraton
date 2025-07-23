@@ -13,6 +13,9 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.volcaronitee.taraton.Taraton;
 import net.volcaronitee.taraton.config.TaratonConfig;
+import net.volcaronitee.taraton.config.controller.KeyButtonController;
+import net.volcaronitee.taraton.feature.qol.CommandHotkey;
+import net.volcaronitee.taraton.feature.qol.ProtectItem;
 
 /**
  * Configuration class for Quality of Life (QOL) features in Taraton.
@@ -68,7 +71,12 @@ public class QolConfig {
                                 .binding(defaults.qol.commandHotkeys,
                                         () -> config.qol.commandHotkeys,
                                         newVal -> config.qol.commandHotkeys = newVal)
-                                .controller(TaratonConfig::createBooleanController).build())
+                                .controller(option -> KeyButtonController.Builder.create(option)
+                                        .keyController(TaratonConfig::createBooleanController)
+                                        .button(Text.literal("Configure"),
+                                                CommandHotkey.HOTKEY_MAP::createScreen)
+                                        .ratio(0.8))
+                                .build())
 
                         // Drag Shift Click
                         .option(Option.<Boolean>createBuilder()
@@ -94,7 +102,12 @@ public class QolConfig {
                                         .build())
                                 .binding(defaults.qol.protectItem, () -> config.qol.protectItem,
                                         newVal -> config.qol.protectItem = newVal)
-                                .controller(TaratonConfig::createBooleanController).build())
+                                .controller(option -> KeyButtonController.Builder.create(option)
+                                        .keyController(TaratonConfig::createBooleanController)
+                                        .button(Text.literal("Configure"),
+                                                ProtectItem.PROTECT_MAP::createScreen)
+                                        .ratio(0.8))
+                                .build())
 
                         // Remove Selfie Mode
                         .option(Option.<Boolean>createBuilder()

@@ -29,7 +29,7 @@ public class EconomyConfig {
                 // Economy Option Group
                 .group(OptionGroup.createBuilder().name(Text.literal("Economy"))
 
-                        // TODO: Coin Tracker
+                        // Coin Tracker
                         .option(Option.<Integer>createBuilder().name(Text.literal("Coin Tracker"))
                                 .description(OptionDescription.createBuilder()
                                         .webpImage(Identifier.of(Taraton.MOD_ID,

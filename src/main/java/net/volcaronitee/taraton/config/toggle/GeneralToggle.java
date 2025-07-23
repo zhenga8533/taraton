@@ -21,7 +21,7 @@ public class GeneralToggle {
      * @return A new {@link ConfigCategory} for the general toggles.
      */
     public static ConfigCategory create(TaratonToggle defaults, TaratonToggle config) {
-        return ConfigCategory.createBuilder().name(Text.literal("Chat"))
+        return ConfigCategory.createBuilder().name(Text.literal("General"))
 
                 // Chat Option Group
                 .group(OptionGroup.createBuilder().name(Text.literal("Server Status"))
