@@ -29,7 +29,7 @@ import net.volcaronitee.taraton.feature.combat.EntityHighlight;
 import net.volcaronitee.taraton.feature.container.SlotBinding;
 import net.volcaronitee.taraton.feature.container.WardrobeSwap;
 import net.volcaronitee.taraton.feature.crimson_isle.VanquisherWarp;
-import net.volcaronitee.taraton.feature.garden.PestControl;
+import net.volcaronitee.taraton.feature.farming.PestControl;
 import net.volcaronitee.taraton.feature.general.ImagePreview;
 import net.volcaronitee.taraton.feature.general.PlayerScale;
 import net.volcaronitee.taraton.feature.general.WidgetDisplay;

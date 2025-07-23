@@ -1,4 +1,4 @@
-package net.volcaronitee.taraton.feature.garden;
+package net.volcaronitee.taraton.feature.farming;
 
 import java.util.List;
 import com.mojang.brigadier.context.CommandContext;
@@ -14,6 +14,9 @@ import net.volcaronitee.taraton.util.LocationUtil.World;
 import net.volcaronitee.taraton.util.ScheduleUtil;
 import net.volcaronitee.taraton.util.TablistUtil;
 
+/**
+ * Feature for managing pest control in the garden.
+ */
 public class PestControl {
     private static final PestControl INSTANCE = new PestControl();
 
@@ -24,6 +27,11 @@ public class PestControl {
      */
     private PestControl() {}
 
+    /**
+     * Gets the singleton instance of PestControl.
+     * 
+     * @return The PestControl instance.
+     */
     public static PestControl getInstance() {
         return INSTANCE;
     }
@@ -32,6 +40,12 @@ public class PestControl {
 
     }
 
+    /**
+     * Command to teleport to the next pest plot in the garden.
+     * 
+     * @param context The command context.
+     * @return 1 if successful, 0 if not applicable or an error occurred.
+     */
     public int pestTpCommand(CommandContext<FabricClientCommandSource> context) {
         if (!FeatureUtil.isEnabled(TaratonConfig.getInstance().farming.pestTeleport)
                 || LocationUtil.getWorld() != World.GARDEN) {
