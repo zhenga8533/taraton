@@ -76,7 +76,7 @@ public class OverlayUtil {
         float scale = overlayJson.has("scale") ? overlayJson.get("scale").getAsFloat() : 1.0f;
         int align = overlayJson.has("align") ? overlayJson.get("align").getAsInt() : 0;
 
-        Overlay overlay = new Overlay(x, y, scale, align, shouldRender, templateLines);
+        Overlay overlay = new Overlay(name, x, y, scale, align, shouldRender, templateLines);
         OVERLAYS.put(name.toLowerCase(), overlay);
 
         return overlay;
@@ -262,31 +262,35 @@ public class OverlayUtil {
 
         @Override
         public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-            if (currentOverlay != null) {
-                if (keyCode == GLFW.GLFW_KEY_UP) {
+            if (currentOverlay == null) {
+                return super.keyPressed(keyCode, scanCode, modifiers);
+            }
+
+            switch (keyCode) {
+                case GLFW.GLFW_KEY_UP:
                     currentOverlay.y--;
                     return true;
-                }
-                if (keyCode == GLFW.GLFW_KEY_DOWN) {
+                case GLFW.GLFW_KEY_DOWN:
                     currentOverlay.y++;
                     return true;
-                }
-                if (keyCode == GLFW.GLFW_KEY_LEFT) {
+                case GLFW.GLFW_KEY_LEFT:
                     currentOverlay.x--;
                     return true;
-                }
-                if (keyCode == GLFW.GLFW_KEY_RIGHT) {
+                case GLFW.GLFW_KEY_RIGHT:
                     currentOverlay.x++;
                     return true;
-                }
-                if (keyCode == GLFW.GLFW_KEY_EQUAL) { // Plus key
+                case GLFW.GLFW_KEY_EQUAL: // Plus key
                     currentOverlay.scale += 0.1f;
                     return true;
-                }
-                if (keyCode == GLFW.GLFW_KEY_MINUS) { // Minus key
+                case GLFW.GLFW_KEY_MINUS: // Minus key
                     currentOverlay.scale = Math.max(0.1f, currentOverlay.scale - 0.1f);
                     return true;
-                }
+                case GLFW.GLFW_KEY_A: // Align key
+                    currentOverlay.align = (currentOverlay.align + 1) % 3;
+                    return true;
+                case GLFW.GLFW_KEY_R: // Reset key
+                    resetOverlay(currentOverlay.name);
+                    return true;
             }
 
             return super.keyPressed(keyCode, scanCode, modifiers);
@@ -309,6 +313,7 @@ public class OverlayUtil {
      * Represents an overlay that can be rendered on the screen, containing lines of content.
      */
     public static class Overlay {
+        private String name;
         private int x, y;
         private float scale;
         private int align;
@@ -339,8 +344,9 @@ public class OverlayUtil {
          * @param shouldRender A supplier that determines if the overlay should be rendered.
          * @param lines The template lines to be displayed in the overlay.
          */
-        public Overlay(int initialX, int initialY, float scale, int align,
+        public Overlay(String name, int initialX, int initialY, float scale, int align,
                 Supplier<Boolean> shouldRender, List<LineContent> lines) {
+            this.name = name;
             this.x = initialX;
             this.y = initialY;
             this.scale = scale;
@@ -430,13 +436,11 @@ public class OverlayUtil {
 
             if (specialRender == null || globalMoveMode) {
                 // Draw the overlay box
-                float scaledMargin = MARGIN * scale;
-                float scaledWidth = width * scale;
-                float scaledHeight = height * scale;
+                float scaledMargin = Math.max(1, MARGIN * scale);
                 int boxX1 = (int) (x - scaledMargin);
                 int boxY1 = (int) (y - scaledMargin);
-                int boxX2 = (int) (x + scaledWidth + scaledMargin);
-                int boxY2 = (int) (y + scaledHeight + scaledMargin);
+                int boxX2 = (int) (x + width + scaledMargin);
+                int boxY2 = (int) (y + height + scaledMargin);
                 int fillColor = hovering ? 0x8000FF00 : 0x80000000;
                 int borderColor = hovering ? 0xFF00FF00 : 0xFFDDDDDD;
                 context.fill(boxX1, boxY1, boxX2, boxY2, fillColor);
@@ -494,9 +498,9 @@ public class OverlayUtil {
             }
 
             // The total width is now the sum of the widest columns.
-            this.width = lines.stream().filter(line -> line.shouldRender())
-                    .mapToInt(line -> line.getWidth()).max().orElse(0);
-            this.height = totalHeight - MARGIN / 2;
+            this.width = (int) (lines.stream().filter(line -> line.shouldRender())
+                    .mapToInt(line -> line.getWidth()).max().orElse(0) * scale);
+            this.height = (int) ((totalHeight - MARGIN / 2) * scale);
         }
 
         /**
