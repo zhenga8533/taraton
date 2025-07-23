@@ -32,6 +32,7 @@ import net.volcaronitee.taraton.feature.container.WardrobeSwap;
 import net.volcaronitee.taraton.feature.crimson_isle.VanquisherWarp;
 import net.volcaronitee.taraton.feature.farming.PestControl;
 import net.volcaronitee.taraton.feature.general.ImagePreview;
+import net.volcaronitee.taraton.feature.general.ItemCooldown;
 import net.volcaronitee.taraton.feature.general.PlayerScale;
 import net.volcaronitee.taraton.feature.general.ReminderTimer;
 import net.volcaronitee.taraton.feature.general.WidgetDisplay;
@@ -143,6 +144,8 @@ public class CommandUtil {
         command.then(CustomEmote.EMOTE_MAP.createCommand("em"));
         command.then(CommandHotkey.HOTKEY_MAP.createCommand("hotkeymap"));
         command.then(CommandHotkey.HOTKEY_MAP.createCommand("hkm"));
+        command.then(ItemCooldown.ITEM_COOLDOWN_MAP.createCommand("cooldownmap"));
+        command.then(ItemCooldown.ITEM_COOLDOWN_MAP.createCommand("cdm"));
         command.then(PlayerScale.PLAYER_SCALE_MAP.createCommand("playerscalemap"));
         command.then(PlayerScale.PLAYER_SCALE_MAP.createCommand("psm"));
         command.then(ProtectItem.PROTECT_MAP.createCommand("protectmap"));
