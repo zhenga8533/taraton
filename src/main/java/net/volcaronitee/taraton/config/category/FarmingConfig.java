@@ -89,7 +89,7 @@ public class FarmingConfig {
                                         newVal -> config.farming.deskHighlight = newVal)
                                 .controller(TaratonConfig::createBooleanController).build())
 
-                        // TODO: Infestation Warning
+                        // Infestation Warning
                         .option(Option.<Integer>createBuilder()
                                 .name(Text.literal("Infestation Warning"))
                                 .description(OptionDescription.createBuilder()
