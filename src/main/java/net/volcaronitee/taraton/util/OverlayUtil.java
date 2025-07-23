@@ -401,6 +401,7 @@ public class OverlayUtil {
                     globalMoveMode && this.lines.isEmpty() ? templateLines : this.lines;
             TextRenderer tr = MinecraftClient.getInstance().textRenderer;
 
+            // Calculate the size of the overlay if it hasn't been set
             boolean changed = false;
             for (LineContent line : lines) {
                 if (line.isChanged()) {
@@ -423,16 +424,19 @@ public class OverlayUtil {
 
                 // Draw position text
                 String positionText = String.format("X: %d, Y: %d", x, y);
-                context.drawTextWithShadow(tr, Text.literal(positionText), x + 2, y - 11,
+                context.drawTextWithShadow(tr, Text.literal(positionText), x + 2, y - 12,
                         Colors.WHITE);
             }
 
             if (specialRender == null || globalMoveMode) {
                 // Draw the overlay box
-                int boxX1 = (int) x - MARGIN;
-                int boxY1 = (int) y - MARGIN;
-                int boxX2 = (int) (x + width + MARGIN);
-                int boxY2 = (int) (y + height + MARGIN);
+                float scaledMargin = MARGIN * scale;
+                float scaledWidth = width * scale;
+                float scaledHeight = height * scale;
+                int boxX1 = (int) (x - scaledMargin);
+                int boxY1 = (int) (y - scaledMargin);
+                int boxX2 = (int) (x + scaledWidth + scaledMargin);
+                int boxY2 = (int) (y + scaledHeight + scaledMargin);
                 int fillColor = hovering ? 0x8000FF00 : 0x80000000;
                 int borderColor = hovering ? 0xFF00FF00 : 0xFFDDDDDD;
                 context.fill(boxX1, boxY1, boxX2, boxY2, fillColor);
