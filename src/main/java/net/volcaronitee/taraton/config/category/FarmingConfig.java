@@ -105,20 +105,19 @@ public class FarmingConfig {
                                         .range(0, 8).step(1))
                                 .build())
 
-                        // TODO: Pest Alert
+                        // Pest Alert
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Pest Alert"))
                                 .description(OptionDescription.createBuilder()
                                         .webpImage(Identifier.of(Taraton.MOD_ID,
                                                 "config/farming/pest_alert.webp"))
                                         .text(Text.literal(
-                                                "Displays a chat message and title when pests spawn in the garden."))
+                                                "Displays an title warning when pests spawn in the garden."))
                                         .build())
                                 .binding(defaults.farming.pestAlert, () -> config.farming.pestAlert,
                                         newVal -> config.farming.pestAlert = newVal)
                                 .controller(TaratonConfig::createBooleanController).build())
 
                         // Pest Teleport
-
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Pest Teleport"))
                                 .description(OptionDescription.createBuilder()
                                         .webpImage(Identifier.of(Taraton.MOD_ID,

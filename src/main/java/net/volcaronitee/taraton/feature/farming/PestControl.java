@@ -1,8 +1,11 @@
 package net.volcaronitee.taraton.feature.farming;
 
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import com.mojang.brigadier.context.CommandContext;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
+import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.PlayerListEntry;
 import net.minecraft.text.Text;
@@ -24,6 +27,9 @@ import net.volcaronitee.taraton.util.TitleUtil;
 public class PestControl {
     private static final PestControl INSTANCE = new PestControl();
 
+    private static final Pattern PEST_PATTERN = Pattern
+            .compile("^.*! (?:(\\d+) Pests have spawned|A Pest has appeared) in Plot - (\\d+)!$");
+
     private String lastTpPlot = "";
 
     /**
@@ -44,10 +50,44 @@ public class PestControl {
      * Registers the pest control feature to run periodically.
      */
     public static void register() {
-        TickUtil.register(INSTANCE::countPests, 20);
+        TickUtil.register(INSTANCE::onTick, 20);
+        ClientReceiveMessageEvents.GAME.register(INSTANCE::onMessage);
     }
 
-    private void countPests(MinecraftClient client) {
+    /**
+     * Handles incoming messages to check for pest spawn alerts.
+     * 
+     * @param message The incoming message text.
+     * @param overlay Whether the message is an overlay message.
+     */
+    private void onMessage(Text message, boolean overlay) {
+        if (!FeatureUtil.isEnabled(TaratonConfig.getInstance().farming.pestAlert)
+                || LocationUtil.getWorld() != World.GARDEN || overlay) {
+            return;
+        }
+
+        // Check if the message matches the pest pattern
+        Matcher matcher = PEST_PATTERN.matcher(message.getString());
+        if (matcher.matches()) {
+            String pestCount = matcher.group(1);
+            String plotNumber = matcher.group(2);
+
+            // Determine the count and noun for the pest spawn
+            String count = (pestCount == null) ? "1" : pestCount;
+            String pestNoun = (pestCount == null) ? "Pest has" : "Pests have";
+
+            // Display a title alert for the pest spawn
+            TitleUtil.createTitle("§aPlot §7- §b" + plotNumber,
+                    String.format("%s §c%s spawned!", count, pestNoun), 2);
+        }
+    }
+
+    /**
+     * Counts the number of pests in the garden and displays a warning if necessary.
+     * 
+     * @param client The Minecraft client instance.
+     */
+    private void onTick(MinecraftClient client) {
         int infestationWarning = TaratonConfig.getInstance().farming.infestationWarning;
         if (!FeatureUtil.isEnabled(infestationWarning != 0)
                 || LocationUtil.getWorld() != World.GARDEN) {
