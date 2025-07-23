@@ -26,6 +26,7 @@ import net.volcaronitee.taraton.feature.chat.JoinParty;
 import net.volcaronitee.taraton.feature.chat.SpamHider;
 import net.volcaronitee.taraton.feature.chat.TextSubstitution;
 import net.volcaronitee.taraton.feature.combat.EntityHighlight;
+import net.volcaronitee.taraton.feature.container.ContainerButtons;
 import net.volcaronitee.taraton.feature.container.SlotBinding;
 import net.volcaronitee.taraton.feature.container.WardrobeSwap;
 import net.volcaronitee.taraton.feature.crimson_isle.VanquisherWarp;
@@ -90,9 +91,15 @@ public class CommandUtil {
             LiteralArgumentBuilder<FabricClientCommandSource> command) {
         command.then(literal("protect").executes(ProtectItem.getInstance()::protect));
         command.then(literal("protectitem").executes(ProtectItem.getInstance()::protect));
+
         command.then(literal("wardrobe").executes(WardrobeSwap.getInstance()::setWardrobe));
+
         command.then(literal("slotbinding").executes(SlotBinding.getInstance()::setSlotBinding));
+
         command.then(literal("pesttp").executes(PestControl.getInstance()::pestTpCommand));
+
+        command.then(ContainerButtons.getInstance().createCommand("containerbuttons"));
+        command.then(ContainerButtons.getInstance().createCommand("buttons"));
     }
 
     /**
