@@ -75,8 +75,11 @@ public class OverlayUtil {
         int y = overlayJson.has("y") ? overlayJson.get("y").getAsInt() : 100;
         float scale = overlayJson.has("scale") ? overlayJson.get("scale").getAsFloat() : 1.0f;
         int align = overlayJson.has("align") ? overlayJson.get("align").getAsInt() : 0;
+        boolean background =
+                overlayJson.has("background") && overlayJson.get("background").getAsBoolean();
 
-        Overlay overlay = new Overlay(name, x, y, scale, align, shouldRender, templateLines);
+        Overlay overlay =
+                new Overlay(name, x, y, scale, align, background, shouldRender, templateLines);
         OVERLAYS.put(name.toLowerCase(), overlay);
 
         return overlay;
@@ -288,6 +291,9 @@ public class OverlayUtil {
                 case GLFW.GLFW_KEY_A: // Align key
                     currentOverlay.align = (currentOverlay.align + 1) % 3;
                     return true;
+                case GLFW.GLFW_KEY_B: // Background key
+                    currentOverlay.background = !currentOverlay.background;
+                    return true;
                 case GLFW.GLFW_KEY_R: // Reset key
                     resetOverlay(currentOverlay.name);
                     return true;
@@ -317,6 +323,7 @@ public class OverlayUtil {
         private int x, y;
         private float scale;
         private int align;
+        private boolean background;
 
         private boolean onContainer = false;
         private final Supplier<Boolean> shouldRender;
@@ -341,16 +348,19 @@ public class OverlayUtil {
          * @param initialX The initial X position of the overlay.
          * @param initialY The initial Y position of the overlay.
          * @param scale The scale factor for the overlay.
+         * @param align The alignment of the overlay (0: left, 1: center, 2: right).
+         * @param background Whether the overlay should have a background.
          * @param shouldRender A supplier that determines if the overlay should be rendered.
          * @param lines The template lines to be displayed in the overlay.
          */
         public Overlay(String name, int initialX, int initialY, float scale, int align,
-                Supplier<Boolean> shouldRender, List<LineContent> lines) {
+                boolean background, Supplier<Boolean> shouldRender, List<LineContent> lines) {
             this.name = name;
             this.x = initialX;
             this.y = initialY;
             this.scale = scale;
             this.align = align;
+            this.background = background;
             this.shouldRender = shouldRender;
             this.lines = lines;
             for (LineContent line : lines) {
@@ -436,15 +446,17 @@ public class OverlayUtil {
 
             if (specialRender == null || globalMoveMode) {
                 // Draw the overlay box
-                float scaledMargin = Math.max(1, MARGIN * scale);
-                int boxX1 = (int) (x - scaledMargin);
-                int boxY1 = (int) (y - scaledMargin);
-                int boxX2 = (int) (x + width + scaledMargin);
-                int boxY2 = (int) (y + height + scaledMargin);
-                int fillColor = hovering ? 0x8000FF00 : 0x80000000;
-                int borderColor = hovering ? 0xFF00FF00 : 0xFFDDDDDD;
-                context.fill(boxX1, boxY1, boxX2, boxY2, fillColor);
-                context.drawBorder(boxX1, boxY1, boxX2 - boxX1, boxY2 - boxY1, borderColor);
+                if (background || globalMoveMode) {
+                    float scaledMargin = Math.max(1, MARGIN * scale);
+                    int boxX1 = (int) (x - scaledMargin);
+                    int boxY1 = (int) (y - scaledMargin);
+                    int boxX2 = (int) (x + width + scaledMargin);
+                    int boxY2 = (int) (y + height + scaledMargin);
+                    int fillColor = hovering ? 0x8000FF00 : 0x80000000;
+                    int borderColor = hovering ? 0xFF00FF00 : 0xFFDDDDDD;
+                    context.fill(boxX1, boxY1, boxX2, boxY2, fillColor);
+                    context.drawBorder(boxX1, boxY1, boxX2 - boxX1, boxY2 - boxY1, borderColor);
+                }
 
                 // Render each line of content
                 float currentY = y;
