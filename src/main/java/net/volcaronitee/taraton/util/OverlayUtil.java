@@ -77,7 +77,7 @@ public class OverlayUtil {
         float scale = overlayJson.has("scale") ? overlayJson.get("scale").getAsFloat() : 1.0f;
         int align = overlayJson.has("align") ? overlayJson.get("align").getAsInt() : 0;
         boolean background =
-                overlayJson.has("background") && overlayJson.get("background").getAsBoolean();
+                !overlayJson.has("background") || overlayJson.get("background").getAsBoolean();
 
         Overlay overlay =
                 new Overlay(name, x, y, scale, align, background, shouldRender, templateLines);
@@ -115,6 +115,8 @@ public class OverlayUtil {
             overlayJson.addProperty("x", overlay.x);
             overlayJson.addProperty("y", overlay.y);
             overlayJson.addProperty("scale", overlay.scale);
+            overlayJson.addProperty("align", overlay.align);
+            overlayJson.addProperty("background", overlay.background);
 
             TaratonJson.saveJson("overlays", name + ".json", overlayJson);
         }
@@ -193,18 +195,14 @@ public class OverlayUtil {
      * Screen for managing overlays, allowing users to drag and drop overlays around the screen.
      */
     private static class OverlayScreen extends Screen {
-        private static final Text INSTRUCTIONS = Text.literal("Controls").formatted(Formatting.GOLD)
-                .formatted(Formatting.BOLD).append(
-                // @formatter:off
-                    Text.literal(
-                          " - Arrow keys to move the overlay\n"
-                        + " - +/- to scale the overlay\n"
-                        + " - A to change alignment\n"
-                        + " - B to toggle background\n"
-                        + " - R to reset the overlay to default\n"
-                        + " - Click and drag to move the overlay")
-                .formatted(Formatting.YELLOW));
-                // @formatter:on
+        private static final List<Text> INSTRUCTIONS = List.of(
+                Text.literal("Controls").formatted(Formatting.GOLD, Formatting.BOLD),
+                Text.literal(" - Arrow keys to move the overlay").formatted(Formatting.YELLOW),
+                Text.literal(" - +/- to scale the overlay").formatted(Formatting.YELLOW),
+                Text.literal(" - A to change alignment").formatted(Formatting.YELLOW),
+                Text.literal(" - B to toggle background").formatted(Formatting.YELLOW),
+                Text.literal(" - R to reset the overlay to default").formatted(Formatting.YELLOW),
+                Text.literal(" - Click and drag to move the overlay").formatted(Formatting.YELLOW));
 
         /**
          * Creates a new OverlayScreen instance with the title set to the current Taraton version.
@@ -472,8 +470,11 @@ public class OverlayUtil {
                     int boxY1 = (int) (y - scaledMargin);
                     int boxX2 = (int) (x + width + scaledMargin);
                     int boxY2 = (int) (y + height + scaledMargin);
-                    int fillColor = hovering ? 0x8000FF00 : 0x80000000;
-                    int borderColor = hovering ? 0xFF00FF00 : 0xFFDDDDDD;
+
+                    int fillColor = hovering ? 0x8000FF00 : (background ? 0x80000000 : 0x80FFFFFF);
+                    int borderColor =
+                            hovering ? 0xFF00FF00 : (background ? 0xFFDDDDDD : 0xFFFFFFFF);
+
                     context.fill(boxX1, boxY1, boxX2, boxY2, fillColor);
                     context.drawBorder(boxX1, boxY1, boxX2 - boxX1, boxY2 - boxY1, borderColor);
                 }
@@ -483,7 +484,7 @@ public class OverlayUtil {
                 for (LineContent line : lines) {
                     if (line.shouldRender()) {
                         line.draw(context, x, (int) currentY, scale, align, maxColumnWidths);
-                        currentY += line.getHeight() * scale;
+                        currentY += line.getHeight();
                     }
                 }
             } else if (specialRender != null) {
@@ -530,8 +531,9 @@ public class OverlayUtil {
             }
 
             // The total width is now the sum of the widest columns.
-            this.width = (int) (lines.stream().filter(line -> line.shouldRender())
-                    .mapToInt(line -> line.getWidth()).max().orElse(0) * scale);
+            this.width = (int) ((lines.stream().filter(line -> line.shouldRender())
+                    .mapToInt(line -> line.getWidth()).max().orElse(0)
+                    + (lines.size() - 1) * MARGIN) * scale);
             this.height = (int) ((totalHeight - MARGIN / 2) * scale);
         }
 
