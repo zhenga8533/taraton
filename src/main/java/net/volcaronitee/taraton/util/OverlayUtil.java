@@ -19,6 +19,7 @@ import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.render.RenderTickCounter;
 import net.minecraft.text.Text;
 import net.minecraft.util.Colors;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.volcaronitee.taraton.Taraton;
 import net.volcaronitee.taraton.config.TaratonJson;
@@ -192,6 +193,19 @@ public class OverlayUtil {
      * Screen for managing overlays, allowing users to drag and drop overlays around the screen.
      */
     private static class OverlayScreen extends Screen {
+        private static final Text INSTRUCTIONS = Text.literal("Controls").formatted(Formatting.GOLD)
+                .formatted(Formatting.BOLD).append(
+                // @formatter:off
+                    Text.literal(
+                          " - Arrow keys to move the overlay\n"
+                        + " - +/- to scale the overlay\n"
+                        + " - A to change alignment\n"
+                        + " - B to toggle background\n"
+                        + " - R to reset the overlay to default\n"
+                        + " - Click and drag to move the overlay")
+                .formatted(Formatting.YELLOW));
+                // @formatter:on
+
         /**
          * Creates a new OverlayScreen instance with the title set to the current Taraton version.
          */
@@ -210,6 +224,12 @@ public class OverlayUtil {
             for (Overlay overlay : OVERLAYS.values()) {
                 overlay.render(context, delta, true);
             }
+
+            // Draw instructions if an overlay is currently selected
+            if (currentOverlay != null) {
+                context.drawTooltip(this.textRenderer, INSTRUCTIONS, mouseX, mouseY);
+            }
+
             super.render(context, mouseX, mouseY, delta);
         }
 
