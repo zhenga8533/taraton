@@ -1,19 +1,17 @@
 package net.volcaronitee.taraton.feature.general;
 
-import java.text.ParseException;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import org.apache.logging.log4j.core.util.CronExpression;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.Text;
 import net.volcaronitee.taraton.config.TaratonConfig;
 import net.volcaronitee.taraton.config.TaratonList;
 import net.volcaronitee.taraton.util.FeatureUtil;
+import net.volcaronitee.taraton.util.ParseUtil;
 import net.volcaronitee.taraton.util.TickUtil;
 import net.volcaronitee.taraton.util.TitleUtil;
 
@@ -23,8 +21,6 @@ import net.volcaronitee.taraton.util.TitleUtil;
  */
 public class ReminderTimer {
     private static final ReminderTimer INSTANCE = new ReminderTimer();
-
-    private static final Pattern TIME_PATTERN = Pattern.compile("(\\d+)([hms])");
 
     private static final TaratonList REMINDER_MAP =
             new TaratonList("Reminder Map", Text.literal("A list of reminders for the player."),
@@ -99,63 +95,6 @@ public class ReminderTimer {
     }
 
     /**
-     * Parses a time duration string into seconds.
-     * 
-     * @param value The time duration string to parse, e.g., "1h 30m 15s".
-     * @return The total duration in seconds, or -1 if the string is invalid.
-     */
-    private long parseTime(String value) {
-        String cleanedString = value.trim().toLowerCase().replaceAll("\\s", "");
-        Matcher matcher = TIME_PATTERN.matcher(cleanedString);
-        long seconds = 0;
-        int lastMatchEnd = 0;
-        boolean foundAnyUnit = false;
-
-        while (matcher.find()) {
-            if (matcher.start() > lastMatchEnd) {
-                return -1;
-            }
-            foundAnyUnit = true;
-            long timeValue = Long.parseLong(matcher.group(1));
-            String timeUnit = matcher.group(2);
-
-            switch (timeUnit) {
-                case "h":
-                    seconds += timeValue * 3600;
-                    break;
-                case "m":
-                    seconds += timeValue * 60;
-                    break;
-                case "s":
-                    seconds += timeValue;
-                    break;
-            }
-            lastMatchEnd = matcher.end();
-        }
-
-        if (lastMatchEnd < cleanedString.length()
-                || (seconds == 0 && !foundAnyUnit && !cleanedString.isEmpty())) {
-            return -1;
-        }
-
-        return seconds;
-    }
-
-    /**
-     * Parses a cron expression from a string.
-     * 
-     * @param cronString The cron expression string to parse.
-     * @return A CronExpression object if valid, null otherwise.
-     */
-    private CronExpression parseCron(String cronString) {
-        try {
-            return new CronExpression(cronString);
-        } catch (ParseException e) {
-            return null;
-        }
-    }
-
-    /**
      * Callback to save the reminders when the map is modified.
      */
     private void onSave() {
@@ -170,14 +109,14 @@ public class ReminderTimer {
             String value = entry.getValue();
 
             // Try parsing the value as a time duration
-            long seconds = parseTime(value);
+            long seconds = ParseUtil.parseTime(value);
             if (seconds > 0) {
                 TIME_REMINDERS.put(key, seconds);
                 continue;
             }
 
             // If parsing time failed, try parsing as a cron expression
-            CronExpression cronExpr = parseCron(value);
+            CronExpression cronExpr = ParseUtil.parseCron(value);
             if (cronExpr != null) {
                 CRON_EXPRESSIONS.put(key, cronExpr);
                 LAST_TRIGGERS.put(key, ZonedDateTime.now(ZoneId.systemDefault()).minusDays(1));

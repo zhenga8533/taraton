@@ -3,10 +3,13 @@ package net.volcaronitee.taraton.util;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.text.ParseException;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.imageio.ImageIO;
+import org.apache.logging.log4j.core.util.CronExpression;
 import net.minecraft.client.texture.NativeImage;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.OrderedText;
@@ -28,6 +31,8 @@ public class ParseUtil {
     public static final Pattern IMAGE_URL_PATTERN =
             Pattern.compile("\\b_?(?:https?|ftp):\\/\\/[\\w\\d\\-_.~%&?#/=+,]*[\\w\\d\\-_~%&?#/=+]",
                     Pattern.CASE_INSENSITIVE);
+
+    private static final Pattern TIME_PATTERN = Pattern.compile("(\\d+)([hms])");
 
     public static boolean isImage(String url) {
         if (url == null || url.isEmpty()) {
@@ -67,6 +72,21 @@ public class ParseUtil {
      */
     public static boolean isNumeric(String str) {
         return str.matches("[-+]?\\d*\\.?\\d+") || str.matches("[-+]?\\d+\\.\\d*");
+    }
+
+
+    /**
+     * Parses a cron expression from a string.
+     * 
+     * @param cronString The cron expression string to parse.
+     * @return A CronExpression object if valid, null otherwise.
+     */
+    public static CronExpression parseCron(String cronString) {
+        try {
+            return new CronExpression(cronString);
+        } catch (ParseException e) {
+            return null;
+        }
     }
 
     /**
@@ -132,6 +152,49 @@ public class ParseUtil {
             e.printStackTrace();
             return null;
         }
+    }
+
+    /**
+     * Parses a time duration string into seconds.
+     * 
+     * @param value The time duration string to parse, e.g., "1h 30m 15s".
+     * @return The total duration in seconds, or -1 if the string is invalid.
+     */
+    public static long parseTime(String value) {
+        String cleanedString = value.trim().toLowerCase().replaceAll("\\s", "");
+        Matcher matcher = TIME_PATTERN.matcher(cleanedString);
+        long seconds = 0;
+        int lastMatchEnd = 0;
+        boolean foundAnyUnit = false;
+
+        while (matcher.find()) {
+            if (matcher.start() > lastMatchEnd) {
+                return -1;
+            }
+            foundAnyUnit = true;
+            long timeValue = Long.parseLong(matcher.group(1));
+            String timeUnit = matcher.group(2);
+
+            switch (timeUnit) {
+                case "h":
+                    seconds += timeValue * 3600;
+                    break;
+                case "m":
+                    seconds += timeValue * 60;
+                    break;
+                case "s":
+                    seconds += timeValue;
+                    break;
+            }
+            lastMatchEnd = matcher.end();
+        }
+
+        if (lastMatchEnd < cleanedString.length()
+                || (seconds == 0 && !foundAnyUnit && !cleanedString.isEmpty())) {
+            return -1;
+        }
+
+        return seconds;
     }
 
     /**
