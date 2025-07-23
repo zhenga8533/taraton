@@ -161,6 +161,10 @@ public class ParseUtil {
      * @return The total duration in seconds, or -1 if the string is invalid.
      */
     public static long parseTime(String value) {
+        if (isInteger(value)) {
+            return Long.parseLong(value);
+        }
+
         String cleanedString = value.trim().toLowerCase().replaceAll("\\s", "");
         Matcher matcher = TIME_PATTERN.matcher(cleanedString);
         long seconds = 0;

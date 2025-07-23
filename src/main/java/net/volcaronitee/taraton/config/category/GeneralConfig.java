@@ -13,6 +13,8 @@ import net.minecraft.util.Identifier;
 import net.volcaronitee.taraton.Taraton;
 import net.volcaronitee.taraton.config.TaratonConfig;
 import net.volcaronitee.taraton.config.controller.KeyButtonController;
+import net.volcaronitee.taraton.feature.general.ItemCooldown;
+import net.volcaronitee.taraton.feature.general.ReminderTimer;
 import net.volcaronitee.taraton.feature.general.WidgetDisplay;
 
 /**
@@ -339,19 +341,23 @@ public class GeneralConfig {
                 // Timer Option Group
                 .group(OptionGroup.createBuilder().name(Text.literal("Timer"))
 
-                        // TODO: Item Cooldown Alert
-                        .option(Option.<Boolean>createBuilder()
-                                .name(Text.literal("Item Cooldown Alert"))
+                        // TODO: Item Cooldown
+                        .option(Option.<Boolean>createBuilder().name(Text.literal("Item Cooldown"))
                                 .description(OptionDescription.createBuilder()
                                         .webpImage(Identifier.of(Taraton.MOD_ID,
-                                                "config/general/item_cooldown_alert.webp"))
+                                                "config/general/item_cooldown.webp"))
                                         .text(Text.literal(
                                                 "Alerts you when an item is ready to use. Set item cooldowns using /vc cd."))
                                         .build())
-                                .binding(defaults.general.itemCooldownAlert,
-                                        () -> config.general.itemCooldownAlert,
-                                        newVal -> config.general.itemCooldownAlert = newVal)
-                                .controller(TaratonConfig::createBooleanController).build())
+                                .binding(defaults.general.itemCooldown,
+                                        () -> config.general.itemCooldown,
+                                        newVal -> config.general.itemCooldown = newVal)
+                                .controller(option -> KeyButtonController.Builder.create(option)
+                                        .keyController(TaratonConfig::createBooleanController)
+                                        .button(Text.literal("Configure"),
+                                                ItemCooldown.ITEM_COOLDOWN_MAP::createScreen)
+                                        .ratio(0.8))
+                                .build())
 
                         // Reminder Timer
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Reminder Timer"))
@@ -364,7 +370,12 @@ public class GeneralConfig {
                                 .binding(defaults.general.reminderTimer,
                                         () -> config.general.reminderTimer,
                                         newVal -> config.general.reminderTimer = newVal)
-                                .controller(TaratonConfig::createBooleanController).build())
+                                .controller(option -> KeyButtonController.Builder.create(option)
+                                        .keyController(TaratonConfig::createBooleanController)
+                                        .button(Text.literal("Configure"),
+                                                ReminderTimer.REMINDER_MAP::createScreen)
+                                        .ratio(0.8))
+                                .build())
 
                         .build())
 
@@ -434,7 +445,7 @@ public class GeneralConfig {
 
     // Timer Option Group
     @SerialEntry
-    public boolean itemCooldownAlert = true;
+    public boolean itemCooldown = true;
 
     @SerialEntry
     public boolean reminderTimer = false;

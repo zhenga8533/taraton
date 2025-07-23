@@ -22,7 +22,7 @@ import net.volcaronitee.taraton.util.TitleUtil;
 public class ReminderTimer {
     private static final ReminderTimer INSTANCE = new ReminderTimer();
 
-    private static final TaratonList REMINDER_MAP =
+    public static final TaratonList REMINDER_MAP =
             new TaratonList("Reminder Map", Text.literal("A list of reminders for the player."),
                     "reminder_map.json", new String[] {"Message", "Time"});
     static {
