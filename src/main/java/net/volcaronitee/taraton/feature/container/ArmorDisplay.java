@@ -30,10 +30,36 @@ public class ArmorDisplay {
     }
 
     /**
+     * Private constructor to prevent instantiation.
+     */
+    private ArmorDisplay() {}
+
+    /**
      * Registers the armor display feature to update every 20 ticks (1 second).
      */
     public static void register() {
         TickUtil.register(INSTANCE::updateArmor, 20);
+    }
+
+    /**
+     * Gets the ItemStack in the specified equipment slot.
+     * 
+     * @param slot The equipment slot to check.
+     * @param client The Minecraft client instance.
+     * @return The ItemStack in the specified slot, or a barrier item if empty or invalid.
+     */
+    private ItemStack getItemStack(EquipmentSlot slot, MinecraftClient client) {
+        if (client.player == null || slot == null) {
+            return Items.BARRIER.getDefaultStack();
+        }
+
+        // Get the item stack in the specified equipment slot
+        ItemStack stack = client.player.getEquippedStack(slot);
+        if (stack == null || stack.isEmpty()) {
+            return Items.BARRIER.getDefaultStack();
+        }
+
+        return stack;
     }
 
     /**
@@ -48,10 +74,10 @@ public class ArmorDisplay {
         }
 
         // Get the player's equipped armor items
-        ItemStack helmet = client.player.getEquippedStack(EquipmentSlot.HEAD);
-        ItemStack chestplate = client.player.getEquippedStack(EquipmentSlot.CHEST);
-        ItemStack leggings = client.player.getEquippedStack(EquipmentSlot.LEGS);
-        ItemStack boots = client.player.getEquippedStack(EquipmentSlot.FEET);
+        ItemStack helmet = getItemStack(EquipmentSlot.HEAD, client);
+        ItemStack chestplate = getItemStack(EquipmentSlot.CHEST, client);
+        ItemStack leggings = getItemStack(EquipmentSlot.LEGS, client);
+        ItemStack boots = getItemStack(EquipmentSlot.FEET, client);
 
         // Add the equipped armor items to the list
         LINES.clear();
