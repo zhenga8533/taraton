@@ -246,7 +246,8 @@ public class LineContent {
         for (int i = 0; i < this.content.size(); i++) {
             List<Object> column = this.content.get(i);
             float columnWidth = this.columnWidths.get(i);
-            float maxColumnWidth = maxColumnWidths.get(i);
+            float maxColumnWidth =
+                    i < maxColumnWidths.size() ? maxColumnWidths.get(i) : columnWidth;
 
             // Calculate the starting X position for the column based on alignment
             float columnStartX = currentX;
