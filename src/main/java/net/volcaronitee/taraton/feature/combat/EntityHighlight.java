@@ -30,7 +30,6 @@ import net.volcaronitee.taraton.util.FormatUtil;
 import net.volcaronitee.taraton.util.LocationUtil;
 import net.volcaronitee.taraton.util.LocationUtil.World;
 import net.volcaronitee.taraton.util.OverlayUtil;
-import net.volcaronitee.taraton.util.OverlayUtil.Overlay;
 import net.volcaronitee.taraton.util.RenderUtil;
 import net.volcaronitee.taraton.util.TickUtil;
 import net.volcaronitee.taraton.util.TitleUtil;
@@ -48,8 +47,6 @@ public class EntityHighlight {
             List.of(LineContent.ofColumns(List.of("§e§lEntity Counter:", ""), () -> true),
                     LineContent.ofColumns(List.of(" §fLion:", "§61"), () -> true),
                     LineContent.ofColumns(List.of(" §7Total:", "§e1"), () -> true)));
-    private static final Overlay OVERLAY = OverlayUtil.createOverlay("entity_counter",
-            () -> FeatureUtil.isEnabled(TaratonConfig.getInstance().combat.entityCounter), LINES);
 
     public static final TaratonList ENTITY_LIST = new TaratonList("Entity List", Text
             .literal("A list of entities to highlight in the game.\n\nUse ")
@@ -104,6 +101,9 @@ public class EntityHighlight {
      * Registers the entity highlight feature to scan the world for entities.
      */
     public static void register() {
+        OverlayUtil.createOverlay("entity_counter",
+                () -> FeatureUtil.isEnabled(TaratonConfig.getInstance().combat.entityCounter),
+                LINES);
         TickUtil.register(INSTANCE::scanWorld, 5);
         TickUtil.register(INSTANCE::renderTitles, 5);
         WorldRenderEvents.AFTER_TRANSLUCENT.register(INSTANCE::renderBeaconBeams);
@@ -204,7 +204,6 @@ public class EntityHighlight {
                     List.of(" §f" + entityName + ": ", "§6" + String.valueOf(count)), () -> true));
         }
         LINES.get(LINES.size() - 1).setColumn("§e" + String.valueOf(totalCount.get()), 1);
-        OVERLAY.setChanged();
     }
 
     /**

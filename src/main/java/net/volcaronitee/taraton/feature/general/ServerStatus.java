@@ -12,7 +12,6 @@ import net.volcaronitee.taraton.config.TaratonConfig;
 import net.volcaronitee.taraton.config.TaratonToggle;
 import net.volcaronitee.taraton.util.FeatureUtil;
 import net.volcaronitee.taraton.util.OverlayUtil;
-import net.volcaronitee.taraton.util.OverlayUtil.Overlay;
 import net.volcaronitee.taraton.util.ScheduleUtil;
 import net.volcaronitee.taraton.util.TickUtil;
 import net.volcaronitee.taraton.util.helper.LineContent;
@@ -40,8 +39,6 @@ public class ServerStatus {
                     () -> TaratonToggle.getInstance().general.cps),
             LineContent.ofColumns(List.of("§8[§6DAY§8]", "§a0.75"),
                     () -> TaratonToggle.getInstance().general.day));
-    private static final Overlay OVERLAY = OverlayUtil.createOverlay("server_status",
-            () -> FeatureUtil.isEnabled(TaratonConfig.getInstance().general.serverStatus), LINES);
 
     // Fields to store server status information
     private int x = 0;
@@ -84,6 +81,9 @@ public class ServerStatus {
      * Registers the server status feature to update every client tick.
      */
     public static void register() {
+        OverlayUtil.createOverlay("server_status",
+                () -> FeatureUtil.isEnabled(TaratonConfig.getInstance().general.serverStatus),
+                LINES);
         TickUtil.register(INSTANCE::updateStatus, 1);
         ClientPlayConnectionEvents.DISCONNECT.register(INSTANCE::resetMeasurements);
     }
@@ -250,9 +250,6 @@ public class ServerStatus {
         String dayColor =
                 day < 0.25 ? "§a" : day < 3 ? "§2" : day < 7 ? "§e" : day < 14 ? "§c" : "§4";
         LINES.get(7).setColumn(dayColor + String.format("%.2f", day), 1);
-
-        // Update the overlay with the new lines
-        OVERLAY.setChanged();
     }
 
     /**

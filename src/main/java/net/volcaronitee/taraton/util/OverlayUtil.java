@@ -136,7 +136,6 @@ public class OverlayUtil {
             overlay.x = x;
             overlay.y = y;
             overlay.scale = scale;
-            overlay.changed = true;
         }
     }
 
@@ -176,10 +175,6 @@ public class OverlayUtil {
      */
     public static int moveGui(CommandContext<FabricClientCommandSource> context) {
         globalMoveMode = true;
-
-        for (Map.Entry<String, Overlay> entry : OVERLAYS.entrySet()) {
-            entry.getValue().setChanged();
-        }
 
         // Create a new screen for managing overlays
         MinecraftClient.getInstance().send(() -> {
@@ -286,12 +281,10 @@ public class OverlayUtil {
                 }
                 if (keyCode == GLFW.GLFW_KEY_EQUAL) { // Plus key
                     currentOverlay.scale += 0.1f;
-                    currentOverlay.changed = true;
                     return true;
                 }
                 if (keyCode == GLFW.GLFW_KEY_MINUS) { // Minus key
                     currentOverlay.scale = Math.max(0.1f, currentOverlay.scale - 0.1f);
-                    currentOverlay.changed = true;
                     return true;
                 }
             }
@@ -305,7 +298,6 @@ public class OverlayUtil {
 
             for (Overlay overlay : OVERLAYS.values()) {
                 overlay.hovering = false;
-                overlay.changed = true;
             }
 
             OverlayUtil.saveOverlays();
@@ -335,7 +327,6 @@ public class OverlayUtil {
         private int dx = 0;
         private int dy = 0;
         private boolean hovering = false;
-        private boolean changed = true;
 
         private SpecialRender specialRender = null;
 
@@ -409,10 +400,17 @@ public class OverlayUtil {
             List<LineContent> lines =
                     globalMoveMode && this.lines.isEmpty() ? templateLines : this.lines;
             TextRenderer tr = MinecraftClient.getInstance().textRenderer;
+
+            boolean changed = false;
             for (LineContent line : lines) {
-                line.calculateSize();
+                if (line.isChanged()) {
+                    changed = true;
+                    line.calculateSize();
+                }
             }
-            calculateSize(lines);
+            if (changed) {
+                calculateSize(lines);
+            }
 
             // Render alignment lines if this is the current overlay
             if (this == currentOverlay) {
@@ -495,8 +493,6 @@ public class OverlayUtil {
             this.width = lines.stream().filter(line -> line.shouldRender())
                     .mapToInt(line -> line.getWidth()).max().orElse(0);
             this.height = totalHeight - MARGIN / 2;
-
-            changed = false;
         }
 
         /**
@@ -527,13 +523,6 @@ public class OverlayUtil {
          */
         public int getY() {
             return this.y;
-        }
-
-        /**
-         * Sets the overlay as changed, indicating that it needs to be recalculated or redrawn.
-         */
-        public void setChanged() {
-            this.changed = true;
         }
     }
 }

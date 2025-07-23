@@ -9,7 +9,6 @@ import net.minecraft.text.Text;
 import net.volcaronitee.taraton.config.TaratonConfig;
 import net.volcaronitee.taraton.util.FeatureUtil;
 import net.volcaronitee.taraton.util.OverlayUtil;
-import net.volcaronitee.taraton.util.OverlayUtil.Overlay;
 import net.volcaronitee.taraton.util.TickUtil;
 import net.volcaronitee.taraton.util.TrackerUtil;
 import net.volcaronitee.taraton.util.TrackerUtil.RateTracker;
@@ -45,14 +44,14 @@ public class SkillTracker {
                     LineContent.ofColumns(List.of("§3Time:", "§cInactive"), () -> true),
                     LineContent.ofColumns(List.of("§3Rate:", "§f0 xp/hr"), () -> true),
                     LineContent.ofColumns(List.of("§3Level Up:", "§aMaxed"), () -> true));
-    private static final Overlay OVERLAY = OverlayUtil.createOverlay("skill_tracker",
-            () -> FeatureUtil.isEnabled(TaratonConfig.getInstance().general.skillTracker != 0),
-            LINES);
 
     /**
      * Registers the skill tracker feature to update periodically and listen for messages.
      */
     public static void register() {
+        OverlayUtil.createOverlay("skill_tracker",
+                () -> FeatureUtil.isEnabled(TaratonConfig.getInstance().general.skillTracker != 0),
+                LINES);
         TickUtil.register(INSTANCE::updateOverlay, 20);
         ClientReceiveMessageEvents.GAME.register(INSTANCE::updateTracker);
     }

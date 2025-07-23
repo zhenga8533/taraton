@@ -18,7 +18,6 @@ import net.minecraft.util.math.Box;
 import net.volcaronitee.taraton.config.TaratonConfig;
 import net.volcaronitee.taraton.util.FeatureUtil;
 import net.volcaronitee.taraton.util.OverlayUtil;
-import net.volcaronitee.taraton.util.OverlayUtil.Overlay;
 import net.volcaronitee.taraton.util.ScheduleUtil;
 import net.volcaronitee.taraton.util.TickUtil;
 import net.volcaronitee.taraton.util.helper.Contract;
@@ -31,12 +30,6 @@ import net.volcaronitee.taraton.util.helper.LineContent;
 public class HookLineAndSinker {
     private static final List<LineContent> LINES =
             new ArrayList<>(List.of(LineContent.of("§c§l!!!", () -> true)));
-    private static final Overlay OVERLAY = OverlayUtil.createOverlay("hook_line_and_sinker",
-            () -> FeatureUtil.isEnabled(TaratonConfig.getInstance().fishing.hookLineAndSinker),
-            LINES);
-    static {
-        LINES.clear();
-    }
 
     private static final HookLineAndSinker INSTANCE = new HookLineAndSinker();
 
@@ -66,6 +59,9 @@ public class HookLineAndSinker {
      * Registers the fishing feature to the TickUtil.
      */
     public static void register() {
+        OverlayUtil.createOverlay("hook_line_and_sinker",
+                () -> FeatureUtil.isEnabled(TaratonConfig.getInstance().fishing.hookLineAndSinker),
+                LINES);
         TickUtil.register(INSTANCE::onTick, 2);
     }
 
@@ -127,7 +123,6 @@ public class HookLineAndSinker {
             // Check if the name matches the time pattern or is "!!!"
             if (TIME_PATTERN.matcher(name.getString()).matches()) {
                 LINES.add(LineContent.of(name, () -> true));
-                OVERLAY.setChanged();
                 continue;
             }
             if (!name.getString().equals("!!!")) {
@@ -135,7 +130,6 @@ public class HookLineAndSinker {
             }
 
             LINES.add(LineContent.of(name, () -> true));
-            OVERLAY.setChanged();
 
             // Check if the use key is pressed and if a contract is signed
             KeyBinding useKey = MinecraftClient.getInstance().options.useKey;

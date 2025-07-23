@@ -21,6 +21,7 @@ public class LineContent {
 
     private List<List<Object>> content = new ArrayList<>();
     private Supplier<Boolean> shouldRender;
+    private boolean changed = true;
 
     private List<Integer> columnWidths = new ArrayList<>();
     private int width = 0;
@@ -146,6 +147,10 @@ public class LineContent {
         return columnWidths.get(columnIndex);
     }
 
+    public boolean isChanged() {
+        return changed;
+    }
+
     public boolean shouldRender() {
         return shouldRender.get();
     }
@@ -186,7 +191,7 @@ public class LineContent {
             column.add(item);
         }
 
-        calculateSize();
+        changed = true;
     }
 
     /**
@@ -219,6 +224,8 @@ public class LineContent {
                 columnWidths.add(columnWidth);
             }
         }
+
+        changed = false;
     }
 
     /**

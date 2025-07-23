@@ -9,7 +9,6 @@ import net.volcaronitee.taraton.config.TaratonConfig;
 import net.volcaronitee.taraton.config.TaratonList;
 import net.volcaronitee.taraton.util.FeatureUtil;
 import net.volcaronitee.taraton.util.OverlayUtil;
-import net.volcaronitee.taraton.util.OverlayUtil.Overlay;
 import net.volcaronitee.taraton.util.TablistUtil;
 import net.volcaronitee.taraton.util.TickUtil;
 import net.volcaronitee.taraton.util.helper.LineContent;
@@ -85,7 +84,6 @@ public class WidgetDisplay {
                 if (name.length() > 1 && name.charAt(0) == ' ' && name.charAt(1) != ' ') {
                     addToWidget.lines.add(LineContent.of(displayName, () -> true));
                 } else {
-                    addToWidget.overlay.setChanged();
                     addToWidget = null;
                 }
             }
@@ -112,7 +110,6 @@ public class WidgetDisplay {
      */
     public static class Widget {
         private List<LineContent> lines;
-        private Overlay overlay;
         private final String name;
 
         /**
@@ -128,7 +125,7 @@ public class WidgetDisplay {
                     LineContent.of(" Handsome: §9☣100", active)));
 
             if (active.get()) {
-                overlay = OverlayUtil.createOverlay(name,
+                OverlayUtil.createOverlay(name,
                         () -> active.get() && FeatureUtil
                                 .isEnabled(TaratonConfig.getInstance().general.widgetDisplay),
                         lines);
