@@ -25,7 +25,7 @@ public class QolConfig {
      * Creates a new {@link ConfigCategory} for the QOL features.
      * 
      * @param defaults The default configuration values.
-     * @param config The current configuration values.
+     * @param config   The current configuration values.
      * @return A new {@link ConfigCategory} for the QOL features.
      */
     public static ConfigCategory create(TaratonConfig defaults, TaratonConfig config) {
@@ -74,7 +74,7 @@ public class QolConfig {
                                 .controller(option -> KeyButtonController.Builder.create(option)
                                         .keyController(TaratonConfig::createBooleanController)
                                         .button(Text.literal("Configure"),
-                                                CommandHotkey.HOTKEY_MAP::createScreen)
+                                                CommandHotkey.HOTKEY_MAP::setScreen)
                                         .ratio(0.8))
                                 .build())
 
@@ -105,7 +105,7 @@ public class QolConfig {
                                 .controller(option -> KeyButtonController.Builder.create(option)
                                         .keyController(TaratonConfig::createBooleanController)
                                         .button(Text.literal("Configure"),
-                                                ProtectItem.PROTECT_MAP::createScreen)
+                                                ProtectItem.PROTECT_MAP::setScreen)
                                         .ratio(0.8))
                                 .build())
 

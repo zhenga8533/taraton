@@ -27,7 +27,7 @@ public class ChatConfig {
      * Creates a new {@link ConfigCategory} for the Chat features.
      * 
      * @param defaults The default configuration values.
-     * @param config The current configuration values.
+     * @param config   The current configuration values.
      * @return A new {@link ConfigCategory} for the Chat features.
      */
     public static ConfigCategory create(TaratonConfig defaults, TaratonConfig config) {
@@ -77,7 +77,7 @@ public class ChatConfig {
                                 .controller(option -> KeyButtonController.Builder.create(option)
                                         .keyController(TaratonConfig::createBooleanController)
                                         .button(Text.literal("Configure"),
-                                                ChatAlert.CHAT_ALERT_MAP::createScreen)
+                                                ChatAlert.CHAT_ALERT_MAP::setScreen)
                                         .ratio(0.8))
                                 .build())
 
@@ -106,7 +106,7 @@ public class ChatConfig {
                                 .controller(option -> KeyButtonController.Builder.create(option)
                                         .keyController(TaratonConfig::createBooleanController)
                                         .button(Text.literal("Configure"),
-                                                CustomEmote.EMOTE_MAP::createScreen)
+                                                CustomEmote.EMOTE_MAP::setScreen)
                                         .ratio(0.8))
                                 .build())
 
@@ -123,7 +123,7 @@ public class ChatConfig {
                                 .controller(option -> KeyButtonController.Builder.create(option)
                                         .keyController(TaratonConfig::createBooleanController)
                                         .button(Text.literal("Configure"),
-                                                SpamHider.SPAM_LIST::createScreen)
+                                                SpamHider.SPAM_LIST::setScreen)
                                         .ratio(0.8))
                                 .build())
 
@@ -208,7 +208,7 @@ public class ChatConfig {
                                 .controller(option -> KeyButtonController.Builder.create(option)
                                         .keyController(TaratonConfig::createBooleanController)
                                         .button(Text.literal("Configure"),
-                                                TaratonToggle::createScreen)
+                                                TaratonToggle::setScreen)
                                         .ratio(0.8))
                                 .build())
 
@@ -226,7 +226,7 @@ public class ChatConfig {
                                 .controller(option -> KeyButtonController.Builder.create(option)
                                         .keyController(TaratonConfig::createBooleanController)
                                         .button(Text.literal("Configure"),
-                                                TaratonToggle::createScreen)
+                                                TaratonToggle::setScreen)
                                         .ratio(0.8))
                                 .build())
 
@@ -245,7 +245,7 @@ public class ChatConfig {
                                 .controller(option -> KeyButtonController.Builder.create(option)
                                         .keyController(TaratonConfig::createBooleanController)
                                         .button(Text.literal("Configure"),
-                                                TaratonToggle::createScreen)
+                                                TaratonToggle::setScreen)
                                         .ratio(0.8))
                                 .build())
 
@@ -300,7 +300,7 @@ public class ChatConfig {
                                 .controller(option -> KeyButtonController.Builder.create(option)
                                         .keyController(TaratonConfig::createBooleanController)
                                         .button(Text.literal("Configure"),
-                                                AutoKick.BLACK_LIST::createScreen)
+                                                AutoKick.BLACK_LIST::setScreen)
                                         .ratio(0.8))
                                 .build())
 
@@ -328,7 +328,7 @@ public class ChatConfig {
                                 .controller(option -> KeyButtonController.Builder.create(option)
                                         .keyController(TaratonConfig::createBooleanController)
                                         .button(Text.literal("Configure"),
-                                                JoinParty.WHITE_LIST::createScreen)
+                                                JoinParty.WHITE_LIST::setScreen)
                                         .ratio(0.8))
                                 .build())
 

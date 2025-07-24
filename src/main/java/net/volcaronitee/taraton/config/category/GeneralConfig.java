@@ -25,7 +25,7 @@ public class GeneralConfig {
      * Creates a new {@link ConfigCategory} for the general features.
      * 
      * @param defaults The default configuration values.
-     * @param config The current configuration values.
+     * @param config   The current configuration values.
      * @return A new {@link ConfigCategory} for the general features.
      */
     public static ConfigCategory create(TaratonConfig defaults, TaratonConfig config) {
@@ -189,7 +189,7 @@ public class GeneralConfig {
                                 .controller(option -> KeyButtonController.Builder.create(option)
                                         .keyController(TaratonConfig::createBooleanController)
                                         .button(Text.literal("Configure"),
-                                                WidgetDisplay.WIDGET_LIST::createScreen)
+                                                WidgetDisplay.WIDGET_LIST::setScreen)
                                         .ratio(0.8))
                                 .build())
 
@@ -355,7 +355,7 @@ public class GeneralConfig {
                                 .controller(option -> KeyButtonController.Builder.create(option)
                                         .keyController(TaratonConfig::createBooleanController)
                                         .button(Text.literal("Configure"),
-                                                ItemCooldown.ITEM_COOLDOWN_MAP::createScreen)
+                                                ItemCooldown.ITEM_COOLDOWN_MAP::setScreen)
                                         .ratio(0.8))
                                 .build())
 
@@ -373,7 +373,7 @@ public class GeneralConfig {
                                 .controller(option -> KeyButtonController.Builder.create(option)
                                         .keyController(TaratonConfig::createBooleanController)
                                         .button(Text.literal("Configure"),
-                                                ReminderTimer.REMINDER_MAP::createScreen)
+                                                ReminderTimer.REMINDER_MAP::setScreen)
                                         .ratio(0.8))
                                 .build())
 
