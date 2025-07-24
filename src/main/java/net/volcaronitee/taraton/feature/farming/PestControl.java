@@ -3,7 +3,8 @@ package net.volcaronitee.taraton.feature.farming;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import com.mojang.brigadier.context.CommandContext;
+import com.mojang.brigadier.builder.LiteralArgumentBuilder;
+import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
 import net.minecraft.client.MinecraftClient;
@@ -115,12 +116,21 @@ public class PestControl {
     }
 
     /**
+     * Creates a command to teleport to the next pest plot in the garden.
+     * 
+     * @param name The name of the command to create.
+     * @return A LiteralArgumentBuilder for the pest teleport command.
+     */
+    public LiteralArgumentBuilder<FabricClientCommandSource> createCommand(String name) {
+        return ClientCommandManager.literal(name).executes(context -> pestTp());
+    }
+
+    /**
      * Command to teleport to the next pest plot in the garden.
      * 
-     * @param context The command context.
      * @return 1 if successful, 0 if not applicable or an error occurred.
      */
-    public int pestTpCommand(CommandContext<FabricClientCommandSource> context) {
+    public int pestTp() {
         if (!FeatureUtil.isEnabled(TaratonConfig.getInstance().farming.pestTeleport)
                 || LocationUtil.getWorld() != World.GARDEN) {
             return 0;

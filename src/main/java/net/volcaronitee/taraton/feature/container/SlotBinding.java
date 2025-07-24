@@ -7,13 +7,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import com.google.common.reflect.TypeToken;
-import com.mojang.brigadier.context.CommandContext;
+import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import dev.isxander.yacl3.api.ConfigCategory;
 import dev.isxander.yacl3.api.ListOption;
 import dev.isxander.yacl3.api.Option;
 import dev.isxander.yacl3.api.OptionDescription;
 import dev.isxander.yacl3.api.controller.IntegerFieldControllerBuilder;
 import dev.isxander.yacl3.api.controller.TickBoxControllerBuilder;
+import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.minecraft.client.MinecraftClient;
@@ -111,12 +112,22 @@ public class SlotBinding {
     }
 
     /**
+     * Creates a command to toggle the slot binding mode, allowing users to edit slot bindings.
+     * 
+     * @param name The name of the command to create.
+     * @return A LiteralArgumentBuilder for the command that sets the slot binding mode to edit
+     *         mode.
+     */
+    public LiteralArgumentBuilder<FabricClientCommandSource> createCommand(String name) {
+        return ClientCommandManager.literal(name).executes(context -> setSlotBinding());
+    }
+
+    /**
      * Sets the slot binding mode to edit mode, allowing users to modify slot bindings.
      * 
-     * @param context The command context for the Fabric client command source.
      * @return 1 if the command was successful, 0 otherwise.
      */
-    public int setSlotBinding(CommandContext<FabricClientCommandSource> context) {
+    public int setSlotBinding() {
         ScheduleUtil.schedule(() -> {
             MinecraftClient client = MinecraftClient.getInstance();
             client.setScreen(new InventoryScreen(client.player));

@@ -1,7 +1,5 @@
 package net.volcaronitee.taraton.config;
 
-import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.literal;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -11,10 +9,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.BiFunction;
-
 import com.google.gson.reflect.TypeToken;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
-
 import dev.isxander.yacl3.api.ConfigCategory;
 import dev.isxander.yacl3.api.ListOption;
 import dev.isxander.yacl3.api.OptionDescription;
@@ -24,6 +20,7 @@ import dev.isxander.yacl3.api.controller.TickBoxControllerBuilder;
 import dev.isxander.yacl3.config.v2.api.ConfigClassHandler;
 import dev.isxander.yacl3.config.v2.api.SerialEntry;
 import dev.isxander.yacl3.config.v2.api.serializer.GsonConfigSerializerBuilder;
+import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
@@ -38,8 +35,8 @@ import net.volcaronitee.taraton.config.controller.KeyValueController.KeyValuePai
  * Utility class for handling configuration settings in a list format.
  */
 public class TaratonList {
-    private static final Path CONFIG_PATH = FabricLoader.getInstance().getConfigDir()
-            .resolve(Taraton.MOD_ID + "/lists");
+    private static final Path CONFIG_PATH =
+            FabricLoader.getInstance().getConfigDir().resolve(Taraton.MOD_ID + "/lists");
 
     static {
         // Ensure the configuration directory exists
@@ -54,21 +51,23 @@ public class TaratonList {
     private String title;
     private Text description;
     private String fileName;
-    private String[] categoryNames = new String[] { "Key", "Value" };
+    private String[] categoryNames = new String[] {"Key", "Value"};
 
     private ConfigClassHandler<TaratonList> handler;
 
-    private BiFunction<TaratonList, TaratonList, ConfigCategory> createCategory = (defaults,
-            config) -> createListCategory(defaults, config);
+    private BiFunction<TaratonList, TaratonList, ConfigCategory> createCategory =
+            (defaults, config) -> createListCategory(defaults, config);
     private Runnable saveCallback;
 
     public final Set<String> list = new java.util.HashSet<>();
     @SerialEntry
-    private List<KeyValuePair<String, Boolean>> listConfig = new ArrayList<KeyValuePair<String, Boolean>>();
+    private List<KeyValuePair<String, Boolean>> listConfig =
+            new ArrayList<KeyValuePair<String, Boolean>>();
 
     public final Map<String, String> map = new java.util.HashMap<>();
     @SerialEntry
-    private List<KeyValuePair<String, KeyValuePair<String, Boolean>>> mapConfig = new ArrayList<KeyValuePair<String, KeyValuePair<String, Boolean>>>();
+    private List<KeyValuePair<String, KeyValuePair<String, Boolean>>> mapConfig =
+            new ArrayList<KeyValuePair<String, KeyValuePair<String, Boolean>>>();
 
     @SerialEntry
     public List<?> customConfig = new ArrayList<>();
@@ -76,18 +75,15 @@ public class TaratonList {
     /**
      * Default constructor for ListUtil.
      */
-    public TaratonList() {
-    }
+    public TaratonList() {}
 
     /**
-     * Constructor for TaratonList with parameters to initialize the title,
-     * description, file name,
+     * Constructor for TaratonList with parameters to initialize the title, description, file name,
      * isMap flag, and a save callback.
      * 
-     * @param title         The title of the list configuration.
-     * @param description   The description of the list configuration.
-     * @param fileName      The name of the file where the configuration will be
-     *                      saved.
+     * @param title The title of the list configuration.
+     * @param description The description of the list configuration.
+     * @param fileName The name of the file where the configuration will be saved.
      * @param categoryNames An array of category names for the configuration.
      */
     public TaratonList(String title, Text description, String fileName, String[] categoryNames) {
@@ -102,8 +98,7 @@ public class TaratonList {
                         .setPath(CONFIG_PATH.resolve(fileName))
                         .appendGsonBuilder(gsonBuilder -> gsonBuilder.setPrettyPrinting()
                                 .disableHtmlEscaping().serializeNulls().registerTypeAdapter(
-                                        new TypeToken<KeyValueController.KeyValuePair<?, ?>>() {
-                                        }
+                                        new TypeToken<KeyValueController.KeyValuePair<?, ?>>() {}
                                                 .getType(),
                                         new KeyValueController.KeyValuePair.KeyValueTypeAdapter()))
                         .build())
@@ -137,8 +132,7 @@ public class TaratonList {
     /**
      * Sets the save callback for this ListUtil instance.
      * 
-     * @param saveCallback The callback to be executed when the configuration is
-     *                     saved.
+     * @param saveCallback The callback to be executed when the configuration is saved.
      */
     public void setSaveCallback(Runnable saveCallback) {
         this.saveCallback = saveCallback;
@@ -159,9 +153,8 @@ public class TaratonList {
     /**
      * Sets a custom category creation function for the ListUtil instance.
      * 
-     * @param createCategory A BiFunction that takes two TaratonList instances
-     *                       (defaults and config)
-     *                       and returns a ConfigCategory instance.
+     * @param createCategory A BiFunction that takes two TaratonList instances (defaults and config)
+     *        and returns a ConfigCategory instance.
      */
     public void setCustomCategory(
             BiFunction<TaratonList, TaratonList, ConfigCategory> createCategory) {
@@ -178,7 +171,8 @@ public class TaratonList {
         }
 
         // Load the template file from resources
-        try (InputStream templateStream = TaratonJson.class.getResourceAsStream("/json/lists/" + fileName)) {
+        try (InputStream templateStream =
+                TaratonJson.class.getResourceAsStream("/json/lists/" + fileName)) {
             if (templateStream == null) {
                 return;
             }
@@ -193,7 +187,7 @@ public class TaratonList {
     /**
      * Adds a key-value pair to the list configuration.
      * 
-     * @param key     The key for the list entry.
+     * @param key The key for the list entry.
      * @param enabled True if the entry is enabled, false otherwise.
      */
     public void addList(String key, boolean enabled) {
@@ -216,8 +210,8 @@ public class TaratonList {
     /**
      * Adds a key-value pair to the map configuration.
      * 
-     * @param key     The key for the map entry.
-     * @param value   The value for the map entry.
+     * @param key The key for the map entry.
+     * @param value The value for the map entry.
      * @param enabled True if the entry is enabled, false otherwise.
      */
     public void addMap(String key, String value, boolean enabled) {
@@ -239,8 +233,7 @@ public class TaratonList {
     }
 
     /**
-     * Resets the configuration by deleting the configuration file and recreating
-     * the defaults.
+     * Resets the configuration by deleting the configuration file and recreating the defaults.
      */
     public void reset() {
         // Delete the configuration file
@@ -255,8 +248,7 @@ public class TaratonList {
     }
 
     /**
-     * Sets the current screen to the configuration screen for the ListUtil
-     * instance.
+     * Sets the current screen to the configuration screen for the ListUtil instance.
      * 
      * @param parent The parent screen to attach the configuration screen to.
      */
@@ -316,11 +308,10 @@ public class TaratonList {
      * Creates a command that opens the whitelist configuration screen.
      * 
      * @param name The name of the command to be registered.
-     * @return A LiteralArgumentBuilder for the command that opens the whitelist
-     *         screen.
+     * @return A LiteralArgumentBuilder for the command that opens the whitelist screen.
      */
     public LiteralArgumentBuilder<FabricClientCommandSource> createCommand(String name) {
-        return literal(name).executes(context -> {
+        return ClientCommandManager.literal(name).executes(context -> {
             MinecraftClient client = MinecraftClient.getInstance();
             if (client.player == null || client.world == null) {
                 return 0;
@@ -328,7 +319,7 @@ public class TaratonList {
 
             setScreen(client.currentScreen);
             return 1;
-        }).then(literal("reset").executes(context -> {
+        }).then(ClientCommandManager.literal("reset").executes(context -> {
             reset();
             Taraton.sendMessage(
                     Text.literal("List reset successfully.").formatted(Formatting.GREEN));
@@ -340,7 +331,7 @@ public class TaratonList {
      * Creates a configuration category for the ListUtil instance.
      * 
      * @param defaults The default configuration values.
-     * @param config   The current configuration values.
+     * @param config The current configuration values.
      * @return A ConfigCategory instance representing the configuration category.
      */
     public ConfigCategory createListCategory(TaratonList defaults, TaratonList config) {
@@ -358,13 +349,11 @@ public class TaratonList {
     }
 
     /**
-     * Creates a configuration category for a map-like structure in the ListUtil
-     * instance.
+     * Creates a configuration category for a map-like structure in the ListUtil instance.
      * 
      * @param defaults The default configuration values for the map.
-     * @param config   The current configuration values for the map.
-     * @return A ConfigCategory instance representing the map configuration
-     *         category.
+     * @param config The current configuration values for the map.
+     * @return A ConfigCategory instance representing the map configuration category.
      */
     public ConfigCategory createMapCategory(TaratonList defaults, TaratonList config) {
         return ConfigCategory.createBuilder().name(Text.literal(title)).option(ListOption

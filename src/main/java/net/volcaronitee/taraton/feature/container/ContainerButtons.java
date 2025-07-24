@@ -62,10 +62,10 @@ public class ContainerButtons {
      * @return The command builder for editing buttons.
      */
     public LiteralArgumentBuilder<FabricClientCommandSource> createCommand(String name) {
-        return ClientCommandManager.literal(name).then(ClientCommandManager.literal("edit")
+        return ClientCommandManager.literal(name)
                 .then(ClientCommandManager.literal("inv").executes(context -> enterEditMode(true)))
                 .then(ClientCommandManager.literal("chest")
-                        .executes(context -> enterEditMode(false))));
+                        .executes(context -> enterEditMode(false)));
     }
 
     /**

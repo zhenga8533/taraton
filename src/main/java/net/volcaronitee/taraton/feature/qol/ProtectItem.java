@@ -1,6 +1,7 @@
 package net.volcaronitee.taraton.feature.qol;
 
-import com.mojang.brigadier.context.CommandContext;
+import com.mojang.brigadier.builder.LiteralArgumentBuilder;
+import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.item.ItemStack;
@@ -40,11 +41,22 @@ public class ProtectItem {
     }
 
     /**
+     * Creates a command to toggle the protection status of the item currently held in the player's
+     * main hand.
+     * 
+     * @param name The name of the command to create.
+     * @return A LiteralArgumentBuilder for the command that toggles item protection.
+     */
+    public LiteralArgumentBuilder<FabricClientCommandSource> createCommand(String name) {
+        return ClientCommandManager.literal(name).executes(context -> protect());
+    }
+
+    /**
      * Toggles the protection status of the item currently held in the player's main hand.
      * 
-     * @param context The command context containing the command source.
+     * @return 1 if the command was executed successfully, 0 otherwise.
      */
-    public int protect(CommandContext<FabricClientCommandSource> context) {
+    public int protect() {
         ItemStack heldStack = MinecraftClient.getInstance().player.getMainHandStack();
         String itemUuid = ParseUtil.getItemUuid(heldStack);
         Text itemName = heldStack.getName();

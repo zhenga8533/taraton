@@ -8,12 +8,13 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import org.lwjgl.glfw.GLFW;
 import com.google.common.reflect.TypeToken;
-import com.mojang.brigadier.context.CommandContext;
+import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import dev.isxander.yacl3.api.ConfigCategory;
 import dev.isxander.yacl3.api.ListOption;
 import dev.isxander.yacl3.api.OptionDescription;
 import dev.isxander.yacl3.api.controller.IntegerSliderControllerBuilder;
 import dev.isxander.yacl3.api.controller.TickBoxControllerBuilder;
+import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenKeyboardEvents;
@@ -100,11 +101,21 @@ public class WardrobeSwap {
     }
 
     /**
+     * Creates a command to open the wardrobe swap screen.
+     * 
+     * @param name The name of the command to create.
+     * @return A LiteralArgumentBuilder for the command that opens the wardrobe swap screen.
+     */
+    public LiteralArgumentBuilder<FabricClientCommandSource> createCommand(String name) {
+        return ClientCommandManager.literal(name).executes(context -> setWardrobe());
+    }
+
+    /**
      * Sets the wardrobe screen in the Minecraft client.
      * 
-     * @param context The command context containing the source of the command.
+     * @return 1 if the wardrobe screen was set successfully, otherwise 0.
      */
-    public int setWardrobe(CommandContext<FabricClientCommandSource> context) {
+    public int setWardrobe() {
         ScheduleUtil.scheduleCommand("wardrobe", 0);
         editWardrobe = true;
         return 1;

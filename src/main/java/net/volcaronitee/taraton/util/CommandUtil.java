@@ -91,14 +91,16 @@ public class CommandUtil {
      */
     private static void registerFeatureCommands(
             LiteralArgumentBuilder<FabricClientCommandSource> command) {
-        command.then(literal("protect").executes(ProtectItem.getInstance()::protect));
-        command.then(literal("protectitem").executes(ProtectItem.getInstance()::protect));
+        command.then(ProtectItem.getInstance().createCommand("protect"));
+        command.then(ProtectItem.getInstance().createCommand("protectitem"));
 
-        command.then(literal("wardrobe").executes(WardrobeSwap.getInstance()::setWardrobe));
+        command.then(WardrobeSwap.getInstance().createCommand("wardrobeswap"));
+        command.then(WardrobeSwap.getInstance().createCommand("wardrobe"));
 
-        command.then(literal("slotbinding").executes(SlotBinding.getInstance()::setSlotBinding));
+        command.then(SlotBinding.getInstance().createCommand("slotbinding"));
+        command.then(SlotBinding.getInstance().createCommand("sb"));
 
-        command.then(literal("pesttp").executes(PestControl.getInstance()::pestTpCommand));
+        command.then(PestControl.getInstance().createCommand("pestp"));
 
         command.then(ContainerButtons.getInstance().createCommand("containerbuttons"));
         command.then(ContainerButtons.getInstance().createCommand("buttons"));
