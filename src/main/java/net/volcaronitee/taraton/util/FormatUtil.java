@@ -2,6 +2,7 @@ package net.volcaronitee.taraton.util;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+
 import net.minecraft.text.ClickEvent;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.OrderedText;
@@ -15,13 +16,14 @@ public class FormatUtil {
     /**
      * Private constructor to prevent instantiation.
      */
-    private FormatUtil() {}
+    private FormatUtil() {
+    }
 
     /**
      * Creates a clickable link text component.
      * 
      * @param text The display text for the link.
-     * @param url The URL to link to.
+     * @param url  The URL to link to.
      * @return A Text component that represents a clickable link.
      */
     public static Text createLink(String text, String url) {
@@ -45,19 +47,11 @@ public class FormatUtil {
      * Formats a number with commas for better readability.
      * 
      * @param number The number to format, as a double.
-     * @return A string representation of the number with commas inserted every three digits.
+     * @return A string representation of the number with commas inserted every
+     *         three digits.
      */
     public static String commafy(double number) {
-        String str = String.valueOf((long) number);
-        StringBuilder result = new StringBuilder();
-        int length = str.length();
-        for (int i = 0; i < length; i++) {
-            if (i > 0 && (length - i) % 3 == 0) {
-                result.append(',');
-            }
-            result.append(str.charAt(i));
-        }
-        return result.toString();
+        return String.format("%,d", (long) number);
     }
 
     /**
@@ -79,7 +73,8 @@ public class FormatUtil {
      * Converts a time in milliseconds to a human-readable string format.
      * 
      * @param time The time in milliseconds to convert.
-     * @return A string representation of the time in days, hours, minutes, and seconds.
+     * @return A string representation of the time in days, hours, minutes, and
+     *         seconds.
      */
     public static String timeToString(long time) {
         long seconds = time / 1000;
