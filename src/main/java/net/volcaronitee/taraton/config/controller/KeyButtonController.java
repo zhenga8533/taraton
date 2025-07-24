@@ -3,6 +3,9 @@ package net.volcaronitee.taraton.config.controller;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
+
+import org.jetbrains.annotations.Nullable;
+
 import dev.isxander.yacl3.api.Controller;
 import dev.isxander.yacl3.api.Option;
 import dev.isxander.yacl3.api.StateManager;
@@ -16,7 +19,8 @@ import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.text.Text;
 
 /**
- * A controller that pairs a key controller with a button that performs an action.
+ * A controller that pairs a key controller with a button that performs an
+ * action.
  */
 public class KeyButtonController<K> implements Controller<K> {
     private final Option<K> option;
@@ -28,11 +32,13 @@ public class KeyButtonController<K> implements Controller<K> {
     /**
      * Creates a new KeyButtonController.
      * 
-     * @param option The option that this controller is associated with.
-     * @param ratio The ratio of the key controller's width to the total width of the controller.
-     * @param keyController A function that provides a key controller for the option.
-     * @param buttonText The text to display on the button.
-     * @param buttonAction The action to perform when the button is clicked.
+     * @param option        The option that this controller is associated with.
+     * @param ratio         The ratio of the key controller's width to the total
+     *                      width of the controller.
+     * @param keyController A function that provides a key controller for the
+     *                      option.
+     * @param buttonText    The text to display on the button.
+     * @param buttonAction  The action to perform when the button is clicked.
      */
     private KeyButtonController(Option<K> option, double ratio,
             Function<Option<K>, ControllerBuilder<K>> keyController, Text buttonText,
@@ -42,25 +48,25 @@ public class KeyButtonController<K> implements Controller<K> {
         this.buttonText = buttonText;
         this.buttonAction = buttonAction;
 
-        this.keyController =
-                dummyOption(null, keyController, option::pendingValue, option::requestSet)
-                        .controller();
+        this.keyController = dummyOption(option.name(), keyController, option::pendingValue,
+                option::requestSet)
+                .controller();
     }
 
     /**
      * Creates a dummy option for the key controller.
      * 
-     * @param <T> The type of the option.
-     * @param name The name of the option, can be null.
+     * @param <T>        The type of the option.
+     * @param name       The name of the option, can be null.
      * @param controller A function that provides a controller for the option.
-     * @param get A supplier to get the current value of the option.
-     * @param set A consumer to set the value of the option.
+     * @param get        A supplier to get the current value of the option.
+     * @param set        A consumer to set the value of the option.
      * @return A dummy option that can be used to create a controller.
      */
-    private static <T> Option<T> dummyOption(String name,
+    private static <T> Option<T> dummyOption(@Nullable Text name,
             Function<Option<T>, ControllerBuilder<T>> controller, Supplier<T> get,
             Consumer<T> set) {
-        return Option.<T>createBuilder().name(name != null ? Text.literal(name) : Text.empty())
+        return Option.<T>createBuilder().name(name)
                 .stateManager(StateManager.createInstant(get.get(), get, set))
                 .controller(controller).build();
     }
@@ -103,7 +109,7 @@ public class KeyButtonController<K> implements Controller<K> {
         /**
          * Creates a new Builder for KeyButtonController with the given option.
          * 
-         * @param <T> The type of the option.
+         * @param <T>    The type of the option.
          * @param option The option that this controller will be associated with.
          * @return A new Builder instance for KeyButtonController.
          */
@@ -114,7 +120,8 @@ public class KeyButtonController<K> implements Controller<K> {
         /**
          * Sets the key controller for this KeyButtonController.
          * 
-         * @param keyController A function that provides a controller for the key option.
+         * @param keyController A function that provides a controller for the key
+         *                      option.
          * @return This Builder instance for method chaining.
          */
         public Builder<K> keyController(Function<Option<K>, ControllerBuilder<K>> keyController) {
@@ -125,7 +132,7 @@ public class KeyButtonController<K> implements Controller<K> {
         /**
          * Sets the key controller for this KeyButtonController using a supplier.
          * 
-         * @param text The text to display on the button.
+         * @param text   The text to display on the button.
          * @param action The action to perform when the button is clicked.
          * @return This Builder instance for method chaining.
          */
@@ -138,8 +145,9 @@ public class KeyButtonController<K> implements Controller<K> {
         /**
          * Sets the text to display on the button.
          * 
-         * @param ratio The ratio of the key controller's width to the total width of the
-         *        controller.
+         * @param ratio The ratio of the key controller's width to the total width of
+         *              the
+         *              controller.
          * @return This Builder instance for method chaining.
          */
         public Builder<K> ratio(double ratio) {
@@ -167,8 +175,8 @@ public class KeyButtonController<K> implements Controller<K> {
          * Creates a new KeyButtonControllerElement.
          * 
          * @param control The KeyButtonController that this element represents.
-         * @param screen The YACLScreen that this element is part of.
-         * @param dim The dimensions of the element.
+         * @param screen  The YACLScreen that this element is part of.
+         * @param dim     The dimensions of the element.
          */
         public KeyButtonControllerElement(KeyButtonController<K> control, YACLScreen screen,
                 Dimension<Integer> dim) {
