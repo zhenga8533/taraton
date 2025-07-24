@@ -118,20 +118,6 @@ public class ContainerConfig {
                 // Items Option Group
                 .group(OptionGroup.createBuilder().name(Text.literal("Items"))
 
-                        // TODO: Attribute Abbreviation
-                        .option(Option.<Boolean>createBuilder()
-                                .name(Text.literal("Attribute Abbreviation"))
-                                .description(OptionDescription.createBuilder()
-                                        .webpImage(Identifier.of(Taraton.MOD_ID,
-                                                "config/container/attribute_abbreviation.webp"))
-                                        .text(Text.literal(
-                                                "Displays attribute abbreviations directly over items."))
-                                        .build())
-                                .binding(defaults.container.attributeAbbreviation,
-                                        () -> config.container.attributeAbbreviation,
-                                        newVal -> config.container.attributeAbbreviation = newVal)
-                                .controller(TaratonConfig::createBooleanController).build())
-
                         // Armor Display
                         .option(Option.<Boolean>createBuilder().name(Text.literal("Armor Display"))
                                 .description(OptionDescription.createBuilder()
@@ -182,9 +168,6 @@ public class ContainerConfig {
     public boolean wardrobeSwap = true;
 
     // Items Option Group
-    @SerialEntry
-    public boolean attributeAbbreviation = false;
-
     @SerialEntry
     public boolean armorDisplay = false;
 
