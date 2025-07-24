@@ -1,19 +1,16 @@
 package net.volcaronitee.taraton.feature.qol;
 
-import org.jetbrains.annotations.Nullable;
 import com.mojang.brigadier.context.CommandContext;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.component.DataComponentTypes;
-import net.minecraft.component.type.NbtComponent;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.volcaronitee.taraton.Taraton;
 import net.volcaronitee.taraton.config.TaratonConfig;
 import net.volcaronitee.taraton.config.TaratonList;
 import net.volcaronitee.taraton.util.FeatureUtil;
+import net.volcaronitee.taraton.util.ParseUtil;
 
 /**
  * Feature to protect specific items from being dropped or thrown in the game.
@@ -49,7 +46,7 @@ public class ProtectItem {
      */
     public int protect(CommandContext<FabricClientCommandSource> context) {
         ItemStack heldStack = MinecraftClient.getInstance().player.getMainHandStack();
-        String itemUuid = getItemUuid(heldStack);
+        String itemUuid = ParseUtil.getItemUuid(heldStack);
         Text itemName = heldStack.getName();
 
         if (itemUuid == null) {
@@ -69,27 +66,6 @@ public class ProtectItem {
     }
 
     /**
-     * Retrieves the UUID of the item from its NBT data.
-     * 
-     * @param stack The ItemStack from which to retrieve the UUID.
-     * @return The UUID of the item as a String, or null if not found.
-     */
-    @Nullable
-    private String getItemUuid(ItemStack stack) {
-        if (stack == null || stack.isEmpty()) {
-            return null;
-        }
-
-        NbtComponent customData = stack.get(DataComponentTypes.CUSTOM_DATA);
-        if (customData == null) {
-            return null;
-        }
-
-        NbtCompound nbt = customData.copyNbt();
-        return nbt.getString("uuid").orElse(null);
-    }
-
-    /**
      * Checks if the item stack should be canceled from being dropped or thrown.
      * 
      * @param stack The ItemStack to check for protection.
@@ -102,7 +78,7 @@ public class ProtectItem {
             return false;
         }
 
-        String itemUuid = getItemUuid(stack);
+        String itemUuid = ParseUtil.getItemUuid(stack);
         Text name = stack.getName();
 
         // Check if the item UUID is in the protect list

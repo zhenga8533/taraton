@@ -10,7 +10,12 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.imageio.ImageIO;
 import org.apache.logging.log4j.core.util.CronExpression;
+import org.jetbrains.annotations.Nullable;
 import net.minecraft.client.texture.NativeImage;
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.NbtComponent;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.OrderedText;
 import net.minecraft.text.Style;
@@ -34,6 +39,33 @@ public class ParseUtil {
 
     private static final Pattern TIME_PATTERN = Pattern.compile("(\\d+)([hms])");
 
+    /**
+     * Retrieves the UUID of the item from its NBT data.
+     * 
+     * @param stack The ItemStack from which to retrieve the UUID.
+     * @return The UUID of the item as a String, or null if not found.
+     */
+    @Nullable
+    public static String getItemUuid(ItemStack stack) {
+        if (stack == null || stack.isEmpty()) {
+            return null;
+        }
+
+        NbtComponent customData = stack.get(DataComponentTypes.CUSTOM_DATA);
+        if (customData == null) {
+            return null;
+        }
+
+        NbtCompound nbt = customData.copyNbt();
+        return nbt.getString("uuid").orElse(null);
+    }
+
+    /**
+     * Checks if the given URL is an image based on its file extension.
+     * 
+     * @param url The URL to check.
+     * @return True if the URL points to an image, false otherwise.
+     */
     public static boolean isImage(String url) {
         if (url == null || url.isEmpty()) {
             return false;
