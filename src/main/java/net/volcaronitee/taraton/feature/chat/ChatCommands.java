@@ -10,7 +10,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import com.google.gson.JsonObject;
+
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
@@ -38,26 +40,23 @@ public class ChatCommands {
 
     public static final TaratonList PREFIX_LIST = new TaratonList("Prefix List",
             Text.literal("A list of prefixes to detect for chat commands."), "prefix_list.json",
-            new String[] {"Prefix"});
+            new String[] { "Prefix" });
     public static final TaratonList AVENGER_LIST = new TaratonList("The Avengers",
-            Text.literal("DUN DUN DUNDUN"), "avenger_list.json", new String[] {"Username"});
+            Text.literal("DUN DUN DUNDUN"), "avenger_list.json", new String[] { "Username" });
 
     // Patterns for matching chat messages
     private static final Pattern ALL_PATTERN = Pattern.compile(ParseUtil.PLAYER_PATTERN + ": (.+)");
-    private static final Pattern GUILD_PATTERN =
-            Pattern.compile("Guild > " + ParseUtil.PLAYER_PATTERN + ": (.+)");
-    private static final Pattern PARTY_PATTERN =
-            Pattern.compile("Party > " + ParseUtil.PLAYER_PATTERN + ": (.+)");
-    private static final Pattern PRIVATE_PATTERN =
-            Pattern.compile("From " + ParseUtil.PLAYER_PATTERN + ": (.+)");
+    private static final Pattern GUILD_PATTERN = Pattern.compile("Guild > " + ParseUtil.PLAYER_PATTERN + ": (.+)");
+    private static final Pattern PARTY_PATTERN = Pattern.compile("Party > " + ParseUtil.PLAYER_PATTERN + ": (.+)");
+    private static final Pattern PRIVATE_PATTERN = Pattern.compile("From " + ParseUtil.PLAYER_PATTERN + ": (.+)");
 
     // List of responses for the 8-ball command
-    private static final String[] EIGHT_BALL = {"As I see it, yes", "It is certain",
+    private static final String[] EIGHT_BALL = { "As I see it, yes", "It is certain",
             "It is decidedly so", "Most likely", "Outlook good", "Signs point to yes",
             "Without a doubt", "Yes", "Yes - definitely", "You may rely on it",
             "Reply hazy, try again", "Ask again later", "Better not tell you now",
             "Cannot predict now", "Concentrate and ask again", "Don't count on it",
-            "My reply is no", "My sources say no", "Outlook not so good", "Very doubtful"};
+            "My reply is no", "My sources say no", "Outlook not so good", "Very doubtful" };
 
     // Waifu image URLs categorized by type
     private static final Map<String, List<String>> WAIFUS = new HashMap<>();
@@ -68,8 +67,8 @@ public class ChatCommands {
     private static final Set<String> WAIFU_NSFW = Set.of("nsfw", "x");
 
     // Instances
-    private static final String[] FLOORS = {"one", "two", "three", "four", "five", "six", "seven"};
-    private static final String[] TIERS = {"basic", "hot", "burning", "fiery", "infernal"};
+    private static final String[] FLOORS = { "one", "two", "three", "four", "five", "six", "seven" };
+    private static final String[] TIERS = { "basic", "hot", "burning", "fiery", "infernal" };
 
     // Stats widget
     private static final Widget STATS_WIDGET = new Widget("Stats", () -> false);
@@ -83,7 +82,7 @@ public class ChatCommands {
         /**
          * Returns the command head based on the command type and username.
          * 
-         * @param type The type of command.
+         * @param type     The type of command.
          * @param username The username of the player sending the command.
          * @return
          */
@@ -108,7 +107,8 @@ public class ChatCommands {
     /**
      * Private constructor to prevent instantiation.
      */
-    private ChatCommands() {}
+    private ChatCommands() {
+    }
 
     /**
      * Returns the singleton instance of ChatCommands.
@@ -133,45 +133,40 @@ public class ChatCommands {
      * @param cat The category of the waifu image (e.g., "waifu", "neko", etc.).
      */
     private void addWaifu(String cat) {
-        // Determine category and type
         String category = WAIFU_CATEGORIES.contains(cat) ? cat : "waifu";
         String type = TaratonData.getData().get("nsfw").getAsBoolean() && WAIFU_NSFW.contains(cat)
                 ? "nsfw"
                 : "sfw";
 
-        // Fetch a waifu image URL from the API and add it to the list
         RequestUtil.get("https://api.waifu.pics/" + type + "/" + category).thenAccept(response -> {
-            if (response != null) {
+            if (response != null && response.trim().startsWith("{")) {
                 try {
                     JsonObject json = TaratonJson.GSON.fromJson(response, JsonObject.class);
                     if (json != null && json.has("url")) {
-                        // Create a new list for the category if it doesn't exist
-                        if (!WAIFUS.containsKey(category)) {
-                            WAIFUS.put(category, new ArrayList<>());
-                        }
+                        WAIFUS.computeIfAbsent(category, k -> new ArrayList<>());
 
-                        // Add the waifu image URL to the list for the category
                         String url = json.get("url").getAsString();
                         if (type.equals("nsfw")) {
                             url = "_" + url;
                         }
-                        WAIFUS.get(category).add(url);
+
+                        List<String> waifuList = WAIFUS.get(category);
+                        waifuList.add(url);
+
+                        while (waifuList.size() > 10) {
+                            waifuList.remove(0);
+                        }
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
+                } catch (com.google.gson.JsonSyntaxException e) {
+                    System.err.println("Waifu API returned invalid JSON. Response: " + response);
                 }
+            } else if (response != null) {
+                System.err.println("Waifu API returned a non-JSON error page: " + response);
             }
         }).exceptionally(e -> {
             e.printStackTrace();
             return null;
         });
-
-        // Limit the number of waifus in each category to 10
-        for (String key : WAIFUS.keySet()) {
-            if (WAIFUS.get(key).size() > 10) {
-                WAIFUS.get(key).remove(0);
-            }
-        }
     }
 
     /**
@@ -250,8 +245,8 @@ public class ChatCommands {
     /**
      * Appends a command to the StringBuilder if the condition is true.
      * 
-     * @param builder The StringBuilder to append to.
-     * @param command The command to append.
+     * @param builder   The StringBuilder to append to.
+     * @param command   The command to append.
      * @param condition The condition to check before appending the command.
      */
     private void appendCommand(StringBuilder builder, String command, boolean condition) {
@@ -263,7 +258,7 @@ public class ChatCommands {
     /**
      * Handles a command from the player.
      * 
-     * @param player The player who sent the command.
+     * @param player  The player who sent the command.
      * @param command The command sent by the player.
      * @return True if the command was handled, false otherwise.
      */
@@ -280,9 +275,9 @@ public class ChatCommands {
     /**
      * Handles the leader command logic when a message is received.
      * 
-     * @param player The player who sent the command.
+     * @param player   The player who sent the command.
      * @param username The username of the player who sent the command.
-     * @param args The arguments of the command.
+     * @param args     The arguments of the command.
      */
     private boolean handleLeaderCommand(ClientPlayerEntity player, String username, String[] args) {
         // Check if username is whitelisted
@@ -453,10 +448,10 @@ public class ChatCommands {
     /**
      * Handles the party command logic when a message is received.
      * 
-     * @param player The player who sent the command.
+     * @param player   The player who sent the command.
      * @param username The username of the player who sent the command.
-     * @param head The command head for the party commands.
-     * @param args The arguments of the command.
+     * @param head     The command head for the party commands.
+     * @param args     The arguments of the command.
      */
     private boolean handlePartyCommand(ClientPlayerEntity player, String username, String head,
             String[] args) {
@@ -509,12 +504,24 @@ public class ChatCommands {
                     return false;
                 }
 
-                // Add a waifu image URL to the WAIFUS list based on the category
                 String category = arg1.isEmpty() ? "waifu" : arg1.toLowerCase();
                 addWaifu(category);
 
-                // Get the last waifu image URL from the list for the specified category
-                List<String> waifuList = WAIFUS.getOrDefault(category, WAIFUS.get("waifu"));
+                // First, try to get the list for the requested category.
+                List<String> waifuList = WAIFUS.get(category);
+
+                // If that fails or is empty, fall back to the default "waifu" list.
+                if (waifuList == null || waifuList.isEmpty()) {
+                    waifuList = WAIFUS.get("waifu");
+                }
+
+                // After falling back, check AGAIN if the list is valid.
+                if (waifuList == null || waifuList.isEmpty()) {
+                    ScheduleUtil.scheduleCommand(head + " Waifu cache is empty. Please try again in a moment.");
+                    return true;
+                }
+
+                // If we have a valid list, send the URL.
                 String waifuUrl = waifuList.get(waifuList.size() - 1);
                 ScheduleUtil.scheduleCommand(head + " " + waifuUrl);
 
@@ -545,8 +552,7 @@ public class ChatCommands {
                 List<String> avengersList = new ArrayList<>(AVENGER_LIST.list);
                 int groupSize = 5;
                 for (int i = 0; i < avengersList.size(); i += groupSize) {
-                    List<String> group =
-                            avengersList.subList(i, Math.min(i + groupSize, avengersList.size()));
+                    List<String> group = avengersList.subList(i, Math.min(i + groupSize, avengersList.size()));
                     String avengers = String.join(" ", group);
                     ScheduleUtil.scheduleCommand("p " + avengers);
                 }
@@ -561,10 +567,10 @@ public class ChatCommands {
     /**
      * Handles the status command logic when a message is received.
      * 
-     * @param player The player who sent the command.
+     * @param player   The player who sent the command.
      * @param username The username of the player who sent the command.
-     * @param head The command head for the status commands.
-     * @param args The arguments of the command.
+     * @param head     The command head for the status commands.
+     * @param args     The arguments of the command.
      * 
      * @return True if the command was handled, false otherwise.
      */
@@ -681,8 +687,7 @@ public class ChatCommands {
                 }
 
                 ZonedDateTime now = ZonedDateTime.now();
-                DateTimeFormatter formatter =
-                        DateTimeFormatter.ofLocalizedDateTime(FormatStyle.LONG);
+                DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.LONG);
                 ScheduleUtil.scheduleCommand(head + " " + now.format(formatter));
                 return true;
             // Status help commands
