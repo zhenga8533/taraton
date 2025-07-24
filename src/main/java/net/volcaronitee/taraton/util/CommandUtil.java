@@ -2,12 +2,10 @@ package net.volcaronitee.taraton.util;
 
 import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.argument;
 import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.literal;
-
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
-
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.client.MinecraftClient;
@@ -44,12 +42,11 @@ import net.volcaronitee.taraton.feature.qol.ProtectItem;
 import net.volcaronitee.taraton.util.helper.Contract;
 
 /**
- * Utility class for handling client commands. Register commands and their
- * associated
+ * Utility class for handling client commands. Register commands and their associated
  * functionalities here to keep the commands centralized.
  */
 public class CommandUtil {
-    private static final String[] ALIASES = { "nar", "notarat", "taraton", "tar", "rat" };
+    private static final String[] ALIASES = {"nar", "notarat", "taraton", "tar", "rat"};
 
     /**
      * Initializes the client command registration for Taraton.
@@ -62,22 +59,22 @@ public class CommandUtil {
      * Registers the Taraton commands with the command dispatcher.
      * 
      * @param dispatcher The command dispatcher to register commands with.
-     * @param access     The command registry access.
+     * @param access The command registry access.
      */
     private static void register(CommandDispatcher<FabricClientCommandSource> dispatcher,
             CommandRegistryAccess access) {
         for (String alias : ALIASES) {
-            LiteralArgumentBuilder<FabricClientCommandSource> command = literal(alias)
-                    .executes(CommandUtil::settingsCommand)
-                    .then(literal("help").executes(CommandUtil::helpCommand))
-                    .then(literal("settings").executes(CommandUtil::settingsCommand))
-                    .then(literal("toggles").executes(CommandUtil::togglesCommand))
-                    .then(literal("gui").executes(OverlayUtil::moveGui))
-                    .then(literal("save").executes(CommandUtil::saveCommand))
-                    .then(literal("debug").executes(CommandUtil::debugCommand))
+            LiteralArgumentBuilder<FabricClientCommandSource> command =
+                    literal(alias).executes(CommandUtil::settingsCommand)
+                            .then(literal("help").executes(CommandUtil::helpCommand))
+                            .then(literal("settings").executes(CommandUtil::settingsCommand))
+                            .then(literal("toggles").executes(CommandUtil::togglesCommand))
+                            .then(literal("gui").executes(OverlayUtil::moveGui))
+                            .then(literal("save").executes(CommandUtil::saveCommand))
+                            .then(literal("debug").executes(CommandUtil::debugCommand))
 
-                    .then(argument("default", StringArgumentType.greedyString())
-                            .executes(CommandUtil::dynamicCommandHandler));
+                            .then(argument("default", StringArgumentType.greedyString())
+                                    .executes(CommandUtil::dynamicCommandHandler));
 
             registerFeatureCommands(command);
             registerListCommands(command);
@@ -143,12 +140,12 @@ public class CommandUtil {
             LiteralArgumentBuilder<FabricClientCommandSource> command) {
         command.then(ChatAlert.CHAT_ALERT_MAP.createCommand("chatalertmap"));
         command.then(ChatAlert.CHAT_ALERT_MAP.createCommand("cam"));
+        command.then(ItemCooldown.COOLDOWN_MAP.createCommand("cooldownmap"));
+        command.then(ItemCooldown.COOLDOWN_MAP.createCommand("cdm"));
         command.then(CustomEmote.EMOTE_MAP.createCommand("emotemap"));
         command.then(CustomEmote.EMOTE_MAP.createCommand("em"));
         command.then(CommandHotkey.HOTKEY_MAP.createCommand("hotkeymap"));
         command.then(CommandHotkey.HOTKEY_MAP.createCommand("hkm"));
-        command.then(ItemCooldown.ITEM_COOLDOWN_MAP.createCommand("cooldownmap"));
-        command.then(ItemCooldown.ITEM_COOLDOWN_MAP.createCommand("cdm"));
         command.then(PlayerScale.PLAYER_SCALE_MAP.createCommand("playerscalemap"));
         command.then(PlayerScale.PLAYER_SCALE_MAP.createCommand("psm"));
         command.then(ProtectItem.PROTECT_MAP.createCommand("protectmap"));
@@ -308,8 +305,7 @@ public class CommandUtil {
     }
 
     /**
-     * Handles the default command for Taraton, which is a catch-all for commands
-     * not explicitly
+     * Handles the default command for Taraton, which is a catch-all for commands not explicitly
      * defined.
      * 
      * @param context The command context containing the source and arguments.
