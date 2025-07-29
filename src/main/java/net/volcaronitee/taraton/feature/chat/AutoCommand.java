@@ -125,6 +125,23 @@ public class AutoCommand {
             return;
         }
 
+        // Decrement the last command's usage count, as it was mistyped.
+        String lastCommand = this.lastCommand.toLowerCase();
+        if (dictionary.has(lastCommand)) {
+            JsonPrimitive primitive = dictionary.getAsJsonPrimitive(lastCommand);
+            if (primitive != null && primitive.isNumber()) {
+                int count = primitive.getAsInt();
+                if (count <= 1) {
+                    // If the count is 1 or less, remove the command from the dictionary.
+                    dictionary.remove(lastCommand);
+                    commandsByLength.getOrDefault(lastCommand.length(), new HashSet<>())
+                            .remove(lastCommand);
+                } else if (count > 0) {
+                    dictionary.addProperty(lastCommand, count - 1);
+                }
+            }
+        }
+
         // Initialize variables to track the best command suggestion.
         String bestSuggestion = null;
         int minFoundDistance = MAX_DISTANCE + 1;
@@ -134,7 +151,6 @@ public class AutoCommand {
         // Iterate through commands with lengths close to the mistyped command's length.
         for (int len = Math.max(1, commandLength - MAX_DISTANCE); len <= commandLength
                 + MAX_DISTANCE; len++) {
-
             Set<String> potentialCommands = commandsByLength.get(len);
             if (potentialCommands == null) {
                 continue;
