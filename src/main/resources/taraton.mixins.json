@@ -10,7 +10,7 @@
     "accessor.InGameHudAccessor",
     "accessor.ScreenAccessor",
     "accessor.WorldRendererAccessor",
-    "ChatInputSuggestor",
+    "ChatInputSuggestorMixin",
     "ChatScreenMixin",
     "ClientPlayerEntityMixin",
     "ClientPlayerInteractionManagerMixin",
