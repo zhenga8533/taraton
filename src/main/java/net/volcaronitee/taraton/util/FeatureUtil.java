@@ -29,6 +29,7 @@ import net.volcaronitee.taraton.feature.general.ImagePreview;
 import net.volcaronitee.taraton.feature.general.ReminderTimer;
 import net.volcaronitee.taraton.feature.general.ServerRejoinAlert;
 import net.volcaronitee.taraton.feature.general.ServerStatus;
+import net.volcaronitee.taraton.feature.general.SkillTracker;
 import net.volcaronitee.taraton.feature.general.SkyBlockLevelUpAlert;
 import net.volcaronitee.taraton.feature.general.SkyBlockXpAlert;
 import net.volcaronitee.taraton.feature.general.UpdateNotification;
@@ -52,6 +53,7 @@ public class FeatureUtil {
         ReminderTimer.register();
         ServerRejoinAlert.register();
         ServerStatus.register();
+        SkillTracker.register();
         UpdateNotification.register();
         WaypointMaker.register();
         WidgetDisplay.register();
