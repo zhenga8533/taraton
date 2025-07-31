@@ -79,17 +79,17 @@ public class EconomyConfig {
                                         .range(0, 54).step(1))
                                 .build())
 
-                        // TODO: Item Price
-                        .option(Option.<EconomyConfig.ItemPrice>createBuilder()
-                                .name(Text.literal("Item Price"))
+                        // TODO: Item Value
+                        .option(Option.<EconomyConfig.ItemValue>createBuilder()
+                                .name(Text.literal("Item Value"))
                                 .description(OptionDescription.createBuilder()
                                         .webpImage(Identifier.of(Taraton.MOD_ID,
                                                 "config/economy/item_price.webp"))
                                         .text(Text.literal(
                                                 "Sets how item prices are displayed in the game."))
                                         .build())
-                                .binding(defaults.economy.itemPrice, () -> config.economy.itemPrice,
-                                        newVal -> config.economy.itemPrice = newVal)
+                                .binding(defaults.economy.itemValue, () -> config.economy.itemValue,
+                                        newVal -> config.economy.itemValue = newVal)
                                 .controller(TaratonConfig::createEnumController).build())
 
                         // TODO: Single Attribute
@@ -151,9 +151,9 @@ public class EconomyConfig {
     public int containerValue = 0;
 
     @SerialEntry
-    public ItemPrice itemPrice = ItemPrice.OFF;
+    public ItemValue itemValue = ItemValue.OFF;
 
-    public enum ItemPrice implements NameableEnum {
+    public enum ItemValue implements NameableEnum {
         OFF, ADVANCED, TOOLTIP, OMNI;
 
         @Override
