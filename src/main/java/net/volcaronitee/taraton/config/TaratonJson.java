@@ -110,21 +110,38 @@ public class TaratonJson {
         }
     }
 
+    /**
+     * Represents an instance of a JSON file, providing methods to load and save the JSON data.
+     */
     public static class JsonInstance {
         private JsonObject jsonObject;
         private String fileDir;
         private String fileName;
 
+        /**
+         * Creates a new JsonInstance for the specified directory and file name.
+         * 
+         * @param fileDir The directory where the JSON file is located.
+         * @param fileName The name of the JSON file to load.
+         */
         private JsonInstance(String fileDir, String fileName) {
             this.fileDir = fileDir;
             this.fileName = fileName;
             load();
         }
 
+        /**
+         * Returns the JSON object loaded from the file.
+         * 
+         * @return The JsonObject loaded from the file.
+         */
         public JsonObject getJsonObject() {
             return jsonObject;
         }
 
+        /**
+         * Sets the JSON object to be saved to the file.
+         */
         private void load() {
             Path filePath = CONFIG_DIR.resolve(fileDir).resolve(fileName);
 
@@ -160,6 +177,10 @@ public class TaratonJson {
             }
         }
 
+        /**
+         * Saves the current JSON object to the file specified by the instance's directory and file
+         * name.
+         */
         private void save() {
             Path filePath;
 

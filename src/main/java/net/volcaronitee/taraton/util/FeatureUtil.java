@@ -21,6 +21,7 @@ import net.volcaronitee.taraton.feature.container.SlotBinding;
 import net.volcaronitee.taraton.feature.container.WardrobeSwap;
 import net.volcaronitee.taraton.feature.crimson_isle.VanquisherWarp;
 import net.volcaronitee.taraton.feature.economy.CoinTracker;
+import net.volcaronitee.taraton.feature.economy.ItemValue;
 import net.volcaronitee.taraton.feature.farming.PestControl;
 import net.volcaronitee.taraton.feature.fishing.HookLineAndSinker;
 import net.volcaronitee.taraton.feature.general.DeveloperKey;
@@ -28,6 +29,7 @@ import net.volcaronitee.taraton.feature.general.ImagePreview;
 import net.volcaronitee.taraton.feature.general.ReminderTimer;
 import net.volcaronitee.taraton.feature.general.ServerRejoinAlert;
 import net.volcaronitee.taraton.feature.general.ServerStatus;
+import net.volcaronitee.taraton.feature.general.SkillTracker;
 import net.volcaronitee.taraton.feature.general.SkyBlockLevelUpAlert;
 import net.volcaronitee.taraton.feature.general.SkyBlockXpAlert;
 import net.volcaronitee.taraton.feature.general.UpdateNotification;
@@ -51,6 +53,7 @@ public class FeatureUtil {
         ReminderTimer.register();
         ServerRejoinAlert.register();
         ServerStatus.register();
+        SkillTracker.register();
         UpdateNotification.register();
         WaypointMaker.register();
         WidgetDisplay.register();
@@ -86,6 +89,7 @@ public class FeatureUtil {
 
         // Economy Features
         CoinTracker.register();
+        ItemValue.register();
 
         // Combat Features
         EntityHighlight.register();

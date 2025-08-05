@@ -11,6 +11,7 @@ import net.volcaronitee.taraton.config.TaratonConfig;
 import net.volcaronitee.taraton.config.TaratonData;
 import net.volcaronitee.taraton.config.TaratonToggle;
 import net.volcaronitee.taraton.util.CommandUtil;
+import net.volcaronitee.taraton.util.EconomyUtil;
 import net.volcaronitee.taraton.util.FeatureUtil;
 import net.volcaronitee.taraton.util.LocationUtil;
 import net.volcaronitee.taraton.util.OverlayUtil;
@@ -40,6 +41,7 @@ public class Taraton implements ClientModInitializer {
     public void onInitializeClient() {
         Contract.init();
 
+        EconomyUtil.init();
         LocationUtil.init();
         TaratonConfig.init();
         TaratonData.init();

@@ -25,6 +25,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.volcaronitee.taraton.config.TaratonJson;
 import net.volcaronitee.taraton.util.OverlayUtil;
+import net.volcaronitee.taraton.util.ScheduleUtil;
 
 /**
  * Feature for adding customizable buttons to container screens.
@@ -84,14 +85,15 @@ public class ContainerButtons {
         ClientPlayerEntity player = client.player;
         PlayerInventory inventory = player.getInventory();
 
-        client.send(() -> {
+        ScheduleUtil.schedule(() -> {
             // Create the edit screen based on the type of container
             Screen editScreen = isInventory ? new InventoryScreen(player)
                     : new GenericContainerScreen(ScreenHandlerType.GENERIC_9X6.create(0, inventory),
                             inventory, Text.literal("Button Editing"));
 
             client.setScreen(new ButtonEditScreen(editScreen));
-        });
+        }, 0);
+
         return 1;
     }
 
